@@ -50,7 +50,7 @@ function safeFormatDate(dateStr) {
   }
 }
 
-export function EducatorRefunds() {
+function EducatorRefunds() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const [selected, setSelected] = useState(null);
@@ -286,3 +286,5 @@ export function EducatorRefunds() {
     </div>
   );
 }
+
+export default EducatorRefunds;

@@ -64,7 +64,7 @@ const CreateTest = lazy(() => import('./pages/CreateTest'));
 const EditTest = lazy(() => import('./pages/EditTest'));
 const EducatorDashboard = lazy(() => import('./pages/EducatorDashboard'));
 const EducatorProfile = lazy(() => import('./pages/EducatorProfile'));
-const EducatorRefunds = lazy(() => import('./pages/EducatorRefunds').then(m => ({ default: m.EducatorRefunds })));
+const EducatorRefunds = lazy(() => import('./pages/EducatorRefunds'));
 const EducatorSettings = lazy(() => import('./pages/EducatorSettings'));
 const Educators = lazy(() => import('./pages/Educators'));
 const ExamTypes = lazy(() => import('./pages/ExamTypes'));
