@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { liveSessions as liveApi } from "@/api/dalClient";
 import { useAuth } from "@/lib/AuthContext";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -39,7 +39,6 @@ export default function LiveSessionJoin() {
   const [sessionId, setSessionId] = useState(null);
   const [lastQuestionId, setLastQuestionId] = useState(null);
   const [submittedOptionId, setSubmittedOptionId] = useState(null);
-  const prevIdxRef = useRef(null);
 
   // Poll session state while joined
   const { data: state, isLoading: stateLoading } = useQuery({
@@ -61,13 +60,15 @@ export default function LiveSessionJoin() {
   }, [sessionId, user, state?.status]);
 
   // Reset answer when question changes
+  const currentQuestionId = state?.currentQuestion?.id;
+  const myAnswer = state?.myAnswer;
   useEffect(() => {
-    if (!state?.currentQuestion) return;
-    if (state.currentQuestion.id !== lastQuestionId) {
-      setLastQuestionId(state.currentQuestion.id);
-      setSubmittedOptionId(state.myAnswer ?? null);
+    if (!currentQuestionId) return;
+    if (currentQuestionId !== lastQuestionId) {
+      setLastQuestionId(currentQuestionId);
+      setSubmittedOptionId(myAnswer ?? null);
     }
-  }, [state?.currentQuestion?.id]);
+  }, [currentQuestionId, lastQuestionId, myAnswer]);
 
   const joinMutation = useMutation({
     mutationFn: () => liveApi.join(codeInput.trim().toUpperCase()),

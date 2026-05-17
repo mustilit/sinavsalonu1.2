@@ -86,7 +86,7 @@ const OPTION_COLORS = [
 ];
 
 // ─── Bar chart for live answer distribution ───────────────────────────────────
-function StatsBar({ options, stats }) {
+function StatsBar({ stats }) {
   if (!stats) return null;
   const total = stats.reduce((s, o) => s + o.count, 0);
   return (
@@ -357,7 +357,7 @@ export default function LiveSessionHost() {
             {(isActive || isEnded) && state.showStats && stats && (
               <div className="border-t border-slate-100 pt-4">
                 <p className="text-xs font-medium text-slate-500 mb-2 uppercase tracking-wide">İstatistikler</p>
-                <StatsBar options={q?.options ?? []} stats={stats} />
+                <StatsBar stats={stats} />
               </div>
             )}
           </div>
