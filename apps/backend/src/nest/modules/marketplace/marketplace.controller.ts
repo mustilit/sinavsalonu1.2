@@ -2,7 +2,7 @@ import { Controller, Get, Query, Param, Inject } from '@nestjs/common';
 import { ApiTags, ApiOkResponse } from '@nestjs/swagger';
 import { ApiErrorResponses } from '../../swagger/decorators';
 import { ListMarketplaceTestsResponseDto } from './dto/marketplace-list.response.dto';
-import { ListMarketplaceTestsUseCase } from '../../../application/use-cases/ListMarketplaceTestsUseCase';
+import { ListMarketplaceTestsUseCase } from '../../../application/use-cases/test/ListMarketplaceTestsUseCase';
 import { ListMarketplacePackagesUseCase } from '../../../application/use-cases/ListMarketplacePackagesUseCase';
 import { GetMarketplacePackageUseCase } from '../../../application/use-cases/GetMarketplacePackageUseCase';
 import { Public } from '../../decorators/public.decorator';

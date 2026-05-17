@@ -17,7 +17,7 @@ import { GetEducatorSalesReportUseCase } from '../../application/use-cases/GetEd
 import { PurchaseAdUseCase } from '../../application/use-cases/PurchaseAdUseCase';
 import { ListEducatorAdPurchasesUseCase } from '../../application/use-cases/ListEducatorAdPurchasesUseCase';
 import { GetEducatorAdStatsUseCase } from '../../application/use-cases/GetEducatorAdStatsUseCase';
-import { ListEducatorTestsUseCase } from '../../application/use-cases/ListEducatorTestsUseCase';
+import { ListEducatorTestsUseCase } from '../../application/use-cases/test/ListEducatorTestsUseCase';
 import { ListEducatorPurchasesUseCase } from '../../application/use-cases/ListEducatorPurchasesUseCase';
 import { ToggleDiscountCodeUseCase } from '../../application/use-cases/ToggleDiscountCodeUseCase';
 import { PrismaUserRepository } from '../../infrastructure/repositories/PrismaUserRepository';

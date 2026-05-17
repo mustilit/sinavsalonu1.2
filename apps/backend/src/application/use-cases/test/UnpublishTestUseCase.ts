@@ -1,5 +1,5 @@
-import { IExamRepository } from '../../domain/interfaces/IExamRepository';
-import { IAuditLogRepository } from '../../domain/interfaces/IAuditLogRepository';
+import { IExamRepository } from '../../../domain/interfaces/IExamRepository';
+import { IAuditLogRepository } from '../../../domain/interfaces/IAuditLogRepository';
 import { BadRequestException, ForbiddenException } from '@nestjs/common';
 
 export class UnpublishTestUseCase {
@@ -34,7 +34,7 @@ export class UnpublishTestUseCase {
     }
 
     try {
-      const { QueueService } = require('../../infrastructure/queue/queue.service');
+      const { QueueService } = require('../../../infrastructure/queue/queue.service');
       const qs = new QueueService();
       await qs.enqueueJob('stats-queue', 'refresh', { testId });
     } catch {}

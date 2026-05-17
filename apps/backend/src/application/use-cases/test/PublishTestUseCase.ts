@@ -1,11 +1,11 @@
-import { IExamRepository, ExamWithQuestions } from '../../domain/interfaces/IExamRepository';
-import { IAuditLogRepository } from '../../domain/interfaces/IAuditLogRepository';
-import { IUserRepository } from '../../domain/interfaces/IUserRepository';
-import { AppError } from '../errors/AppError';
-import { ensureEducatorActive } from '../policies/ensureEducatorActive';
-import { PrismaFollowRepository } from '../../infrastructure/repositories/PrismaFollowRepository';
-import { RedisCache } from '../../infrastructure/cache/RedisCache';
-import { prisma } from '../../infrastructure/database/prisma';
+import { IExamRepository, ExamWithQuestions } from '../../../domain/interfaces/IExamRepository';
+import { IAuditLogRepository } from '../../../domain/interfaces/IAuditLogRepository';
+import { IUserRepository } from '../../../domain/interfaces/IUserRepository';
+import { AppError } from '../../errors/AppError';
+import { ensureEducatorActive } from '../../policies/ensureEducatorActive';
+import { PrismaFollowRepository } from '../../../infrastructure/repositories/PrismaFollowRepository';
+import { RedisCache } from '../../../infrastructure/cache/RedisCache';
+import { prisma } from '../../../infrastructure/database/prisma';
 
 export class PublishTestUseCase {
   static MIN_QUESTIONS = 5;
@@ -141,7 +141,7 @@ export class PublishTestUseCase {
 
     // enqueue stats refresh for this test (followers may want updated aggregates)
     try {
-      const { QueueService } = require('../../infrastructure/queue/queue.service');
+      const { QueueService } = require('../../../infrastructure/queue/queue.service');
       const qs = new QueueService();
       await qs.enqueueJob('stats-queue', 'refresh', { testId });
     } catch {}

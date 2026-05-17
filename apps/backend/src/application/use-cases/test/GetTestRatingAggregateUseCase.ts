@@ -1,4 +1,4 @@
-import { IReviewRepository } from '../../domain/interfaces/IReviewRepository';
+import { IReviewRepository } from '../../../domain/interfaces/IReviewRepository';
 
 /**
  * Bir test için değerlendirme özetini döner: ortalama puan ve değerlendirme sayısı.

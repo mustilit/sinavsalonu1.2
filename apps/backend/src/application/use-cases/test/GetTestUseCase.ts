@@ -1,5 +1,5 @@
-import { IExamRepository } from '../../domain/interfaces/IExamRepository';
-import { prisma } from '../../infrastructure/database/prisma';
+import { IExamRepository } from '../../../domain/interfaces/IExamRepository';
+import { prisma } from '../../../infrastructure/database/prisma';
 
 /**
  * TestPackage ID ile paketin ilk ExamTest'ini getirir (sorular ve seçenekler dahil).

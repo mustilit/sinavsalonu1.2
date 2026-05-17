@@ -1,5 +1,5 @@
 import { InMemoryExamRepository } from '../../src/infrastructure/repositories/InMemoryExamRepository';
-import { ListMarketplaceTestsUseCase } from '../../src/application/use-cases/ListMarketplaceTestsUseCase';
+import { ListMarketplaceTestsUseCase } from '../../src/application/use-cases/test/ListMarketplaceTestsUseCase';
 
 // ReviewAggregationService mock — Prisma bağlantısı gerektirmez
 jest.mock('../../src/application/services/ReviewAggregationService', () => ({

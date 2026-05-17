@@ -1,4 +1,4 @@
-import { PublishTestUseCase } from '../../src/application/use-cases/PublishTestUseCase';
+import { PublishTestUseCase } from '../../src/application/use-cases/test/PublishTestUseCase';
 
 // PublishTestUseCase prisma singleton'ını adminSettings için kullanıyor; mock gerekli
 jest.mock('../../src/infrastructure/database/prisma', () => ({

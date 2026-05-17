@@ -9,7 +9,7 @@ import { Roles } from '../decorators/roles.decorator';
 import { Public } from '../decorators/public.decorator';
 import { CreateOrUpdateReviewUseCase } from '../../application/use-cases/CreateOrUpdateReviewUseCase';
 import { ListTestReviewsUseCase } from '../../application/use-cases/ListTestReviewsUseCase';
-import { GetTestRatingAggregateUseCase } from '../../application/use-cases/GetTestRatingAggregateUseCase';
+import { GetTestRatingAggregateUseCase } from '../../application/use-cases/test/GetTestRatingAggregateUseCase';
 import { PrismaReviewRepository } from '../../infrastructure/repositories/PrismaReviewRepository';
 import { PrismaPurchaseRepository } from '../../infrastructure/repositories/PrismaPurchaseRepository';
 import { PrismaAttemptRepository } from '../../infrastructure/repositories/PrismaAttemptRepository';

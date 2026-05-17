@@ -1,5 +1,5 @@
-import { PublishTestUseCase } from '../../src/application/use-cases/PublishTestUseCase';
-import { UnpublishTestUseCase } from '../../src/application/use-cases/UnpublishTestUseCase';
+import { PublishTestUseCase } from '../../src/application/use-cases/test/PublishTestUseCase';
+import { UnpublishTestUseCase } from '../../src/application/use-cases/test/UnpublishTestUseCase';
 
 // QueueService mock — UnpublishTestUseCase içinde dinamik require ile çağrılır;
 // gerçek bağlantı olmadığında 20sn timeout'a düşmemesi için mock edilir.

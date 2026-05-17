@@ -1,4 +1,4 @@
-import { GetPerformanceDistributionUseCase } from '../../src/application/use-cases/GetPerformanceDistributionUseCase';
+import { GetPerformanceDistributionUseCase } from '../../src/application/use-cases/test/GetPerformanceDistributionUseCase';
 
 // Prisma mock — testlerde gerçek DB bağlantısı olmaz
 jest.mock('../../src/infrastructure/database/prisma', () => ({

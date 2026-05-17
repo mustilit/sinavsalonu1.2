@@ -1,10 +1,10 @@
-import { IExamRepository } from '../../domain/interfaces/IExamRepository';
-import { IExamTypeRepository } from '../../domain/interfaces/IExamTypeRepository';
-import { ITopicRepository } from '../../domain/interfaces/ITopicRepository';
-import { ExamTest, ExamQuestion } from '../../domain/entities/Exam';
-import { AppError } from '../errors/AppError';
+import { IExamRepository } from '../../../domain/interfaces/IExamRepository';
+import { IExamTypeRepository } from '../../../domain/interfaces/IExamTypeRepository';
+import { ITopicRepository } from '../../../domain/interfaces/ITopicRepository';
+import { ExamTest, ExamQuestion } from '../../../domain/entities/Exam';
+import { AppError } from '../../errors/AppError';
 import { randomUUID } from 'crypto';
-import { prisma } from '../../infrastructure/database/prisma';
+import { prisma } from '../../../infrastructure/database/prisma';
 
 const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 

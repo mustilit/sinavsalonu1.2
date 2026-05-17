@@ -1,7 +1,7 @@
 import { Controller, Get, Param, Query, Req } from '@nestjs/common';
 import { Roles } from '../decorators/roles.decorator';
 import { GetPerformanceDistributionDto } from './dto/get-performance-distribution.dto';
-import { GetPerformanceDistributionUseCase } from '../../application/use-cases/GetPerformanceDistributionUseCase';
+import { GetPerformanceDistributionUseCase } from '../../application/use-cases/test/GetPerformanceDistributionUseCase';
 import { PrismaAttemptRepository } from '../../infrastructure/repositories/PrismaAttemptRepository';
 
 /**

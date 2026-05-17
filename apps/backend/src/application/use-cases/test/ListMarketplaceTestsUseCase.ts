@@ -1,6 +1,6 @@
-import { IExamRepository } from '../../domain/interfaces/IExamRepository';
-import { ReviewAggregationService } from '../services/ReviewAggregationService';
-import { AppError } from '../errors/AppError';
+import { IExamRepository } from '../../../domain/interfaces/IExamRepository';
+import { ReviewAggregationService } from '../../services/ReviewAggregationService';
+import { AppError } from '../../errors/AppError';
 
 /** UUID doğrulama regex'i — gelen filtre parametreleri bu kuralla kontrol edilir. */
 const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -73,7 +73,7 @@ export class ListMarketplaceTestsUseCase {
     const items = res.items;
     const ids = items.map((t) => t.id);
     // Önce testStats tablosundaki önceden hesaplanmış değerleri çek
-    const { prisma } = require('../../infrastructure/database/prisma');
+    const { prisma } = require('../../../infrastructure/database/prisma');
     const statsRows: Array<{ testId: string; ratingAvg: number | null; ratingCount: number }> =
       ids.length > 0
         ? await prisma.testStats.findMany({ where: { testId: { in: ids } }, select: { testId: true, ratingAvg: true, ratingCount: true } })

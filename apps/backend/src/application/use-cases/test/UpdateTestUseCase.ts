@@ -1,8 +1,8 @@
-import { IExamRepository } from '../../domain/interfaces/IExamRepository';
-import { IAuditLogRepository } from '../../domain/interfaces/IAuditLogRepository';
-import { IUserRepository } from '../../domain/interfaces/IUserRepository';
-import { AppError } from '../errors/AppError';
-import { ensureEducatorActive } from '../policies/ensureEducatorActive';
+import { IExamRepository } from '../../../domain/interfaces/IExamRepository';
+import { IAuditLogRepository } from '../../../domain/interfaces/IAuditLogRepository';
+import { IUserRepository } from '../../../domain/interfaces/IUserRepository';
+import { AppError } from '../../errors/AppError';
+import { ensureEducatorActive } from '../../policies/ensureEducatorActive';
 
 /** Test metadata güncelleme (title, priceCents, duration, isTimed). Fiyat değişimi audit edilir. */
 export class UpdateTestUseCase {

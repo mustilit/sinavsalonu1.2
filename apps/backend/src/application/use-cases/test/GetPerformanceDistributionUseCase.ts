@@ -1,7 +1,7 @@
-import { IAttemptRepository } from '../../domain/interfaces/IAttemptRepository';
+import { IAttemptRepository } from '../../../domain/interfaces/IAttemptRepository';
 import { BadRequestException, ForbiddenException } from '@nestjs/common';
-import { prisma } from '../../infrastructure/database/prisma';
-import { RedisCache } from '../../infrastructure/cache/RedisCache';
+import { prisma } from '../../../infrastructure/database/prisma';
+import { RedisCache } from '../../../infrastructure/cache/RedisCache';
 
 /** Tek bir testin performans dağılımı raporu için dönüş tipi */
 type Result = {
