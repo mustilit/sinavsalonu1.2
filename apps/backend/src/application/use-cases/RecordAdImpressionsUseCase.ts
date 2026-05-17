@@ -22,28 +22,32 @@ export class RecordAdImpressionsUseCase {
   ): Promise<void> {
     if (slots.length === 0) return;
 
-    // Her slot için atomic sayaç güncellemesi + impression kaydı
-    await prisma.$transaction(
-      slots.map((slot) =>
-        // impressionsRemaining > 0 kontrolü ile negatife düşmeyi engelle
-        prisma.$executeRaw`
-          UPDATE ad_purchases
-          SET impressions_remaining = impressions_remaining - 1,
-              impressions_delivered = impressions_delivered + 1
-          WHERE id = ${slot.id}::uuid
-            AND impressions_remaining > 0
-        `,
-      ),
-    );
+    // Sayaç güncellemesi ve impression kaydı aynı interactive transaction içinde —
+    // process crash durumunda her iki taraf da rollback alır.
+    await prisma.$transaction(async (tx) => {
+      // Her slot için atomic sayaç güncellemesi
+      await Promise.all(
+        slots.map((slot) =>
+          // impressionsRemaining > 0 kontrolü ile negatife düşmeyi engelle
+          tx.$executeRaw`
+            UPDATE ad_purchases
+            SET impressions_remaining = impressions_remaining - 1,
+                impressions_delivered = impressions_delivered + 1
+            WHERE id = ${slot.id}::uuid
+              AND impressions_remaining > 0
+          `,
+        ),
+      );
 
-    // AdImpression kayıtlarını toplu oluştur
-    await prisma.adImpression.createMany({
-      data: slots.map((slot) => ({
-        purchaseId:   slot.id,
-        educatorId:   slot.educatorId,
-        testId:       slot.testId ?? null,
-        viewerUserId: viewerUserId ?? null,
-      })),
+      // AdImpression kayıtlarını aynı transaction içinde toplu oluştur
+      await tx.adImpression.createMany({
+        data: slots.map((slot) => ({
+          purchaseId:   slot.id,
+          educatorId:   slot.educatorId,
+          testId:       slot.testId ?? null,
+          viewerUserId: viewerUserId ?? null,
+        })),
+      });
     });
   }
 }
