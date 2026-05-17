@@ -134,19 +134,18 @@ export class SubmitAttemptUseCase {
       }
     }
 
-    const updated = await this.prisma.testAttempt.update({
-      where: { id: attemptId },
-      data: {
-        score,
-        status: 'SUBMITTED',
-        submittedAt: new Date(),
-        completedAt: new Date(),
-        ...(overtimeSeconds !== null ? { overtimeSeconds } : {}),
-      },
-    });
-
-    try {
-      await this.prisma.auditLog.create({
+    const updated = await this.prisma.$transaction(async (tx) => {
+      const u = await tx.testAttempt.update({
+        where: { id: attemptId },
+        data: {
+          score,
+          status: 'SUBMITTED',
+          submittedAt: new Date(),
+          completedAt: new Date(),
+          ...(overtimeSeconds !== null ? { overtimeSeconds } : {}),
+        },
+      });
+      await tx.auditLog.create({
         data: {
           action: 'SUBMIT_ATTEMPT',
           entityType: 'TestAttempt',
@@ -155,9 +154,8 @@ export class SubmitAttemptUseCase {
           metadata: { correct, wrong, blank, score, overtimeSeconds },
         },
       });
-    } catch {
-      // ignore audit failures
-    }
+      return u;
+    });
 
     return { correct, wrong, blank, score, overtimeSeconds, updated };
   }
