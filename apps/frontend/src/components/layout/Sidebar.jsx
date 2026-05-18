@@ -22,9 +22,10 @@ import {
   Megaphone,
   RefreshCw,
   Zap,
+  ChevronLeft,
 } from "lucide-react";
 
-export default function Sidebar({ user, currentPage }) {
+export default function Sidebar({ user, currentPage, onCollapse }) {
   const { logout } = useAuth();
   const role = (user?.role || '').toString().toUpperCase();
   const isEducator = role === "EDUCATOR";
@@ -102,14 +103,24 @@ export default function Sidebar({ user, currentPage }) {
   const handleLogout = () => logout(true);
 
   return (
-    <aside className="w-64 bg-white dark:bg-gray-900 border-r border-slate-200 dark:border-gray-800 min-h-screen flex flex-col">
-      <div className="p-6 border-b border-slate-100 dark:border-gray-800">
-        <Link to={createPageUrl("Home")} className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-gradient-to-br from-indigo-600 to-indigo-500 rounded-xl flex items-center justify-center">
+    <aside className="w-64 bg-white dark:bg-gray-900 border-r border-slate-200 dark:border-gray-800 h-full min-h-screen lg:min-h-0 flex flex-col overflow-y-auto">
+      <div className="p-6 border-b border-slate-100 dark:border-gray-800 flex items-center justify-between gap-2">
+        <Link to={createPageUrl("Home")} className="flex items-center gap-3 min-w-0">
+          <div className="w-10 h-10 bg-gradient-to-br from-indigo-600 to-indigo-500 rounded-xl flex items-center justify-center shrink-0">
             <GraduationCap className="w-6 h-6 text-white" />
           </div>
-          <span className="text-xl font-bold text-slate-900 dark:text-gray-50">Sınav Salonu</span>
+          <span className="text-xl font-bold text-slate-900 dark:text-gray-50 truncate">Sınav Salonu</span>
         </Link>
+        {onCollapse && (
+          <button
+            type="button"
+            onClick={onCollapse}
+            aria-label="Menüyü kapat"
+            className="hidden lg:flex items-center justify-center w-8 h-8 rounded-lg text-slate-500 hover:bg-slate-100 hover:text-slate-700 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-200 transition-colors shrink-0"
+          >
+            <ChevronLeft className="w-5 h-5" aria-hidden="true" />
+          </button>
+        )}
       </div>
 
       <nav className="flex-1 p-4" aria-label="Ana navigasyon">
@@ -146,11 +157,19 @@ export default function Sidebar({ user, currentPage }) {
 
         {/* Kullanıcı bilgisi */}
         <div className="flex items-center gap-3 px-4 py-3">
-          <div className="w-10 h-10 bg-gradient-to-br from-slate-100 to-slate-200 dark:from-gray-700 dark:to-gray-600 rounded-full flex items-center justify-center shrink-0">
-            <span className="text-sm font-semibold text-slate-600 dark:text-gray-200">
-              {(user?.full_name || user?.username || "?")[0]?.toUpperCase()}
-            </span>
-          </div>
+          {user?.profile_image_url ? (
+            <img
+              src={user.profile_image_url}
+              alt={user?.full_name || user?.username || "Profil"}
+              className="w-10 h-10 rounded-full object-cover shrink-0"
+            />
+          ) : (
+            <div className="w-10 h-10 bg-gradient-to-br from-slate-100 to-slate-200 dark:from-gray-700 dark:to-gray-600 rounded-full flex items-center justify-center shrink-0">
+              <span className="text-sm font-semibold text-slate-600 dark:text-gray-200">
+                {(user?.full_name || user?.username || "?")[0]?.toUpperCase()}
+              </span>
+            </div>
+          )}
           <div className="flex-1 min-w-0">
             <p className="text-sm font-medium text-slate-900 dark:text-gray-100 truncate">{user?.full_name || user?.username}</p>
             <p className="text-xs text-slate-500 dark:text-gray-500 truncate">

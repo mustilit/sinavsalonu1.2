@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { useAuth } from "@/lib/AuthContext";
 import Sidebar from "@/components/layout/Sidebar";
@@ -6,10 +6,21 @@ import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AUTH_PAGES } from "@/lib/routeRoles";
 
+const SIDEBAR_COLLAPSE_KEY = "sidebar:collapsed";
+
 export default function Layout({ children, currentPageName }) {
   const { user } = useAuth();
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [desktopCollapsed, setDesktopCollapsed] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return window.localStorage?.getItem(SIDEBAR_COLLAPSE_KEY) === "1";
+  });
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    window.localStorage?.setItem(SIDEBAR_COLLAPSE_KEY, desktopCollapsed ? "1" : "0");
+  }, [desktopCollapsed]);
 
   const path = (location.pathname || "").replace(/\/+$/, "") || "/";
   const isAuthPage = AUTH_PAGES.includes(currentPageName) ||
@@ -64,16 +75,36 @@ export default function Layout({ children, currentPageName }) {
           onClick={() => setSidebarOpen(false)}
         />
       )}
+      {/* Masaüstünde sidebar kapalıyken görünen "aç" düğmesi */}
+      {desktopCollapsed && (
+        <Button
+          variant="ghost"
+          size="icon"
+          aria-label="Menüyü aç"
+          aria-expanded={false}
+          aria-controls="sidebar"
+          className="hidden lg:flex fixed top-4 left-4 z-50 bg-white/95 dark:bg-gray-900/95 shadow-md hover:bg-white dark:hover:bg-gray-800"
+          onClick={() => setDesktopCollapsed(false)}
+        >
+          <Menu className="w-5 h-5" aria-hidden="true" />
+        </Button>
+      )}
       <div
         id="sidebar"
         className={`
-          fixed lg:static inset-y-0 left-0 z-40 transform transition-transform duration-300
+          fixed top-0 left-0 h-screen z-40 transform transition-all duration-300
+          lg:sticky lg:top-0 lg:h-screen lg:z-auto lg:transform-none
           ${sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
+          ${desktopCollapsed ? "lg:w-0 lg:overflow-hidden lg:pointer-events-none" : "lg:w-64"}
         `}
       >
-        <Sidebar user={user} currentPage={currentPageName} />
+        <Sidebar
+          user={user}
+          currentPage={currentPageName}
+          onCollapse={() => setDesktopCollapsed(true)}
+        />
       </div>
-      <main className="flex-1 lg:ml-0 min-h-screen" id="main">
+      <main className="flex-1 min-w-0 min-h-screen" id="main">
         <div className="p-6 lg:p-8">{children}</div>
       </main>
     </div>
