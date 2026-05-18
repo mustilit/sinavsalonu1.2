@@ -99,6 +99,13 @@ const LiveSessionHost = lazy(() => import('./pages/LiveSessionHost'));
 const LiveSessionJoin = lazy(() => import('./pages/LiveSessionJoin'));
 const ManageLiveTiers = lazy(() => import('./pages/ManageLiveTiers'));
 const MyLiveSessions = lazy(() => import('./pages/MyLiveSessions'));
+const ModerationQueue = lazy(() => import('./pages/ModerationQueue'));
+const RiskyEducators = lazy(() => import('./pages/RiskyEducators'));
+const BlockedTerms = lazy(() => import('./pages/BlockedTerms'));
+const ModerationResultDetail = lazy(() => import('./pages/ModerationResultDetail'));
+const EducatorViolationDetail = lazy(() => import('./pages/EducatorViolationDetail'));
+const ModerationSettings = lazy(() => import('./pages/ModerationSettings'));
+const MyModerationStatus = lazy(() => import('./pages/MyModerationStatus'));
 
 
 export const PAGES = {
@@ -151,6 +158,13 @@ export const PAGES = {
     "LiveSessionJoin": LiveSessionJoin,
     "ManageLiveTiers": ManageLiveTiers,
     "MyLiveSessions": MyLiveSessions,
+    "ModerationQueue": ModerationQueue,
+    "RiskyEducators": RiskyEducators,
+    "BlockedTerms": BlockedTerms,
+    "ModerationResultDetail": ModerationResultDetail,
+    "EducatorViolationDetail": EducatorViolationDetail,
+    "ModerationSettings": ModerationSettings,
+    "MyModerationStatus": MyModerationStatus,
 }
 
 export const pagesConfig = {

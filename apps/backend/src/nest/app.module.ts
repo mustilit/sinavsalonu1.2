@@ -164,6 +164,9 @@ import { DeleteLiveSessionTierUseCase } from '../application/use-cases/live/Dele
 import { GetLiveSessionByCodeUseCase } from '../application/use-cases/live/GetLiveSessionByCodeUseCase';
 import { CreateRound2LiveSessionUseCase } from '../application/use-cases/live/CreateRound2LiveSessionUseCase';
 import { GetLiveSessionComparisonUseCase } from '../application/use-cases/live/GetLiveSessionComparisonUseCase';
+import { ContentSafetyModule } from './modules/content-safety/content-safety.module';
+import { AdminModerationController } from './controllers/admin.moderation.controller';
+import { MeModerationController } from './controllers/me.moderation.controller';
 
 const THROTTLE_TTL_SECONDS = Number(process.env.THROTTLE_TTL_SECONDS ?? '60') || 60;
 
@@ -227,8 +230,9 @@ const throttleDisabled = process.env.THROTTLE_DISABLED === '1';
     // Refunds
     (require('./modules/refunds/refunds.module').RefundsModule),
     ContractsModule,
+    ContentSafetyModule,
   ],
-  controllers: [RootController, HealthController, NotificationsController, AdminDlqController, TestsPerformanceController, HomeController, SiteController, ReviewsController, EducatorsController, FollowsController, CspReportController, AdminExamTypesController, AdminTopicsController, AdminEducatorsController, AdminUsersController, ObjectionsController, EducatorObjectionsController, AdminObjectionsController, AdminRefundsController, AdminSettingsController, AdminSiteSettingsController, AdminContractsController, AdminAuditController, AdminAdPackagesController, AdPackagesController, MeRefundsController, MePurchasesController, MePreferencesController, MetricsController, AdminCandidatesController, AdminEducatorReportController, AdminCommissionController, AdminAdReportController, MePerformanceController, MeHeartbeatController, AdminWorkersController, PackagesController, UploadController, AttemptsController, EducatorRefundsController, AdminStatsController, LiveSessionsController],
+  controllers: [RootController, HealthController, NotificationsController, AdminDlqController, TestsPerformanceController, HomeController, SiteController, ReviewsController, EducatorsController, FollowsController, CspReportController, AdminExamTypesController, AdminTopicsController, AdminEducatorsController, AdminUsersController, ObjectionsController, EducatorObjectionsController, AdminObjectionsController, AdminRefundsController, AdminSettingsController, AdminSiteSettingsController, AdminContractsController, AdminAuditController, AdminAdPackagesController, AdPackagesController, MeRefundsController, MePurchasesController, MePreferencesController, MetricsController, AdminCandidatesController, AdminEducatorReportController, AdminCommissionController, AdminAdReportController, MePerformanceController, MeHeartbeatController, AdminWorkersController, PackagesController, UploadController, AttemptsController, EducatorRefundsController, AdminStatsController, LiveSessionsController, AdminModerationController, MeModerationController],
   providers: [
     SeedService,
     ...(throttleDisabled ? [] : [{ provide: APP_GUARD, useClass: CustomThrottlerGuard }]),

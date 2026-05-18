@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ScheduleModule } from '@nestjs/schedule';
 import { CronService } from './cron.service';
+import { ModerationCronService } from './ModerationCronService';
 import { PrismaNotificationPreferenceRepository } from '../../../infrastructure/repositories/PrismaNotificationPreferenceRepository';
 import { PrismaFollowRepository } from '../../../infrastructure/repositories/PrismaFollowRepository';
 import { PrismaUserRepository } from '../../../infrastructure/repositories/PrismaUserRepository';
@@ -12,17 +13,24 @@ import { EscalateOverdueObjectionsUseCase } from '../../../application/use-cases
 import { EscalateOverdueRefundsUseCase } from '../../../application/use-cases/refund/EscalateOverdueRefundsUseCase';
 import { PrismaRefundRepository } from '../../../infrastructure/repositories/PrismaRefundRepository';
 import { PrismaAuditLogRepository } from '../../../infrastructure/repositories/PrismaAuditLogRepository';
+import { PrismaModerationViolationRepository } from '../../../infrastructure/repositories/PrismaModerationViolationRepository';
+import { PrismaEducatorRiskScoreRepository } from '../../../infrastructure/repositories/PrismaEducatorRiskScoreRepository';
+import { PrismaModerationActionRepository } from '../../../infrastructure/repositories/PrismaModerationActionRepository';
 
 @Module({
   imports: [ScheduleModule.forRoot()],
   providers: [
     CronService,
+    ModerationCronService,
     PrismaNotificationPreferenceRepository,
     PrismaFollowRepository,
     PrismaUserRepository,
     PrismaObjectionRepository,
     PrismaAuditLogRepository,
     QueueService,
+    PrismaModerationViolationRepository,
+    PrismaEducatorRiskScoreRepository,
+    PrismaModerationActionRepository,
     {
       provide: SendWeeklyFollowDigestUseCase,
       useFactory: (f: PrismaFollowRepository, p: PrismaNotificationPreferenceRepository, q: QueueService, a: PrismaAuditLogRepository) =>
@@ -47,7 +55,6 @@ import { PrismaAuditLogRepository } from '../../../infrastructure/repositories/P
       inject: [PrismaRefundRepository],
     },
   ],
-  exports: [CronService],
+  exports: [CronService, ModerationCronService],
 })
 export class CronModule {}
-

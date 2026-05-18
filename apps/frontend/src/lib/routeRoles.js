@@ -76,6 +76,17 @@ export const PAGE_ROLES = {
   AdminObjections: [ROLES.ADMIN],
   // Canlı test kapasite paketleri yönetimi — yalnızca admin
   ManageLiveTiers: [ROLES.ADMIN],
+
+  // İçerik Moderasyonu — yalnızca admin (WORKER alt yetkilendirmesi mümkün)
+  ModerationQueue: [ROLES.ADMIN],
+  RiskyEducators: [ROLES.ADMIN],
+  BlockedTerms: [ROLES.ADMIN],
+  ModerationResultDetail: [ROLES.ADMIN],
+  EducatorViolationDetail: [ROLES.ADMIN],
+  ModerationSettings: [ROLES.ADMIN],
+
+  // Eğitici moderasyon durumu — eğitici ve admin
+  MyModerationStatus: [ROLES.EDUCATOR, ROLES.ADMIN],
 };
 
 /** Rolü büyük harfe normalize et (backend bazen küçük harf dönebilir) */

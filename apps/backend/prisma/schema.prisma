@@ -94,6 +94,51 @@ enum AdTargetType {
   EDUCATOR
 }
 
+// ── İçerik Moderasyonu enum'ları ─────────────────────────────────────────────
+
+enum ModerationStatus {
+  PENDING_REVIEW
+  APPROVED
+  REJECTED
+  ESCALATED
+}
+
+enum ModerationCategory {
+  HATE_SPEECH
+  VIOLENCE
+  SEXUAL_CONTENT
+  SELF_HARM
+  HARASSMENT
+  ILLEGAL
+  PROFANITY
+  SPAM
+  MISINFORMATION
+  PERSONAL_DATA
+  COPYRIGHT
+  OTHER
+}
+
+enum ModerationProvider {
+  CLAUDE
+  RULE_BASED
+  MANUAL
+}
+
+enum EducatorRiskLevel {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum ModerationActionType {
+  WARN
+  CONTENT_REMOVED
+  ACCOUNT_SUSPENDED
+  ACCOUNT_BANNED
+  ESCALATED_TO_ADMIN
+}
+
 // --- Multi-tenant foundation ---
 
 model Tenant {
@@ -111,27 +156,33 @@ model Tenant {
   subscriptions Subscription[]
   testPackages  TestPackage[]
 
+  blockedTerms         BlockedTerm[]
+  moderationResults    ModerationResult[]
+  moderationViolations ModerationViolation[]
+  moderationActions    ModerationAction[]
+  educatorRiskScores   EducatorRiskScore[]
+
   @@map("tenants")
 }
 
 // --- Marketplace / Exam domain ---
 
 model User {
-  id                 String     @id @default(uuid())
-  email              String     @unique
-  username           String     @unique
-  passwordHash       String
-  bio                String?
-  role               UserRole   @default(CANDIDATE)
-  status             UserStatus @default(ACTIVE)
-  educatorApprovedAt DateTime?
+  id                          String     @id @default(uuid())
+  email                       String     @unique
+  username                    String     @unique
+  passwordHash                String
+  bio                         String?
+  role                        UserRole   @default(CANDIDATE)
+  status                      UserStatus @default(ACTIVE)
+  educatorApprovedAt          DateTime?
   lastLoginAt                 DateTime?
-  passwordResetToken          String?   @unique
+  passwordResetToken          String?    @unique
   passwordResetTokenExpiresAt DateTime?
   metadata                    Json?
-  createdAt          DateTime   @default(now())
-  updatedAt          DateTime   @updatedAt
-  deletedAt          DateTime?
+  createdAt                   DateTime   @default(now())
+  updatedAt                   DateTime   @updatedAt
+  deletedAt                   DateTime?
 
   tenantId String
   tenant   Tenant @relation(fields: [tenantId], references: [id])
@@ -148,9 +199,17 @@ model User {
   adImpressions           AdImpression[]           @relation("AdImpressionEducator")
   viewedAdImpressions     AdImpression[]           @relation("AdImpressionViewer")
   workerPermission        WorkerPermission?
-  testPackages            TestPackage[]    @relation("educatorPackages")
-  liveSessions            LiveSession[]    @relation("EducatorLiveSessions")
-  liveParticipations      LiveParticipant[] @relation("UserLiveParticipations")
+  testPackages            TestPackage[]            @relation("educatorPackages")
+  liveSessions            LiveSession[]            @relation("EducatorLiveSessions")
+  liveParticipations      LiveParticipant[]        @relation("UserLiveParticipations")
+
+  // ── İçerik Moderasyonu ──────────────────────────────────────────────────
+  moderationResults    ModerationResult[]
+  moderationViolations ModerationViolation[]
+  moderationActions    ModerationAction[]
+  educatorRiskScore    EducatorRiskScore?
+  suspendedUntil       DateTime?
+  isBanned             Boolean               @default(false)
 
   @@index([tenantId])
   @@map("users")
@@ -169,14 +228,14 @@ model UserPreference {
 }
 
 model ExamType {
-  id          String   @id @default(uuid())
+  id          String          @id @default(uuid())
   name        String
   description String?
   metadata    Json?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  slug        String   @unique
-  active      Boolean  @default(true)
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  slug        String          @unique
+  active      Boolean         @default(true)
   topics      TopicExamType[]
 
   tests ExamTest[]
@@ -258,13 +317,15 @@ model ExamTest {
 }
 
 model ExamQuestion {
-  id               String  @id @default(uuid())
+  id               String           @id @default(uuid())
   testId           String
   content          String
   mediaUrl         String?
-  order            Int     @default(0)
+  order            Int              @default(0)
   solutionText     String?
   solutionMediaUrl String?
+  moderationStatus ModerationStatus @default(PENDING_REVIEW)
+  moderatedAt      DateTime?
 
   test       ExamTest        @relation(fields: [testId], references: [id], onDelete: Cascade)
   options    ExamOption[]
@@ -275,11 +336,13 @@ model ExamQuestion {
 }
 
 model ExamOption {
-  id         String  @id @default(uuid())
-  questionId String
-  content    String
-  mediaUrl   String?
-  isCorrect  Boolean @default(false)
+  id               String           @id @default(uuid())
+  questionId       String
+  content          String
+  mediaUrl         String?
+  isCorrect        Boolean          @default(false)
+  moderationStatus ModerationStatus @default(PENDING_REVIEW)
+  moderatedAt      DateTime?
 
   question   ExamQuestion    @relation(fields: [questionId], references: [id], onDelete: Cascade)
   selectedBy AttemptAnswer[]
@@ -385,19 +448,19 @@ model Purchase {
 }
 
 model TestPackage {
-  id           String    @id @default(cuid())
+  id           String                   @id @default(cuid())
   tenantId     String
   educatorId   String?
   title        String
   description  String?
   priceCents   Int
-  difficulty   String    @default("medium")
-  isActive     Boolean   @default(true)
+  difficulty   String                   @default("medium")
+  isActive     Boolean                  @default(true)
   publishedAt  DateTime?
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  createdAt    DateTime                 @default(now())
+  updatedAt    DateTime                 @updatedAt
   /// Generated tsvector kolonu — Prisma'nın yazması yasak, sadece okunur
-  searchVector Unsupported("tsvector")?  @map("search_vector")
+  searchVector Unsupported("tsvector")? @map("search_vector")
 
   tenant    Tenant     @relation(fields: [tenantId], references: [id])
   educator  User?      @relation("educatorPackages", fields: [educatorId], references: [id], onDelete: SetNull)
@@ -590,21 +653,29 @@ model ContractAcceptance {
 }
 
 model AdminSettings {
-  id                     Int      @id @default(1)
-  commissionPercent      Int      @default(20) // percent
-  vatPercent             Int      @default(18)
+  id                             Int      @id @default(1)
+  commissionPercent              Int      @default(20) // percent
+  vatPercent                     Int      @default(18)
   // ── Kill switches ─────────────────────────────────────────────────────
-  purchasesEnabled       Boolean  @default(true)  // Satış Durdur
-  packageCreationEnabled Boolean  @default(true)  // Paket Durdur (test oluşturma)
-  testPublishingEnabled  Boolean  @default(true)  // Canlı Test Durdur (yayınlama)
-  testAttemptsEnabled    Boolean  @default(true)  // Test Durdur (çözüm başlatma)
-  adPurchasesEnabled     Boolean  @default(true)  // Reklam Satın Alma Durdur
-  minPackagePriceCents   Int      @default(100)   // Minimum paket fiyatı (kuruş)
-  minQuestionsPerTest    Int      @default(1)     // Test başına minimum soru sayısı
-  maxQuestionsPerTest    Int      @default(100)   // Test başına maksimum soru sayısı
-  maxTestsPerPackage     Int      @default(10)    // Paket başına maksimum test sayısı
-  maxLiveQuestions       Int      @default(50)    // Canlı oturum başına maksimum soru sayısı
-  updatedAt              DateTime @updatedAt
+  purchasesEnabled               Boolean  @default(true) // Satış Durdur
+  packageCreationEnabled         Boolean  @default(true) // Paket Durdur (test oluşturma)
+  testPublishingEnabled          Boolean  @default(true) // Canlı Test Durdur (yayınlama)
+  testAttemptsEnabled            Boolean  @default(true) // Test Durdur (çözüm başlatma)
+  adPurchasesEnabled             Boolean  @default(true) // Reklam Satın Alma Durdur
+  minPackagePriceCents           Int      @default(100) // Minimum paket fiyatı (kuruş)
+  minQuestionsPerTest            Int      @default(1) // Test başına minimum soru sayısı
+  maxQuestionsPerTest            Int      @default(100) // Test başına maksimum soru sayısı
+  maxTestsPerPackage             Int      @default(10) // Paket başına maksimum test sayısı
+  maxLiveQuestions               Int      @default(50) // Canlı oturum başına maksimum soru sayısı
+  // ── İçerik Moderasyonu ────────────────────────────────────────────────────
+  moderationEnabled              Boolean  @default(true)
+  moderationClaudeEnabled        Boolean  @default(true)
+  moderationThresholds           Json     @default("{\"hate\":0.7,\"sexual\":0.6,\"violence\":0.7,\"selfHarm\":0.5,\"harassment\":0.7,\"illegal\":0.7,\"profanity\":0.6}")
+  moderationAutoSuspendThreshold Int      @default(80) // EducatorRiskScore.computedScore eşiği (0-100)
+  moderationAutoBanThreshold     Int      @default(95)
+  moderationModelText            String   @default("claude-haiku-4-5")
+  moderationModelVision          String   @default("claude-sonnet-4-6")
+  updatedAt                      DateTime @updatedAt
 
   @@map("admin_settings")
 }
@@ -734,7 +805,7 @@ model IdempotencyKey {
   route        String
   key          String
   requestHash  String?
-  status       String   // IN_PROGRESS | COMPLETED
+  status       String // IN_PROGRESS | COMPLETED
   responseCode Int?
   responseBody Json?
   createdAt    DateTime @default(now())
@@ -748,7 +819,7 @@ model IdempotencyKey {
 // Ödeme sağlayıcı ayarları — admin panelinden yönetilir
 model PaymentSettings {
   id                  Int      @id @default(1)
-  mode                String   @default("test")    // "test" | "live"
+  mode                String   @default("test") // "test" | "live"
   iyzicoEnabled       Boolean  @default(true)
   iyzicoApiKey        String?
   iyzicoSecretKey     String?
@@ -783,23 +854,23 @@ model LiveSessionTier {
 }
 
 model LiveSession {
-  id                       String           @id @default(uuid())
-  educatorId               String
-  tierId                   String?
-  maxParticipants          Int?
-  currentParticipantCount  Int              @default(0) @map("current_participant_count")
-  title                    String
-  joinCode                 String           @unique
-  status                   String           @default("DRAFT")
-  currentQuestionIdx       Int              @default(0)
-  showStats                Boolean          @default(false)
-  paidAt                   DateTime?
-  startedAt                DateTime?
-  endedAt                  DateTime?
-  roundNumber              Int              @default(1)
-  parentSessionId          String?
-  createdAt                DateTime         @default(now())
-  updatedAt                DateTime         @updatedAt
+  id                      String    @id @default(uuid())
+  educatorId              String
+  tierId                  String?
+  maxParticipants         Int?
+  currentParticipantCount Int       @default(0) @map("current_participant_count")
+  title                   String
+  joinCode                String    @unique
+  status                  String    @default("DRAFT")
+  currentQuestionIdx      Int       @default(0)
+  showStats               Boolean   @default(false)
+  paidAt                  DateTime?
+  startedAt               DateTime?
+  endedAt                 DateTime?
+  roundNumber             Int       @default(1)
+  parentSessionId         String?
+  createdAt               DateTime  @default(now())
+  updatedAt               DateTime  @updatedAt
 
   educator     User              @relation("EducatorLiveSessions", fields: [educatorId], references: [id])
   tier         LiveSessionTier?  @relation(fields: [tierId], references: [id])
@@ -814,12 +885,12 @@ model LiveSession {
 }
 
 model LiveQuestion {
-  id        String       @id @default(uuid())
+  id        String   @id @default(uuid())
   sessionId String
   content   String
   mediaUrl  String?
   order     Int
-  createdAt DateTime     @default(now())
+  createdAt DateTime @default(now())
 
   session LiveSession  @relation(fields: [sessionId], references: [id])
   options LiveOption[]
@@ -887,4 +958,121 @@ model WorkerPermission {
   updatedAt DateTime @updatedAt
 
   @@map("worker_permissions")
+}
+
+// ── İçerik Moderasyonu ───────────────────────────────────────────────────────
+
+model BlockedTerm {
+  id        String             @id @default(uuid())
+  tenantId  String
+  term      String // normalize edilmiş literal
+  pattern   String? // opsiyonel regex
+  category  ModerationCategory
+  severity  Int                @default(1) // 1-5
+  isActive  Boolean            @default(true)
+  createdBy String? // admin userId
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @updatedAt
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, isActive])
+  @@index([tenantId, category])
+  @@map("blocked_terms")
+}
+
+model ModerationResult {
+  id             String               @id @default(uuid())
+  tenantId       String
+  userId         String // içeriği yükleyen kullanıcı (educatorId)
+  entityType     String // "ExamQuestion" | "ExamOption" | "ExamTest"
+  entityId       String
+  provider       ModerationProvider
+  status         ModerationStatus
+  score          Float? // tek skor (geriye uyum için)
+  scores         Json? // { hate: 0.1, sexual: 0.8, ... }
+  categories     ModerationCategory[]
+  matchedTerms   String[]             @default([]) // blocklist eşleşmeleri
+  flaggedContent String?
+  reasonText     String? // Claude reasoning veya açıklama
+  reviewerNote   String?
+  rawResponse    Json? // AI yanıtı (debug için)
+  cost           Decimal?             @db.Decimal(10, 6)
+  latencyMs      Int                  @default(0)
+  createdAt      DateTime             @default(now())
+  reviewedAt     DateTime?
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, entityType, entityId])
+  @@index([tenantId, status])
+  @@index([tenantId, userId])
+  @@map("moderation_results")
+}
+
+model ModerationViolation {
+  id                 String             @id @default(uuid())
+  tenantId           String
+  userId             String // educatorId
+  moderationResultId String?
+  category           ModerationCategory
+  severity           Int                @default(1) // 1-5
+  status             String             @default("OPEN") // OPEN | DISMISSED | CONFIRMED
+  entityType         String
+  entityId           String
+  adminNote          String?
+  reviewedBy         String?
+  reviewedAt         DateTime?
+  resolvedAt         DateTime?
+  createdAt          DateTime           @default(now())
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, userId, createdAt])
+  @@index([tenantId, status, severity, createdAt])
+  @@index([tenantId, category])
+  @@map("moderation_violations")
+}
+
+model ModerationAction {
+  id         String               @id @default(uuid())
+  tenantId   String
+  userId     String // aksiyon alınan kullanıcı
+  actorId    String? // aksiyon alan admin/worker; null = otomatik
+  actionType ModerationActionType
+  reason     String?
+  metadata   Json                 @default("{}")
+  expiresAt  DateTime? // geçici askıya alma için
+  createdAt  DateTime             @default(now())
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, userId, createdAt])
+  @@index([tenantId, actionType])
+  @@map("moderation_actions")
+}
+
+model EducatorRiskScore {
+  id                String            @id @default(uuid())
+  tenantId          String
+  userId            String            @unique
+  riskLevel         EducatorRiskLevel @default(LOW)
+  computedScore     Float             @default(0) // 0-100
+  violationCount    Int               @default(0)
+  openViolations    Int               @default(0)
+  highSeverityCount Int               @default(0)
+  lastViolationAt   DateTime?
+  lastComputedAt    DateTime          @default(now())
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, riskLevel, computedScore])
+  @@index([tenantId, lastViolationAt])
+  @@map("educator_risk_scores")
 }

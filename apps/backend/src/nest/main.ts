@@ -13,6 +13,7 @@ import { buildCspDirectivesFromEnv } from './security/csp';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { RolesGuard } from './guards/roles.guard';
 import { JwtService } from '../infrastructure/services/JwtService';
+import { RedisCache } from '../infrastructure/cache/RedisCache';
 import { Reflector } from '@nestjs/core';
 import { HttpExceptionFilter } from './filters/http-exception.filter';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
@@ -81,7 +82,8 @@ async function bootstrap() {
   }
   const reflector = app.get(Reflector);
   const jwtService = new JwtService();
-  app.useGlobalGuards(new JwtAuthGuard(jwtService, reflector), new RolesGuard(reflector));
+  const redisCache = new RedisCache();
+  app.useGlobalGuards(new JwtAuthGuard(jwtService, reflector, redisCache), new RolesGuard(reflector));
   // Uploads klasörünü statik olarak sun
   // CORP: cross-origin — frontend farklı port'tan img src ile erişebilsin
   const uploadsDir = join(process.cwd(), 'uploads');

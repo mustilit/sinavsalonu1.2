@@ -23,6 +23,8 @@ import {
   RefreshCw,
   Zap,
   ChevronLeft,
+  Shield,
+  List,
 } from "lucide-react";
 
 export default function Sidebar({ user, currentPage, onCollapse }) {
@@ -54,6 +56,7 @@ export default function Sidebar({ user, currentPage, onCollapse }) {
     { name: "Canlı Testlerim", page: "MyLiveSessions", icon: Zap },
     { name: "İade Talepleri", page: "EducatorRefunds", icon: RefreshCw },
     { name: "Hata Bildirimleri", page: "QuestionReports", icon: Settings },
+    { name: "İçerik Durumum", page: "MyModerationStatus", icon: Shield },
     { name: "Profil Ayarları", page: "EducatorSettings", icon: User },
   ] : [
     { name: "Profil Ayarları", page: "EducatorSettings", icon: User },
@@ -74,6 +77,12 @@ export default function Sidebar({ user, currentPage, onCollapse }) {
     { name: "Reklam Raporu", page: "AdminAdReport", icon: Megaphone },
     { name: "Sistem Kontrolleri", page: "AdminSystemControls", icon: ShieldAlert },
     { name: "Canlı Test Paketleri", page: "ManageLiveTiers", icon: Zap },
+    // İçerik Moderasyonu
+    { divider: true },
+    { name: "İnceleme Kuyruğu", page: "ModerationQueue", icon: ShieldAlert },
+    { name: "Riskli Eğiticiler", page: "RiskyEducators", icon: AlertTriangle },
+    { name: "Yasak Kelimeler", page: "BlockedTerms", icon: List },
+    { name: "Moderasyon Ayarları", page: "ModerationSettings", icon: Settings },
   ];
 
   // Worker: yalnızca kendisine atanan admin sayfaları

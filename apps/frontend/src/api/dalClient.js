@@ -976,5 +976,157 @@ export const liveSessions = {
   },
 };
 
+/** İçerik Moderasyonu — Eğitici tarafı (kendi durumu) */
+export const meModeration = {
+  /**
+   * Eğitici'nin moderasyon durumu — risk profili, son ihlaller, aktif aksiyon
+   */
+  getStatus: async () => {
+    const { data } = await api.get('/me/moderation-status');
+    return data ?? { riskScore: null, recentViolations: [], activeAction: null, suspendedUntil: null, isBanned: false };
+  },
+};
+
+/** İçelik Moderasyonu (Admin Panel) */
+export const adminModeration = {
+  /**
+   * İnceleme kuyruğu — cursor pagination
+   * @param {Object} opts - { cursor, limit, category, dateFrom, dateTo, userId }
+   */
+  listQueue: async (opts = {}) => {
+    const qs = new URLSearchParams();
+    if (opts.cursor?.id) qs.set('cursorId', opts.cursor.id);
+    if (opts.cursor?.createdAt) qs.set('cursorCreatedAt', opts.cursor.createdAt);
+    if (opts.limit) qs.set('limit', String(opts.limit));
+    if (opts.category) qs.set('category', opts.category);
+    if (opts.dateFrom) qs.set('dateFrom', opts.dateFrom);
+    if (opts.dateTo) qs.set('dateTo', opts.dateTo);
+    if (opts.userId) qs.set('userId', opts.userId);
+    const { data } = await api.get(`/admin/moderation/queue?${qs.toString()}`);
+    return data ?? { items: [], nextCursor: null };
+  },
+
+  /**
+   * Moderasyon sonucu detayı
+   */
+  getResult: async (id) => {
+    const { data } = await api.get(`/admin/moderation/results/${id}`);
+    return data;
+  },
+
+  /**
+   * Moderasyon sonucunu onay (clean)
+   */
+  approveResult: async (id, { reviewerNote } = {}) => {
+    const { data } = await api.post(`/admin/moderation/results/${id}/approve`, { reviewerNote });
+    return data;
+  },
+
+  /**
+   * Moderasyon sonucunu reddet (violation confirmed)
+   */
+  rejectResult: async (id, { reviewerNote } = {}) => {
+    const { data } = await api.post(`/admin/moderation/results/${id}/reject`, { reviewerNote });
+    return data;
+  },
+
+  /**
+   * Riskli eğiticiler listesi — cursor pagination
+   * @param {Object} opts - { cursor, limit, riskLevel, category, dateFrom, dateTo, q }
+   */
+  listRiskyEducators: async (opts = {}) => {
+    const qs = new URLSearchParams();
+    if (opts.cursor?.id) qs.set('cursorId', opts.cursor.id);
+    if (opts.cursor?.computedScore) qs.set('cursorScore', String(opts.cursor.computedScore));
+    if (opts.limit) qs.set('limit', String(opts.limit));
+    if (opts.riskLevel?.length) qs.set('riskLevel', opts.riskLevel.join(','));
+    if (opts.category) qs.set('category', opts.category);
+    if (opts.dateFrom) qs.set('dateFrom', opts.dateFrom);
+    if (opts.dateTo) qs.set('dateTo', opts.dateTo);
+    if (opts.q) qs.set('q', opts.q);
+    const { data } = await api.get(`/admin/moderation/risky-educators?${qs.toString()}`);
+    return data ?? { items: [], nextCursor: null };
+  },
+
+  /**
+   * Eğitici ihlal geçmişi — cursor pagination
+   */
+  getEducatorViolations: async (educatorId, opts = {}) => {
+    const qs = new URLSearchParams();
+    if (opts.cursor?.id) qs.set('cursorId', opts.cursor.id);
+    if (opts.cursor?.createdAt) qs.set('cursorCreatedAt', opts.cursor.createdAt);
+    if (opts.limit) qs.set('limit', String(opts.limit));
+    const { data } = await api.get(`/admin/moderation/educators/${educatorId}/violations?${qs.toString()}`);
+    return data ?? { items: [], nextCursor: null };
+  },
+
+  /**
+   * Eğitici üzerine aksiyon uygula (uyar, askıya al, banla)
+   */
+  applyAction: async (educatorId, {
+    actionType,  // WARN, ACCOUNT_SUSPENDED, ACCOUNT_BANNED, ESCALATED_TO_ADMIN
+    reason,      // min 20 karakter
+    durationDays, // opsiyonel, SUSPEND için gerekli
+    violationId  // opsiyonel
+  }) => {
+    const { data } = await api.post(`/admin/moderation/educators/${educatorId}/actions`, {
+      actionType,
+      reason,
+      durationDays,
+      violationId,
+    });
+    return data;
+  },
+
+  /**
+   * Eğitici üzerine uygulanan aksiyonu iptal et
+   */
+  revokeAction: async (actionId) => {
+    await api.delete(`/admin/moderation/actions/${actionId}`);
+  },
+
+  /**
+   * Yasak kelimeler listesi — cursor pagination
+   */
+  listBlockedTerms: async (opts = {}) => {
+    const qs = new URLSearchParams();
+    if (opts.cursor?.id) qs.set('cursorId', opts.cursor.id);
+    if (opts.limit) qs.set('limit', String(opts.limit));
+    if (opts.category) qs.set('category', opts.category);
+    if (opts.isActive !== undefined) qs.set('isActive', String(opts.isActive));
+    const { data } = await api.get(`/admin/moderation/blocked-terms?${qs.toString()}`);
+    return data ?? { items: [], nextCursor: null };
+  },
+
+  /**
+   * Yeni yasak kelime ekle
+   */
+  createBlockedTerm: async ({ term, pattern, category, severity, isActive }) => {
+    const { data } = await api.post(`/admin/moderation/blocked-terms`, {
+      term,
+      pattern,
+      category,
+      severity,
+      isActive: isActive !== false,
+    });
+    return data;
+  },
+
+  /**
+   * Yasak kelime güncelle
+   */
+  updateBlockedTerm: async (id, partial) => {
+    const { data } = await api.patch(`/admin/moderation/blocked-terms/${id}`, partial);
+    return data;
+  },
+
+  /**
+   * Yasak kelime sil
+   */
+  deleteBlockedTerm: async (id) => {
+    await api.delete(`/admin/moderation/blocked-terms/${id}`);
+  },
+};
+
 export default api;
 export { api };
