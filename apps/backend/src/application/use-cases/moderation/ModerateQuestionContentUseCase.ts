@@ -1,3 +1,4 @@
+import { Injectable } from '@nestjs/common';
 import { ModerationCategory, ModerationProvider, ModerationStatus } from '@prisma/client';
 import { prisma } from '../../../infrastructure/database/prisma';
 import { ContentSafetyService } from '../../services/content-safety/ContentSafetyService';
@@ -20,6 +21,7 @@ export interface ModerateQuestionParams {
   imageUrl?: string | null;
 }
 
+@Injectable()
 export class ModerateQuestionContentUseCase {
   private readonly recordViolation: RecordModerationViolationUseCase;
 

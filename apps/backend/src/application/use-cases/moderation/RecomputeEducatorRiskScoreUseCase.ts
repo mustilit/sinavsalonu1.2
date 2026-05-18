@@ -1,3 +1,4 @@
+import { Injectable } from '@nestjs/common';
 import { prisma } from '../../../infrastructure/database/prisma';
 import { EducatorRiskLevel, ModerationCategory } from '@prisma/client';
 import { IEducatorRiskScoreRepository } from '../../../domain/interfaces/IEducatorRiskScoreRepository';
@@ -38,6 +39,7 @@ export interface RecomputeParams {
   tenantId: string;
 }
 
+@Injectable()
 export class RecomputeEducatorRiskScoreUseCase {
   constructor(
     private readonly riskRepo: IEducatorRiskScoreRepository,

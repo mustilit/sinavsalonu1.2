@@ -1,3 +1,4 @@
+import { Injectable } from '@nestjs/common';
 import { ModerationCategory, ModerationStatus } from '@prisma/client';
 import { prisma } from '../../../infrastructure/database/prisma';
 import { ClaudeTextProvider } from '../../services/content-safety/providers/ClaudeTextProvider';
@@ -33,6 +34,7 @@ function exceedsThreshold(
   return false;
 }
 
+@Injectable()
 export class ProcessModerationJobUseCase {
   private readonly recordViolation: RecordModerationViolationUseCase;
 

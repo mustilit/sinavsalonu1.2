@@ -1,3 +1,4 @@
+import { Injectable } from '@nestjs/common';
 import { prisma } from '../../../infrastructure/database/prisma';
 import { AppError } from '../../errors/AppError';
 import { IModerationActionRepository } from '../../../domain/interfaces/IModerationActionRepository';
@@ -8,6 +9,7 @@ export interface RevokeModerationActionParams {
   tenantId: string;
 }
 
+@Injectable()
 export class RevokeModerationActionUseCase {
   constructor(private readonly actionRepo: IModerationActionRepository) {}
 

@@ -1,3 +1,4 @@
+import { Injectable } from '@nestjs/common';
 import { EducatorRiskLevel } from '@prisma/client';
 import { prisma } from '../../../infrastructure/database/prisma';
 
@@ -10,6 +11,7 @@ export interface ListRiskyEducatorsParams {
   dateTo?: Date;
 }
 
+@Injectable()
 export class ListRiskyEducatorsUseCase {
   async execute(params: ListRiskyEducatorsParams) {
     const limit = Math.min(Math.max(params.limit ?? 20, 1), 100);

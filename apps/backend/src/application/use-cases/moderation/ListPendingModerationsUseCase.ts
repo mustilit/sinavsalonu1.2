@@ -1,3 +1,4 @@
+import { Injectable } from '@nestjs/common';
 import { ModerationCategory, ModerationStatus } from '@prisma/client';
 import { prisma } from '../../../infrastructure/database/prisma';
 
@@ -11,6 +12,7 @@ export interface ListPendingModerationsParams {
   userId?: string;
 }
 
+@Injectable()
 export class ListPendingModerationsUseCase {
   async execute(params: ListPendingModerationsParams) {
     const limit = Math.min(Math.max(params.limit ?? 20, 1), 100);

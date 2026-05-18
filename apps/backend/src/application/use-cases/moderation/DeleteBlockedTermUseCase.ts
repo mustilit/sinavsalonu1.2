@@ -1,6 +1,8 @@
+import { Injectable } from '@nestjs/common';
 import { IBlockedTermRepository } from '../../../domain/interfaces/IBlockedTermRepository';
 import { AppError } from '../../errors/AppError';
 
+@Injectable()
 export class DeleteBlockedTermUseCase {
   constructor(private readonly repo: IBlockedTermRepository) {}
 

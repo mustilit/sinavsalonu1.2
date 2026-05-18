@@ -1,3 +1,4 @@
+import { Injectable } from '@nestjs/common';
 import { ModerationCategory } from '@prisma/client';
 import { IBlockedTermRepository } from '../../../domain/interfaces/IBlockedTermRepository';
 
@@ -11,6 +12,7 @@ export interface CreateBlockedTermParams {
   createdBy: string;
 }
 
+@Injectable()
 export class CreateBlockedTermUseCase {
   constructor(private readonly repo: IBlockedTermRepository) {}
 

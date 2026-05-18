@@ -1,3 +1,4 @@
+import { Injectable } from '@nestjs/common';
 import { ModerationCategory } from '@prisma/client';
 import { prisma } from '../../../infrastructure/database/prisma';
 import { IModerationViolationRepository } from '../../../domain/interfaces/IModerationViolationRepository';
@@ -16,6 +17,7 @@ export interface RecordViolationParams {
   adminNote?: string | null;
 }
 
+@Injectable()
 export class RecordModerationViolationUseCase {
   private readonly recompute: RecomputeEducatorRiskScoreUseCase;
 

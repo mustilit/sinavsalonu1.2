@@ -1,3 +1,4 @@
+import { Injectable } from '@nestjs/common';
 import { ModerationActionType } from '@prisma/client';
 import { prisma } from '../../../infrastructure/database/prisma';
 import { AppError } from '../../errors/AppError';
@@ -14,6 +15,7 @@ export interface ApplyModerationActionParams {
   violationId?: string | null;
 }
 
+@Injectable()
 export class ApplyModerationActionUseCase {
   constructor(private readonly actionRepo: IModerationActionRepository) {}
 

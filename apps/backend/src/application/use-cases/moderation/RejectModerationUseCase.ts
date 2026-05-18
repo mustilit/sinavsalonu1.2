@@ -1,3 +1,4 @@
+import { Injectable } from '@nestjs/common';
 import { ModerationCategory } from '@prisma/client';
 import { prisma } from '../../../infrastructure/database/prisma';
 import { AppError } from '../../errors/AppError';
@@ -12,6 +13,7 @@ export interface RejectModerationParams {
   reviewerNote?: string | null;
 }
 
+@Injectable()
 export class RejectModerationUseCase {
   private readonly recompute: RecomputeEducatorRiskScoreUseCase;
 

@@ -1,3 +1,4 @@
+import { Injectable } from '@nestjs/common';
 import { ModerationCategory } from '@prisma/client';
 import { IBlockedTermRepository } from '../../../domain/interfaces/IBlockedTermRepository';
 import { AppError } from '../../errors/AppError';
@@ -12,6 +13,7 @@ export interface UpdateBlockedTermParams {
   isActive?: boolean;
 }
 
+@Injectable()
 export class UpdateBlockedTermUseCase {
   constructor(private readonly repo: IBlockedTermRepository) {}
 

@@ -1,3 +1,4 @@
+import { Injectable } from '@nestjs/common';
 import { prisma } from '../../../infrastructure/database/prisma';
 import { AppError } from '../../errors/AppError';
 
@@ -7,6 +8,7 @@ export interface ApproveModerationParams {
   reviewerNote?: string | null;
 }
 
+@Injectable()
 export class ApproveModerationUseCase {
   async execute(params: ApproveModerationParams): Promise<void> {
     const result = await prisma.moderationResult.findUnique({

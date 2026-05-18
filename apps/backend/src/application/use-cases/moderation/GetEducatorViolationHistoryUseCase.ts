@@ -1,3 +1,4 @@
+import { Injectable } from '@nestjs/common';
 import { prisma } from '../../../infrastructure/database/prisma';
 import { AppError } from '../../errors/AppError';
 import { IEducatorRiskScoreRepository } from '../../../domain/interfaces/IEducatorRiskScoreRepository';
@@ -9,6 +10,7 @@ export interface GetEducatorViolationHistoryParams {
   limit?: number;
 }
 
+@Injectable()
 export class GetEducatorViolationHistoryUseCase {
   constructor(private readonly riskRepo: IEducatorRiskScoreRepository) {}
 

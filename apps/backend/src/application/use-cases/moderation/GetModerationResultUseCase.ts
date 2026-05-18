@@ -1,6 +1,8 @@
+import { Injectable } from '@nestjs/common';
 import { prisma } from '../../../infrastructure/database/prisma';
 import { AppError } from '../../errors/AppError';
 
+@Injectable()
 export class GetModerationResultUseCase {
   async execute(id: string) {
     const result = await prisma.moderationResult.findUnique({

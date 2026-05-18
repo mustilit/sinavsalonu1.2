@@ -1,6 +1,8 @@
+import { Injectable } from '@nestjs/common';
 import { prisma } from '../../../infrastructure/database/prisma';
 import { IEducatorRiskScoreRepository } from '../../../domain/interfaces/IEducatorRiskScoreRepository';
 
+@Injectable()
 export class GetMyModerationStatusUseCase {
   constructor(private readonly riskRepo: IEducatorRiskScoreRepository) {}
 
