@@ -78,7 +78,8 @@ export const PAGE_ROLES = {
   ManageLiveTiers: [ROLES.ADMIN],
 
   // İçerik Moderasyonu — yalnızca admin (WORKER alt yetkilendirmesi mümkün)
-  ModerationQueue: [ROLES.ADMIN],
+  RiskyContent: [ROLES.ADMIN], // birleşik sekmeli sayfa (queue + educators + terms + settings)
+  ModerationQueue: [ROLES.ADMIN], // legacy direkt erişim
   RiskyEducators: [ROLES.ADMIN],
   BlockedTerms: [ROLES.ADMIN],
   ModerationResultDetail: [ROLES.ADMIN],

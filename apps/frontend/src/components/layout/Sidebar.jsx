@@ -77,12 +77,9 @@ export default function Sidebar({ user, currentPage, onCollapse }) {
     { name: "Reklam Raporu", page: "AdminAdReport", icon: Megaphone },
     { name: "Sistem Kontrolleri", page: "AdminSystemControls", icon: ShieldAlert },
     { name: "Canlı Test Paketleri", page: "ManageLiveTiers", icon: Zap },
-    // İçerik Moderasyonu
+    // İçerik Moderasyonu — tek sayfa, sekmeli
     { divider: true },
-    { name: "İnceleme Kuyruğu", page: "ModerationQueue", icon: ShieldAlert },
-    { name: "Riskli Eğiticiler", page: "RiskyEducators", icon: AlertTriangle },
-    { name: "Yasak Kelimeler", page: "BlockedTerms", icon: List },
-    { name: "Moderasyon Ayarları", page: "ModerationSettings", icon: Settings },
+    { name: "Riskli İçerik", page: "RiskyContent", icon: AlertTriangle },
   ];
 
   // Worker: yalnızca kendisine atanan admin sayfaları
