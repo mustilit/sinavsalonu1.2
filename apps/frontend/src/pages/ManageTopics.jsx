@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { topics as topicsApi } from "@/api/dalClient";
 import { entities } from "@/api/dalClient";
 import { useAuth } from "@/lib/AuthContext";
@@ -7,7 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Edit2, Trash2, ChevronRight, ChevronDown, BookOpen } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
+import { useDebouncedValue } from "@/lib/useDebouncedValue";
+import { Plus, Edit2, Trash2, ChevronRight, ChevronDown, BookOpen, Search, X, CheckSquare, Square } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -133,7 +135,7 @@ function TopicDialog({ open, onOpenChange, topic, parentTopic, examTypes, onSave
 }
 
 // ── Ağaç düğümü (özyinelemeli) ───────────────────────────────────────────────
-function TopicNode({ topic, depth = 0, examTypes, onEdit, onDelete, onAddChild }) {
+function TopicNode({ topic, depth = 0, examTypes, onEdit, onDelete, onAddChild, onToggleActive, togglingId }) {
   const [expanded, setExpanded] = useState(true);
   const hasChildren = topic.children?.length > 0;
 
@@ -178,6 +180,27 @@ function TopicNode({ topic, depth = 0, examTypes, onEdit, onDelete, onAddChild }
             </Badge>
           ))}
         </div>
+
+        {/* Durum badge'i */}
+        <Badge
+          variant="outline"
+          className={`text-xs py-0 px-2 ${
+            topic.active
+              ? "border-emerald-200 text-emerald-700 bg-emerald-50"
+              : "border-slate-200 text-slate-500 bg-slate-100"
+          }`}
+        >
+          {topic.active ? "Aktif" : "Pasif"}
+        </Badge>
+
+        {/* Aktif/Pasif switch — her zaman görünür */}
+        <Switch
+          checked={!!topic.active}
+          disabled={togglingId === topic.id}
+          onCheckedChange={(checked) => onToggleActive(topic, checked)}
+          aria-label={topic.active ? "Pasife çek" : "Aktife al"}
+          title={topic.active ? "Pasife çek" : "Aktife al"}
+        />
 
         {/* Eylemler — hover'da görünür */}
         <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -224,6 +247,8 @@ function TopicNode({ topic, depth = 0, examTypes, onEdit, onDelete, onAddChild }
               onEdit={onEdit}
               onDelete={onDelete}
               onAddChild={onAddChild}
+              onToggleActive={onToggleActive}
+              togglingId={togglingId}
             />
           ))}
         </div>
@@ -240,7 +265,16 @@ export default function ManageTopics() {
   // dialog: { mode: 'create'|'edit'|'addChild', topic?, parentTopic? }
   const [dialog, setDialog] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
-  const [filterExamType, setFilterExamType] = useState("all");
+  const [selectedExamTypeIds, setSelectedExamTypeIds] = useState([]); // [] = Tümü
+  const [searchQuery, setSearchQuery] = useState("");
+  const debouncedSearch = useDebouncedValue(searchQuery, 300);
+
+  const toggleExamTypeFilter = (id) => {
+    setSelectedExamTypeIds((prev) =>
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
+    );
+  };
+  const clearExamTypeFilter = () => setSelectedExamTypeIds([]);
 
   const isAdmin = (user?.role || "").toString().toUpperCase() === "ADMIN";
 
@@ -286,6 +320,17 @@ export default function ManageTopics() {
     onError: (e) => toast.error(e?.response?.data?.message || e?.message || "Silinemedi"),
   });
 
+  const toggleActiveMutation = useMutation({
+    mutationFn: ({ id, active }) => topicsApi.update(id, { active }),
+    onSuccess: (_, { active }) => {
+      toast.success(active ? "Konu aktife alındı" : "Konu pasife çekildi");
+      queryClient.invalidateQueries({ queryKey: ["topicsTree"] });
+    },
+    onError: (e) => toast.error(e?.response?.data?.message || e?.message || "Durum değiştirilemedi"),
+  });
+  const handleToggleActive = (topic, nextActive) =>
+    toggleActiveMutation.mutate({ id: topic.id, active: nextActive });
+
   if (!isAdmin) {
     return (
       <div className="text-center py-20">
@@ -305,14 +350,30 @@ export default function ManageTopics() {
     }
   };
 
-  // Sınav türüne göre ağaç filtreleme (üst konuyu da dahil et)
+  // Sınav türü + metin filtresi — eşleşen düğüm veya altındaki herhangi
+  // bir alt-düğüm eşleşirse o üst konuyu da göster.
+  const filterSet = new Set(selectedExamTypeIds);
+  const search = debouncedSearch.trim().toLocaleLowerCase("tr");
+
+  const matchesNode = (node) => {
+    const examOk =
+      filterSet.size === 0 ||
+      node.examTypes?.some((et) => filterSet.has(et.id));
+    const textOk =
+      !search || node.name?.toLocaleLowerCase("tr").includes(search);
+    return examOk && textOk;
+  };
+
   const filterNode = (node) => {
-    if (filterExamType === "all") return true;
-    if (node.examTypes?.some((et) => et.id === filterExamType)) return true;
+    if (matchesNode(node)) return true;
     if (node.children?.some((c) => filterNode(c))) return true;
     return false;
   };
-  const filteredTree = tree.filter(filterNode);
+  const filteredTree = useMemo(
+    () => tree.filter(filterNode),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [tree, selectedExamTypeIds, debouncedSearch],
+  );
 
   const isPending = createMutation.isPending || updateMutation.isPending;
 
@@ -334,34 +395,71 @@ export default function ManageTopics() {
         </Button>
       </div>
 
-      {/* Sınav türü filtresi */}
-      <div className="mb-6 flex flex-wrap gap-2 items-center">
-        <span className="text-sm text-slate-500 mr-1">Filtre:</span>
-        <button
-          type="button"
-          onClick={() => setFilterExamType("all")}
-          className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
-            filterExamType === "all"
-              ? "bg-indigo-600 text-white border-indigo-600"
-              : "bg-white text-slate-600 border-slate-300 hover:border-indigo-400"
-          }`}
-        >
-          Tümü
-        </button>
-        {examTypes.map((et) => (
+      {/* Filtreler */}
+      <div className="mb-6 space-y-3">
+        {/* Metin araması */}
+        <div className="relative max-w-md">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+          <Input
+            type="search"
+            placeholder="Konu adı ara (tüm hiyerarşide)…"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-9 pr-9"
+            aria-label="Konu adı ara"
+          />
+          {searchQuery && (
+            <button
+              type="button"
+              onClick={() => setSearchQuery("")}
+              className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-slate-600"
+              aria-label="Aramayı temizle"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          )}
+        </div>
+
+        {/* Sınav türü çoklu seçim */}
+        <div className="flex flex-wrap gap-2 items-center">
+          <span className="text-sm text-slate-500 mr-1">Sınav türü:</span>
           <button
-            key={et.id}
             type="button"
-            onClick={() => setFilterExamType(et.id)}
-            className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
-              filterExamType === et.id
+            onClick={clearExamTypeFilter}
+            className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors inline-flex items-center gap-1.5 ${
+              selectedExamTypeIds.length === 0
                 ? "bg-indigo-600 text-white border-indigo-600"
                 : "bg-white text-slate-600 border-slate-300 hover:border-indigo-400"
             }`}
           >
-            {et.name}
+            Tümü
           </button>
-        ))}
+          {examTypes.map((et) => {
+            const checked = selectedExamTypeIds.includes(et.id);
+            const Icon = checked ? CheckSquare : Square;
+            return (
+              <button
+                key={et.id}
+                type="button"
+                onClick={() => toggleExamTypeFilter(et.id)}
+                aria-pressed={checked}
+                className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors inline-flex items-center gap-1.5 ${
+                  checked
+                    ? "bg-indigo-50 text-indigo-700 border-indigo-300"
+                    : "bg-white text-slate-600 border-slate-300 hover:border-indigo-400"
+                }`}
+              >
+                <Icon className="w-3.5 h-3.5" aria-hidden="true" />
+                {et.name}
+              </button>
+            );
+          })}
+          {selectedExamTypeIds.length > 0 && (
+            <span className="text-xs text-slate-500 ml-2">
+              {selectedExamTypeIds.length} seçili
+            </span>
+          )}
+        </div>
       </div>
 
       {/* Konu ağacı */}
@@ -376,9 +474,9 @@ export default function ManageTopics() {
           <div className="text-center py-14">
             <BookOpen className="w-12 h-12 text-slate-300 mx-auto mb-3" />
             <p className="text-slate-500 font-medium">
-              {filterExamType === "all"
+              {selectedExamTypeIds.length === 0 && !debouncedSearch.trim()
                 ? "Henüz konu eklenmedi"
-                : "Bu sınav türüne ait konu bulunamadı"}
+                : "Filtreye uyan konu bulunamadı"}
             </p>
             <Button
               variant="outline"
@@ -400,6 +498,8 @@ export default function ManageTopics() {
                 onEdit={(t) => setDialog({ mode: "edit", topic: t })}
                 onDelete={(t) => setDeleteTarget(t)}
                 onAddChild={(t) => setDialog({ mode: "addChild", parentTopic: t })}
+                onToggleActive={handleToggleActive}
+                togglingId={toggleActiveMutation.isPending ? toggleActiveMutation.variables?.id : null}
               />
             ))}
           </div>
