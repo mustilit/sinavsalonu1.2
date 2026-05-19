@@ -87,7 +87,7 @@ function DecideModal({ isOpen, onClose, onSubmit, status }) {
 
 export default function ModerationQueue() {
   const navigate = useNavigate();
-  const [category, setCategory] = useState('');
+  const [category, setCategory] = useState('ALL');
   const [searchEmail, setSearchEmail] = useState('');
   const debouncedEmail = useDebouncedValue(searchEmail, 300);
   const [dateFrom, setDateFrom] = useState('');
@@ -110,7 +110,7 @@ export default function ModerationQueue() {
       adminModeration.listQueue({
         cursor: pageParam,
         limit: 20,
-        category: category || undefined,
+        category: category && category !== 'ALL' ? category : undefined,
         userId: debouncedEmail || undefined,
         dateFrom: dateFrom || undefined,
         dateTo: dateTo || undefined,
@@ -202,7 +202,7 @@ export default function ModerationQueue() {
                   <SelectValue placeholder="Tümü" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Tümü</SelectItem>
+                  <SelectItem value="ALL">Tümü</SelectItem>
                   {Object.entries(CATEGORY_LABELS_TR).map(([key, label]) => (
                     <SelectItem key={key} value={key}>
                       {label}

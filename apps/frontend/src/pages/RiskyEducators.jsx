@@ -148,7 +148,7 @@ export default function RiskyEducators() {
   const [searchQuery, setSearchQuery] = useState('');
   const debouncedSearch = useDebouncedValue(searchQuery, 300);
   const [selectedRiskLevels, setSelectedRiskLevels] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('ALL');
   const [sortBy, setSortBy] = useState('risk'); // risk | violation | date
   const [actionModalOpen, setActionModalOpen] = useState(false);
   const [selectedEducator, setSelectedEducator] = useState(null);
@@ -185,7 +185,7 @@ export default function RiskyEducators() {
         cursor: pageParam,
         limit: 20,
         riskLevel: selectedRiskLevels.length > 0 ? selectedRiskLevels : undefined,
-        category: selectedCategory || undefined,
+        category: selectedCategory && selectedCategory !== 'ALL' ? selectedCategory : undefined,
         q: debouncedSearch || undefined,
       }),
     initialPageParam: null,
@@ -321,14 +321,14 @@ export default function RiskyEducators() {
                 Risk Seviyeleri
               </Label>
               <Select
-                value={selectedRiskLevels.join(',')}
-                onValueChange={(v) => setSelectedRiskLevels(v ? v.split(',') : [])}
+                value={selectedRiskLevels.length > 0 ? selectedRiskLevels.join(',') : 'ALL'}
+                onValueChange={(v) => setSelectedRiskLevels(!v || v === 'ALL' ? [] : v.split(','))}
               >
                 <SelectTrigger id="risk-levels" className="mt-1.5">
                   <SelectValue placeholder="Tümü" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Tümü</SelectItem>
+                  <SelectItem value="ALL">Tümü</SelectItem>
                   {['LOW', 'MEDIUM', 'HIGH', 'CRITICAL'].map((level) => (
                     <SelectItem key={level} value={level}>
                       {RISK_LEVEL_LABELS_TR[level]}
@@ -347,7 +347,7 @@ export default function RiskyEducators() {
                   <SelectValue placeholder="Tümü" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Tümü</SelectItem>
+                  <SelectItem value="ALL">Tümü</SelectItem>
                   {Object.entries(CATEGORY_LABELS_TR).map(([key, label]) => (
                     <SelectItem key={key} value={key}>
                       {label}

@@ -157,7 +157,7 @@ function CreateTermModal({ isOpen, onClose, onSubmit, isPending }) {
 }
 
 export default function BlockedTerms() {
-  const [categoryFilter, setCategoryFilter] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('ALL');
   const [activeFilter, setActiveFilter] = useState('all'); // all | active | inactive
   const [modalOpen, setModalOpen] = useState(false);
   const [editingTerm, setEditingTerm] = useState(null);
@@ -177,7 +177,7 @@ export default function BlockedTerms() {
       adminModeration.listBlockedTerms({
         cursor: pageParam,
         limit: 50,
-        category: categoryFilter || undefined,
+        category: categoryFilter && categoryFilter !== 'ALL' ? categoryFilter : undefined,
         isActive: activeFilter === 'active' ? true : activeFilter === 'inactive' ? false : undefined,
       }),
     initialPageParam: null,
@@ -283,7 +283,7 @@ export default function BlockedTerms() {
                   <SelectValue placeholder="Tümü" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Tümü</SelectItem>
+                  <SelectItem value="ALL">Tümü</SelectItem>
                   {Object.entries(CATEGORY_LABELS_TR).map(([key, label]) => (
                     <SelectItem key={key} value={key}>
                       {label}
