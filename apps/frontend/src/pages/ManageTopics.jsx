@@ -8,8 +8,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useDebouncedValue } from "@/lib/useDebouncedValue";
-import { Plus, Edit2, Trash2, ChevronRight, ChevronDown, BookOpen, Search, X, CheckSquare, Square } from "lucide-react";
+import { Plus, Edit2, Trash2, ChevronRight, ChevronDown, BookOpen, Search, X, CheckSquare, Square, Filter, Check } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -268,6 +269,8 @@ export default function ManageTopics() {
   const [selectedExamTypeIds, setSelectedExamTypeIds] = useState([]); // [] = Tümü
   const [searchQuery, setSearchQuery] = useState("");
   const debouncedSearch = useDebouncedValue(searchQuery, 300);
+  const [examTypeFilterOpen, setExamTypeFilterOpen] = useState(false);
+  const [examTypeFilterSearch, setExamTypeFilterSearch] = useState("");
 
   const toggleExamTypeFilter = (id) => {
     setSelectedExamTypeIds((prev) =>
@@ -396,9 +399,9 @@ export default function ManageTopics() {
       </div>
 
       {/* Filtreler */}
-      <div className="mb-6 space-y-3">
+      <div className="mb-6 flex flex-wrap items-center gap-3">
         {/* Metin araması */}
-        <div className="relative max-w-md">
+        <div className="relative flex-1 min-w-[240px] max-w-md">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
           <Input
             type="search"
@@ -420,46 +423,119 @@ export default function ManageTopics() {
           )}
         </div>
 
-        {/* Sınav türü çoklu seçim */}
-        <div className="flex flex-wrap gap-2 items-center">
-          <span className="text-sm text-slate-500 mr-1">Sınav türü:</span>
-          <button
-            type="button"
-            onClick={clearExamTypeFilter}
-            className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors inline-flex items-center gap-1.5 ${
-              selectedExamTypeIds.length === 0
-                ? "bg-indigo-600 text-white border-indigo-600"
-                : "bg-white text-slate-600 border-slate-300 hover:border-indigo-400"
-            }`}
-          >
-            Tümü
-          </button>
-          {examTypes.map((et) => {
-            const checked = selectedExamTypeIds.includes(et.id);
-            const Icon = checked ? CheckSquare : Square;
-            return (
-              <button
-                key={et.id}
-                type="button"
-                onClick={() => toggleExamTypeFilter(et.id)}
-                aria-pressed={checked}
-                className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors inline-flex items-center gap-1.5 ${
-                  checked
-                    ? "bg-indigo-50 text-indigo-700 border-indigo-300"
-                    : "bg-white text-slate-600 border-slate-300 hover:border-indigo-400"
-                }`}
-              >
-                <Icon className="w-3.5 h-3.5" aria-hidden="true" />
-                {et.name}
-              </button>
-            );
-          })}
-          {selectedExamTypeIds.length > 0 && (
-            <span className="text-xs text-slate-500 ml-2">
-              {selectedExamTypeIds.length} seçili
-            </span>
-          )}
-        </div>
+        {/* Sınav türü çoklu seçim — Popover */}
+        <Popover open={examTypeFilterOpen} onOpenChange={setExamTypeFilterOpen}>
+          <PopoverTrigger asChild>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="h-9 gap-2"
+              aria-haspopup="listbox"
+              aria-expanded={examTypeFilterOpen}
+            >
+              <Filter className="w-4 h-4 text-slate-500" aria-hidden="true" />
+              Sınav türü
+              {selectedExamTypeIds.length > 0 && (
+                <Badge
+                  variant="outline"
+                  className="ml-1 px-1.5 py-0 text-xs border-indigo-200 text-indigo-700 bg-indigo-50"
+                >
+                  {selectedExamTypeIds.length}
+                </Badge>
+              )}
+              <ChevronDown className="w-4 h-4 text-slate-400" aria-hidden="true" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent align="start" className="w-72 p-0">
+            <div className="p-3 border-b border-slate-100">
+              <div className="relative">
+                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400 pointer-events-none" />
+                <Input
+                  type="search"
+                  placeholder="Sınav türü ara…"
+                  value={examTypeFilterSearch}
+                  onChange={(e) => setExamTypeFilterSearch(e.target.value)}
+                  className="h-8 pl-8 pr-2 text-sm"
+                  autoFocus
+                />
+              </div>
+            </div>
+            <ul role="listbox" aria-label="Sınav türleri" className="max-h-64 overflow-y-auto py-1">
+              {examTypes
+                .filter((et) =>
+                  !examTypeFilterSearch.trim() ||
+                  et.name?.toLocaleLowerCase("tr").includes(examTypeFilterSearch.trim().toLocaleLowerCase("tr")),
+                )
+                .map((et) => {
+                  const checked = selectedExamTypeIds.includes(et.id);
+                  return (
+                    <li key={et.id} role="option" aria-selected={checked}>
+                      <button
+                        type="button"
+                        onClick={() => toggleExamTypeFilter(et.id)}
+                        className="w-full flex items-center gap-2 px-3 py-2 text-sm text-slate-700 hover:bg-slate-50 focus:bg-slate-50 focus:outline-none"
+                      >
+                        <span
+                          className={`w-4 h-4 rounded border flex items-center justify-center shrink-0 ${
+                            checked
+                              ? "bg-indigo-600 border-indigo-600 text-white"
+                              : "bg-white border-slate-300"
+                          }`}
+                          aria-hidden="true"
+                        >
+                          {checked && <Check className="w-3 h-3" />}
+                        </span>
+                        <span className="flex-1 text-left">{et.name}</span>
+                      </button>
+                    </li>
+                  );
+                })}
+              {examTypes.filter((et) =>
+                !examTypeFilterSearch.trim() ||
+                et.name?.toLocaleLowerCase("tr").includes(examTypeFilterSearch.trim().toLocaleLowerCase("tr")),
+              ).length === 0 && (
+                <li className="px-3 py-4 text-center text-xs text-slate-400">Eşleşen sınav türü yok</li>
+              )}
+            </ul>
+            {selectedExamTypeIds.length > 0 && (
+              <div className="p-2 border-t border-slate-100 flex items-center justify-between">
+                <span className="text-xs text-slate-500 px-1">{selectedExamTypeIds.length} seçili</span>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="h-7 px-2 text-xs text-slate-600 hover:text-rose-600"
+                  onClick={clearExamTypeFilter}
+                >
+                  Temizle
+                </Button>
+              </div>
+            )}
+          </PopoverContent>
+        </Popover>
+
+        {/* Seçili filtrelerin küçük chip listesi (×'lı) */}
+        {selectedExamTypeIds.length > 0 && (
+          <div className="flex flex-wrap gap-1.5">
+            {selectedExamTypeIds.map((id) => {
+              const et = examTypes.find((e) => e.id === id);
+              if (!et) return null;
+              return (
+                <button
+                  key={id}
+                  type="button"
+                  onClick={() => toggleExamTypeFilter(id)}
+                  className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-indigo-50 text-indigo-700 border border-indigo-200 hover:bg-rose-50 hover:text-rose-700 hover:border-rose-200"
+                  aria-label={`${et.name} filtresini kaldır`}
+                >
+                  {et.name}
+                  <X className="w-3 h-3" aria-hidden="true" />
+                </button>
+              );
+            })}
+          </div>
+        )}
       </div>
 
       {/* Konu ağacı */}
