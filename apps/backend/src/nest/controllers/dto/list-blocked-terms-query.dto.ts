@@ -30,4 +30,8 @@ export class ListBlockedTermsQueryDto {
   @Transform(({ value }) => value === 'true' || value === true)
   @IsBoolean()
   isActive?: boolean;
+
+  @IsOptional()
+  @IsString()
+  term?: string;
 }

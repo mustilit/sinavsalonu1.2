@@ -8,6 +8,8 @@ export interface ListBlockedTermsParams {
   limit?: number;
   category?: ModerationCategory;
   isActive?: boolean;
+  /** Term substring araması (case-insensitive) */
+  term?: string;
 }
 
 @Injectable()
@@ -19,11 +21,13 @@ export class ListBlockedTermsUseCase {
     const limit = Math.min(Math.max(params.limit ?? 20, 1), 100);
     const take = limit + 1;
 
+    const trimmedTerm = params.term?.trim();
     const rows = await prisma.blockedTerm.findMany({
       where: {
         tenantId: params.tenantId,
         ...(params.category && { category: params.category }),
         ...(params.isActive !== undefined && { isActive: params.isActive }),
+        ...(trimmedTerm && { term: { contains: trimmedTerm, mode: 'insensitive' as const } }),
       },
       select: {
         id: true,

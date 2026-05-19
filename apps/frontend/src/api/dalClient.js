@@ -1094,6 +1094,7 @@ export const adminModeration = {
     if (opts.limit) qs.set('limit', String(opts.limit));
     if (opts.category) qs.set('category', opts.category);
     if (opts.isActive !== undefined) qs.set('isActive', String(opts.isActive));
+    if (opts.term) qs.set('term', opts.term);
     const { data } = await api.get(`/admin/moderation/blocked-terms?${qs.toString()}`);
     return data ?? { items: [], nextCursor: null };
   },

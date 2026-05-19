@@ -184,6 +184,7 @@ export class AdminModerationController {
       limit: q.limit,
       category: q.category,
       isActive: q.isActive,
+      term: q.term,
     });
   }
 

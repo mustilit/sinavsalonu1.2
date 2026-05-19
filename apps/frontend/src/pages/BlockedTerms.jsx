@@ -14,6 +14,7 @@ import {
   CATEGORY_COLORS,
 } from '@/lib/moderationLabels';
 import { adminModeration } from '@/api/dalClient';
+import { useDebouncedValue } from '@/lib/useDebouncedValue';
 import { formatDistanceToNow } from 'date-fns';
 import { tr } from 'date-fns/locale';
 import { Plus, Trash2, Edit2, AlertTriangle } from 'lucide-react';
@@ -165,6 +166,8 @@ function CreateTermModal({ isOpen, onClose, onSubmit, isPending }) {
 export default function BlockedTerms() {
   const [categoryFilter, setCategoryFilter] = useState('ALL');
   const [activeFilter, setActiveFilter] = useState('all'); // all | active | inactive
+  const [termFilter, setTermFilter] = useState('');
+  const debouncedTerm = useDebouncedValue(termFilter, 300);
   const [modalOpen, setModalOpen] = useState(false);
   const [editingTerm, setEditingTerm] = useState(null);
   const [editForm, setEditForm] = useState(null);
@@ -178,13 +181,14 @@ export default function BlockedTerms() {
     isLoading,
     isError,
   } = useInfiniteQuery({
-    queryKey: ['adminModeration', 'blockedTerms', categoryFilter, activeFilter],
+    queryKey: ['adminModeration', 'blockedTerms', categoryFilter, activeFilter, debouncedTerm],
     queryFn: ({ pageParam }) =>
       adminModeration.listBlockedTerms({
         cursor: pageParam,
         limit: 50,
         category: categoryFilter && categoryFilter !== 'ALL' ? categoryFilter : undefined,
         isActive: activeFilter === 'active' ? true : activeFilter === 'inactive' ? false : undefined,
+        term: debouncedTerm.trim() || undefined,
       }),
     initialPageParam: null,
     getNextPageParam: (last) => last.nextCursor ?? undefined,
@@ -292,6 +296,21 @@ export default function BlockedTerms() {
       <Card>
         <CardContent className="p-4 space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <Label htmlFor="filter-term" className="text-xs font-medium">
+                Terim
+              </Label>
+              <Input
+                id="filter-term"
+                type="search"
+                placeholder="Terim ara..."
+                value={termFilter}
+                onChange={(e) => setTermFilter(e.target.value)}
+                className="mt-1.5"
+                autoComplete="off"
+              />
+            </div>
+
             <div>
               <Label htmlFor="filter-category" className="text-xs font-medium">
                 Kategori
