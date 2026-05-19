@@ -976,6 +976,7 @@ model BlockedTerm {
 
   tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 
+  @@unique([tenantId, term])
   @@index([tenantId, isActive])
   @@index([tenantId, category])
   @@map("blocked_terms")

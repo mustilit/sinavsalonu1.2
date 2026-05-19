@@ -192,7 +192,15 @@ export default function BlockedTerms() {
       toast.success('Yasak kelime eklendi');
     },
     onError: (err) => {
-      toast.error(err?.response?.data?.message || 'Eklenemiyor');
+      const status = err?.response?.status ?? err?.status;
+      const data = err?.response?.data ?? err?.data;
+      const code = data?.error?.code ?? data?.code;
+      const msg = data?.error?.message ?? data?.message ?? err?.message;
+      if (status === 409 || code === 'DUPLICATE_BLOCKED_TERM') {
+        toast.warning('Bu kelime zaten listede mevcut');
+      } else {
+        toast.error(msg || 'Eklenemiyor');
+      }
     },
   });
 
