@@ -86,6 +86,9 @@ export class SeedService implements OnApplicationBootstrap {
       where: { email: 'educator@demo.com' },
     });
 
+    // Sınav türleri her boot'ta idempotent senkronize edilir (ManageExamTypes için)
+    await this.seedCommonExamTypes();
+
     if (existing) {
       // Kullanıcılar var — ama test yoksa yine de oluştur
       const testCount = await this.prisma.examTest.count();
@@ -152,6 +155,41 @@ export class SeedService implements OnApplicationBootstrap {
     await this.createDemoTestData(educator.id);
 
     console.log('Seed: Demo — eğitici: educator@demo.com / aday: aday@demo.com (şifre: demo123)');
+  }
+
+  /**
+   * Türkiye'deki yaygın sınav türleri — admin paneli ManageExamTypes'ı doldurur.
+   * Idempotent (slug üzerinden upsert), her seed çalışmasında kayıtlar bozulmaz.
+   */
+  private async seedCommonExamTypes() {
+    const types = [
+      { slug: 'yks-tyt', name: 'YKS — TYT', description: 'Temel Yeterlilik Testi' },
+      { slug: 'yks-ayt', name: 'YKS — AYT', description: 'Alan Yeterlilik Testi' },
+      { slug: 'yks-ydt', name: 'YKS — YDT', description: 'Yabancı Dil Testi (YKS)' },
+      { slug: 'lgs', name: 'LGS', description: 'Liselere Geçiş Sınavı' },
+      { slug: 'kpss-lisans', name: 'KPSS Lisans', description: 'Kamu Personeli Seçme Sınavı (Lisans)' },
+      { slug: 'kpss-onlisans', name: 'KPSS Önlisans', description: 'Kamu Personeli Seçme Sınavı (Önlisans)' },
+      { slug: 'kpss-ortaogretim', name: 'KPSS Ortaöğretim', description: 'Kamu Personeli Seçme Sınavı (Ortaöğretim)' },
+      { slug: 'kpss-egitim-bilimleri', name: 'KPSS Eğitim Bilimleri', description: 'Öğretmen adayları için' },
+      { slug: 'kpss-oabt', name: 'KPSS ÖABT', description: 'Öğretmenlik Alan Bilgisi Testi' },
+      { slug: 'ales', name: 'ALES', description: 'Akademik Personel ve Lisansüstü Eğitimi Giriş Sınavı' },
+      { slug: 'dgs', name: 'DGS', description: 'Dikey Geçiş Sınavı' },
+      { slug: 'yds', name: 'YDS', description: 'Yabancı Dil Bilgisi Seviye Tespit Sınavı' },
+      { slug: 'yokdil', name: 'YÖKDİL', description: 'YÖK Yabancı Dil Sınavı' },
+      { slug: 'msu', name: 'MSÜ', description: 'Milli Savunma Üniversitesi Sınavı' },
+      { slug: 'tus', name: 'TUS', description: 'Tıpta Uzmanlık Sınavı' },
+      { slug: 'dus', name: 'DUS', description: 'Diş Hekimliği Uzmanlık Sınavı' },
+      { slug: 'eus', name: 'EUS', description: 'Eczacılıkta Uzmanlık Sınavı' },
+      { slug: 'ehliyet', name: 'Ehliyet Sınavı', description: 'MEB Sürücü Belgesi sınavı' },
+    ];
+    for (const t of types) {
+      await this.prisma.examType.upsert({
+        where: { slug: t.slug },
+        create: { slug: t.slug, name: t.name, description: t.description, active: true },
+        update: { name: t.name, description: t.description },
+      });
+    }
+    console.log(`Seed: ${types.length} sınav türü hazır`);
   }
 
   private async createDemoTestData(educatorId: string) {
