@@ -86,9 +86,11 @@ export class SeedService implements OnApplicationBootstrap {
       where: { email: 'educator@demo.com' },
     });
 
-    // Sınav türleri + konu hiyerarşisi her boot'ta idempotent senkronize edilir
+    // Sınav türleri + konu hiyerarşisi + canlı oturum tier'ları her boot'ta
+    // idempotent senkronize edilir
     await this.seedCommonExamTypes();
     await this.seedTopicHierarchy();
+    await this.seedLiveSessionTiers();
 
     if (existing) {
       // Kullanıcılar var — ama test yoksa yine de oluştur
@@ -254,6 +256,57 @@ export class SeedService implements OnApplicationBootstrap {
       }
     }
     console.log(`Seed: ${upsertCount} konu, ${junctionCount} sınav türü ilişkisi hazır`);
+  }
+
+  /**
+   * Canlı oturum tier'ları — ManageLiveTiers'ı doldurur.
+   * Label @unique değil → findFirst + create/update pattern.
+   * Order array index'inden alınır (mevcut DB'deki 0,0,0,0,0 yerine sıralı).
+   */
+  private async seedLiveSessionTiers() {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const data = require('./seed-data/live-session-tiers.json') as {
+      liveSessionTiers: Array<{
+        label: string;
+        minParticipants: number;
+        maxParticipants: number | null;
+        priceCents: number;
+        isActive: boolean;
+        order?: number;
+      }>;
+    };
+    const tiers = data.liveSessionTiers ?? [];
+    if (!tiers.length) return;
+
+    for (let i = 0; i < tiers.length; i++) {
+      const t = tiers[i];
+      const order = t.order ?? i;
+      const existing = await this.prisma.liveSessionTier.findFirst({ where: { label: t.label } });
+      if (existing) {
+        await this.prisma.liveSessionTier.update({
+          where: { id: existing.id },
+          data: {
+            minParticipants: t.minParticipants,
+            maxParticipants: t.maxParticipants,
+            priceCents: t.priceCents,
+            isActive: t.isActive,
+            order,
+          },
+        });
+      } else {
+        await this.prisma.liveSessionTier.create({
+          data: {
+            label: t.label,
+            minParticipants: t.minParticipants,
+            maxParticipants: t.maxParticipants,
+            priceCents: t.priceCents,
+            isActive: t.isActive,
+            order,
+          },
+        });
+      }
+    }
+    console.log(`Seed: ${tiers.length} canlı oturum tier'ı hazır`);
   }
 
   private async createDemoTestData(educatorId: string) {
