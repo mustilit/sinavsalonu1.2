@@ -86,8 +86,9 @@ export class SeedService implements OnApplicationBootstrap {
       where: { email: 'educator@demo.com' },
     });
 
-    // Sınav türleri her boot'ta idempotent senkronize edilir (ManageExamTypes için)
+    // Sınav türleri + konu hiyerarşisi her boot'ta idempotent senkronize edilir
     await this.seedCommonExamTypes();
+    await this.seedTopicHierarchy();
 
     if (existing) {
       // Kullanıcılar var — ama test yoksa yine de oluştur
@@ -158,38 +159,101 @@ export class SeedService implements OnApplicationBootstrap {
   }
 
   /**
-   * Türkiye'deki yaygın sınav türleri — admin paneli ManageExamTypes'ı doldurur.
-   * Idempotent (slug üzerinden upsert), her seed çalışmasında kayıtlar bozulmaz.
+   * Sınav türleri — `seed-data/exam-types.json` üzerinden idempotent upsert.
+   * Slug eşleşmesi; mevcut kayıtlar bozulmaz.
    */
   private async seedCommonExamTypes() {
-    const types = [
-      { slug: 'yks-tyt', name: 'YKS — TYT', description: 'Temel Yeterlilik Testi' },
-      { slug: 'yks-ayt', name: 'YKS — AYT', description: 'Alan Yeterlilik Testi' },
-      { slug: 'yks-ydt', name: 'YKS — YDT', description: 'Yabancı Dil Testi (YKS)' },
-      { slug: 'lgs', name: 'LGS', description: 'Liselere Geçiş Sınavı' },
-      { slug: 'kpss-lisans', name: 'KPSS Lisans', description: 'Kamu Personeli Seçme Sınavı (Lisans)' },
-      { slug: 'kpss-onlisans', name: 'KPSS Önlisans', description: 'Kamu Personeli Seçme Sınavı (Önlisans)' },
-      { slug: 'kpss-ortaogretim', name: 'KPSS Ortaöğretim', description: 'Kamu Personeli Seçme Sınavı (Ortaöğretim)' },
-      { slug: 'kpss-egitim-bilimleri', name: 'KPSS Eğitim Bilimleri', description: 'Öğretmen adayları için' },
-      { slug: 'kpss-oabt', name: 'KPSS ÖABT', description: 'Öğretmenlik Alan Bilgisi Testi' },
-      { slug: 'ales', name: 'ALES', description: 'Akademik Personel ve Lisansüstü Eğitimi Giriş Sınavı' },
-      { slug: 'dgs', name: 'DGS', description: 'Dikey Geçiş Sınavı' },
-      { slug: 'yds', name: 'YDS', description: 'Yabancı Dil Bilgisi Seviye Tespit Sınavı' },
-      { slug: 'yokdil', name: 'YÖKDİL', description: 'YÖK Yabancı Dil Sınavı' },
-      { slug: 'msu', name: 'MSÜ', description: 'Milli Savunma Üniversitesi Sınavı' },
-      { slug: 'tus', name: 'TUS', description: 'Tıpta Uzmanlık Sınavı' },
-      { slug: 'dus', name: 'DUS', description: 'Diş Hekimliği Uzmanlık Sınavı' },
-      { slug: 'eus', name: 'EUS', description: 'Eczacılıkta Uzmanlık Sınavı' },
-      { slug: 'ehliyet', name: 'Ehliyet Sınavı', description: 'MEB Sürücü Belgesi sınavı' },
-    ];
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const data = require('./seed-data/exam-types.json') as {
+      examTypes: Array<{ slug: string; name: string; description?: string | null; active?: boolean }>;
+    };
+    const types = data.examTypes ?? [];
     for (const t of types) {
       await this.prisma.examType.upsert({
         where: { slug: t.slug },
-        create: { slug: t.slug, name: t.name, description: t.description, active: true },
-        update: { name: t.name, description: t.description },
+        create: {
+          slug: t.slug,
+          name: t.name,
+          description: t.description ?? null,
+          active: t.active ?? true,
+        },
+        update: { name: t.name, description: t.description ?? null },
       });
     }
     console.log(`Seed: ${types.length} sınav türü hazır`);
+  }
+
+  /**
+   * Soru konuları + topic_exam_types junction — idempotent.
+   * `seed-data/topics.json` parentId NULLS FIRST sıralı (root → child).
+   * Slug üzerinden upsert; parent referansları slug eşleştirmesiyle çözülür.
+   */
+  private async seedTopicHierarchy() {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const data = require('./seed-data/topics.json') as {
+      topics: Array<{
+        id: string;
+        name: string;
+        slug: string;
+        active: boolean;
+        parentId: string | null;
+        examTypeSlugs: string[];
+      }>;
+    };
+    const topics = data.topics ?? [];
+    if (!topics.length) return;
+
+    // Eski-id → slug haritası (parentId'yi slug üzerinden çözmek için)
+    const idToSlug = new Map(topics.map((t) => [t.id, t.slug]));
+
+    // Aktif exam_type slug → id (junction için)
+    const allExamTypes = await this.prisma.examType.findMany({ select: { id: true, slug: true } });
+    const examTypeSlugToId = new Map(allExamTypes.map((e) => [e.slug, e.id]));
+
+    let upsertCount = 0;
+    let junctionCount = 0;
+    for (const t of topics) {
+      const parentSlug = t.parentId ? idToSlug.get(t.parentId) : null;
+      const parent = parentSlug
+        ? await this.prisma.topic.findFirst({ where: { slug: parentSlug }, select: { id: true } })
+        : null;
+
+      // Topic.slug Prisma şemasında @unique değil → findFirst + create/update
+      const existing = await this.prisma.topic.findFirst({ where: { slug: t.slug } });
+      const topic = existing
+        ? await this.prisma.topic.update({
+            where: { id: existing.id },
+            data: { name: t.name, active: t.active, parentId: parent?.id ?? null },
+          })
+        : await this.prisma.topic.create({
+            data: {
+              name: t.name,
+              slug: t.slug,
+              active: t.active,
+              parentId: parent?.id ?? null,
+            },
+          });
+      upsertCount++;
+
+      // exam type junction kayıtları (mevcut olmayanları ekle, fazlaları silme)
+      const wantedExamTypeIds = (t.examTypeSlugs ?? [])
+        .map((s) => examTypeSlugToId.get(s))
+        .filter((id): id is string => Boolean(id));
+
+      for (const examTypeId of wantedExamTypeIds) {
+        try {
+          await this.prisma.topicExamType.upsert({
+            where: { topicId_examTypeId: { topicId: topic.id, examTypeId } },
+            create: { topicId: topic.id, examTypeId },
+            update: {},
+          });
+          junctionCount++;
+        } catch {
+          // composite key veya FK ihlali sessizce geç (zaten varsa OK)
+        }
+      }
+    }
+    console.log(`Seed: ${upsertCount} konu, ${junctionCount} sınav türü ilişkisi hazır`);
   }
 
   private async createDemoTestData(educatorId: string) {
