@@ -41,23 +41,41 @@ import {
     // Redis cache — BlocklistTextProvider için
     RedisCache,
 
-    // Repository implementasyonları
+    // Repository implementasyonları — tüm constructor injection'lar
+    // tsx/esbuild metadata yayımlamadığı için açık factory ile.
     {
-      provide: BLOCKED_TERM_REPO,
+      provide: PrismaBlockedTermRepository,
       useFactory: (cache: RedisCache) => new PrismaBlockedTermRepository(cache),
       inject: [RedisCache],
     },
-    PrismaBlockedTermRepository,
-
+    {
+      provide: BLOCKED_TERM_REPO,
+      useExisting: PrismaBlockedTermRepository,
+    },
+    {
+      provide: PrismaModerationResultRepository,
+      useFactory: () => new PrismaModerationResultRepository(),
+      inject: [],
+    },
     {
       provide: MODERATION_RESULT_REPO,
-      useClass: PrismaModerationResultRepository,
+      useExisting: PrismaModerationResultRepository,
     },
-    PrismaModerationResultRepository,
-
-    PrismaModerationViolationRepository,
-    PrismaModerationActionRepository,
-    PrismaEducatorRiskScoreRepository,
+    {
+      provide: PrismaModerationViolationRepository,
+      useFactory: () => new PrismaModerationViolationRepository(),
+      inject: [],
+    },
+    {
+      provide: PrismaModerationActionRepository,
+      useFactory: () => new PrismaModerationActionRepository(),
+      inject: [],
+    },
+    {
+      provide: PrismaEducatorRiskScoreRepository,
+      useFactory: () => new PrismaEducatorRiskScoreRepository(),
+      inject: [],
+    },
 
     // Provider'lar
     {

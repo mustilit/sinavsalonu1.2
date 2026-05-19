@@ -2,7 +2,7 @@ import { Controller, Get, Req, Inject } from '@nestjs/common';
 import { GetMyModerationStatusUseCase } from '../../application/use-cases/moderation/GetMyModerationStatusUseCase';
 import { Roles } from '../decorators/roles.decorator';
 
-const TENANT_ID = process.env.DEFAULT_TENANT_ID ?? 'default';
+const TENANT_ID = process.env.DEFAULT_TENANT_ID ?? 'dev-tenant';
 
 @Controller('me')
 export class MeModerationController {

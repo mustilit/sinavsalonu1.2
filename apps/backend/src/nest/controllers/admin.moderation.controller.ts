@@ -34,7 +34,7 @@ import { CreateBlockedTermDto } from './dto/create-blocked-term.dto';
 import { UpdateBlockedTermDto } from './dto/update-blocked-term.dto';
 import { ListBlockedTermsQueryDto } from './dto/list-blocked-terms-query.dto';
 
-const TENANT_ID = process.env.DEFAULT_TENANT_ID ?? 'default';
+const TENANT_ID = process.env.DEFAULT_TENANT_ID ?? 'dev-tenant';
 
 @Controller('admin/moderation')
 export class AdminModerationController {
