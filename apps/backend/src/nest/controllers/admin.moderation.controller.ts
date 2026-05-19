@@ -9,6 +9,7 @@ import {
   Body,
   Req,
   UseGuards,
+  Inject,
 } from '@nestjs/common';
 import { Roles } from '../decorators/roles.decorator';
 import { WorkerPermissions } from '../decorators/worker-permissions.decorator';
@@ -38,18 +39,18 @@ const TENANT_ID = process.env.DEFAULT_TENANT_ID ?? 'default';
 @Controller('admin/moderation')
 export class AdminModerationController {
   constructor(
-    private readonly listPendingUC: ListPendingModerationsUseCase,
-    private readonly getResultUC: GetModerationResultUseCase,
-    private readonly approveUC: ApproveModerationUseCase,
-    private readonly rejectUC: RejectModerationUseCase,
-    private readonly listRiskyUC: ListRiskyEducatorsUseCase,
-    private readonly getHistoryUC: GetEducatorViolationHistoryUseCase,
-    private readonly applyActionUC: ApplyModerationActionUseCase,
-    private readonly revokeActionUC: RevokeModerationActionUseCase,
-    private readonly listTermsUC: ListBlockedTermsUseCase,
-    private readonly createTermUC: CreateBlockedTermUseCase,
-    private readonly updateTermUC: UpdateBlockedTermUseCase,
-    private readonly deleteTermUC: DeleteBlockedTermUseCase,
+    @Inject(ListPendingModerationsUseCase) private readonly listPendingUC: ListPendingModerationsUseCase,
+    @Inject(GetModerationResultUseCase) private readonly getResultUC: GetModerationResultUseCase,
+    @Inject(ApproveModerationUseCase) private readonly approveUC: ApproveModerationUseCase,
+    @Inject(RejectModerationUseCase) private readonly rejectUC: RejectModerationUseCase,
+    @Inject(ListRiskyEducatorsUseCase) private readonly listRiskyUC: ListRiskyEducatorsUseCase,
+    @Inject(GetEducatorViolationHistoryUseCase) private readonly getHistoryUC: GetEducatorViolationHistoryUseCase,
+    @Inject(ApplyModerationActionUseCase) private readonly applyActionUC: ApplyModerationActionUseCase,
+    @Inject(RevokeModerationActionUseCase) private readonly revokeActionUC: RevokeModerationActionUseCase,
+    @Inject(ListBlockedTermsUseCase) private readonly listTermsUC: ListBlockedTermsUseCase,
+    @Inject(CreateBlockedTermUseCase) private readonly createTermUC: CreateBlockedTermUseCase,
+    @Inject(UpdateBlockedTermUseCase) private readonly updateTermUC: UpdateBlockedTermUseCase,
+    @Inject(DeleteBlockedTermUseCase) private readonly deleteTermUC: DeleteBlockedTermUseCase,
   ) {}
 
   // ── Moderasyon kuyruğu ──────────────────────────────────────────────────────

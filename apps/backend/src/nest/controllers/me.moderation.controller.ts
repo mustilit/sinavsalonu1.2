@@ -1,4 +1,4 @@
-import { Controller, Get, Req } from '@nestjs/common';
+import { Controller, Get, Req, Inject } from '@nestjs/common';
 import { GetMyModerationStatusUseCase } from '../../application/use-cases/moderation/GetMyModerationStatusUseCase';
 import { Roles } from '../decorators/roles.decorator';
 
@@ -7,7 +7,7 @@ const TENANT_ID = process.env.DEFAULT_TENANT_ID ?? 'default';
 @Controller('me')
 export class MeModerationController {
   constructor(
-    private readonly getMyStatusUC: GetMyModerationStatusUseCase,
+    @Inject(GetMyModerationStatusUseCase) private readonly getMyStatusUC: GetMyModerationStatusUseCase,
   ) {}
 
   @Roles('EDUCATOR', 'ADMIN')
