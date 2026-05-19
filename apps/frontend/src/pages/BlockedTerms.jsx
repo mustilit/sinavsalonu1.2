@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -35,14 +35,20 @@ function CreateTermModal({ isOpen, onClose, onSubmit, isPending }) {
       toast.error('Terim en az 2 karakter olmalıdır');
       return;
     }
+    // Modal'ı parent (onSuccess) kapatır — duplicate hatasında açık kalsın
     onSubmit({ term: term.trim(), pattern: pattern.trim() || null, category, severity: Number(severity), isActive });
-    setTerm('');
-    setPattern('');
-    setCategory('PROFANITY');
-    setSeverity(3);
-    setIsActive(true);
-    onClose();
   };
+
+  // Modal her açıldığında alanlar sıfırlanır
+  useEffect(() => {
+    if (isOpen) {
+      setTerm('');
+      setPattern('');
+      setCategory('PROFANITY');
+      setSeverity(3);
+      setIsActive(true);
+    }
+  }, [isOpen]);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -190,6 +196,7 @@ export default function BlockedTerms() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['adminModeration', 'blockedTerms'] });
       toast.success('Yasak kelime eklendi');
+      setModalOpen(false);
     },
     onError: (err) => {
       const status = err?.response?.status ?? err?.status;
@@ -197,7 +204,10 @@ export default function BlockedTerms() {
       const code = data?.error?.code ?? data?.code;
       const msg = data?.error?.message ?? data?.message ?? err?.message;
       if (status === 409 || code === 'DUPLICATE_BLOCKED_TERM') {
-        toast.warning('Bu kelime zaten listede mevcut');
+        toast.warning('Bu kelime zaten kayıtlı', {
+          description: 'Aynı terim sistemde mevcut, yeniden eklenmedi.',
+          duration: 5000,
+        });
       } else {
         toast.error(msg || 'Eklenemiyor');
       }
