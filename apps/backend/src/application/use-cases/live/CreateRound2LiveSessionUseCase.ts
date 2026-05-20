@@ -48,6 +48,9 @@ export class CreateRound2LiveSessionUseCase {
         status: 'DRAFT',
         roundNumber: 2,
         parentSessionId: original.id,
+        // Tur 1 zaten ödendi — Tur 2 aynı içerikle ek ücret almadan başlatılabilsin.
+        // StartLiveSessionUseCase paidAt zorunlu kıldığı için burada şimdi olarak set.
+        paidAt: original.paidAt ?? new Date(),
         questions: {
           create: original.questions.map((q) => ({
             content: q.content,

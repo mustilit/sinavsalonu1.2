@@ -15,7 +15,9 @@ export class ToggleDiscountCodeUseCase {
   async execute(educatorId: string, codeId: string) {
     const user = await this.userRepo.findById(educatorId);
     if (!user) throw new AppError('USER_NOT_FOUND', 'User not found', 404);
-    if (user.role !== 'EDUCATOR') throw new AppError('USER_NOT_EDUCATOR', 'User is not an educator', 403);
+    // EDUCATOR sadece kendi kodlarını yönetebilir; ADMIN herhangi bir kodu yönetebilir
+    if (user.role !== 'EDUCATOR' && user.role !== 'ADMIN')
+      throw new AppError('USER_NOT_AUTHORIZED', 'User is not authorized to toggle discount codes', 403);
 
     // Kodu oku — $queryRaw: Prisma client yeniden üretilmeden isActive okunamaz
     const rows = await prisma.$queryRaw<
@@ -28,7 +30,8 @@ export class ToggleDiscountCodeUseCase {
 
     if (!rows.length) throw new AppError('NOT_FOUND', 'Discount code not found', 404);
     const row = rows[0];
-    if (row.createdById !== educatorId) {
+    // ADMIN her kodu yönetebilir; EDUCATOR yalnızca kendi oluşturduğu kodları
+    if (user.role !== 'ADMIN' && row.createdById !== educatorId) {
       throw new AppError('FORBIDDEN_NOT_OWNER', 'You can only manage your own discount codes', 403);
     }
 

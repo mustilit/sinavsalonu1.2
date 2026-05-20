@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
 import { entities } from "@/api/dalClient";
+import api from "@/lib/api/apiClient";
 import { useAuth } from "@/lib/AuthContext";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -26,6 +27,7 @@ import { tr } from "date-fns/locale";
  */
 export default function MyDiscountCodes() {
   const { user } = useAuth();
+  const isAdmin = (user?.role || "").toUpperCase() === "ADMIN";
   // Yeni kod oluşturma diyaloğunun açık/kapalı durumu
   const [showDialog, setShowDialog] = useState(false);
   // Yeni kod formu alanları; varsayılan değerler: %10 indirim, 100 kullanım hakkı
@@ -46,12 +48,33 @@ export default function MyDiscountCodes() {
   });
   const queryClient = useQueryClient();
 
-  // Giriş yapan eğiticinin indirim kodlarını yükle; cache key'e e-posta eklendi (çoklu kullanıcı senaryosu)
+  // Admin tüm kodları görür; eğitici yalnızca kendi oluşturduklarını
   const { data: codes = [], isLoading } = useQuery({
-    queryKey: ["discountCodes", user?.email],
-    queryFn: () => entities.DiscountCode.filter({ educator_email: user.email }, "-created_date"),
+    queryKey: ["discountCodes", isAdmin ? "ALL" : user?.email],
+    queryFn: () =>
+      isAdmin
+        ? entities.DiscountCode.adminFilter()
+        : entities.DiscountCode.filter({ educator_email: user.email }, "-created_date"),
     enabled: !!user,
   });
+
+  // Admin tarafından belirlenen maksimum indirim sınırı.
+  // /site/service-status public endpoint — eğitici dahil tüm roller okuyabilir.
+  const { data: serviceStatus } = useQuery({
+    queryKey: ["serviceStatus"],
+    queryFn: async () => {
+      try {
+        const { data } = await api.get("/site/service-status");
+        return data;
+      } catch {
+        return null;
+      }
+    },
+    staleTime: 60_000,
+  });
+  const maxDiscountForEducator = serviceStatus?.maxDiscountPercent ?? 50;
+  // Admin'in kendisi sınırla kısıtlı değildir (1-100 arası)
+  const effectiveMaxDiscount = isAdmin ? 100 : maxDiscountForEducator;
 
   // Aktif filtre sayısını hesapla (rozet için)
   const activeFilterCount = [filters.search, filters.minPercent, filters.maxPercent, filters.dateFrom, filters.dateTo]
@@ -86,14 +109,17 @@ export default function MyDiscountCodes() {
     enabled: !!user,
   });
 
-  // Kodu backend'e kaydeder; educator_email ve current_uses otomatik atanır
+  // Kodu backend'e kaydeder; rol bazlı endpoint seçilir
   const createMutation = useMutation({
-    mutationFn: (data) => entities.DiscountCode.create({
-      ...data,
-      educator_email: user.email,
-      current_uses: 0,
-      is_active: true
-    }),
+    mutationFn: (data) =>
+      isAdmin
+        ? entities.DiscountCode.adminCreate(data)
+        : entities.DiscountCode.create({
+            ...data,
+            educator_email: user.email,
+            current_uses: 0,
+            is_active: true,
+          }),
     onSuccess: () => {
       toast.success("İndirim kodu oluşturuldu");
       queryClient.invalidateQueries({ queryKey: ["discountCodes"] });
@@ -107,7 +133,7 @@ export default function MyDiscountCodes() {
   });
 
   const toggleMutation = useMutation({
-    mutationFn: (id) => entities.DiscountCode.toggle(id),
+    mutationFn: (id) => isAdmin ? entities.DiscountCode.adminToggle(id) : entities.DiscountCode.toggle(id),
     onSuccess: (data) => {
       const msg = data?.isActive ? "İndirim kodu aktive edildi" : "İndirim kodu pasife alındı";
       toast.success(msg);
@@ -118,15 +144,16 @@ export default function MyDiscountCodes() {
     },
   });
 
-  // Formu doğrular ve kodu oluşturur; %50 üzeri indirim platforma zarar verebileceğinden engellenir
+  // Formu doğrular ve kodu oluşturur.
+  // Eğitici için: admin tarafından belirlenen `maxDiscountPercent` üst sınırı zorunlu.
+  // Admin için: 1-100 aralığında esnek (admin override).
   const handleSubmit = () => {
     if (!formData.code || formData.discount_percent < 1) {
       toast.error("Lütfen gerekli alanları doldurun");
       return;
     }
-    // İndirim oranı iş kuralı: maksimum %50
-    if (formData.discount_percent > 50) {
-      toast.error("İndirim oranı maksimum %50 olabilir");
+    if (formData.discount_percent > effectiveMaxDiscount) {
+      toast.error(`İndirim oranı maksimum %${effectiveMaxDiscount} olabilir`);
       return;
     }
     createMutation.mutate(formData);
@@ -142,8 +169,14 @@ export default function MyDiscountCodes() {
     <div>
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">İndirim Kodlarım</h1>
-          <p className="text-slate-500 mt-2">Test paketlerin için indirim kodları oluştur</p>
+          <h1 className="text-3xl font-bold text-slate-900">
+            {isAdmin ? "İndirim Kodları" : "İndirim Kodlarım"}
+          </h1>
+          <p className="text-slate-500 mt-2">
+            {isAdmin
+              ? "Tüm eğitici ve admin indirim kodlarını yönet"
+              : "Test paketlerin için indirim kodları oluştur"}
+          </p>
         </div>
         <Button onClick={() => setShowDialog(true)} className="bg-indigo-600 hover:bg-indigo-700">
           <Plus className="w-4 h-4 mr-2" />
@@ -264,6 +297,17 @@ export default function MyDiscountCodes() {
                       <p className="text-sm text-slate-500">
                         %{code.percentOff ?? code.discount_percent} indirim • {code.usedCount ?? code.current_uses ?? 0}/{code.maxUses ?? code.max_uses ?? "∞"} kullanım
                       </p>
+                      {isAdmin && code.creatorUsername && (
+                        <p className="text-xs text-slate-400 mt-0.5">
+                          Oluşturan:{" "}
+                          <span className="font-medium text-slate-600">{code.creatorUsername}</span>
+                          {code.creatorRole && (
+                            <Badge className={`ml-1.5 ${code.creatorRole === "ADMIN" ? "bg-indigo-100 text-indigo-700" : "bg-emerald-100 text-emerald-700"}`}>
+                              {code.creatorRole === "ADMIN" ? "Yönetici" : "Eğitici"}
+                            </Badge>
+                          )}
+                        </p>
+                      )}
                     </div>
                   </div>
                   <div className="flex items-center gap-4">
@@ -332,11 +376,14 @@ export default function MyDiscountCodes() {
                 <Input
                   type="number"
                   min="1"
-                  max="50"
+                  max={effectiveMaxDiscount}
                   value={formData.discount_percent}
                   onChange={(e) => setFormData({ ...formData, discount_percent: Number(e.target.value) })}
                 />
-                <p className="text-xs text-slate-500">Maksimum %50</p>
+                <p className="text-xs text-slate-500">
+                  Maksimum %{effectiveMaxDiscount}
+                  {isAdmin && " (admin override)"}
+                </p>
               </div>
               <div className="space-y-2">
                 <Label>Kullanım Limiti</Label>

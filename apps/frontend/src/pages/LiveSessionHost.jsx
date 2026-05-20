@@ -6,7 +6,6 @@ import { liveSessions as liveApi } from "@/api/dalClient";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
 import {
   ChevronLeft, ChevronRight, BarChart2, EyeOff, Users,
@@ -85,8 +84,9 @@ const OPTION_COLORS = [
   "bg-rose-500", "bg-blue-500", "bg-amber-500", "bg-emerald-500", "bg-violet-500"
 ];
 
-// ─── Bar chart for live answer distribution ───────────────────────────────────
-function StatsBar({ stats }) {
+// ─── Bar chart for live answer distribution (eski yardımcı — şu an opsiyonların
+// arka planına entegre edildi; bileşen ileride başka yerde kullanılabilir diye saklı)
+function _StatsBar({ stats }) {
   if (!stats) return null;
   const total = stats.reduce((s, o) => s + o.count, 0);
   return (
@@ -136,7 +136,19 @@ export default function LiveSessionHost() {
   const mut = (fn) => ({
     mutationFn: fn,
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["liveState", sessionId] }),
-    onError: (e) => toast.error(e?.response?.data?.message || "Hata"),
+    onError: (e) => {
+      // Backend hata response'u birkaç farklı şekilde gelebilir:
+      // { error: { code, message } } veya { message } veya { code, message }
+      const d = e?.response?.data;
+      const msg =
+        d?.error?.message ||
+        d?.message ||
+        d?.error?.code ||
+        d?.code ||
+        e?.message ||
+        "Hata";
+      toast.error(msg);
+    },
   });
 
   const startMut    = useMutation(mut(() => liveApi.start(sessionId)));
@@ -155,9 +167,13 @@ export default function LiveSessionHost() {
     mutationFn: () => liveApi.createRound2(sessionId),
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["liveState", sessionId] });
+      const newId = data?.id ?? data?.sessionId;
+      if (!newId) {
+        toast.error("2. tur oluşturuldu ancak yönlendirme yapılamadı");
+        return;
+      }
       toast.success(`2. tur oluşturuldu! Kod: ${data.joinCode}`);
-      // Navigate to the new round 2 session
-      navigate(createPageUrl("LiveSessionHost") + "?id=" + data.sessionId);
+      navigate(createPageUrl("LiveSessionHost") + "?id=" + newId);
     },
     onError: (e) => toast.error(e?.response?.data?.message || "2. tur oluşturulamadı"),
   });
@@ -185,6 +201,7 @@ export default function LiveSessionHost() {
   const isActive = state.status === "ACTIVE";
   const isEnded  = state.status === "ENDED";
   const stats    = q ? state.stats?.[q.id] : null;
+  const parentStats = q ? state.parentStats?.[q.id] : null;
   const isFirst  = state.currentQuestionIdx === 0;
   const isLast   = state.currentQuestionIdx === state.totalQuestions - 1;
 
@@ -244,131 +261,133 @@ export default function LiveSessionHost() {
         </div>
       </div>
 
-      <div className="grid lg:grid-cols-3 gap-5">
-        {/* ── Left: QR + join info ── */}
-        <div className="space-y-4">
-          <div className="bg-white rounded-2xl border border-slate-200 p-5 text-center">
-            <p className="text-xs font-medium text-slate-500 mb-3 uppercase tracking-wide">Katılım Kodu</p>
-            <div className="text-4xl font-black tracking-widest text-indigo-700 mb-3 font-mono">
-              {state.joinCode}
-            </div>
-            <button
-              onClick={copyCode}
-              className="text-xs text-slate-500 hover:text-indigo-600 flex items-center gap-1 mx-auto mb-4"
-            >
-              {copied ? <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
-              {copied ? "Kopyalandı!" : "Kodu kopyala"}
-            </button>
-            <div className="bg-white p-3 rounded-xl border border-slate-100 inline-block">
-              <QRCode value={joinUrl} size={140} />
-            </div>
-            <p className="text-xs text-slate-400 mt-3">
-              Adaylar QR kodu tarayarak katılabilir
+      <div className="space-y-5">
+        {/* ── Question card: tam genişlik, normal test stiliyle ── */}
+        <div className="bg-white rounded-2xl border border-slate-200 p-6">
+          <div className="mb-4">
+            <span className="text-xs font-medium text-slate-400 uppercase tracking-wide">
+              Soru {state.currentQuestionIdx + 1}
+            </span>
+            {q?.mediaUrl && (
+              <div className="mt-2 w-full max-h-64 rounded-xl overflow-hidden border border-slate-100">
+                <img src={q.mediaUrl} alt="soru" className="w-full h-full object-contain" />
+              </div>
+            )}
+            <p className="text-slate-700 text-lg mt-3 leading-relaxed">
+              {q?.content ?? "—"}
             </p>
           </div>
 
-          {/* Katılımcı durumu */}
-          <div className="bg-white rounded-xl border border-slate-200 p-4 space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-slate-700">Aktif Katılımcılar</span>
-              <div className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                <span className="text-lg font-bold text-emerald-700">{state.activeParticipantCount ?? 0}</span>
+          {/* Options — TakeTest stilinde; istatistik açıkken sağa yaslı yüzde.
+              Tur 2'de aynı sıradaki Tur 1 yüzdesi de gösterilir (karşılaştırma). */}
+          {q && (() => {
+            const showStats = (isActive || isEnded) && state.showStats && Array.isArray(stats);
+            const isRound2 = state.roundNumber === 2;
+            // optionId → { count, pct } eşlemesi (Tur 2 / mevcut tur)
+            const statByOpt = new Map();
+            if (showStats) {
+              const total = stats.reduce((s, o) => s + o.count, 0);
+              stats.forEach((s) => {
+                const pct = total > 0 ? Math.round((s.count / total) * 100) : 0;
+                statByOpt.set(s.optionId, { count: s.count, pct });
+              });
+            }
+            // Tur 1 (parent) istatistikleri — yalnızca Tur 2'de mevcut
+            const r1ByOpt = new Map();
+            if (showStats && isRound2 && Array.isArray(parentStats)) {
+              parentStats.forEach((p) => {
+                const pct = p.total > 0 ? Math.round((p.count / p.total) * 100) : 0;
+                r1ByOpt.set(p.optionId, { count: p.count, pct });
+              });
+            }
+            return (
+              <div className="space-y-3 mb-4">
+                {q.options.map((opt, idx) => {
+                  const isCorrect = !!opt.isCorrect;
+                  const highlight = isEnded && isCorrect;
+                  const stat = statByOpt.get(opt.id);
+                  const r1 = r1ByOpt.get(opt.id);
+                  const delta = stat && r1 ? stat.pct - r1.pct : null;
+                  return (
+                    <div
+                      key={opt.id}
+                      className={cn(
+                        "relative w-full p-4 rounded-xl border-2 text-left flex items-center gap-4 transition-all overflow-hidden",
+                        highlight
+                          ? "border-emerald-600 bg-emerald-50"
+                          : "border-slate-200 bg-white",
+                      )}
+                    >
+                      {/* İstatistik açıkken arka planda yüzde dolgusu */}
+                      {showStats && stat && (
+                        <div
+                          aria-hidden="true"
+                          className={cn(
+                            "absolute inset-y-0 left-0 transition-all duration-500",
+                            isCorrect ? "bg-emerald-100" : "bg-indigo-50",
+                          )}
+                          style={{ width: `${stat.pct}%` }}
+                        />
+                      )}
+                      <span
+                        className={cn(
+                          "relative w-8 h-8 rounded-lg flex items-center justify-center font-semibold text-sm flex-shrink-0",
+                          highlight ? "bg-emerald-600 text-white" : "bg-slate-100 text-slate-600",
+                        )}
+                      >
+                        {LETTERS[idx]}
+                      </span>
+                      <span className="relative text-slate-700 flex-1">{opt.content}</span>
+                      {showStats && stat && (
+                        <div className="relative flex items-center gap-3 shrink-0 ml-2">
+                          {isRound2 && r1 && (
+                            <div className="flex flex-col items-end text-xs leading-tight">
+                              <span className="text-slate-400">Tur 1: %{r1.pct}</span>
+                              {delta != null && delta !== 0 && (
+                                <span
+                                  className={cn(
+                                    "font-medium tabular-nums",
+                                    delta > 0
+                                      ? (isCorrect ? "text-emerald-600" : "text-rose-600")
+                                      : (isCorrect ? "text-rose-600" : "text-emerald-600"),
+                                  )}
+                                >
+                                  {delta > 0 ? "+" : ""}{delta} pp
+                                </span>
+                              )}
+                            </div>
+                          )}
+                          <span
+                            className={cn(
+                              "text-sm font-semibold tabular-nums",
+                              isCorrect ? "text-emerald-700" : "text-slate-700",
+                            )}
+                            title={`${stat.count} kişi`}
+                          >
+                            {isRound2 && <span className="text-xs text-slate-500 mr-1">Tur 2:</span>}
+                            %{stat.pct}
+                            <span className="text-xs text-slate-400 font-normal ml-1">({stat.count})</span>
+                          </span>
+                        </div>
+                      )}
+                      {highlight && !showStats && (
+                        <CheckCircle2 className="relative w-5 h-5 text-emerald-600 flex-shrink-0" />
+                      )}
+                    </div>
+                  );
+                })}
               </div>
-            </div>
-            <div className="flex items-center justify-between text-sm text-slate-500">
-              <span>Toplam katılan</span>
-              <span className="font-medium">
-                {state.participantCount}
-                {state.maxParticipants != null && (
-                  <span className="text-slate-400"> / {state.maxParticipants}</span>
-                )}
-              </span>
-            </div>
-            {state.maxParticipants != null && (
-              <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-indigo-500 rounded-full transition-all duration-500"
-                  style={{ width: `${Math.min(100, (state.participantCount / state.maxParticipants) * 100)}%` }}
-                />
-              </div>
-            )}
-          </div>
-
-          {/* Progress */}
-          <div className="bg-white rounded-xl border border-slate-200 p-4">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-medium text-slate-700">İlerleme</span>
-              <span className="text-sm text-slate-500">
-                {state.currentQuestionIdx + 1} / {state.totalQuestions}
-              </span>
-            </div>
-            <Progress
-              value={((state.currentQuestionIdx + 1) / state.totalQuestions) * 100}
-              className="h-2"
-            />
-          </div>
+            );
+          })()}
         </div>
 
-        {/* ── Right: Current question + controls ── */}
-        <div className="lg:col-span-2 space-y-4">
-          {/* Question card */}
-          <div className="bg-white rounded-2xl border border-slate-200 p-6">
-            <div className="flex items-start justify-between mb-4">
-              <div>
-                <span className="text-xs font-medium text-slate-400 uppercase tracking-wide">
-                  Soru {state.currentQuestionIdx + 1}
-                </span>
-                {q?.mediaUrl && (
-                  <div className="mt-2 w-full max-h-48 rounded-xl overflow-hidden border border-slate-100">
-                    <img src={q.mediaUrl} alt="soru" className="w-full h-full object-cover" />
-                  </div>
-                )}
-                <p className="text-xl font-semibold text-slate-900 mt-2 leading-snug">
-                  {q?.content ?? "—"}
-                </p>
-              </div>
-            </div>
-
-            {/* Options grid */}
-            {q && (
-              <div className="grid grid-cols-2 gap-2 mb-4">
-                {q.options.map((opt, idx) => (
-                  <div
-                    key={opt.id}
-                    className={cn(
-                      "flex items-center gap-3 p-3 rounded-xl border-2",
-                      isEnded && opt.isCorrect
-                        ? "border-emerald-500 bg-emerald-50"
-                        : "border-slate-200 bg-slate-50"
-                    )}
-                  >
-                    <span className={`w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold text-white shrink-0 ${OPTION_COLORS[idx % OPTION_COLORS.length]}`}>
-                      {LETTERS[idx]}
-                    </span>
-                    <span className="text-sm text-slate-700 flex-1">{opt.content}</span>
-                    {isEnded && opt.isCorrect && <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />}
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {/* Stats */}
-            {(isActive || isEnded) && state.showStats && stats && (
-              <div className="border-t border-slate-100 pt-4">
-                <p className="text-xs font-medium text-slate-500 mb-2 uppercase tracking-wide">İstatistikler</p>
-                <StatsBar stats={stats} />
-              </div>
-            )}
-          </div>
-
-          {/* Controls */}
+          {/* Controls — ACTIVE: canlı yönetim; ENDED: gözden geçirme navigasyonu */}
           {(isActive || isEnded) && (
             <div className="flex items-center justify-between gap-3 flex-wrap">
               <Button
                 variant="outline"
                 onClick={() => prevMut.mutate()}
-                disabled={isFirst || prevMut.isPending || !isActive}
+                disabled={isFirst || prevMut.isPending}
               >
                 <ChevronLeft className="w-4 h-4 mr-1" /> Önceki
               </Button>
@@ -386,7 +405,7 @@ export default function LiveSessionHost() {
 
               <Button
                 onClick={() => nextMut.mutate()}
-                disabled={isLast || nextMut.isPending || !isActive}
+                disabled={isLast || nextMut.isPending}
                 className="bg-indigo-600 hover:bg-indigo-700"
               >
                 Sonraki <ChevronRight className="w-4 h-4 ml-1" />
@@ -440,6 +459,60 @@ export default function LiveSessionHost() {
           {isEnded && state.roundNumber === 2 && (
             <ComparisonPanel sessionId={sessionId} />
           )}
+
+        {/* ── Alt satır: sol Aktif Katılımcılar + İlerleme, sağ QR (küçük) ── */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+          {/* Sol: Aktif katılımcılar — İlerleme zaten soru kartı başlığında var, ayrı bloka gerek yok */}
+          <div className="bg-white rounded-xl border border-slate-200 p-4 space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium text-slate-700">Aktif Katılımcılar</span>
+              <div className="flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="text-lg font-bold text-emerald-700">{state.activeParticipantCount ?? 0}</span>
+              </div>
+            </div>
+            <div className="flex items-center justify-between text-sm text-slate-500">
+              <span>Toplam katılan</span>
+              <span className="font-medium">
+                {state.participantCount}
+                {state.maxParticipants != null && (
+                  <span className="text-slate-400"> / {state.maxParticipants}</span>
+                )}
+              </span>
+            </div>
+            {state.maxParticipants != null && (
+              <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-indigo-500 rounded-full transition-all duration-500"
+                  style={{ width: `${Math.min(100, (state.participantCount / state.maxParticipants) * 100)}%` }}
+                />
+              </div>
+            )}
+          </div>
+
+          {/* Sağ: Katılım kodu + küçük QR */}
+          <div className="bg-white rounded-xl border border-slate-200 p-4">
+            <div className="flex items-center justify-between gap-4">
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-medium text-slate-500 mb-1 uppercase tracking-wide">Katılım Kodu</p>
+                <div className="text-2xl font-black tracking-widest text-indigo-700 font-mono break-all">
+                  {state.joinCode}
+                </div>
+                <button
+                  onClick={copyCode}
+                  className="mt-1 text-xs text-slate-500 hover:text-indigo-600 flex items-center gap-1"
+                >
+                  {copied ? <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
+                  {copied ? "Kopyalandı!" : "Kodu kopyala"}
+                </button>
+                <p className="text-xs text-slate-400 mt-2">QR kodu ile katılım</p>
+              </div>
+              {/* QR kodu — eski 140 px'in %50'si */}
+              <div className="bg-white p-2 rounded-lg border border-slate-100 shrink-0">
+                <QRCode value={joinUrl} size={70} />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

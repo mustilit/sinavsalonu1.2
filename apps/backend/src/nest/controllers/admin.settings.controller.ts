@@ -51,6 +51,7 @@ export class AdminSettingsController {
         adPurchasesEnabled: dto.adPurchasesEnabled,
         twoFactorSystemEnabled: dto.twoFactorSystemEnabled,
         minPackagePriceCents: dto.minPackagePriceCents,
+        maxDiscountPercent: dto.maxDiscountPercent,
         minQuestionsPerTest: dto.minQuestionsPerTest,
         maxQuestionsPerTest: dto.maxQuestionsPerTest,
         maxTestsPerPackage: dto.maxTestsPerPackage,

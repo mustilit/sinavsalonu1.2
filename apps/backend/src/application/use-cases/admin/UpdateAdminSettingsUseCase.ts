@@ -22,6 +22,7 @@ export interface UpdateAdminSettingsInput {
   adPurchasesEnabled?: boolean;
   twoFactorSystemEnabled?: boolean;
   minPackagePriceCents?: number;
+  maxDiscountPercent?: number;
   minQuestionsPerTest?: number;
   maxQuestionsPerTest?: number;
   maxTestsPerPackage?: number;
@@ -83,6 +84,11 @@ export class UpdateAdminSettingsUseCase {
           WHERE id = 1
         `;
       }
+      if (input.maxDiscountPercent !== undefined) {
+        await prisma.$executeRaw`
+          UPDATE admin_settings SET "maxDiscountPercent" = ${input.maxDiscountPercent} WHERE id = 1
+        `;
+      }
       if (input.minQuestionsPerTest !== undefined) {
         await prisma.$executeRaw`
           UPDATE admin_settings SET "minQuestionsPerTest" = ${input.minQuestionsPerTest} WHERE id = 1
@@ -107,6 +113,7 @@ export class UpdateAdminSettingsUseCase {
 
     // Guncel degerleri raw okuyarak dondur
     let minPackagePriceCents = 100;
+    let maxDiscountPercent = 50;
     let minQuestionsPerTest = 1;
     let maxQuestionsPerTest = 100;
     let maxTestsPerPackage = 10;
@@ -114,17 +121,19 @@ export class UpdateAdminSettingsUseCase {
 
     if (prisma.$queryRaw) {
       const result = await prisma.$queryRaw`
-        SELECT "minPackagePriceCents", "minQuestionsPerTest", "maxQuestionsPerTest", "maxTestsPerPackage", "maxLiveQuestions"
+        SELECT "minPackagePriceCents", "maxDiscountPercent", "minQuestionsPerTest", "maxQuestionsPerTest", "maxTestsPerPackage", "maxLiveQuestions"
         FROM admin_settings WHERE id = 1
       ` as any[];
       const r = result[0];
       minPackagePriceCents = r?.minPackagePriceCents ?? 100;
+      maxDiscountPercent = r?.maxDiscountPercent ?? 50;
       minQuestionsPerTest = r?.minQuestionsPerTest ?? 1;
       maxQuestionsPerTest = r?.maxQuestionsPerTest ?? 100;
       maxTestsPerPackage = r?.maxTestsPerPackage ?? 10;
       maxLiveQuestions = r?.maxLiveQuestions ?? 50;
     } else {
       minPackagePriceCents = (row as any).minPackagePriceCents ?? 100;
+      maxDiscountPercent = (row as any).maxDiscountPercent ?? 50;
       minQuestionsPerTest = (row as any).minQuestionsPerTest ?? 1;
       maxQuestionsPerTest = (row as any).maxQuestionsPerTest ?? 100;
       maxTestsPerPackage = (row as any).maxTestsPerPackage ?? 10;
@@ -141,6 +150,7 @@ export class UpdateAdminSettingsUseCase {
       adPurchasesEnabled: (row as any).adPurchasesEnabled ?? true,
       twoFactorSystemEnabled: (row as any).twoFactorSystemEnabled ?? false,
       minPackagePriceCents,
+      maxDiscountPercent,
       minQuestionsPerTest,
       maxQuestionsPerTest,
       maxTestsPerPackage,
@@ -161,17 +171,19 @@ export class UpdateAdminSettingsUseCase {
       const row = await prisma.adminSettings.findUnique({ where: { id: 1 } });
       if (!row) return null;
       let mpp = 100;
+      let mdp = 50;
       let minQ = 1;
       let maxQ = 100;
       let maxTpp = 10;
       let maxLq = 50;
       if (prisma.$queryRaw) {
         const r = await prisma.$queryRaw`
-          SELECT "minPackagePriceCents", "minQuestionsPerTest", "maxQuestionsPerTest",
+          SELECT "minPackagePriceCents", "maxDiscountPercent", "minQuestionsPerTest", "maxQuestionsPerTest",
                  "maxTestsPerPackage", "maxLiveQuestions"
           FROM admin_settings WHERE id = 1
         ` as any[];
         mpp = r[0]?.minPackagePriceCents ?? 100;
+        mdp = r[0]?.maxDiscountPercent ?? 50;
         minQ = r[0]?.minQuestionsPerTest ?? 1;
         maxQ = r[0]?.maxQuestionsPerTest ?? 100;
         maxTpp = r[0]?.maxTestsPerPackage ?? 10;
@@ -187,6 +199,7 @@ export class UpdateAdminSettingsUseCase {
         adPurchasesEnabled: (row as any).adPurchasesEnabled ?? true,
         twoFactorSystemEnabled: (row as any).twoFactorSystemEnabled ?? false,
         minPackagePriceCents: mpp,
+        maxDiscountPercent: mdp,
         minQuestionsPerTest: minQ,
         maxQuestionsPerTest: maxQ,
         maxTestsPerPackage: maxTpp,

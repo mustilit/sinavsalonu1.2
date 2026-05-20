@@ -273,6 +273,7 @@ export default function AdminSystemControls() {
   const [activeTab, setActiveTab] = useState("system");
   const [savingKey, setSavingKey] = useState(null);
   const [minPriceInput, setMinPriceInput] = useState("");
+  const [maxDiscountInput, setMaxDiscountInput] = useState("");
   const [newRate, setNewRate] = useState("");
   const [newEffectiveFrom, setNewEffectiveFrom] = useState("");
   const [newNote, setNewNote] = useState("");
@@ -347,6 +348,17 @@ export default function AdminSystemControls() {
     setSavingKey("minPackagePriceCents");
     updateMutation.mutate({ minPackagePriceCents: cents });
     setMinPriceInput("");
+  };
+
+  const handleMaxDiscountSave = () => {
+    const pct = parseInt(maxDiscountInput, 10);
+    if (isNaN(pct) || pct < 1 || pct > 100) {
+      toast.error("Geçerli bir yüzde değeri giriniz (1-100)");
+      return;
+    }
+    setSavingKey("maxDiscountPercent");
+    updateMutation.mutate({ maxDiscountPercent: pct });
+    setMaxDiscountInput("");
   };
 
   const { data: rateHistory = [], isLoading: ratesLoading } = useQuery({
@@ -760,6 +772,50 @@ export default function AdminSystemControls() {
                 className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white text-sm font-medium rounded-lg transition-colors flex items-center gap-2"
               >
                 {savingKey === "minPackagePriceCents"
+                  ? <><Loader2 className="w-4 h-4 animate-spin" />Kaydediliyor...</>
+                  : "Kaydet"}
+              </button>
+            </div>
+          </div>
+
+          {/* İndirim Sınırı — eğiticinin tanımlayabileceği maksimum indirim oranı */}
+          <div className="p-5 bg-white border border-slate-200 rounded-xl space-y-4">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-lg bg-amber-50 flex items-center justify-center flex-shrink-0">
+                <Percent className="w-5 h-5 text-amber-600" />
+              </div>
+              <div>
+                <p className="font-semibold text-slate-900">İndirim Sınırı</p>
+                <p className="text-sm text-slate-500">
+                  Eğiticilerin indirim kodu oluştururken belirleyebileceği maksimum oran.
+                  Admin tarafından oluşturulan kodlar bu sınırla kısıtlı değildir.
+                  Mevcut değer:{" "}
+                  <strong className="text-slate-700">
+                    %{settings?.maxDiscountPercent ?? 50}
+                  </strong>
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="relative flex-1 max-w-xs">
+                <input
+                  type="number"
+                  min="1"
+                  max="100"
+                  step="1"
+                  placeholder={String(settings?.maxDiscountPercent ?? 50)}
+                  value={maxDiscountInput}
+                  onChange={(e) => setMaxDiscountInput(e.target.value)}
+                  className="w-full pl-3 pr-8 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+                />
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">%</span>
+              </div>
+              <button
+                onClick={handleMaxDiscountSave}
+                disabled={!maxDiscountInput || savingKey === "maxDiscountPercent"}
+                className="px-4 py-2 bg-amber-600 hover:bg-amber-700 disabled:opacity-50 text-white text-sm font-medium rounded-lg transition-colors flex items-center gap-2"
+              >
+                {savingKey === "maxDiscountPercent"
                   ? <><Loader2 className="w-4 h-4 animate-spin" />Kaydediliyor...</>
                   : "Kaydet"}
               </button>

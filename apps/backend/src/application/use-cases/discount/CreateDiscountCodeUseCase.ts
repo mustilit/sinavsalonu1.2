@@ -42,18 +42,34 @@ export class CreateDiscountCodeUseCase {
     const user = await this.userRepo.findById(educatorId);
     if (!user) throw new AppError('USER_NOT_FOUND', 'User not found', 404);
     // Askıya alınmış hesap indirim kodu oluşturamaz; educatorApprovedAt kontrolü yok
-    // (paket oluşturmayla tutarlı: onay beklemeyen eğiticiler de kullanabilir)
-    if (user.role !== 'EDUCATOR') throw new AppError('USER_NOT_EDUCATOR', 'User is not an educator', 403);
-    if (user.status === 'SUSPENDED') throw new AppError('EDUCATOR_SUSPENDED', 'Educator account is suspended', 403);
+    // (paket oluşturmayla tutarlı: onay beklemeyen eğiticiler de kullanabilir).
+    // ADMIN da indirim kodu oluşturabilir — aynı kuralları taşır.
+    if (user.role !== 'EDUCATOR' && user.role !== 'ADMIN')
+      throw new AppError('USER_NOT_AUTHORIZED', 'User is not authorized to create discount codes', 403);
+    if (user.status === 'SUSPENDED') throw new AppError('USER_SUSPENDED', 'User account is suspended', 403);
 
     // Kod normalize edilir: boşluklar temizlenir ve büyük harfe çevrilir
     const code = input.code.trim().toUpperCase();
     if (!code || code.length < 3) {
       throw new BadRequestException({ code: 'INVALID_CODE', message: 'Code must be at least 3 characters' });
     }
-    // İndirim oranı platform politikası gereği %50 ile sınırlandırılmıştır
-    if (input.percentOff < 1 || input.percentOff > 50) {
-      throw new BadRequestException({ code: 'INVALID_PERCENT', message: 'percentOff must be between 1 and 50' });
+    // İndirim oranı 1-100 aralığında olmalı (DB constraint)
+    if (input.percentOff < 1 || input.percentOff > 100) {
+      throw new BadRequestException({ code: 'INVALID_PERCENT', message: 'percentOff must be between 1 and 100' });
+    }
+    // Admin ayarlarındaki maksimum indirim oranını oku — eğitici bu sınırı geçemez.
+    // Admin'in kendisi bu sınırla kısıtlı değildir (yönetici override).
+    if (user.role === 'EDUCATOR') {
+      const settingsRow = await prisma.$queryRaw<Array<{ maxDiscountPercent: number | null }>>`
+        SELECT "maxDiscountPercent" FROM admin_settings WHERE id = 1 LIMIT 1
+      `;
+      const maxAllowed = settingsRow[0]?.maxDiscountPercent ?? 50;
+      if (input.percentOff > maxAllowed) {
+        throw new BadRequestException({
+          code: 'DISCOUNT_LIMIT_EXCEEDED',
+          message: `İndirim oranı en fazla %${maxAllowed} olabilir`,
+        });
+      }
     }
     if (input.maxUses != null && input.maxUses < 1) {
       throw new BadRequestException({ code: 'INVALID_MAX_USES', message: 'maxUses must be at least 1' });

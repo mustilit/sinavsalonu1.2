@@ -20,6 +20,7 @@ export class GetAdminSettingsUseCase {
         adPurchasesEnabled: true,
         twoFactorSystemEnabled: false,
         minPackagePriceCents: 100,
+        maxDiscountPercent: 50,
         minQuestionsPerTest: 1,
         maxQuestionsPerTest: 100,
         maxTestsPerPackage: 10,
@@ -27,13 +28,16 @@ export class GetAdminSettingsUseCase {
       };
     }
 
-    // minPackagePriceCents Prisma client'ta olmayabilir; raw okuma güvenli yol
+    // minPackagePriceCents / maxDiscountPercent Prisma client'ta olmayabilir; raw okuma güvenli yol
     let minPackagePriceCents = 100;
+    let maxDiscountPercent = 50;
     if (prisma.$queryRaw) {
-      const result = await prisma.$queryRaw`SELECT "minPackagePriceCents" FROM admin_settings WHERE id = 1` as any[];
+      const result = await prisma.$queryRaw`SELECT "minPackagePriceCents", "maxDiscountPercent" FROM admin_settings WHERE id = 1` as any[];
       minPackagePriceCents = result[0]?.minPackagePriceCents ?? 100;
+      maxDiscountPercent = result[0]?.maxDiscountPercent ?? 50;
     } else {
       minPackagePriceCents = (row as any).minPackagePriceCents ?? 100;
+      maxDiscountPercent = (row as any).maxDiscountPercent ?? 50;
     }
 
     return {
@@ -46,6 +50,7 @@ export class GetAdminSettingsUseCase {
       adPurchasesEnabled: (row as any).adPurchasesEnabled ?? true,
       twoFactorSystemEnabled: (row as any).twoFactorSystemEnabled ?? false,
       minPackagePriceCents,
+      maxDiscountPercent,
       minQuestionsPerTest: (row as any).minQuestionsPerTest ?? 1,
       maxQuestionsPerTest: (row as any).maxQuestionsPerTest ?? 100,
       maxTestsPerPackage: (row as any).maxTestsPerPackage ?? 10,

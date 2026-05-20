@@ -817,6 +817,7 @@ model AdminSettings {
   adPurchasesEnabled               Boolean   @default(true) // Reklam Satın Alma Durdur
   twoFactorSystemEnabled           Boolean   @default(false) // 2FA sistem geneli aç/kapat (admin kontrolü)
   minPackagePriceCents             Int       @default(100) // Minimum paket fiyatı (kuruş)
+  maxDiscountPercent               Int       @default(50) // Eğiticinin tanımlayabileceği maksimum indirim oranı (%)
   minQuestionsPerTest              Int       @default(1) // Test başına minimum soru sayısı
   maxQuestionsPerTest              Int       @default(100) // Test başına maksimum soru sayısı
   maxTestsPerPackage               Int       @default(10) // Paket başına maksimum test sayısı

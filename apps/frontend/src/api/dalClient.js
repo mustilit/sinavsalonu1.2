@@ -660,6 +660,61 @@ export const entities = {
       const { data } = await api.patch(`/educators/me/discount-codes/${id}/toggle`);
       return data;
     },
+    // Admin: tüm indirim kodlarını listele (creator bilgisiyle)
+    adminFilter: async () => {
+      try {
+        const { data } = await api.get('/admin/discount-codes');
+        const list = Array.isArray(data) ? data : [];
+        return list.map((d) => ({
+          id: d.id,
+          code: d.code,
+          percentOff: d.percentOff,
+          discount_percent: d.percentOff,
+          maxUses: d.maxUses,
+          max_uses: d.maxUses,
+          usedCount: d.usedCount,
+          current_uses: d.usedCount,
+          isActive: d.isActive ?? true,
+          is_active: d.isActive ?? true,
+          validFrom: d.validFrom,
+          valid_from: d.validFrom,
+          validUntil: d.validUntil,
+          valid_until: d.validUntil,
+          description: d.description,
+          createdAt: d.createdAt,
+          created_date: d.createdAt,
+          creatorId: d.creatorId,
+          creatorUsername: d.creatorUsername,
+          creatorEmail: d.creatorEmail,
+          creatorRole: d.creatorRole,
+        }));
+      } catch {
+        return [];
+      }
+    },
+    // Admin: kendi kullanıcısı olarak yeni kod oluştur
+    adminCreate: async (body) => {
+      const percentOff = body.discount_percent ?? body.percent_off ?? body.percentOff ?? 10;
+      const maxUses    = body.max_uses ?? body.maxUses;
+      const validFrom  = body.valid_from  || null;
+      const validUntil = body.valid_until || null;
+      const description = body.description || null;
+      const payload = {
+        code: body.code,
+        percentOff,
+        ...(maxUses   != null ? { maxUses }   : {}),
+        ...(validFrom         ? { validFrom } : {}),
+        ...(validUntil        ? { validUntil }: {}),
+        ...(description       ? { description }: {}),
+      };
+      const { data } = await api.post('/admin/discount-codes', payload);
+      return data;
+    },
+    // Admin: herhangi bir kodu aktif/pasif yap
+    adminToggle: async (id) => {
+      const { data } = await api.patch(`/admin/discount-codes/${id}/toggle`);
+      return data;
+    },
   },
 
   // RefundRequest

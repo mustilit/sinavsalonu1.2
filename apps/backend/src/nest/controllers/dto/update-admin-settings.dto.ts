@@ -53,6 +53,13 @@ export class UpdateAdminSettingsDto {
   @IsPositive()
   minPackagePriceCents?: number;
 
+  @ApiPropertyOptional({ example: 50, description: 'Eğiticinin tanımlayabileceği maksimum indirim oranı (1-100)' })
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  @Max(100)
+  maxDiscountPercent?: number;
+
   @ApiPropertyOptional({ example: 1, description: 'Test başına minimum soru sayısı' })
   @IsOptional()
   @IsInt()

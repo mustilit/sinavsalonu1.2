@@ -71,6 +71,8 @@ export default function Sidebar({ user, currentPage }) {
     { name: "Soru Konuları", page: "ManageTopics", icon: BookOpen },
     { name: "Kullanıcılar", page: "ManageUsers", icon: Users },
     { name: "Tüm Testler", page: "ManageTests", icon: BookOpen },
+    // İndirim Kodları — admin tüm eğitici/admin kodlarını yönetir
+    { name: "İndirim Kodları", page: "MyDiscountCodes", icon: Award },
     // Talepler — İade Talepleri + Hata Bildirimleri tek sayfada sekmeli
     { name: "Talepler", page: "AdminClaims", icon: ShoppingBag },
     // Gelirler — Komisyon Raporu + Reklam Raporu tek sayfada sekmeli
@@ -160,6 +162,14 @@ export default function Sidebar({ user, currentPage }) {
               alt={user?.full_name || user?.username || "Profil"}
               className="w-10 h-10 rounded-full object-cover shrink-0 border border-slate-200 dark:border-gray-700"
             />
+          ) : isAdmin ? (
+            // Admin için varsayılan avatar — Sınav Salonu logosu (custom foto yüklenmemişse)
+            <div
+              className="w-10 h-10 bg-gradient-to-br from-indigo-600 to-indigo-500 rounded-full flex items-center justify-center shrink-0"
+              title="Sınav Salonu"
+            >
+              <GraduationCap className="w-6 h-6 text-white" aria-hidden="true" />
+            </div>
           ) : (
             <div className="w-10 h-10 bg-gradient-to-br from-slate-100 to-slate-200 dark:from-gray-700 dark:to-gray-600 rounded-full flex items-center justify-center shrink-0">
               <span className="text-sm font-semibold text-slate-600 dark:text-gray-200">

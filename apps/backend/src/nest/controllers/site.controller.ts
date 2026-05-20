@@ -61,9 +61,11 @@ export class SiteController {
   @ApiOkResponse({ description: 'Current kill-switch status for all services' })
   async getServiceStatus() {
     const row = await this.prisma.adminSettings.findFirst({ where: { id: 1 } });
-    // minPackagePriceCents Prisma client'ta olmayabilir; raw okuma güvenli yol
-    const raw = await (this.prisma as any).$queryRaw<{ minPackagePriceCents: number }[]>`
-      SELECT "minPackagePriceCents" FROM admin_settings WHERE id = 1
+    // minPackagePriceCents / maxDiscountPercent Prisma client'ta olmayabilir; raw okuma güvenli yol
+    const raw = await (this.prisma as any).$queryRaw<
+      { minPackagePriceCents: number; maxDiscountPercent: number }[]
+    >`
+      SELECT "minPackagePriceCents", "maxDiscountPercent" FROM admin_settings WHERE id = 1
     `;
     return {
       purchasesEnabled:       row?.purchasesEnabled                    ?? true,
@@ -72,6 +74,7 @@ export class SiteController {
       testAttemptsEnabled:    row?.testAttemptsEnabled                 ?? true,
       adPurchasesEnabled:     (row as any)?.adPurchasesEnabled         ?? true,
       minPackagePriceCents:   raw[0]?.minPackagePriceCents             ?? 100,
+      maxDiscountPercent:     raw[0]?.maxDiscountPercent               ?? 50,
     };
   }
 

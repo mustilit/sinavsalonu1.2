@@ -98,6 +98,8 @@ export type AdminSettings = {
   twoFactorSystemEnabled: boolean;
   /** Minimum paket fiyatı (kuruş). Eğitici bu değerin altında fiyat giremez. */
   minPackagePriceCents: number;
+  /** Eğiticinin tanımlayabileceği maksimum indirim oranı (% 1-100). */
+  maxDiscountPercent: number;
   /** Test başına minimum soru sayısı. Yayımlamada kontrol edilir. */
   minQuestionsPerTest: number;
   /** Test başına maksimum soru sayısı. Soru eklerken kontrol edilir. */

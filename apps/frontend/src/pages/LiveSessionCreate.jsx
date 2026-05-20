@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { liveSessions as liveApi, liveSessionTiers as tiersApi, topics as topicsApi } from "@/api/dalClient";
@@ -21,7 +21,7 @@ import {
 import { toast } from "sonner";
 import {
   Plus, Trash2, CheckCircle2, ArrowLeft, Zap, Loader2, Users,
-  Eye, BookOpen, Package, AlertTriangle, WrenchIcon, ImagePlus, X,
+  Eye, BookOpen, Package, AlertTriangle, WrenchIcon, ImagePlus, X, Upload,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -206,11 +206,21 @@ function QuestionEditDialog({ question, questionIndex, topicList, onSave, onSave
 
   const qImgDisplay = local._imgPreview || local.mediaUrl || null;
 
+  // Yeni eklenen boş bir soru için başlık "Yeni Soru" — düzenleme için "Düzenle"
+  const isBrandNew =
+    !question.content.trim() &&
+    !question.mediaUrl &&
+    !question.options.some((o) => o.content.trim() || o.mediaUrl);
+
   return (
     <Dialog open onOpenChange={onClose}>
       <DialogContent className="max-w-2xl max-h-screen overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Soru {displayIndex + 1} Düzenle</DialogTitle>
+          <DialogTitle>
+            {isBrandNew
+              ? `Soru ${displayIndex + 1} Ekle`
+              : `Soru ${displayIndex + 1} Düzenle`}
+          </DialogTitle>
         </DialogHeader>
 
         <div className="space-y-5 py-2">
@@ -414,8 +424,17 @@ function QuestionEditDialog({ question, questionIndex, topicList, onSave, onSave
 }
 
 // ─── Soru accordion öğesi ────────────────────────────────────────────────────
-function QuestionItem({ questionIndex, question, topicList, onUpdate, onDelete, onAddNew }) {
+function QuestionItem({ questionIndex, question, topicList, onUpdate, onDelete, onAddNew, autoOpenEdit, onAutoOpenHandled }) {
   const [editOpen, setEditOpen] = useState(false);
+
+  // Yeni soru eklendiğinde veya DOCX import sonrasında — parent autoOpenEdit'i true yapar.
+  // Mount sonrası dialog açılır; sonra parent'in flag'i temizlemesi için callback'i tetikler.
+  useEffect(() => {
+    if (autoOpenEdit) {
+      setEditOpen(true);
+      onAutoOpenHandled?.();
+    }
+  }, [autoOpenEdit, onAutoOpenHandled]);
 
   const isComplete = (question.content.trim() || question.mediaUrl) &&
     question.options.filter(o => o.content.trim() || o.mediaUrl).length >= 2 &&
@@ -482,8 +501,141 @@ export default function LiveSessionCreate() {
   const [selectedTier, setSelectedTier] = useState(null);
   const [title, setTitle]               = useState("");
   const [description, setDescription]  = useState("");
-  const [questions, setQuestions]       = useState([emptyQuestion()]);
+  const [questions, setQuestions]       = useState(() => {
+    const q = emptyQuestion();
+    return [q];
+  });
   const [step1Errors, setStep1Errors]   = useState({});
+  const [showDOCXDialog, setShowDOCXDialog] = useState(false);
+  const [docxLoading, setDocxLoading]   = useState(false);
+  // Ödeme onay modal'ı durumu — Önizleme sonrası, kayıt yapılmadan önce açılır
+  const [paymentOpen, setPaymentOpen]   = useState(false);
+  const [paymentProvider, setPaymentProvider] = useState("iyzico");
+  // Accordion'da hangi sorunun açık olduğunu tutan controlled değer.
+  // İlk render'da varsa ilk sorunun _k'sı açılır; yeni soru eklenince onun _k'sı set edilir.
+  const [openQuestionKey, setOpenQuestionKey] = useState(null);
+  // "Soru Ekle" tıklamasından sonra otomatik açılacak düzenleme modalının soru _k'sı
+  const [pendingEditKey, setPendingEditKey] = useState(null);
+  useEffect(() => {
+    if (!openQuestionKey && questions.length > 0) {
+      setOpenQuestionKey(questions[0]._k);
+    }
+  }, [questions, openQuestionKey]);
+
+  // DOCX'ten soru içeri aktarma — iki format desteklenir:
+  //   1) Düz metin formatı:
+  //      "1. Soru metni"  veya  "Soru: Soru metni"
+  //      "A) Seçenek..."  ...  "E) Seçenek..."
+  //      "Cevap: A"  veya  "*A"  → doğru cevap işareti
+  //
+  //   2) Word otomatik numaralama (nested <ol><li>):
+  //      Word'de soru listesinin altına sub-list olarak şıklar girildiyse,
+  //      mammoth nested <ol><li> üretir. İlk seviye = sorular, ikinci seviye = şıklar.
+  //      Bu durumda sıralama A,B,C,D,E olarak atanır; cevap işareti yoksa boş bırakılır.
+  const handleDOCXImport = async (file) => {
+    setDocxLoading(true);
+    try {
+      const mammoth = await import("mammoth");
+      const arrayBuffer = await file.arrayBuffer();
+      const result = await mammoth.convertToHtml({ arrayBuffer });
+      const html = result.value;
+
+      const div = document.createElement("div");
+      div.innerHTML = html;
+
+      const parsed = [];
+
+      // --- 1) Yapısal parser: top-level <ol><li> (her li bir soru, içindeki <ol><li> şıklar) ---
+      const topLists = Array.from(div.children).filter((el) => el.tagName === "OL" || el.tagName === "UL");
+      for (const list of topLists) {
+        const questionItems = Array.from(list.children).filter((el) => el.tagName === "LI");
+        for (const qLi of questionItems) {
+          // Soru metni: alt listeleri (şıkları) hariç tutarak başlığı çek
+          const subList = Array.from(qLi.children).find((el) => el.tagName === "OL" || el.tagName === "UL");
+          let qText;
+          if (subList) {
+            const clone = qLi.cloneNode(true);
+            clone.querySelectorAll("ol, ul").forEach((n) => n.remove());
+            qText = clone.textContent.trim();
+          } else {
+            qText = qLi.textContent.trim();
+          }
+          if (!qText) continue;
+
+          const q = emptyQuestion();
+          q.content = qText;
+
+          if (subList) {
+            const optionItems = Array.from(subList.children).filter((el) => el.tagName === "LI");
+            optionItems.slice(0, q.options.length).forEach((optLi, i) => {
+              q.options[i].content = optLi.textContent.trim();
+            });
+          }
+          // En az 2 dolu seçenek varsa kabul et
+          if (q.options.filter((o) => o.content.trim()).length >= 2 || qText) {
+            parsed.push(q);
+          }
+        }
+      }
+
+      // --- 2) Yapısal parser sonuç vermediyse düz metin fallback ---
+      if (parsed.length === 0) {
+        const lines = Array.from(div.querySelectorAll("p, li"))
+          .map((el) => el.textContent.trim())
+          .filter((t) => t.length > 0);
+
+        let currentQuestion = null;
+        for (const line of lines) {
+          if (/^(soru:|\d+\s*\.)/i.test(line)) {
+            if (currentQuestion) parsed.push(currentQuestion);
+            currentQuestion = emptyQuestion();
+            currentQuestion.content = line.replace(/^(soru:|\d+\s*\.\s*)/i, "").trim();
+          } else if (currentQuestion && /^([A-E])\s*\)\s*(.+)/.test(line)) {
+            const match = line.match(/^([A-E])\s*\)\s*(.+)/);
+            const idx = LETTERS.indexOf(match[1]);
+            if (idx >= 0 && idx < currentQuestion.options.length) {
+              currentQuestion.options[idx].content = match[2].trim();
+            }
+          } else if (currentQuestion && /^\*|cevap:/i.test(line)) {
+            const match = line.match(/^[\*]*\s*([A-E])/i);
+            if (match) {
+              const idx = LETTERS.indexOf(match[1].toUpperCase());
+              if (idx >= 0) {
+                currentQuestion.options = currentQuestion.options.map((o, i) => ({
+                  ...o,
+                  isCorrect: i === idx,
+                }));
+              }
+            }
+          }
+        }
+        if (currentQuestion) parsed.push(currentQuestion);
+      }
+
+      if (parsed.length === 0) {
+        toast.error("DOCX'ten soru parse edilemedi. Lütfen manuel ekleyiniz.");
+      } else {
+        setQuestions((prev) => {
+          // İlk soru hâlâ boşsa onun yerine yenileri koy; aksi halde sona ekle
+          const allEmpty = prev.length === 1 && !prev[0].content.trim() &&
+            !prev[0].options.some((o) => o.content.trim());
+          return allEmpty ? parsed : [...prev, ...parsed];
+        });
+        // İçeri aktarılan ilk soruyu açık göster — kullanıcı sonucu hızlı görür
+        setOpenQuestionKey(parsed[0]._k);
+        toast.success(`${parsed.length} soru eklendi`);
+      }
+    } catch (err) {
+      if (err.message?.includes("mammoth")) {
+        toast.error("DOCX import paketi yüklü değil");
+      } else {
+        toast.error("DOCX import başarısız: " + (err?.message || "Bilinmeyen hata"));
+      }
+    } finally {
+      setDocxLoading(false);
+      setShowDOCXDialog(false);
+    }
+  };
 
   // ── Tier query ────────────────────────────────────────────────────────
   const { data: tiers = [], isLoading: tiersLoading } = useQuery({
@@ -530,15 +682,30 @@ export default function LiveSessionCreate() {
       return liveApi.create(payload);
     },
     onSuccess: async (session) => {
-      await liveApi.pay(session.id);
       const price = selectedTier?.priceCents ?? 0;
-      toast.success(price > 0
-        ? `Canlı test oluşturuldu! (${(price / 100).toFixed(2)} ₺ ödendi)`
-        : "Canlı test oluşturuldu!"
-      );
-      navigate(createPageUrl("LiveSessionHost") + "?id=" + session.id);
+      try {
+        // Ödeme adımı — provider seçimi metadata olarak gönderiliyor (mock).
+        // Başarısız olursa oturum DRAFT/unpaid kalır → kullanıcıya hata mesajı.
+        await liveApi.pay(session.id);
+        toast.success(price > 0
+          ? `Ödeme tamamlandı! (₺${(price / 100).toFixed(2)} — ${paymentProvider})`
+          : "Canlı test oluşturuldu!"
+        );
+        setPaymentOpen(false);
+        navigate(createPageUrl("LiveSessionHost") + "?id=" + session.id);
+      } catch (e) {
+        toast.error(
+          e?.response?.data?.error?.message ||
+            e?.response?.data?.message ||
+            "Ödeme başarısız oldu. Oturum taslak olarak kaydedildi; daha sonra Canlı Testlerim'den ödeme yapabilirsiniz.",
+        );
+        setPaymentOpen(false);
+      }
     },
-    onError: (err) => toast.error(err?.response?.data?.message || err.message || "Oluşturulamadı"),
+    onError: (err) => {
+      const d = err?.response?.data;
+      toast.error(d?.error?.message || d?.message || err.message || "Oluşturulamadı");
+    },
   });
 
   // ── Adım geçişleri ────────────────────────────────────────────────────
@@ -563,11 +730,26 @@ export default function LiveSessionCreate() {
   };
 
   // ── Soru yardımcıları ─────────────────────────────────────────────────
-  const addQuestion    = () => setQuestions(qs => [...qs, emptyQuestion()]);
+  const addQuestion = () => {
+    const q = emptyQuestion();
+    setQuestions((qs) => [...qs, q]);
+    setOpenQuestionKey(q._k);
+    // Soru giriş ekranını (modal) doğrudan aç — eğitici neyi dolduracağını anlasın
+    setPendingEditKey(q._k);
+  };
   const updateQuestion = (idx, updated) =>
     setQuestions(qs => qs.map((q, i) => i === idx ? updated : q));
-  const deleteQuestion = (idx) =>
-    setQuestions(qs => qs.filter((_, i) => i !== idx));
+  const deleteQuestion = (idx) => {
+    setQuestions((qs) => {
+      const deleted = qs[idx];
+      const next = qs.filter((_, i) => i !== idx);
+      // Silinen soru açıksa accordion'ı temizle; aksi halde dokunma
+      if (deleted && openQuestionKey === deleted._k) {
+        setOpenQuestionKey(next[0]?._k ?? null);
+      }
+      return next;
+    });
+  };
 
   const completedCount = questions.filter((q) => {
     const filled = q.options.filter(o => o.content.trim() || o.mediaUrl);
@@ -688,13 +870,66 @@ export default function LiveSessionCreate() {
                 {completedCount}/{questions.length} soru tamamlandı
               </p>
             </div>
-            <Button size="sm" className="bg-amber-500 hover:bg-amber-600"
-              onClick={addQuestion}>
-              <Plus className="w-4 h-4 mr-1" />Soru Ekle
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button
+                size="sm"
+                variant="outline"
+                className="gap-2"
+                onClick={() => setShowDOCXDialog(true)}
+                disabled={docxLoading}
+              >
+                <Upload className="w-4 h-4" />
+                {docxLoading ? "Yükleniyor..." : "DOCX İçeri Aktar"}
+              </Button>
+              <Button size="sm" className="bg-amber-500 hover:bg-amber-600"
+                onClick={addQuestion}>
+                <Plus className="w-4 h-4 mr-1" />Soru Ekle
+              </Button>
+            </div>
           </div>
 
-          <Accordion type="single" collapsible className="space-y-2">
+          {/* DOCX import dialog — CreateTest ile aynı UX */}
+          <Dialog open={showDOCXDialog} onOpenChange={setShowDOCXDialog}>
+            <DialogContent className="max-w-sm">
+              <DialogHeader>
+                <DialogTitle>DOCX'ten Sorular İçeri Aktar</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4">
+                <p className="text-sm text-slate-600">
+                  Word dosyasını seçin. Sorular otomatik olarak ayrıştırılacak.
+                </p>
+                <p className="text-xs text-slate-500">
+                  Format: <code>1. Soru metni</code>, ardından <code>A) ... E)</code> seçenekleri,
+                  son satırda <code>Cevap: A</code> veya <code>*A</code>.
+                </p>
+                <div className="border-2 border-dashed border-slate-300 rounded-lg p-6 text-center">
+                  <label className="cursor-pointer flex flex-col items-center gap-2">
+                    <Upload className="w-6 h-6 text-slate-400" aria-hidden="true" />
+                    <span className="text-sm font-medium text-slate-600">DOCX Dosya Seç</span>
+                    <input
+                      type="file"
+                      accept=".docx"
+                      className="hidden"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) handleDOCXImport(file);
+                        e.target.value = "";
+                      }}
+                      disabled={docxLoading}
+                    />
+                  </label>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
+
+          <Accordion
+            type="single"
+            collapsible
+            value={openQuestionKey ?? undefined}
+            onValueChange={(v) => setOpenQuestionKey(v || null)}
+            className="space-y-2"
+          >
             {questions.map((q, idx) => (
               <QuestionItem
                 key={q._k}
@@ -704,6 +939,8 @@ export default function LiveSessionCreate() {
                 onUpdate={(updated) => updateQuestion(idx, updated)}
                 onDelete={(i) => deleteQuestion(i)}
                 onAddNew={addQuestion}
+                autoOpenEdit={pendingEditKey === q._k}
+                onAutoOpenHandled={() => setPendingEditKey(null)}
               />
             ))}
           </Accordion>
@@ -819,11 +1056,23 @@ export default function LiveSessionCreate() {
                 <Button
                   className="w-full bg-amber-500 hover:bg-amber-600 gap-2"
                   disabled={createMutation.isPending}
-                  onClick={() => createMutation.mutate()}
+                  onClick={() => {
+                    // Önce form geçerli mi kontrol et (tamamlanmış soru sayısı)
+                    const valid = questions.filter((q) => {
+                      const filled = q.options.filter((o) => o.content.trim() || o.mediaUrl);
+                      return (q.content.trim() || q.mediaUrl) && filled.length >= 2 && q.options.some((o) => o.isCorrect);
+                    });
+                    if (valid.length === 0) {
+                      toast.error("En az bir tamamlanmış soru gereklidir");
+                      return;
+                    }
+                    // Ödeme modal'ını aç — kayıt sadece ödeme onayından sonra yapılır
+                    setPaymentOpen(true);
+                  }}
                 >
                   {createMutation.isPending
                     ? <><Loader2 className="w-4 h-4 animate-spin" /> Oluşturuluyor...</>
-                    : <><Zap className="w-4 h-4" /> Oturumu Oluştur ve Başlat</>}
+                    : <><Zap className="w-4 h-4" /> Ödeme Yap ve Başlat</>}
                 </Button>
               </div>
             </CardContent>
@@ -832,6 +1081,105 @@ export default function LiveSessionCreate() {
           <Button variant="outline" onClick={() => setStep(2)}>← Geri (Sorular)</Button>
         </div>
       )}
+
+      {/* ── Ödeme Onay Modalı ── */}
+      <Dialog
+        open={paymentOpen}
+        onOpenChange={(o) => {
+          if (!o && !createMutation.isPending) {
+            setPaymentOpen(false);
+          }
+        }}
+      >
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Zap className="w-5 h-5 text-amber-500" aria-hidden="true" />
+              Ödeme ile Oturum Oluştur
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 mt-2">
+            <div className="p-4 bg-slate-50 rounded-lg space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-slate-500">Başlık</span>
+                <span className="text-sm font-medium text-slate-800 truncate max-w-[220px]" title={title}>
+                  {title || "—"}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-slate-500">Paket</span>
+                <span className="text-sm font-medium text-slate-800">
+                  {selectedTier?.label ?? "—"}
+                  {selectedTier?.maxParticipants != null && (
+                    <span className="text-slate-400 ml-1">/ {selectedTier.maxParticipants} kişi</span>
+                  )}
+                </span>
+              </div>
+              <div className="flex items-center justify-between border-t border-slate-200 pt-2 mt-2">
+                <span className="text-sm font-semibold text-slate-700">Tutar</span>
+                <span className="text-lg font-bold text-amber-700">
+                  ₺{((selectedTier?.priceCents ?? 0) / 100).toFixed(2)}
+                </span>
+              </div>
+            </div>
+
+            {(selectedTier?.priceCents ?? 0) > 0 && (
+              <div>
+                <p className="text-xs font-semibold text-slate-600 mb-2">Ödeme Sağlayıcısı</p>
+                <div className="grid grid-cols-3 gap-2">
+                  {[
+                    { id: "iyzico",     label: "iyzico" },
+                    { id: "google_pay", label: "G Pay" },
+                    { id: "amazon_pay", label: "Amazon" },
+                  ].map((p) => (
+                    <button
+                      key={p.id}
+                      type="button"
+                      onClick={() => setPaymentProvider(p.id)}
+                      disabled={createMutation.isPending}
+                      className={cn(
+                        "px-3 py-2 rounded-lg border text-sm font-medium transition-colors",
+                        paymentProvider === p.id
+                          ? "border-amber-500 bg-amber-50 text-amber-700"
+                          : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50",
+                      )}
+                    >
+                      {p.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <p className="text-xs text-slate-500">
+              {(selectedTier?.priceCents ?? 0) > 0
+                ? "Ödeme tamamlandıktan sonra oturum oluşturulur ve katılım kodu üretilir."
+                : "Bu paket ücretsiz — onayladığınızda oturum oluşturulur."}
+            </p>
+
+            <div className="flex gap-3 justify-end pt-2 border-t">
+              <Button
+                variant="outline"
+                onClick={() => setPaymentOpen(false)}
+                disabled={createMutation.isPending}
+              >
+                İptal
+              </Button>
+              <Button
+                onClick={() => createMutation.mutate()}
+                disabled={createMutation.isPending}
+                className="bg-amber-500 hover:bg-amber-600"
+              >
+                {createMutation.isPending
+                  ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> İşleniyor...</>
+                  : (selectedTier?.priceCents ?? 0) > 0
+                    ? <><Zap className="w-4 h-4 mr-1" /> Ödemeyi Tamamla</>
+                    : <><Zap className="w-4 h-4 mr-1" /> Onayla ve Oluştur</>}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

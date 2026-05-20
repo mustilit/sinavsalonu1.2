@@ -218,6 +218,11 @@ export default function ProfileSettings() {
           <div className="relative group flex-shrink-0">
             {formData.profile_image_url ? (
               <img src={formData.profile_image_url} alt={user.full_name || user.username} className="w-16 h-16 rounded-full object-cover" />
+            ) : (user?.role || "").toUpperCase() === "ADMIN" ? (
+              // Admin için varsayılan avatar — Sınav Salonu logosu (custom foto yüklenmemişse)
+              <div className="w-16 h-16 bg-gradient-to-br from-indigo-600 to-indigo-500 rounded-full flex items-center justify-center" title="Sınav Salonu">
+                <GraduationCap className="w-9 h-9 text-white" aria-hidden="true" />
+              </div>
             ) : (
               <div className="w-16 h-16 bg-gradient-to-br from-indigo-100 to-violet-100 rounded-full flex items-center justify-center">
                 <User className="w-8 h-8 text-indigo-600" />

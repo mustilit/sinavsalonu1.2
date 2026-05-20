@@ -49,7 +49,8 @@ export const PAGE_ROLES = {
   EducatorSettings: [ROLES.EDUCATOR],
   MyTestPackages: [ROLES.EDUCATOR],
   MySales: [ROLES.EDUCATOR],
-  MyDiscountCodes: [ROLES.EDUCATOR],
+  // İndirim kodları — eğitici kendi kodlarını, admin tüm kodları yönetir
+  MyDiscountCodes: [ROLES.EDUCATOR, ROLES.ADMIN],
   // MyAds: Eğiticinin reklam satın alma ve istatistik sayfası
   MyAds: [ROLES.EDUCATOR],
   QuestionReports: [ROLES.EDUCATOR],

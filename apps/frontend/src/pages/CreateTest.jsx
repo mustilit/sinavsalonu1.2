@@ -533,6 +533,10 @@ function TestCard({ test, testIndex, examTypes, topicList, onTestUpdate, onTestD
   const [showDOCXDialog, setShowDOCXDialog] = useState(false);
   const [docxLoading, setDocxLoading] = useState(false);
 
+  // DOCX'ten soru içeri aktarma — iki format desteklenir:
+  //   1) Düz metin: "1. Soru..." / "A) Seçenek..." / "Cevap: A" veya "*A"
+  //   2) Word otomatik numaralama: nested <ol><li> (mammoth bunu üretir)
+  //      İlk seviye <li> = soru, içindeki <ol><li> = şıklar
   const handleDOCXImport = async (file) => {
     setDocxLoading(true);
     try {
@@ -541,51 +545,70 @@ function TestCard({ test, testIndex, examTypes, topicList, onTestUpdate, onTestD
       const result = await mammoth.convertToHtml({ arrayBuffer });
       const html = result.value;
 
-      // Basit HTML parse: <p>, <li> elemanlarını böl
       const div = document.createElement("div");
       div.innerHTML = html;
-      const lines = Array.from(div.querySelectorAll("p, li"))
-        .map((el) => el.textContent.trim())
-        .filter((t) => t.length > 0);
-
       const questions = [];
-      let currentQuestion = null;
 
-      for (const line of lines) {
-        // Soru tanımı: numarası veya "Soru:" ile başlar
-        if (/^(soru:|\d+\s*\.)/i.test(line)) {
-          if (currentQuestion && currentQuestion.options.length >= 2) {
-            questions.push(currentQuestion);
+      // 1) Yapısal parser: top-level <ol>/<ul> içindeki her <li> bir soru
+      const topLists = Array.from(div.children).filter((el) => el.tagName === "OL" || el.tagName === "UL");
+      for (const list of topLists) {
+        const questionItems = Array.from(list.children).filter((el) => el.tagName === "LI");
+        for (const qLi of questionItems) {
+          const subList = Array.from(qLi.children).find((el) => el.tagName === "OL" || el.tagName === "UL");
+          let qText;
+          if (subList) {
+            const clone = qLi.cloneNode(true);
+            clone.querySelectorAll("ol, ul").forEach((n) => n.remove());
+            qText = clone.textContent.trim();
+          } else {
+            qText = qLi.textContent.trim();
           }
-          currentQuestion = emptyQuestion();
-          currentQuestion.content = line.replace(/^(soru:|\d+\s*\.\s*)/i, "").trim();
-        } else if (currentQuestion && /^([A-E])\s*\)\s*(.+)/.test(line)) {
-          // Seçenek: A) B) C) D) E)
-          const match = line.match(/^([A-E])\s*\)\s*(.+)/);
-          const letter = match[1];
-          const text = match[2].trim();
-          const idx = LETTERS.indexOf(letter);
-          if (idx >= 0 && idx < currentQuestion.options.length) {
-            currentQuestion.options[idx].content = text;
+          if (!qText) continue;
+
+          const q = emptyQuestion();
+          q.content = qText;
+          if (subList) {
+            const optionItems = Array.from(subList.children).filter((el) => el.tagName === "LI");
+            optionItems.slice(0, q.options.length).forEach((optLi, i) => {
+              q.options[i].content = optLi.textContent.trim();
+            });
           }
-        } else if (currentQuestion && /^\*|cevap:/i.test(line)) {
-          // Doğru cevap işareti
-          const match = line.match(/^[\*]*\s*([A-E])/i);
-          if (match) {
-            const letter = match[1].toUpperCase();
-            const idx = LETTERS.indexOf(letter);
-            if (idx >= 0) {
-              currentQuestion.options = currentQuestion.options.map((o, i) => ({
-                ...o,
-                isCorrect: i === idx,
-              }));
-            }
-          }
+          questions.push(q);
         }
       }
 
-      if (currentQuestion && currentQuestion.options.length >= 2) {
-        questions.push(currentQuestion);
+      // 2) Yapısal parser sonuç vermediyse düz metin fallback
+      if (questions.length === 0) {
+        const lines = Array.from(div.querySelectorAll("p, li"))
+          .map((el) => el.textContent.trim())
+          .filter((t) => t.length > 0);
+
+        let currentQuestion = null;
+        for (const line of lines) {
+          if (/^(soru:|\d+\s*\.)/i.test(line)) {
+            if (currentQuestion) questions.push(currentQuestion);
+            currentQuestion = emptyQuestion();
+            currentQuestion.content = line.replace(/^(soru:|\d+\s*\.\s*)/i, "").trim();
+          } else if (currentQuestion && /^([A-E])\s*\)\s*(.+)/.test(line)) {
+            const match = line.match(/^([A-E])\s*\)\s*(.+)/);
+            const idx = LETTERS.indexOf(match[1]);
+            if (idx >= 0 && idx < currentQuestion.options.length) {
+              currentQuestion.options[idx].content = match[2].trim();
+            }
+          } else if (currentQuestion && /^\*|cevap:/i.test(line)) {
+            const match = line.match(/^[\*]*\s*([A-E])/i);
+            if (match) {
+              const idx = LETTERS.indexOf(match[1].toUpperCase());
+              if (idx >= 0) {
+                currentQuestion.options = currentQuestion.options.map((o, i) => ({
+                  ...o,
+                  isCorrect: i === idx,
+                }));
+              }
+            }
+          }
+        }
+        if (currentQuestion) questions.push(currentQuestion);
       }
 
       if (questions.length === 0) {

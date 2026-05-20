@@ -100,6 +100,9 @@ import { UpdateContractUseCase } from '../application/use-cases/contract/UpdateC
 import { ListAuditLogsUseCase } from '../application/use-cases/admin/ListAuditLogsUseCase';
 import { CreateDiscountCodeUseCase } from '../application/use-cases/discount/CreateDiscountCodeUseCase';
 import { ListEducatorDiscountCodesUseCase } from '../application/use-cases/discount/ListEducatorDiscountCodesUseCase';
+import { ListAllDiscountCodesUseCase } from '../application/use-cases/discount/ListAllDiscountCodesUseCase';
+import { DeleteDiscountCodeUseCase } from '../application/use-cases/discount/DeleteDiscountCodeUseCase';
+import { AdminDiscountCodesController } from './controllers/admin.discount-codes.controller';
 import { GetEducatorSalesReportUseCase } from '../application/use-cases/report/GetEducatorSalesReportUseCase';
 import { CreateAdPackageUseCase } from '../application/use-cases/ad/CreateAdPackageUseCase';
 import { ListAdPackagesUseCase } from '../application/use-cases/ad/ListAdPackagesUseCase';
@@ -284,7 +287,7 @@ const throttleDisabled = process.env.THROTTLE_DISABLED === '1';
     ContractsModule,
     ContentSafetyModule,
   ],
-  controllers: [RootController, HealthController, NotificationsController, AdminDlqController, TestsPerformanceController, HomeController, SiteController, ReviewsController, EducatorsController, FollowsController, CspReportController, AdminExamTypesController, AdminTopicsController, AdminEducatorsController, AdminUsersController, ObjectionsController, EducatorObjectionsController, AdminObjectionsController, AdminRefundsController, AdminSettingsController, AdminSiteSettingsController, AdminContractsController, AdminAuditController, AdminAdPackagesController, AdPackagesController, MeRefundsController, MeObjectionsController, MePurchasesController, MePreferencesController, MetricsController, AdminCandidatesController, AdminEducatorReportController, AdminCommissionController, AdminAdReportController, MePerformanceController, MeHeartbeatController, AdminWorkersController, PackagesController, UploadController, AttemptsController, EducatorRefundsController, AdminStatsController, LiveSessionsController,
+  controllers: [RootController, HealthController, NotificationsController, AdminDlqController, TestsPerformanceController, HomeController, SiteController, ReviewsController, EducatorsController, FollowsController, CspReportController, AdminExamTypesController, AdminTopicsController, AdminEducatorsController, AdminUsersController, ObjectionsController, EducatorObjectionsController, AdminObjectionsController, AdminRefundsController, AdminSettingsController, AdminSiteSettingsController, AdminContractsController, AdminAuditController, AdminAdPackagesController, AdPackagesController, MeRefundsController, MeObjectionsController, MePurchasesController, AdminDiscountCodesController, MePreferencesController, MetricsController, AdminCandidatesController, AdminEducatorReportController, AdminCommissionController, AdminAdReportController, MePerformanceController, MeHeartbeatController, AdminWorkersController, PackagesController, UploadController, AttemptsController, EducatorRefundsController, AdminStatsController, LiveSessionsController,
     // Aşama 6 — wire-up: yeni controller'lar
     WebhookController,
     BillingController,
@@ -513,6 +516,16 @@ const throttleDisabled = process.env.THROTTLE_DISABLED === '1';
     {
       provide: ListEducatorDiscountCodesUseCase,
       useFactory: (userRepo: PrismaUserRepository) => new ListEducatorDiscountCodesUseCase(userRepo),
+      inject: [USER_REPO],
+    },
+    {
+      provide: ListAllDiscountCodesUseCase,
+      useFactory: (userRepo: PrismaUserRepository) => new ListAllDiscountCodesUseCase(userRepo),
+      inject: [USER_REPO],
+    },
+    {
+      provide: DeleteDiscountCodeUseCase,
+      useFactory: (userRepo: PrismaUserRepository) => new DeleteDiscountCodeUseCase(userRepo),
       inject: [USER_REPO],
     },
     {

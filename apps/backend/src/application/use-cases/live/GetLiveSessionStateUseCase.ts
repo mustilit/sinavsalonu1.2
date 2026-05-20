@@ -27,6 +27,10 @@ export class GetLiveSessionStateUseCase {
     const currentQ = session.questions[session.currentQuestionIdx] ?? null;
 
     let stats: Record<string, { optionId: string; content: string; count: number; isCorrect: boolean }[]> | null = null;
+    // parentStats: Tur 2 oturumunda, aynı sıradaki Tur 1 sorusunun yanıt dağılımı.
+    // Karşılaştırma amaçlı; option order ile eşleştirilir (Tur 2 option id'siyle anahtarlanır).
+    let parentStats: Record<string, { optionId: string; count: number; total: number }[]> | null = null;
+
     if ((session.showStats || isEducator) && currentQ) {
       const answers = await prisma.liveAnswer.groupBy({
         by: ['optionId'],
@@ -42,6 +46,31 @@ export class GetLiveSessionStateUseCase {
           isCorrect: o.isCorrect,
         })),
       };
+
+      // Tur 2'de aynı sıradaki Tur 1 sorusunun istatistikleri (varsa)
+      if (session.roundNumber === 2 && session.parent) {
+        const r1Q = session.parent.questions.find((q) => q.order === currentQ.order);
+        if (r1Q) {
+          const r1Answers = await prisma.liveAnswer.groupBy({
+            by: ['optionId'],
+            where: { questionId: r1Q.id },
+            _count: { optionId: true },
+          });
+          const r1CountMap = new Map(r1Answers.map((a) => [a.optionId, a._count.optionId]));
+          const r1Total = r1Answers.reduce((s, a) => s + a._count.optionId, 0);
+          // Tur 1 ve Tur 2 option'larını order ile eşle; frontend için Tur 2'nin option id'siyle key'le
+          parentStats = {
+            [currentQ.id]: currentQ.options.map((r2Opt, idx) => {
+              const r1Opt = r1Q.options[idx];
+              return {
+                optionId: r2Opt.id,
+                count: r1Opt ? (r1CountMap.get(r1Opt.id) ?? 0) : 0,
+                total: r1Total,
+              };
+            }),
+          };
+        }
+      }
     }
 
     let myAnswer: string | null = null;
@@ -114,6 +143,7 @@ export class GetLiveSessionStateUseCase {
         })),
       } : null,
       stats,
+      parentStats,
       myAnswer,
       myResults,
       roundNumber: session.roundNumber,
