@@ -36,27 +36,46 @@ export class JwtAuthGuard implements CanActivate {
 
     req.user = { ...payload, id: payload.sub };
 
-    // Ban/suspension kontrolü — cache'den oku, yoksa DB'den çek
+    // Ban/suspension + tek oturum kontrolü. Cache'de ban + activeSessionId
+    // birlikte tutulur; eski cache şemasıyla uyumlu — activeSessionId yoksa
+    // DB'den taze çekilir.
     const cacheKey = `userBanStatus:${payload.sub}`;
-    let banStatus = await this.cache.get<{ isBanned: boolean; suspendedUntil: string | null }>(cacheKey);
+    let status = await this.cache.get<{ isBanned: boolean; suspendedUntil: string | null; activeSessionId: string | null }>(cacheKey);
 
-    if (banStatus === null) {
+    // Eski cache şeması (activeSessionId yok) → invalidate et
+    if (status !== null && !('activeSessionId' in status)) {
+      status = null;
+    }
+
+    if (status === null) {
       const user = await prisma.user.findUnique({
         where: { id: payload.sub },
-        select: { isBanned: true, suspendedUntil: true },
+        select: { isBanned: true, suspendedUntil: true, activeSessionId: true } as any,
       });
-      banStatus = {
-        isBanned: user?.isBanned ?? false,
-        suspendedUntil: user?.suspendedUntil?.toISOString() ?? null,
+      status = {
+        isBanned: (user as any)?.isBanned ?? false,
+        suspendedUntil: (user as any)?.suspendedUntil?.toISOString() ?? null,
+        activeSessionId: (user as any)?.activeSessionId ?? null,
       };
-      await this.cache.set(cacheKey, banStatus, BAN_CACHE_TTL_SECONDS);
+      await this.cache.set(cacheKey, status, BAN_CACHE_TTL_SECONDS);
     }
 
-    if (banStatus.isBanned) {
+    if (status.isBanned) {
       throw new UnauthorizedException({ error: 'ACCOUNT_SUSPENDED_OR_BANNED' });
     }
-    if (banStatus.suspendedUntil && new Date(banStatus.suspendedUntil) > new Date()) {
+    if (status.suspendedUntil && new Date(status.suspendedUntil) > new Date()) {
       throw new UnauthorizedException({ error: 'ACCOUNT_SUSPENDED_OR_BANNED' });
+    }
+
+    // Tek aktif oturum kuralı:
+    //   - User.activeSessionId NULL ise (eski legacy tokenlar) geçirme.
+    //   - User.activeSessionId varsa payload.sid ile eşleşmelidir.
+    //   - payload.sid yoksa (eski token), aktif oturum ile karşılaştırılamaz →
+    //     başka cihazda yeni login olmuşsa bu token reddedilir.
+    if (status.activeSessionId) {
+      if (!payload.sid || payload.sid !== status.activeSessionId) {
+        throw new UnauthorizedException({ error: 'SESSION_REPLACED' });
+      }
     }
 
     return true;

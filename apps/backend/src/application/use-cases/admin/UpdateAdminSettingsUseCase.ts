@@ -23,6 +23,7 @@ export interface UpdateAdminSettingsInput {
   twoFactorSystemEnabled?: boolean;
   minPackagePriceCents?: number;
   maxDiscountPercent?: number;
+  googleClientId?: string | null;
   minQuestionsPerTest?: number;
   maxQuestionsPerTest?: number;
   maxTestsPerPackage?: number;
@@ -89,6 +90,13 @@ export class UpdateAdminSettingsUseCase {
           UPDATE admin_settings SET "maxDiscountPercent" = ${input.maxDiscountPercent} WHERE id = 1
         `;
       }
+      if (input.googleClientId !== undefined) {
+        // Boş string'i NULL'a çevir — Google ile giriş'i kapatmak için kullanılır
+        const val = input.googleClientId && input.googleClientId.trim() ? input.googleClientId.trim() : null;
+        await prisma.$executeRaw`
+          UPDATE admin_settings SET "googleClientId" = ${val} WHERE id = 1
+        `;
+      }
       if (input.minQuestionsPerTest !== undefined) {
         await prisma.$executeRaw`
           UPDATE admin_settings SET "minQuestionsPerTest" = ${input.minQuestionsPerTest} WHERE id = 1
@@ -114,6 +122,7 @@ export class UpdateAdminSettingsUseCase {
     // Guncel degerleri raw okuyarak dondur
     let minPackagePriceCents = 100;
     let maxDiscountPercent = 50;
+    let googleClientId: string | null = null;
     let minQuestionsPerTest = 1;
     let maxQuestionsPerTest = 100;
     let maxTestsPerPackage = 10;
@@ -121,12 +130,13 @@ export class UpdateAdminSettingsUseCase {
 
     if (prisma.$queryRaw) {
       const result = await prisma.$queryRaw`
-        SELECT "minPackagePriceCents", "maxDiscountPercent", "minQuestionsPerTest", "maxQuestionsPerTest", "maxTestsPerPackage", "maxLiveQuestions"
+        SELECT "minPackagePriceCents", "maxDiscountPercent", "googleClientId", "minQuestionsPerTest", "maxQuestionsPerTest", "maxTestsPerPackage", "maxLiveQuestions"
         FROM admin_settings WHERE id = 1
       ` as any[];
       const r = result[0];
       minPackagePriceCents = r?.minPackagePriceCents ?? 100;
       maxDiscountPercent = r?.maxDiscountPercent ?? 50;
+      googleClientId = r?.googleClientId ?? null;
       minQuestionsPerTest = r?.minQuestionsPerTest ?? 1;
       maxQuestionsPerTest = r?.maxQuestionsPerTest ?? 100;
       maxTestsPerPackage = r?.maxTestsPerPackage ?? 10;
@@ -134,6 +144,7 @@ export class UpdateAdminSettingsUseCase {
     } else {
       minPackagePriceCents = (row as any).minPackagePriceCents ?? 100;
       maxDiscountPercent = (row as any).maxDiscountPercent ?? 50;
+      googleClientId = (row as any).googleClientId ?? null;
       minQuestionsPerTest = (row as any).minQuestionsPerTest ?? 1;
       maxQuestionsPerTest = (row as any).maxQuestionsPerTest ?? 100;
       maxTestsPerPackage = (row as any).maxTestsPerPackage ?? 10;
@@ -151,6 +162,7 @@ export class UpdateAdminSettingsUseCase {
       twoFactorSystemEnabled: (row as any).twoFactorSystemEnabled ?? false,
       minPackagePriceCents,
       maxDiscountPercent,
+      googleClientId,
       minQuestionsPerTest,
       maxQuestionsPerTest,
       maxTestsPerPackage,
@@ -172,18 +184,20 @@ export class UpdateAdminSettingsUseCase {
       if (!row) return null;
       let mpp = 100;
       let mdp = 50;
+      let gci: string | null = null;
       let minQ = 1;
       let maxQ = 100;
       let maxTpp = 10;
       let maxLq = 50;
       if (prisma.$queryRaw) {
         const r = await prisma.$queryRaw`
-          SELECT "minPackagePriceCents", "maxDiscountPercent", "minQuestionsPerTest", "maxQuestionsPerTest",
+          SELECT "minPackagePriceCents", "maxDiscountPercent", "googleClientId", "minQuestionsPerTest", "maxQuestionsPerTest",
                  "maxTestsPerPackage", "maxLiveQuestions"
           FROM admin_settings WHERE id = 1
         ` as any[];
         mpp = r[0]?.minPackagePriceCents ?? 100;
         mdp = r[0]?.maxDiscountPercent ?? 50;
+        gci = r[0]?.googleClientId ?? null;
         minQ = r[0]?.minQuestionsPerTest ?? 1;
         maxQ = r[0]?.maxQuestionsPerTest ?? 100;
         maxTpp = r[0]?.maxTestsPerPackage ?? 10;
@@ -200,6 +214,7 @@ export class UpdateAdminSettingsUseCase {
         twoFactorSystemEnabled: (row as any).twoFactorSystemEnabled ?? false,
         minPackagePriceCents: mpp,
         maxDiscountPercent: mdp,
+        googleClientId: gci,
         minQuestionsPerTest: minQ,
         maxQuestionsPerTest: maxQ,
         maxTestsPerPackage: maxTpp,

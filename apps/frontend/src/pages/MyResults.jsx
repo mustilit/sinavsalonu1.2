@@ -1,4 +1,5 @@
 import { useState, useRef, useCallback } from "react";
+import { useTranslation } from "react-i18next";
 import html2canvas from "html2canvas";
 import { entities } from "@/api/dalClient";
 import { useAuth } from "@/lib/AuthContext";
@@ -35,27 +36,46 @@ import {
 const PAGE_SIZE = 15;
 
 /** Filtrelenmiş sonuçları XLSX olarak indirir */
-async function exportToXLSX(rows, safeFormatDate) {
+async function exportToXLSX(rows, safeFormatDate, t) {
   const XLSX = await import("xlsx");
+  const col = {
+    test: t("pages:myResults.xlsxColumns.test"),
+    score: t("pages:myResults.xlsxColumns.score"),
+    correct: t("pages:myResults.xlsxColumns.correct"),
+    wrong: t("pages:myResults.xlsxColumns.wrong"),
+    blank: t("pages:myResults.xlsxColumns.blank"),
+    totalQ: t("pages:myResults.xlsxColumns.totalQ"),
+    durationMin: t("pages:myResults.xlsxColumns.durationMin"),
+    date: t("pages:myResults.xlsxColumns.date"),
+    delaySec: t("pages:myResults.xlsxColumns.delaySec"),
+    status: t("pages:myResults.xlsxColumns.status"),
+  };
+  const statusFor = (score) =>
+    score >= 80 ? t("pages:myResults.scoreBadge.excellent")
+    : score >= 60 ? t("pages:myResults.scoreBadge.good")
+    : score >= 40 ? t("pages:myResults.scoreBadge.average")
+    : t("pages:myResults.scoreBadge.needsWork");
+  const testFallback = t("pages:myResults.empty.testFallback");
   const data = rows.map((r) => ({
-    "Test": r.test_package_title || r.test_title || "Test",
-    "Puan": r.score ?? 0,
-    "Doğru": r.correct_count ?? 0,
-    "Yanlış": r.wrong_count ?? 0,
-    "Boş": r.empty_count ?? 0,
-    "Toplam Soru": r.question_count ?? "",
-    "Süre (dk)": r.time_spent_seconds ? Math.floor(r.time_spent_seconds / 60) : "",
-    "Tarih": safeFormatDate(r.created_date),
-    "Gecikme (sn)": r.overtime_seconds ?? 0,
-    "Durum": r.score >= 80 ? "Mükemmel" : r.score >= 60 ? "İyi" : r.score >= 40 ? "Orta" : "Geliştirilmeli",
+    [col.test]: r.test_package_title || r.test_title || testFallback,
+    [col.score]: r.score ?? 0,
+    [col.correct]: r.correct_count ?? 0,
+    [col.wrong]: r.wrong_count ?? 0,
+    [col.blank]: r.empty_count ?? 0,
+    [col.totalQ]: r.question_count ?? "",
+    [col.durationMin]: r.time_spent_seconds ? Math.floor(r.time_spent_seconds / 60) : "",
+    [col.date]: safeFormatDate(r.created_date),
+    [col.delaySec]: r.overtime_seconds ?? 0,
+    [col.status]: statusFor(r.score ?? 0),
   }));
   const ws = XLSX.utils.json_to_sheet(data);
   const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, "Sonuçlarım");
+  XLSX.utils.book_append_sheet(wb, ws, t("pages:myResults.sheetName"));
   XLSX.writeFile(wb, `sinav-salonu-sonuclar-${new Date().toISOString().slice(0, 10)}.xlsx`);
 }
 
 export default function MyResults() {
+  const { t } = useTranslation(["pages"]);
   const { user } = useAuth();
   const shareRef = useRef(null);
   const [isSharing, setIsSharing] = useState(false);
@@ -86,7 +106,7 @@ export default function MyResults() {
       canvas.toBlob(async (blob) => {
         const file = new File([blob], "sinav-salonu-rapor.png", { type: "image/png" });
         if (navigator.share && navigator.canShare?.({ files: [file] })) {
-          await navigator.share({ files: [file], title: "Sınav Salonu Raporun" });
+          await navigator.share({ files: [file], title: t("pages:myResults.shareTitle") });
         } else {
           const url = URL.createObjectURL(blob);
           const a = document.createElement("a");
@@ -101,7 +121,7 @@ export default function MyResults() {
     } finally {
       setIsSharing(false);
     }
-  }, [isSharing]);
+  }, [isSharing, t]);
 
   const [filterTest, setFilterTest] = useState("all");
   const [filterTimeRange, setFilterTimeRange] = useState("all");
@@ -189,9 +209,9 @@ export default function MyResults() {
     return { id: String(id), title: result?.test_package_title || "Test" };
   });
 
-  // Get test title helper
+  // Get test title helper — fallback i18n'lendi; test_package_title user-generated, çevrilmez
   const getTestTitle = (result) =>
-    result?.test_package_title || result?.test_title || "Test";
+    result?.test_package_title || result?.test_title || t("pages:myResults.empty.testFallback");
 
   const safeFormatDate = (dateVal) => {
     if (!dateVal) return "-";
@@ -200,10 +220,10 @@ export default function MyResults() {
   };
 
   const getScoreBadge = (score) => {
-    if (score >= 80) return <Badge className="bg-emerald-100 text-emerald-700">Mükemmel</Badge>;
-    if (score >= 60) return <Badge className="bg-blue-100 text-blue-700">İyi</Badge>;
-    if (score >= 40) return <Badge className="bg-amber-100 text-amber-700">Orta</Badge>;
-    return <Badge className="bg-rose-100 text-rose-700">Geliştirilmeli</Badge>;
+    if (score >= 80) return <Badge className="bg-emerald-100 text-emerald-700">{t("pages:myResults.scoreBadge.excellent")}</Badge>;
+    if (score >= 60) return <Badge className="bg-blue-100 text-blue-700">{t("pages:myResults.scoreBadge.good")}</Badge>;
+    if (score >= 40) return <Badge className="bg-amber-100 text-amber-700">{t("pages:myResults.scoreBadge.average")}</Badge>;
+    return <Badge className="bg-rose-100 text-rose-700">{t("pages:myResults.scoreBadge.needsWork")}</Badge>;
   };
 
   // Gecikmeli teslim edilen testleri filtrele — "gelişime açık" bölümü için
@@ -214,9 +234,9 @@ export default function MyResults() {
     if (!seconds) return "-";
     const m = Math.floor(seconds / 60);
     const s = seconds % 60;
-    if (m === 0) return `${s} sn`;
-    if (s === 0) return `${m} dk`;
-    return `${m} dk ${s} sn`;
+    if (m === 0) return t("pages:myResults.duration.sec", { s });
+    if (s === 0) return t("pages:myResults.duration.min", { m });
+    return t("pages:myResults.duration.minSec", { m, s });
   };
 
   if (!user) {
@@ -230,7 +250,7 @@ export default function MyResults() {
   if (isError) {
     return (
       <div className="text-center py-12">
-        <p className="text-slate-500">Sonuçlar yüklenirken hata oluştu. Sayfayı yenileyin.</p>
+        <p className="text-slate-500">{t("pages:myResults.errorLoad")}</p>
       </div>
     );
   }
@@ -238,8 +258,8 @@ export default function MyResults() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-slate-900">Sonuçlarım</h1>
-        <p className="text-slate-500 mt-2">Test performansını takip et</p>
+        <h1 className="text-3xl font-bold text-slate-900">{t("pages:titles.myResults")}</h1>
+        <p className="text-slate-500 mt-2">{t("pages:titles.myResultsDesc")}</p>
       </div>
 
       {/* Filters */}
@@ -247,36 +267,37 @@ export default function MyResults() {
         <div className="flex items-center gap-4 flex-wrap">
             <Filter className="w-5 h-5 text-slate-500" />
             <Select value={filterTest} onValueChange={setFilterTest}>
-              <SelectTrigger aria-label="Test paketi filtresi" className="w-64">
-                <SelectValue placeholder="Tüm Paketler" />
+              <SelectTrigger aria-label={t("pages:myResults.filters.packageAria")} className="w-64">
+                <SelectValue placeholder={t("pages:myResults.filters.allPackages")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Tüm Paketler</SelectItem>
+                <SelectItem value="all">{t("pages:myResults.filters.allPackages")}</SelectItem>
                 {uniquePackages.map((pkg) => (
+                  /* pkg.title user-generated — çevrilmez */
                   <SelectItem key={pkg.id} value={pkg.id}>{pkg.title}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
             <Select value={filterExamType} onValueChange={setFilterExamType}>
-              <SelectTrigger aria-label="Sınav türü filtresi" className="w-48">
-                <SelectValue placeholder="Tüm Sınav Türleri" />
+              <SelectTrigger aria-label={t("pages:myResults.filters.examTypeAria")} className="w-48">
+                <SelectValue placeholder={t("pages:myResults.filters.allExamTypes")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Tüm Sınav Türleri</SelectItem>
+                <SelectItem value="all">{t("pages:myResults.filters.allExamTypes")}</SelectItem>
                 {uniqueExamTypes.map((et) => (
                   <SelectItem key={et.id} value={et.id}>{et.name}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
             <Select value={filterTimeRange} onValueChange={setFilterTimeRange}>
-              <SelectTrigger aria-label="Zaman aralığı filtresi" className="w-48">
-                <SelectValue placeholder="Tüm Zamanlar" />
+              <SelectTrigger aria-label={t("pages:myResults.filters.timeAria")} className="w-48">
+                <SelectValue placeholder={t("pages:myResults.filters.allTime")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Tüm Zamanlar</SelectItem>
-                <SelectItem value="week">Son 1 Hafta</SelectItem>
-                <SelectItem value="month">Son 1 Ay</SelectItem>
-                <SelectItem value="3months">Son 3 Ay</SelectItem>
+                <SelectItem value="all">{t("pages:myResults.filters.allTime")}</SelectItem>
+                <SelectItem value="week">{t("pages:myResults.filters.lastWeek")}</SelectItem>
+                <SelectItem value="month">{t("pages:myResults.filters.lastMonth")}</SelectItem>
+                <SelectItem value="3months">{t("pages:myResults.filters.last3Months")}</SelectItem>
               </SelectContent>
             </Select>
             {(filterTest !== "all" || filterExamType !== "all" || filterTimeRange !== "all") && (
@@ -290,7 +311,7 @@ export default function MyResults() {
                   setPage(1);
                 }}
               >
-                Filtreleri Temizle
+                {t("pages:myResults.filters.clear")}
               </Button>
             )}
           </div>
@@ -306,7 +327,7 @@ export default function MyResults() {
           className="text-indigo-600 hover:text-indigo-700"
         >
           <Share2 className="w-4 h-4 mr-1.5" />
-          {isSharing ? "Hazırlanıyor…" : "Paylaş"}
+          {isSharing ? t("pages:myResults.sharePreparing") : t("pages:myResults.shareButton")}
         </Button>
       </div>
 
@@ -314,25 +335,25 @@ export default function MyResults() {
       <div ref={shareRef} className="bg-white rounded-xl p-4 -mx-4">
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <StatCard
-          title="Toplam Test"
+          title={t("pages:myResults.stats.totalTests")}
           value={stats.totalTests}
           icon={BarChart3}
           iconColor="text-indigo-500"
         />
         <StatCard
-          title="Ortalama Puan"
+          title={t("pages:myResults.stats.avgScore")}
           value={stats.avgScore}
           icon={TrendingUp}
           iconColor="text-violet-500"
         />
         <StatCard
-          title="Toplam Doğru"
+          title={t("pages:myResults.stats.totalCorrect")}
           value={stats.totalCorrect}
           icon={CheckCircle}
           iconColor="text-emerald-500"
         />
         <StatCard
-          title="Toplam Yanlış"
+          title={t("pages:myResults.stats.totalWrong")}
           value={stats.totalWrong}
           icon={XCircle}
           iconColor="text-rose-500"
@@ -343,18 +364,18 @@ export default function MyResults() {
       {results.length > 0 && (
         <div className="mb-6 pb-6 border-b border-slate-200">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-base font-semibold text-slate-800">Gelişim</h2>
+            <h2 className="text-base font-semibold text-slate-800">{t("pages:myResults.progress")}</h2>
             <div data-html2canvas-ignore="true">
               <Select value={chartType} onValueChange={setChartType}>
-                <SelectTrigger aria-label="Grafik türü seçimi" className="w-40 shrink-0">
+                <SelectTrigger aria-label={t("pages:myResults.chartTypeAria")} className="w-40 shrink-0">
                   <span className="truncate text-sm">
-                    {chartType === "performance" ? "Performans" : chartType === "questions" ? "Çözülen Soru" : "Çalışma Süresi"}
+                    {chartType === "performance" ? t("pages:myResults.chartType.performance") : chartType === "questions" ? t("pages:myResults.chartType.questions") : t("pages:myResults.chartType.time")}
                   </span>
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="performance">Performans</SelectItem>
-                  <SelectItem value="questions">Çözülen Soru</SelectItem>
-                  <SelectItem value="time">Çalışma Süresi</SelectItem>
+                  <SelectItem value="performance">{t("pages:myResults.chartType.performance")}</SelectItem>
+                  <SelectItem value="questions">{t("pages:myResults.chartType.questions")}</SelectItem>
+                  <SelectItem value="time">{t("pages:myResults.chartType.time")}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -371,8 +392,8 @@ export default function MyResults() {
                         return (
                           <div className="bg-white p-3 rounded-lg shadow-lg border border-slate-200">
                             <p className="font-semibold">{payload[0].payload.week}</p>
-                            <p className="text-indigo-600">Ortalama: {payload[0].value}</p>
-                            <p className="text-slate-500 text-sm">Test Sayısı: {payload[0].payload.count}</p>
+                            <p className="text-indigo-600">{t("pages:myResults.tooltip.avg", { value: payload[0].value })}</p>
+                            <p className="text-slate-500 text-sm">{t("pages:myResults.tooltip.testCount", { count: payload[0].payload.count })}</p>
                           </div>
                         );
                       }
@@ -398,8 +419,8 @@ export default function MyResults() {
                         return (
                           <div className="bg-white p-3 rounded-lg shadow-lg border border-slate-200">
                             <p className="font-semibold">{payload[0].payload.week}</p>
-                            <p className="text-emerald-600">Soru Sayısı: {payload[0].value}</p>
-                            <p className="text-slate-500 text-sm">Test Sayısı: {payload[0].payload.count}</p>
+                            <p className="text-emerald-600">{t("pages:myResults.tooltip.questionCount", { count: payload[0].value })}</p>
+                            <p className="text-slate-500 text-sm">{t("pages:myResults.tooltip.testCount", { count: payload[0].payload.count })}</p>
                           </div>
                         );
                       }
@@ -424,13 +445,14 @@ export default function MyResults() {
                       if (active && payload && payload.length) {
                         const hours = Math.floor(payload[0].value / 60);
                         const minutes = payload[0].value % 60;
+                        const timeLabel = `${hours > 0 ? `${hours}h ` : ''}${minutes}m`;
                         return (
                           <div className="bg-white p-3 rounded-lg shadow-lg border border-slate-200">
                             <p className="font-semibold">{payload[0].payload.week}</p>
                             <p className="text-violet-600">
-                              Süre: {hours > 0 ? `${hours}sa ` : ''}{minutes}dk
+                              {t("pages:myResults.tooltip.time", { label: timeLabel })}
                             </p>
-                            <p className="text-slate-500 text-sm">Test Sayısı: {payload[0].payload.count}</p>
+                            <p className="text-slate-500 text-sm">{t("pages:myResults.tooltip.testCount", { count: payload[0].payload.count })}</p>
                           </div>
                         );
                       }
@@ -456,7 +478,7 @@ export default function MyResults() {
       <div className="pb-6 border-b border-slate-200">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-base font-semibold text-slate-800">
-            Test Geçmişi
+            {t("pages:myResults.history")}
             {filteredResults.length > 0 && (
               <span className="ml-2 text-sm font-normal text-slate-500">({filteredResults.length})</span>
             )}
@@ -465,11 +487,11 @@ export default function MyResults() {
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => exportToXLSX(filteredResults, safeFormatDate)}
+              onClick={() => exportToXLSX(filteredResults, safeFormatDate, t)}
               className="text-slate-500 hover:text-slate-700"
             >
               <Download className="w-4 h-4 mr-1.5" />
-              Excel'e Aktar
+              {t("pages:myResults.exportXlsx")}
             </Button>
           )}
         </div>
@@ -483,7 +505,7 @@ export default function MyResults() {
             <div className="text-center py-12">
               <Award className="w-12 h-12 text-slate-300 mx-auto mb-3" />
               <p className="text-slate-500">
-                {results.length === 0 ? "Henüz tamamlanmış test yok" : "Filtreye uygun sonuç bulunamadı"}
+                {results.length === 0 ? t("pages:myResults.empty.noResults") : t("pages:myResults.empty.noFilterMatch")}
               </p>
             </div>
           ) : (
@@ -492,13 +514,13 @@ export default function MyResults() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Test</TableHead>
-                    <TableHead className="text-center">Puan</TableHead>
-                    <TableHead className="text-center">D / Y / B</TableHead>
-                    <TableHead className="text-center">Süre</TableHead>
-                    <TableHead>Tarih</TableHead>
-                    <TableHead className="text-center">Gecikme</TableHead>
-                    <TableHead>Durum</TableHead>
+                    <TableHead>{t("pages:myResults.table.test")}</TableHead>
+                    <TableHead className="text-center">{t("pages:myResults.table.score")}</TableHead>
+                    <TableHead className="text-center">{t("pages:myResults.table.dyb")}</TableHead>
+                    <TableHead className="text-center">{t("pages:myResults.table.time")}</TableHead>
+                    <TableHead>{t("pages:myResults.table.date")}</TableHead>
+                    <TableHead className="text-center">{t("pages:myResults.table.overtime")}</TableHead>
+                    <TableHead>{t("pages:myResults.table.status")}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -510,8 +532,9 @@ export default function MyResults() {
                     return (
                     <TableRow key={result?.id ? String(result.id) : "row-" + idx}>
                       <TableCell className="font-medium">
+                        {/* getTestTitle dönüşü user-generated içerik içerebilir — fallback i18n'li */}
                         {getTestTitle(result)}
-                        {total && <span className="ml-1 text-xs text-slate-500">({total} soru)</span>}
+                        {total && <span className="ml-1 text-xs text-slate-500">({t("pages:myResults.table.questions", { count: total })})</span>}
                       </TableCell>
                       <TableCell className="text-center">
                         <span className="font-bold text-lg">{result.score}</span>
@@ -564,7 +587,7 @@ export default function MyResults() {
                   className="text-slate-600"
                 >
                   <ChevronDown className="w-4 h-4 mr-1.5" />
-                  Daha Fazla Göster ({filteredResults.length - page * PAGE_SIZE} kaldı)
+                  {t("pages:myResults.loadMore", { count: filteredResults.length - page * PAGE_SIZE })}
                 </Button>
               </div>
             )}
@@ -577,12 +600,10 @@ export default function MyResults() {
         <div className="mt-6 pt-6 border-t border-amber-200">
           <h2 className="flex items-center gap-2 text-amber-800 text-base font-semibold mb-3">
             <AlertTriangle className="w-5 h-5 text-amber-600" />
-            Gelişime Açık Yön: Süre Yönetimi
+            {t("pages:myResults.overtime.title")}
           </h2>
             <p className="text-sm text-amber-700 mb-4">
-              Aşağıdaki {overtimeResults.length} testte izin verilen süreden daha geç teslim yaptın.
-              Sınav koşullarında gecikmeli teslim mümkün değildir — süre yönetimine odaklanmak
-              performansını önemli ölçüde artırabilir.
+              {t("pages:myResults.overtime.desc", { count: overtimeResults.length })}
             </p>
             <div className="space-y-2">
               {overtimeResults.map((result, idx) => (
@@ -596,13 +617,13 @@ export default function MyResults() {
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="text-right">
-                      <p className="text-xs text-slate-500">Gecikme</p>
+                      <p className="text-xs text-slate-500">{t("pages:myResults.overtime.delay")}</p>
                       <p className="text-sm font-bold text-amber-700">
                         +{formatOvertime(result.overtime_seconds)}
                       </p>
                     </div>
                     <div className="text-right">
-                      <p className="text-xs text-slate-500">Puan</p>
+                      <p className="text-xs text-slate-500">{t("pages:myResults.overtime.score")}</p>
                       <p className="text-sm font-bold text-slate-700">{result.score}</p>
                     </div>
                   </div>
@@ -610,7 +631,7 @@ export default function MyResults() {
               ))}
             </div>
             <p className="text-xs text-amber-600 mt-4 italic">
-              💡 İpucu: Her soruya ortalama {Math.round((filteredResults[0]?.time_spent_seconds ?? 0) / Math.max(1, (filteredResults[0]?.correct_count ?? 0) + (filteredResults[0]?.wrong_count ?? 0))) || "?"} saniye ayırmayı hedefle. Zorlandığın soruları işaretleyip geç, sonunda dön.
+              {t("pages:myResults.overtime.tip", { seconds: Math.round((filteredResults[0]?.time_spent_seconds ?? 0) / Math.max(1, (filteredResults[0]?.correct_count ?? 0) + (filteredResults[0]?.wrong_count ?? 0))) || "?" })}
             </p>
         </div>
       )}

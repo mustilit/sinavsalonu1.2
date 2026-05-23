@@ -1,0 +1,1623 @@
+{
+  "card": {
+    "free": "免费",
+    "boosted": "精选",
+    "timed": "限时",
+    "viewDetails": "查看",
+    "seeAll": "查看全部",
+    "personalized": "为您推荐",
+    "questionsCount_one": "{{count}} 道题",
+    "questionsCount_other": "{{count}} 道题",
+    "salesCount_one": "{{count}} 次销售",
+    "salesCount_other": "{{count}} 次销售",
+    "testsCount_one": "{{count}} 个测试",
+    "testsCount_other": "{{count}} 个测试"
+  },
+  "home": {
+    "nav": {
+      "explore": "探索测试",
+      "educators": "讲师",
+      "login": "登录"
+    },
+    "hero": {
+      "titleLine1": "自信准备",
+      "titleLine2": "每场考试",
+      "subtitle": "做数千份专业讲师的测试,跟踪学习进度,达成目标。",
+      "searchPlaceholder": "搜索测试、主题或讲师...",
+      "searchButton": "搜索",
+      "features": {
+        "uniqueTests": "原创测试",
+        "experiencedEducators": "经验丰富的讲师",
+        "performanceTracking": "成绩跟踪"
+      }
+    },
+    "sections": {
+      "continue": "继续",
+      "examTypes": "考试类型",
+      "testPackages": "测试套餐",
+      "educators": "讲师"
+    },
+    "interestedExamType": "您感兴趣的",
+    "continueAria": "继续",
+    "completedAria": "已完成",
+    "empty": {
+      "noPackages": "暂无已发布的测试套餐",
+      "noEducators": "未找到讲师"
+    },
+    "stats": {
+      "testsValue": "在线",
+      "testsLabel": "测试",
+      "contentValue": "原创",
+      "contentLabel": "测试内容",
+      "educatorsValue": "经验丰富",
+      "educatorsLabel": "讲师",
+      "performanceValue": "成绩",
+      "performanceLabel": "跟踪"
+    },
+    "cta": {
+      "candidateTitle": "以考生身份加入",
+      "candidateDesc": "做数千份专业讲师的测试,跟踪学习进度,达成目标。",
+      "educatorTitle": "以讲师身份加入",
+      "educatorDesc": "在您擅长的领域创建测试套餐,触达数千考生,获得收入。",
+      "startNow": "立即开始"
+    },
+    "footer": {
+      "tagline": "最值得信赖的考试准备平台。来自专业讲师的测试,跟踪您的成绩。",
+      "corporate": "公司",
+      "support": "支持",
+      "supportLink": "帮助与支持",
+      "rights": "保留所有权利。",
+      "links": {
+        "about": "关于我们",
+        "contact": "联系我们",
+        "privacy": "隐私政策",
+        "partnership": "合作"
+      }
+    },
+    "fallbackPackageTitle": "测试套餐"
+  },
+  "testCard": {
+    "difficulty": {
+      "easy": "简单",
+      "medium": "中等",
+      "hard": "困难"
+    },
+    "examTypeFallback": "通用",
+    "solutionsSuffix": " — 含解答",
+    "testsLabel_one": "{{count}} 个测试",
+    "testsLabel_other": "{{count}} 个测试",
+    "questionsLabel_one": "{{count}} 道题",
+    "questionsLabel_other": "{{count}} 道题",
+    "minutes": "{{count}} 分钟",
+    "free": "免费",
+    "review": "复习",
+    "continue": "继续",
+    "start": "开始测试",
+    "buy": "购买",
+    "durationFull": "{{h}}小时 {{m}}分钟",
+    "durationShort": "{{m}}分 {{s}}秒"
+  },
+  "explore": {
+    "title": "探索测试",
+    "subtitle": "从数千个测试中找到适合您的",
+    "searchPlaceholder": "搜索测试、主题或讲师...",
+    "filtersButton": "筛选",
+    "filter": {
+      "examType": "考试类型",
+      "examTypeAria": "考试类型筛选",
+      "difficulty": "难度",
+      "difficultyAria": "难度筛选",
+      "price": "价格",
+      "priceAria": "价格筛选",
+      "educator": "讲师",
+      "educatorAria": "讲师筛选",
+      "ratingAria": "最低评分筛选",
+      "all": "全部",
+      "allEducators": "所有讲师",
+      "priceFree": "免费",
+      "priceUnder50": "₺50 以下",
+      "price50to100": "₺50 – ₺100",
+      "priceOver100": "₺100 以上",
+      "active": "活动筛选器:",
+      "clear": "清除"
+    },
+    "empty": {
+      "title": "未找到结果",
+      "description": "请尝试其他筛选条件或更改搜索词"
+    },
+    "countFound_one": "找到 {{count}} 个测试",
+    "countFound_other": "找到 {{count}} 个测试"
+  },
+  "testDetail": {
+    "backToTests": "返回测试列表",
+    "errorLoading": "无法加载测试",
+    "errorLoadingDesc": "服务器无响应。请刷新页面。",
+    "notFound": "未找到测试",
+    "notFoundDesc": "此测试不存在或已下架。",
+    "reload": "重新加载",
+    "rate": {
+      "title": "评价该套餐",
+      "packageAverage": "您的套餐平均分:{{avg}}/5({{count}} 个测试)。",
+      "updateAvailable": "您可以更新当前评分。",
+      "shareExperience": "您已完成此测试。分享您的体验!",
+      "commentPlaceholder": "您的评论(可选)",
+      "submitNew": "提交评分",
+      "submitUpdate": "更新评分",
+      "successUpdated": "您的评分已更新!",
+      "successSaved": "您的测试评分已保存!",
+      "errorGeneric": "出错了!",
+      "titleUpdate": "更新套餐评分",
+      "cancel": "取消"
+    },
+    "about": {
+      "title": "关于此测试",
+      "noDescription": "此测试套餐尚未添加说明。"
+    },
+    "educator": {
+      "title": "讲师",
+      "fallbackName": "讲师",
+      "follow": "关注",
+      "following": "已关注",
+      "unfollowed": "已取消关注",
+      "followed": "已关注"
+    },
+    "reviews": {
+      "title": "评价",
+      "unknownCandidate": "未知考生",
+      "ratedTestCount_one": "(共 {{count}} 个测试的平均分)",
+      "ratedTestCount_other": "(共 {{count}} 个测试的平均分)",
+      "prev": "上一页",
+      "next": "下一页",
+      "pageOf": "第 {{current}} / {{total}} 页"
+    },
+    "features": {
+      "title": "特性",
+      "testCount": "测试数量",
+      "questionCount": "题目数量",
+      "difficulty": "难度",
+      "rating": "评分"
+    },
+    "purchase": {
+      "totalSales_one": "{{count}} 人已购买",
+      "totalSales_other": "{{count}} 人已购买",
+      "testsListTitle": "测试",
+      "testMeta": "{{questions}} 道题 • {{minutes}} 分钟",
+      "servicesPaused": "🔧 购买服务正在维护中",
+      "servicesPausedDesc": "请稍后再试。",
+      "servicesPausedToast": "我们的购买服务正在维护中。请稍后再试。",
+      "features": {
+        "unlimitedAccess": "无限制访问",
+        "detailedSolutions": "详细解答",
+        "performanceAnalysis": "成绩分析",
+        "mobileFriendly": "移动端友好"
+      }
+    },
+    "packageRating": {
+      "title": "套餐评分",
+      "outOf": "/ 5",
+      "noReviews": "暂无评价",
+      "reviewerCount_one": "{{count}} 位考生的评分",
+      "reviewerCount_other": "{{count}} 位考生的评分",
+      "rateButton": "评价",
+      "updateButton": "更新评分"
+    }
+  },
+  "titles": {
+    "myObjections": "我的报告",
+    "myObjectionsDesc": "跟踪您提交的报告和收到的回复",
+    "myResults": "我的成绩报告",
+    "myResultsDesc": "查看您已完成测试的结果和统计数据",
+    "myTopicReport": "主题表现",
+    "myTopicReportDesc": "跟踪每个主题的准确率和用时",
+    "profileSettings": "个人设置",
+    "profileSettingsDesc": "更新您的账户信息和偏好",
+    "takeTest": "测试",
+    "educatorDashboard": "讲师面板",
+    "educatorDashboardDesc": "跟踪您的测试套餐、销售和统计数据",
+    "myTestPackages": "我的测试套餐",
+    "myTestPackagesDesc": "管理您的测试套餐",
+    "createTest": "创建新测试",
+    "createTestDesc": "开始一个新测试套餐",
+    "editTest": "编辑测试",
+    "mySales": "我的销售",
+    "mySalesDesc": "查看销售历史和收入",
+    "myDiscountCodes": "折扣码",
+    "myDiscountCodesDesc": "创建和管理折扣码",
+    "myAds": "我的广告",
+    "myAdsDesc": "管理您的广告活动",
+    "myLiveSessions": "我的实时测试",
+    "myLiveSessionsDesc": "管理您的实时会话",
+    "educatorRefunds": "退款请求",
+    "educatorRefundsDesc": "审核考生提交的退款请求",
+    "questionReports": "错误报告",
+    "questionReportsDesc": "审核考生提交的错误报告",
+    "educatorSettings": "个人设置",
+    "educatorSettingsDesc": "讲师账户设置和偏好",
+    "myModerationStatus": "内容状态",
+    "myModerationStatusDesc": "您题目的审核状态和风险评分",
+    "educators": "讲师",
+    "educatorsDesc": "探索所有讲师",
+    "educatorProfile": "讲师资料",
+    "examTypes": "考试类型",
+    "paymentSuccess": "支付成功",
+    "paymentSuccessDesc": "您的购买已完成",
+    "about": "关于我们",
+    "contact": "联系我们",
+    "privacy": "隐私政策",
+    "partnership": "合作",
+    "support": "帮助与支持"
+  },
+  "liveHost": {
+    "status": {
+      "draft": "未开始",
+      "active": "进行中",
+      "ended": "已结束"
+    },
+    "participants": {
+      "active": "在线",
+      "total": "总计",
+      "activeTitle": "在线参与者",
+      "totalJoined": "总参与人数"
+    },
+    "controls": {
+      "start": "开始",
+      "end": "结束",
+      "ending": "结束中…",
+      "previous": "上一题",
+      "next": "下一题",
+      "showStats": "显示统计",
+      "hideStats": "隐藏统计"
+    },
+    "question": {
+      "label": "第 {{n}} 题",
+      "mediaAlt": "题目",
+      "peopleTooltip_one": "{{count}} 人",
+      "peopleTooltip_other": "{{count}} 人"
+    },
+    "round": {
+      "round1": "第1轮:{{pct}}%",
+      "round2Prefix": "第2轮:"
+    },
+    "ended": {
+      "round1Title": "会话已完成",
+      "round2Title": "后测已完成!",
+      "summary": "{{participants}} 位参与者 • {{questions}} 道题",
+      "createRound2": "再次进行(后测)",
+      "creatingRound2": "创建中…",
+      "round2Exists": "第2轮已存在 — 代码:",
+      "goToRound2": "进入会话 →",
+      "backToDashboard": "返回主页",
+      "backToLiveSessions": "返回我的实时测试"
+    },
+    "join": {
+      "codeLabel": "加入代码",
+      "copyCode": "复制代码",
+      "copied": "已复制!",
+      "qrHint": "通过二维码加入"
+    },
+    "endDialog": {
+      "title": "结束会话",
+      "description": "您确定要现在结束此会话吗?此操作无法撤销;现有参与者将无法再提交答案。",
+      "cancel": "取消",
+      "confirm": "是,结束"
+    },
+    "round2Dialog": {
+      "title": "开始第2轮",
+      "description": "将使用相同的题目创建第2轮(后测)。只有本轮的考生才能加入新会话。",
+      "cancel": "取消",
+      "confirm": "创建第2轮"
+    },
+    "comparison": {
+      "title": "小组前测 / 后测对比",
+      "round1Avg": "第1轮均分",
+      "round2Avg": "第2轮均分",
+      "improvement": "提升",
+      "peopleCount_one": "{{count}} 人",
+      "peopleCount_other": "{{count}} 人"
+    },
+    "toasts": {
+      "ended": "会话已结束",
+      "round2Created": "第2轮已创建!代码:{{code}}",
+      "round2NoNav": "第2轮已创建但跳转失败",
+      "round2Failed": "无法创建第2轮",
+      "genericError": "错误"
+    },
+    "notFound": "未找到会话"
+  },
+  "testForm": {
+    "steps": {
+      "package": "套餐",
+      "tests": "测试",
+      "preview": "预览"
+    },
+    "nav": {
+      "backToPackages": "我的测试套餐",
+      "back": "← 返回",
+      "backToTests": "← 返回(测试)",
+      "next": "下一步 →",
+      "previewNext": "预览 →"
+    },
+    "package": {
+      "sectionTitle": "套餐信息",
+      "titleLabel": "套餐标题 *",
+      "titlePlaceholder": "例如:KPSS 综合能力",
+      "descLabel": "描述",
+      "descPlaceholder": "套餐简介...",
+      "examTypeLabel": "考试类型(可选)",
+      "examTypePlaceholder": "选择",
+      "examTypeNone": "— 未选择 —",
+      "priceLabel": "价格 (₺) *",
+      "pricePlaceholder": "例如:49",
+      "priceMin": "最低: {{min}} ₺",
+      "difficultyLabel": "难度",
+      "difficulty": {
+        "easy": "🟢 简单",
+        "medium": "🟡 中等",
+        "hard": "🔴 困难"
+      },
+      "cover": {
+        "label": "套餐封面图",
+        "hint": "上传将在列表和详情页显示的预览图。考生会看到这张图。",
+        "upload": "上传图片",
+        "change": "更换图片",
+        "remove": "移除",
+        "uploading": "上传中…",
+        "uploaded": "封面图已上传",
+        "format": "PNG、JPG 或 WebP — 最大 5MB",
+        "previewTitleFallback": "套餐标题会显示在这里",
+        "errors": {
+          "invalidFormat": "请选择 PNG、JPG 或 WebP 格式的图片",
+          "tooBig": "图片大小最多为 5MB",
+          "uploadFailed": "图片上传失败,请重试。"
+        }
+      }
+    },
+    "testCard": {
+      "titleLabel": "测试标题 *",
+      "titlePlaceholder": "例如:YKS 数学",
+      "timedToggle": "限时",
+      "durationLabel": "时长(分钟)",
+      "deleteTest": "删除测试",
+      "questionCountStat": "{{count}} 道题",
+      "completedSuffix": "(已完成 {{count}} 道)",
+      "addQuestion": "添加题目",
+      "indexLabel": "测试 {{index}}",
+      "completedShort": "已完成 {{count}}",
+      "collapseAria": "收起此测试"
+    },
+    "question": {
+      "editDialogTitle": "编辑第 {{n}} 题",
+      "label": "第 {{n}} 题",
+      "contentLabel": "题目内容",
+      "contentPlaceholder": "输入题目...",
+      "duplicateCheck": "正在检查...",
+      "duplicateTitle": "相似题目",
+      "duplicateSimilarity": "相似度: {{pct}}%",
+      "duplicateToast": "发现一个相似题目。",
+      "imageLabel": "图片(可选)",
+      "selectImage": "选择图片",
+      "clearImage": "清除",
+      "topicLabel": "主题(可选)",
+      "topicPlaceholder": "选择主题",
+      "topicNone": "— 未选择 —",
+      "optionsLabel": "选项",
+      "optionPlaceholder": "选项 {{letter}}",
+      "optionImage": "图片",
+      "selectedCount": "{{filled}}/5 选项",
+      "correctMissing": "• 未选择正确答案",
+      "correctIs": "• 正确答案: {{letter}}",
+      "edit": "编辑",
+      "delete": "删除",
+      "rejectedNotice": "此题违反内容政策。"
+    },
+    "dialog": {
+      "cancel": "取消",
+      "saving": "保存中...",
+      "newQuestion": "新题目",
+      "complete": "完成",
+      "validateNoCorrect": "请标记正确答案",
+      "genericError": "错误"
+    },
+    "testsStep": {
+      "title": "测试与题目",
+      "subtitleEdit": "编辑现有题目或添加新题目",
+      "subtitleCreate": "创建您的第一个测试并添加题目",
+      "addTest": "添加测试",
+      "validateAtLeastOne": "至少需要一个已完成的测试和题目"
+    },
+    "preview": {
+      "sectionTitle": "套餐摘要",
+      "packageTitleLabel": "套餐标题",
+      "descriptionLabel": "描述",
+      "testsCount_one": "{{count}} 个测试",
+      "testsCount_other": "{{count}} 个测试",
+      "validQuestions_one": "{{count}} 道有效题目",
+      "validQuestions_other": "{{count}} 道有效题目",
+      "free": "免费",
+      "testsListTitle": "测试",
+      "untitled": "无标题"
+    },
+    "validations": {
+      "titleRequired": "套餐标题必填",
+      "priceMin": "价格至少为 {{min}} ₺"
+    },
+    "editPage": {
+      "publishedBadge": "已发布",
+      "draftBadge": "草稿",
+      "notFoundId": "未找到套餐 ID",
+      "loadFailed": "套餐加载失败",
+      "saveChanges": "保存更改",
+      "saving": "保存中...",
+      "publishing": "发布中...",
+      "saveAndPublish": "保存并发布",
+      "unpublishing": "处理中...",
+      "unpublish": "下架",
+      "cannotDeleteAnswered": "已回答的题目跳过:无法删除。",
+      "moderationPendingError": "此测试的部分题目正在审核中,审核通过前无法发布。",
+      "savedAndPublished": "套餐已更新并发布!",
+      "unpublished": "套餐已下架。",
+      "savedChanges": "更改已保存。",
+      "saveFailed": "保存失败",
+      "autoSave": {
+        "saving": "正在保存...",
+        "savedAt": "已自动保存 · {{time}}"
+      },
+      "draftDialog": {
+        "title": "发现未完成的编辑",
+        "description": "您有一个未完成的此套餐编辑会话。是否要从上次中断的位置继续?",
+        "restore": "继续",
+        "discard": "放弃并重置",
+        "loaded": "已恢复上次的编辑。"
+      }
+    },
+    "createPage": {
+      "subtitle": "创建新测试套餐",
+      "submit": "创建套餐",
+      "submitting": "创建中...",
+      "submitAndPublish": "创建并发布",
+      "submitFailed": "无法创建套餐",
+      "created": "套餐已创建!",
+      "createdAndPublished": "套餐已创建并发布!",
+      "draftRestored": "草稿已恢复",
+      "draftSaving": "自动保存中…",
+      "draftSaved": "{{time}} • 自动保存",
+      "discardDraft": "删除草稿",
+      "discardConfirm": "当前草稿将被删除。继续吗?",
+      "discarded": "草稿已删除",
+      "backToDashboard": "返回主页",
+      "headerSubtitle": "3 步准备并发布您的测试。",
+      "publishHint": "发布后,考生可以查看并购买此套餐。",
+      "draftSave": "保存草稿",
+      "publish": "发布",
+      "publishing": "发布中...",
+      "saving": "保存中...",
+      "publishedToast": "套餐已创建并发布!",
+      "draftedToast": "套餐已保存为草稿。",
+      "saveFailed": "保存失败",
+      "moderationPending": "此测试的部分题目正在审核中,审核通过前无法发布。",
+      "noTestsYet": "尚未添加测试",
+      "untitled": "无标题测试",
+      "imageAdded": "已添加图片",
+      "atLeastOneValid": "您必须创建至少一个有效的测试",
+      "validations": {
+        "titleRequired": "套餐标题必填",
+        "priceMin": "价格至少为 {{min}} ₺",
+        "testTitleRequired": "测试标题必填",
+        "atLeastOneValidQuestion": "至少需要一道完成的题目"
+      },
+      "questionDialog": {
+        "contentRequired": "题目内容或图片必填",
+        "atLeast2Options": "至少需要填写 2 个选项",
+        "correctRequired": "请标记正确答案 (A–E)",
+        "duplicateToast": "发现相似题目。您可以继续。",
+        "duplicateWarning": "警告:发现相似题目",
+        "duplicateLoading": "正在检查重复题目...",
+        "imageLabel": "题目图片(可选)",
+        "saveError": "保存时出错"
+      },
+      "docx": {
+        "button": "导入 DOCX",
+        "loading": "加载中...",
+        "dialogTitle": "从 DOCX 导入题目",
+        "dialogDesc": "选择 Word 文件,题目将自动解析。",
+        "selectFile": "选择 DOCX 文件",
+        "parseError": "无法从 DOCX 解析题目。请手动添加。",
+        "mammothMissing": "未安装 DOCX 导入包",
+        "importError": "DOCX 导入失败: {{msg}}",
+        "unknownError": "未知错误",
+        "added_one": "添加了 {{count}} 道题",
+        "added_other": "添加了 {{count}} 道题"
+      },
+      "draftDialog": {
+        "title": "未保存的草稿",
+        "found": "发现未保存的草稿:<strong>\"{{title}}\"</strong>。",
+        "continue": "继续",
+        "discardRestart": "删除,重新开始",
+        "loaded": "草稿已加载"
+      },
+      "guards": {
+        "loginRequired": "请登录以创建测试",
+        "loginButton": "登录",
+        "maintenanceTitle": "维护模式",
+        "maintenanceDesc": "测试创建功能暂时停用。",
+        "pendingApprovalTitle": "等待账户审核",
+        "pendingApprovalDesc": "您的账户必须由管理员审核通过才能创建测试。",
+        "goToSettings": "前往个人设置"
+      },
+      "questionItem": {
+        "selectedCount": "{{filled}}/5 选项已填",
+        "correctIs": "• 正确答案: {{letter}}",
+        "correctMissing": "• 未选择正确答案"
+      },
+      "duration": "时长(分钟)"
+    }
+  },
+  "myTestPackages": {
+    "searchPlaceholder": "搜索测试...",
+    "filter": {
+      "statusPlaceholder": "状态",
+      "allStatuses": "所有状态",
+      "published": "已发布",
+      "draft": "草稿",
+      "examTypePlaceholder": "考试类型",
+      "allExamTypes": "所有考试类型",
+      "exportExcel": "导出 Excel",
+      "clear": "清除"
+    },
+    "empty": {
+      "errorLoad": "测试加载失败,请刷新页面。",
+      "noTestsTitle": "您还没有创建任何测试",
+      "noTestsDesc": "创建您的第一个测试套餐并开始销售",
+      "createFirst": "创建第一个测试",
+      "noResultsTitle": "未找到结果",
+      "noResultsDesc": "请尝试更改筛选条件",
+      "clearFilters": "清除筛选"
+    },
+    "card": {
+      "stats": "{{tests}} 个测试 · {{questions}} 道题",
+      "salesCount_one": "{{count}} 次销售",
+      "salesCount_other": "{{count}} 次销售",
+      "noRating": "尚无评分",
+      "viewsAria": "浏览量:{{count}}",
+      "viewsTooltip": "总计:{{total}} · 独立考生:{{unique}} · 最近 7 天:{{last7}}",
+      "viewsLast7": "+{{count}} / 7天",
+      "editTitle": "编辑",
+      "publishTitle": "发布",
+      "unpublishTitle": "下架"
+    },
+    "toasts": {
+      "statusUpdated": "套餐状态已更新",
+      "actionFailed": "操作失败",
+      "excelDownloaded": "Excel 文件已下载"
+    },
+    "excel": {
+      "headers": {
+        "title": "标题",
+        "examType": "考试类型",
+        "status": "状态",
+        "testCount": "测试数量",
+        "questionCount": "题目数量",
+        "price": "价格 (₺)",
+        "sales": "销售",
+        "rating": "评分",
+        "createdAt": "创建日期"
+      },
+      "published": "已发布",
+      "draft": "草稿",
+      "sheetName": "测试套餐",
+      "filePrefix": "my-test-packages"
+    }
+  },
+  "mySales": {
+    "stats": {
+      "totalSales": "总销售",
+      "totalRevenue": "总收入",
+      "monthRevenue": "本月收入",
+      "uniqueBuyers": "独立买家"
+    },
+    "searchPlaceholder": "搜索买家或测试...",
+    "filter": {
+      "statusPlaceholder": "状态",
+      "allStatuses": "所有状态",
+      "completed": "已完成",
+      "pending": "待处理",
+      "refunded": "已退款",
+      "datePlaceholder": "日期",
+      "allDates": "所有时间",
+      "today": "今天",
+      "lastWeek": "最近 7 天",
+      "lastMonth": "最近 30 天",
+      "exportExcel": "导出 Excel",
+      "clear": "清除"
+    },
+    "tableTitle": "销售记录",
+    "empty": {
+      "noSales": "暂无销售",
+      "noResults": "未找到结果",
+      "clearFilters": "清除筛选"
+    },
+    "table": {
+      "buyer": "买家",
+      "test": "测试",
+      "amount": "金额",
+      "status": "状态",
+      "date": "日期",
+      "buyerFallback": "用户"
+    },
+    "excel": {
+      "headers": {
+        "buyer": "买家",
+        "email": "邮箱",
+        "test": "测试",
+        "amount": "金额",
+        "status": "状态",
+        "date": "日期"
+      },
+      "filePrefix": "my-sales"
+    },
+    "toasts": {
+      "excelDownloaded": "Excel 文件已下载"
+    }
+  },
+  "myDiscountCodes": {
+    "newCode": "新代码",
+    "filter": {
+      "codeLabel": "代码",
+      "codePlaceholder": "搜索代码…",
+      "minPercent": "最小折扣 %",
+      "maxPercent": "最大折扣 %",
+      "dateFrom": "开始日期",
+      "dateTo": "结束日期",
+      "clear": "清除"
+    },
+    "empty": {
+      "noCodes": "您尚未创建折扣码",
+      "noResults": "没有符合筛选条件的代码",
+      "clearFilters": "清除筛选"
+    },
+    "card": {
+      "discountUsage": "{{pct}}% 折扣 • {{used}}/{{max}} 使用",
+      "infinite": "∞",
+      "createdBy": "创建者:",
+      "roles": {
+        "admin": "管理员",
+        "educator": "讲师"
+      },
+      "status": {
+        "passive": "已停用",
+        "expired": "已过期",
+        "limitReached": "已达上限",
+        "active": "有效"
+      },
+      "toggleActivate": "启用",
+      "toggleDeactivate": "停用"
+    },
+    "dialog": {
+      "title": "新折扣码",
+      "codeLabel": "折扣码 *",
+      "codePlaceholder": "例如:NEW2024",
+      "percentLabel": "折扣比例 (%) *",
+      "percentMax": "最大 {{max}}%",
+      "adminOverride": "(管理员覆盖)",
+      "maxUsesLabel": "使用次数限制",
+      "validForLabel": "适用测试(可选)",
+      "allTests": "所有测试",
+      "validUntilLabel": "有效期至(可选)",
+      "cancel": "取消",
+      "create": "创建"
+    },
+    "toasts": {
+      "created": "折扣码已创建",
+      "createFailed": "无法创建折扣码",
+      "activated": "折扣码已启用",
+      "deactivated": "折扣码已停用",
+      "toggleFailed": "操作失败",
+      "fillRequired": "请填写必填字段",
+      "maxPercent": "最大折扣为 {{max}}%",
+      "codeCopied": "代码已复制"
+    }
+  },
+  "myAds": {
+    "tabs": {
+      "stats": "统计",
+      "purchases": "我的广告",
+      "buy": "新广告"
+    },
+    "stats": {
+      "totalImpressions": "总展示次数",
+      "activeAds": "活跃广告",
+      "last7Days": "最近 7 天",
+      "last30Days": "最近 30 天展示",
+      "noData": "暂无展示数据",
+      "performanceDetail": "广告表现详情",
+      "profileBoost": "推广个人资料",
+      "validUntil": "有效期至 {{date}}",
+      "active": "进行中",
+      "completed": "已结束",
+      "noDataPrompt": "购买第一个广告以推广您的测试。",
+      "buyAd": "购买广告"
+    },
+    "purchases": {
+      "noneYet": "您还未购买任何广告",
+      "buyFirst": "购买第一个广告",
+      "impressionsRemaining": "剩余 {{count}} 次展示"
+    },
+    "buy": {
+      "servicesPaused": "广告购买暂时暂停。",
+      "servicesPausedDesc": "请稍后再试。",
+      "howItWorks": "如何运作?",
+      "howItWorks1": "首页推荐的 <strong>10%</strong> 为广告。",
+      "howItWorks2": "个性化推荐不受影响 — 广告提供额外曝光。",
+      "howItWorks3": "购买套餐中的展示用完后广告自动结束。",
+      "targetType": "推广类型",
+      "targetTest": "测试套餐",
+      "targetTestDesc": "推广您的特定测试",
+      "targetEducator": "我的资料",
+      "targetEducatorDesc": "推广您的讲师资料",
+      "whichTest": "哪个测试?",
+      "noPublishedTests": "您还没有已发布的测试。请先发布一个。",
+      "selectTest": "选择测试",
+      "adPackage": "广告套餐",
+      "noPackages": "目前没有可购买的套餐。",
+      "packageInfo": "{{impressions}} 次展示 · 有效期 {{days}} 天",
+      "processing": "处理中...",
+      "buyAd": "购买广告"
+    },
+    "toasts": {
+      "purchased": "广告已购买!展示将立即开始。",
+      "purchaseFailed": "购买失败",
+      "selectPackage": "请选择一个套餐",
+      "selectTest": "请选择要推广的测试"
+    }
+  },
+  "myLiveSessions": {
+    "subtitle": "管理您的实时测试会话。",
+    "newButton": "新实时测试",
+    "empty": {
+      "title": "您还没有创建实时测试",
+      "desc": "开启一个实时会话,参与者通过二维码或代码加入。",
+      "firstButton": "创建我的第一个实时测试"
+    },
+    "sections": {
+      "active": "进行中 ({{count}})",
+      "draft": "草稿 ({{count}})",
+      "ended": "已结束 ({{count}})"
+    },
+    "status": {
+      "draft": "草稿",
+      "active": "进行中",
+      "ended": "已结束"
+    },
+    "round2": {
+      "completedBadge": "第 2 轮已完成",
+      "activeBadge": "第 2 轮进行中",
+      "draftBadge": "第 2 轮草稿"
+    },
+    "card": {
+      "questions": "{{count}} 道题",
+      "participants": "{{count}} 位参与者",
+      "joinCode": "代码:",
+      "round2JoinCode": "第 2 轮代码:",
+      "manage": "管理",
+      "review": "复习",
+      "reviewRound1": "复习第 1 轮",
+      "reviewRound2": "复习第 2 轮",
+      "startRound2": "开始第 2 轮",
+      "goRound2": "前往第 2 轮"
+    },
+    "confirms": {
+      "round2": "使用相同题目创建第 2 轮(后测)吗?\n仅本轮的考生可加入。"
+    },
+    "toasts": {
+      "round2Created": "第 2 轮已创建!代码:{{code}}",
+      "round2Failed": "无法创建第 2 轮"
+    }
+  },
+  "educatorRefunds": {
+    "accessDenied": "访问被拒绝",
+    "deadlineWarning": "部分申请即将到期。7 天内未回复的申请将转交管理员。",
+    "tabs": {
+      "pending": "待审",
+      "reviewed": "已审"
+    },
+    "empty": {
+      "noPending": "无待审退款申请",
+      "noReviewed": "尚无已审申请"
+    },
+    "card": {
+      "testFallback": "测试",
+      "reasonFallback": "未指定原因",
+      "deadline": "截止: {{when}}",
+      "review": "审核"
+    },
+    "status": {
+      "PENDING": "待审",
+      "EDUCATOR_APPROVED": "已批准",
+      "EDUCATOR_REJECTED": "已拒绝",
+      "APPEAL_PENDING": "申诉中",
+      "ESCALATED": "已升级",
+      "APPROVED": "已退款",
+      "REJECTED": "已处理"
+    },
+    "reasons": {
+      "wrong_content": "内容不符预期",
+      "defective_questions": "题目有误",
+      "not_working": "技术问题",
+      "quality_issue": "质量问题",
+      "other": "其他"
+    },
+    "dialog": {
+      "title": "审核退款申请",
+      "testLabel": "测试:",
+      "reasonLabel": "原因:",
+      "descLabel": "说明:",
+      "deadlineLabel": "审核截止:",
+      "rejectPlaceholder": "拒绝理由(可选,至少 5 字)...",
+      "back": "返回",
+      "reject": "拒绝",
+      "approve": "批准 → 提交管理员"
+    },
+    "toasts": {
+      "approved": "退款已批准。已提交管理员审核。",
+      "rejected": "退款已拒绝。",
+      "actionFailed": "操作失败"
+    }
+  },
+  "questionReports": {
+    "tabs": {
+      "pending": "待审",
+      "resolved": "已处理"
+    },
+    "filterBar": {
+      "status": "状态",
+      "test": "测试",
+      "reporter": "举报人",
+      "reason": "错误类型/原因",
+      "allStatuses": "全部",
+      "allTests": "所有测试",
+      "selectTest": "选择测试...",
+      "searchTest": "搜索测试...",
+      "testFilterAria": "测试筛选",
+      "allReporters": "所有考生",
+      "selectReporter": "选择考生...",
+      "searchReporter": "搜索考生...",
+      "reporterFilterAria": "举报人筛选",
+      "noResult": "无结果",
+      "reasonPlaceholder": "例如:答案错误...",
+      "reasonAria": "搜索类型或原因",
+      "count": "{{filtered}} / {{total}} 报告",
+      "clear": "清除筛选",
+      "unnamed": "(未命名)",
+      "unknown": "(未知)"
+    },
+    "statusConfig": {
+      "OPEN": "待处理",
+      "ANSWERED": "已回复",
+      "ESCALATED": "已升级至管理员"
+    },
+    "card": {
+      "reporter": "举报人:{{name}}",
+      "daysLeft": "剩余 {{count}} 天",
+      "deadlineExpired": "已过期",
+      "adminNote": "管理员备注",
+      "yourAnswer": "您的回复:",
+      "respondedAt": "回复时间:{{date}}",
+      "respond": "回复"
+    },
+    "empty": {
+      "noPending": "无待处理报告",
+      "noResolved": "无已处理报告",
+      "noResults": "没有符合筛选的报告"
+    },
+    "dialog": {
+      "title": "回复报告",
+      "testLabel": "测试",
+      "questionLabel": "题目(前 150 字)",
+      "reportLabel": "考生报告",
+      "responsePlaceholder": "请写下您的回复(至少 5 字)...",
+      "cancel": "取消",
+      "submit": "回复",
+      "submitting": "发送中..."
+    },
+    "toasts": {
+      "sent": "回复已发送",
+      "sendFailed": "回复发送失败",
+      "min5Chars": "请至少写 5 字"
+    }
+  },
+  "educatorSettings": {
+    "tabs": {
+      "profile": "资料",
+      "verification": "认证",
+      "contact": "联系方式",
+      "exams": "考试偏好",
+      "notifications": "通知",
+      "payment": "支付"
+    },
+    "notices": {
+      "rejected": {
+        "title": "您的申请被拒绝",
+        "reason": "拒绝原因:",
+        "desc": "请更新资料并重新提交申请。",
+        "resubmit": "重新提交申请",
+        "resubmitting": "提交中...",
+        "resubmittedToast": "您的申请已重新提交"
+      },
+      "pending": {
+        "title": "等待账户审核",
+        "desc": "您的讲师申请正在审核。为加快审核,请完善所有信息。"
+      },
+      "approved": {
+        "title": "您的账户已批准",
+        "desc": "您现在可以创建测试,资料页将对考生可见。"
+      }
+    },
+    "profile": {
+      "title": "个人信息",
+      "educationLabel": "教育背景",
+      "educationPlaceholder": "例如:伊斯坦布尔大学 — 数学",
+      "educationHint": "您的大学和专业",
+      "bioLabel": "简介",
+      "bioPlaceholder": "介绍自己,提及您的专业领域...",
+      "bioHint": "显示在您资料页的简介"
+    },
+    "verification": {
+      "title": "学术认证",
+      "gscholarLabel": "Google Scholar 资料",
+      "gscholarHint": "添加 Google Scholar 链接以验证学术背景",
+      "cvLabel": "上传简历",
+      "cvUploaded": "简历已上传",
+      "cvView": "查看文件",
+      "cvChange": "更换",
+      "cvUpload": "上传简历",
+      "cvUploading": "上传中...",
+      "cvFormat": "PDF (最大 5MB)",
+      "cvHint": "上传简历向考生展示您的专业背景"
+    },
+    "contact": {
+      "title": "联系信息",
+      "phoneLabel": "电话",
+      "cityLabel": "城市",
+      "websiteLabel": "网站/博客",
+      "linkedinLabel": "LinkedIn"
+    },
+    "exams": {
+      "title": "我的专业领域",
+      "desc": "选择您擅长备考哪些考试。此信息将显示在您的资料页。",
+      "noExamTypes": "未找到考试类型"
+    },
+    "notifications": {
+      "title": "通知偏好",
+      "newTests": "新测试通知",
+      "newTestsDesc": "新测试发布时接收通知",
+      "promotions": "促销",
+      "promotionsDesc": "接收折扣和优惠信息",
+      "educatorUpdates": "讲师更新",
+      "educatorUpdatesDesc": "接收您关注讲师的更新",
+      "testReminders": "测试提醒",
+      "testRemindersDesc": "接收您已开始测试的提醒"
+    },
+    "payment": {
+      "title": "支付信息",
+      "desc": "输入将接收佣金支付的银行账户。此信息仅管理员可见。",
+      "ibanLabel": "IBAN",
+      "ibanPlaceholder": "TR00 0000 0000 0000 0000 0000 00",
+      "ibanError": "IBAN 格式:TR 开头,26 字符(TR + 24 位)",
+      "ibanHint": "土耳其 IBAN 格式:TR 开头,共 26 字符",
+      "holderLabel": "账户持有人",
+      "holderPlaceholder": "姓名",
+      "holderHint": "银行账户上注册的姓名",
+      "bankLabel": "银行名称",
+      "bankPlaceholder": "例如:Ziraat 银行",
+      "important": "重要:",
+      "importantDesc": "为按时收到佣金,请完整填写 IBAN 和账户持有人。您的信息加密存储。"
+    },
+    "saveButton": "保存更改",
+    "saving": "保存中...",
+    "toasts": {
+      "profileUpdated": "资料信息已更新",
+      "updateFailed": "更新失败",
+      "invalidPdf": "请上传 PDF 文件",
+      "fileTooBig": "文件大小不能超过 5MB",
+      "cvUploaded": "简历上传成功",
+      "cvUploadFailed": "简历上传失败",
+      "invalidImage": "请上传 JPG、PNG 或 WebP 图片",
+      "imageTooBig": "图片大小不能超过 5MB",
+      "imageUploaded": "头像已更新",
+      "imageUploadFailed": "图片上传失败"
+    }
+  },
+  "myModerationStatus": {
+    "errorLoad": "无法加载审核状态。请稍后再试。",
+    "banned": {
+      "title": "您的账户已永久封禁",
+      "desc": "您的账户因违反平台政策被永久关闭。如有疑问请联系:support@sinav-salonu.com"
+    },
+    "suspended": {
+      "title": "您的账户已暂停",
+      "desc": "您的账户暂停至 <strong>{{date}}</strong>。",
+      "countdown": "剩余时间:{{days}} 天 {{hours}} 小时"
+    },
+    "risk": {
+      "title": "风险档案",
+      "scoreLabel": "风险评分",
+      "progressLabel": "风险等级",
+      "openViolations": "未处理违规",
+      "totalViolations": "总违规数",
+      "highSeverity": "高严重度",
+      "lastViolation": "最近违规:{{when}}"
+    },
+    "activeAction": {
+      "title": "活动处罚",
+      "actionType": "处罚类型",
+      "reason": "原因",
+      "expiresAt": "到期时间"
+    },
+    "recent": {
+      "title": "最近 30 天违规",
+      "noViolations": "最近 30 天无违规。您的内容看起来很干净!"
+    },
+    "entityTypes": {
+      "question": "题目",
+      "test": "测试",
+      "content": "内容"
+    },
+    "severity": {
+      "label": "严重度:{{level}}/5"
+    }
+  },
+  "myTests": {
+    "title": "我的测试",
+    "subtitle": "查看并完成您购买的测试",
+    "filter": {
+      "title": "筛选",
+      "clear": "清除筛选",
+      "examTypeLabel": "考试类型",
+      "educatorLabel": "讲师",
+      "completionLabel": "完成状态",
+      "all": "全部",
+      "pending": "未完成",
+      "completed": "已完成",
+      "examTypeAria": "考试类型筛选",
+      "educatorAria": "讲师筛选",
+      "completionAria": "完成状态筛选"
+    },
+    "empty": {
+      "title": "您还没有购买测试",
+      "desc": "探索测试并开始备考",
+      "cta": "探索测试"
+    }
+  },
+  "about": {
+    "backToHome": "返回首页",
+    "subtitle": "Sınav Salonu 是土耳其最全面的在线考试备考平台。",
+    "missionTitle": "我们的使命",
+    "missionBody": "通过为备考的考生提供高质量、最新且有效的测试内容,成为通往成功之路上最可靠的指南。每位考生都可以按照自己的节奏学习,跟踪进度并实现目标。",
+    "visionTitle": "我们的愿景",
+    "visionBody": "成为土耳其考试备考领域首屈一指的平台。将技术与教育结合,为每位考生提供平等的机会,引领教育的数字化转型。",
+    "valuesTitle": "我们的价值观",
+    "value1Title": "质量",
+    "value1Body": "每个测试包都由该领域的专家教育者精心准备,并持续更新。",
+    "value2Title": "透明度",
+    "value2Body": "通过考生和教育者的反馈持续改进,保持开放的沟通。",
+    "value3Title": "可访问性",
+    "value3Body": "我们提供经济实惠且易于访问的内容,让每个人都能获得优质教育。",
+    "value4Title": "创新",
+    "value4Body": "我们借助技术的力量持续提升学习体验。",
+    "whyTitle": "为什么选择 Sınav Salonu?",
+    "why1Title": "专家教育者团队",
+    "why1Body": "各领域的专家教育者和最新的测试内容。",
+    "why2Title": "详细的表现分析",
+    "why2Body": "跟踪你的进度,发现你的优势和不足。",
+    "why3Title": "随时随地",
+    "why3Body": "使用我们的移动端友好平台,随时随地学习。"
+  },
+  "contact": {
+    "backToHome": "返回首页",
+    "subtitle": "如有疑问或建议,请与我们联系。",
+    "formTitle": "发送消息",
+    "nameLabel": "姓名 *",
+    "namePlaceholder": "你的姓和名",
+    "emailLabel": "电子邮件 *",
+    "emailPlaceholder": "example@mail.com",
+    "subjectLabel": "主题",
+    "subjectPlaceholder": "你的消息主题",
+    "messageLabel": "你的消息 *",
+    "messagePlaceholder": "在此处输入你的消息...",
+    "sendButton": "发送消息",
+    "sending": "发送中...",
+    "emailTitle": "电子邮件",
+    "addressTitle": "地址",
+    "addressBody": "Sınav Salonu Eğitim Teknolojileri A.Ş.\nMaslak Mahallesi, Büyükdere Caddesi\nNo: 123, Sarıyer\nİstanbul, Türkiye",
+    "toasts": {
+      "missingFields": "请填写所有必填字段",
+      "sent": "你的消息已成功发送!我们会尽快回复你。"
+    }
+  },
+  "partnership": {
+    "backToHome": "返回首页",
+    "subtitle": "成为 Sınav Salonu 的合作伙伴,在教育技术领域创造不同。",
+    "type1Title": "企业销售合作",
+    "type1Body": "我们为你的公司或组织提供定制测试包和批量销售机会。",
+    "type2Title": "教育机构合作",
+    "type2Body": "为补习学校、大学和教育机构提供定制集成与内容合作。",
+    "type3Title": "技术合作",
+    "type3Body": "为希望开发 API 集成和技术解决方案的公司提供合作机会。",
+    "formTitle": "合作申请",
+    "companyLabel": "公司名称 *",
+    "companyPlaceholder": "你的公司名称",
+    "nameLabel": "联系人 *",
+    "namePlaceholder": "你的姓和名",
+    "emailLabel": "电子邮件 *",
+    "emailPlaceholder": "example@company.com",
+    "phoneLabel": "电话",
+    "phonePlaceholder": "+90 5XX XXX XX XX",
+    "messageLabel": "合作详情 *",
+    "messagePlaceholder": "告诉我们合作类型和详细信息...",
+    "submitButton": "提交申请",
+    "submitting": "提交中...",
+    "advantagesTitle": "成为合作伙伴的优势",
+    "adv1Title": "特殊定价",
+    "adv1Body": "企业客户专享折扣价",
+    "adv2Title": "优先支持",
+    "adv2Body": "24/7 优先技术支持服务",
+    "adv3Title": "定制内容",
+    "adv3Body": "根据你的需求定制的测试内容",
+    "adv4Title": "详细报告",
+    "adv4Body": "全面的分析和报告工具",
+    "toasts": {
+      "missingFields": "请填写所有必填字段",
+      "submitted": "你的申请已收到!我们会尽快与你联系。"
+    }
+  },
+  "privacy": {
+    "backToHome": "返回首页",
+    "lastUpdated": "最后更新:2026年2月17日",
+    "s1Title": "1. 一般信息",
+    "s1Body": "在 Sınav Salonu,我们尊重用户的隐私,并高度重视个人数据的保护。本隐私政策描述了我们在平台上收集、处理和存储个人数据的做法。",
+    "s2Title": "2. 收集的数据",
+    "s2Intro": "在使用平台期间可能会收集以下个人数据:",
+    "s2List": [
+      "姓、名、电子邮件地址和电话号码",
+      "账户创建和登录信息",
+      "测试结果和表现数据",
+      "支付信息(通过安全支付系统)",
+      "平台使用统计和偏好",
+      "通信记录和反馈"
+    ],
+    "s3Title": "3. 数据使用",
+    "s3Intro": "收集的个人数据用于以下目的:",
+    "s3List": [
+      "提供和运营平台",
+      "管理用户账户",
+      "存储和报告测试结果",
+      "处理支付",
+      "提供客户支持",
+      "改进平台和开发新功能",
+      "履行法律义务"
+    ],
+    "s4Title": "4. 数据安全",
+    "s4Body": "我们采用行业标准的安全措施来确保你的个人数据安全。你的数据通过加密连接传输并存储在安全的服务器上。已采取技术和管理措施防止未经授权的访问、更改或披露。",
+    "s5Title": "5. 数据共享",
+    "s5Intro": "你的个人数据不会与第三方共享、出售或租赁。但在以下情况下,你的数据可能会被共享:",
+    "s5List": [
+      "法律义务和法院命令",
+      "用于支付处理的可信支付提供商",
+      "用于平台基础设施的云服务提供商",
+      "获得你明确同意的特定情况"
+    ],
+    "s6Title": "6. 用户权利",
+    "s6Intro": "根据数据保护法律,你享有以下权利:",
+    "s6List": [
+      "了解你的个人数据是否被处理",
+      "请求有关已处理个人数据的信息",
+      "请求更正你的个人数据",
+      "请求删除或销毁你的个人数据",
+      "知道你的个人数据被转移到的第三方"
+    ],
+    "s7Title": "7. Cookie",
+    "s7Body": "我们的平台使用 Cookie 来改善用户体验。Cookie 是浏览器存储在你计算机上的小型文本文件。你可以通过浏览器设置管理或阻止 Cookie。",
+    "s8Title": "8. 变更",
+    "s8Body": "本隐私政策可能会不时更新。重大变更将通过电子邮件通知。继续使用平台意味着你接受更新后的政策。"
+  },
+  "support": {
+    "backToHome": "返回首页",
+    "subtitle": "常见问题及可能对你有帮助的信息",
+    "cat1Title": "一般",
+    "cat2Title": "测试和内容",
+    "cat3Title": "支付和退款",
+    "cat4Title": "成为教育者",
+    "cat5Title": "账户和设置",
+    "noAnswerTitle": "没看到你的问题?",
+    "noAnswerDesc": "如有其他问题,请联系我们的支持团队",
+    "contactButton": "联系我们",
+    "cat1Items": [
+      {
+        "q": "什么是 Sınav Salonu?",
+        "a": "Sınav Salonu 是一个综合性教育平台,为备考各种考试的考生提供在线测试,汇集各领域专家教育者创建的内容。"
+      },
+      {
+        "q": "我如何注册?",
+        "a": "点击首页的“登录”按钮,你可以注册为考生或教育者。你可以用电子邮件创建账户并立即开始做测试。"
+      },
+      {
+        "q": "平台是免费的吗?",
+        "a": "注册是免费的。你可以浏览测试并了解教育者。购买测试包后,你可以开始做这些测试。"
+      }
+    ],
+    "cat2Items": [
+      {
+        "q": "我如何购买测试?",
+        "a": "选择你感兴趣的测试,在详情页面点击“购买”按钮。完成支付后,你可以立即访问该测试。"
+      },
+      {
+        "q": "我可以访问已购买的测试多长时间?",
+        "a": "你对所购买的测试包拥有无限访问权限。你可以随时多次解答。"
+      },
+      {
+        "q": "我如何查看测试结果?",
+        "a": "在“我的结果”页面,你可以查看所有测试结果、详细分析和表现图表。"
+      },
+      {
+        "q": "如何报告错误的题目?",
+        "a": "在做测试时,你可以使用题目上的“报告题目”按钮来报告你认为错误的题目。"
+      }
+    ],
+    "cat3Items": [
+      {
+        "q": "你们接受哪些支付方式?",
+        "a": "你可以使用信用卡和借记卡支付。所有支付都通过安全的支付基础设施进行处理。"
+      },
+      {
+        "q": "你们的退款政策是什么?",
+        "a": "如果你购买的测试包有问题,你可以从“申请退款”页面申请。你的错题报告会被评估,如果被认定为合理,将处理退款。"
+      }
+    ],
+    "cat4Items": [
+      {
+        "q": "我如何申请成为教育者?",
+        "a": "注册为教育者,完善你的个人资料和专业领域。上传学术认证所需的文件。审核通过后,你可以开始创建测试。"
+      },
+      {
+        "q": "作为教育者我能赚多少?",
+        "a": "你按设定的佣金比例从测试销售中获得收入。你的收入会随着销售业绩增长。"
+      },
+      {
+        "q": "测试创建流程如何运作?",
+        "a": "在“创建测试”页面,输入测试信息,添加题目并发布。测试审核通过后,将提供给考生。"
+      }
+    ],
+    "cat5Items": [
+      {
+        "q": "如何修改我的密码?",
+        "a": "你可以从个人资料设置页面修改密码。输入当前密码并设置新密码。"
+      },
+      {
+        "q": "我如何删除账户?",
+        "a": "要删除你的账户,请联系我们的支持团队。在审核你的请求后,你的账户将被删除。"
+      },
+      {
+        "q": "我如何管理通知设置?",
+        "a": "在个人资料设置页面,你可以打开或关闭电子邮件通知、测试提醒和其他通知。"
+      }
+    ]
+  },
+  "myObjections": {
+    "stats": {
+      "total": "总计",
+      "pending": "待处理",
+      "answered": "已回复",
+      "escalated": "已升级"
+    },
+    "status": {
+      "OPEN": "待处理",
+      "ANSWERED": "已回复",
+      "ESCALATED": "已升级至管理员"
+    },
+    "filterBar": {
+      "statusLabel": "状态",
+      "allStatuses": "所有状态",
+      "testLabel": "测试",
+      "allTests": "所有测试",
+      "selectTest": "选择测试...",
+      "searchTest": "搜索测试...",
+      "noResult": "无结果",
+      "testFilterAria": "测试筛选",
+      "reasonLabel": "错误类型 / 原因",
+      "reasonPlaceholder": "例如:答案错误、信息缺失...",
+      "reasonAria": "搜索错误类型或原因",
+      "count": "{{filtered}} / {{total}} 个报告",
+      "clear": "清除筛选",
+      "unnamed": "(无标题)"
+    },
+    "empty": {
+      "noneYet": "你还没有任何错误报告",
+      "hint": "在做测试时,你可以报告在题目中发现的错误。",
+      "noResults": "没有报告符合所选筛选条件"
+    },
+    "card": {
+      "educator": "教育者:",
+      "educatorYes": "教育者已回复",
+      "educatorNo": "教育者尚未回复",
+      "adminYes": "管理员已回复",
+      "adminNo": "管理员尚未回复",
+      "educatorChip": "教育者",
+      "adminChip": "管理员",
+      "daysLeft": "{{count}} 天",
+      "deadlineExpired": "已过期",
+      "viewDetails": "查看详情"
+    },
+    "dialog": {
+      "title": "报告详情",
+      "reportedAt": "报告时间:",
+      "slaEnd": "SLA 截止:",
+      "testLabel": "测试",
+      "educatorLabel": "教育者",
+      "questionLabel": "题目(前 150 字符)",
+      "reasonLabel": "你的报告",
+      "educatorReply": "教育者回复:",
+      "educatorNoReply": "教育者尚未回复。",
+      "adminNote": "管理员备注",
+      "adminNoNote": "管理员尚未添加备注。",
+      "close": "关闭"
+    }
+  },
+  "myTopicReport": {
+    "errorLoad": "加载报告时出错。请刷新页面。",
+    "empty": {
+      "title": "暂无数据",
+      "desc": "你已完成测试的主题表现将在此显示。开始做测试后,你的报告将自动生成。"
+    },
+    "stats": {
+      "topicCount": "主题数",
+      "totalAttempts": "总尝试次数",
+      "totalQuestions": "总题数",
+      "overallAvg": "总体平均"
+    },
+    "filterAll": "全部",
+    "noGroupForExamType": "找不到此考试类型的主题。",
+    "card": {
+      "overtimeBadge": "{{count}}次超时",
+      "correct": "{{count}} 正确",
+      "wrong": "{{count}} 错误",
+      "blank": "{{count}} 空白",
+      "summary": "{{attempts}} 次尝试 · {{questions}} 道题",
+      "overtimeWarning": "你在此主题的 {{count}} 次尝试中超时。",
+      "overtimeWarningEmphasis": "时间管理",
+      "overtimeWarningSuffix": "突显为可以提升的方向。",
+      "showChart": "显示时间序列",
+      "hideChart": "隐藏图表",
+      "tooltipCorrect": "✓ {{count}} 正确",
+      "tooltipWrong": "✗ {{count}} 错误",
+      "tooltipBlank": "— {{count}} 空白",
+      "tooltipTotal": "总计:{{count}} 道题",
+      "tooltipOvertime": "⏱ +{{m}}分钟 {{s}}秒延迟",
+      "tooltipCorrectAlt": "正确:{{count}}",
+      "tooltipWrongAlt": "错误:{{count}}",
+      "tooltipBlankAlt": "空白:{{count}}"
+    }
+  },
+  "myResults": {
+    "errorLoad": "加载结果时出错。请刷新页面。",
+    "filters": {
+      "packageAria": "测试包筛选",
+      "allPackages": "所有测试包",
+      "examTypeAria": "考试类型筛选",
+      "allExamTypes": "所有考试类型",
+      "timeAria": "时间范围筛选",
+      "allTime": "所有时间",
+      "lastWeek": "过去 1 周",
+      "lastMonth": "过去 1 个月",
+      "last3Months": "过去 3 个月",
+      "clear": "清除筛选"
+    },
+    "shareButton": "分享",
+    "sharePreparing": "正在准备…",
+    "shareTitle": "你的 Sınav Salonu 报告",
+    "stats": {
+      "totalTests": "测试总数",
+      "avgScore": "平均分",
+      "totalCorrect": "总正确",
+      "totalWrong": "总错误"
+    },
+    "progress": "进步",
+    "chartTypeAria": "图表类型选择",
+    "chartType": {
+      "performance": "表现",
+      "questions": "解题数",
+      "time": "学习时间"
+    },
+    "tooltip": {
+      "avg": "平均:{{value}}",
+      "testCount": "测试数:{{count}}",
+      "questionCount": "题数:{{count}}",
+      "time": "时长:{{label}}"
+    },
+    "history": "测试历史",
+    "exportXlsx": "导出到 Excel",
+    "sheetName": "我的结果",
+    "table": {
+      "test": "测试",
+      "score": "分数",
+      "dyb": "对 / 错 / 空",
+      "time": "时间",
+      "date": "日期",
+      "overtime": "延迟",
+      "status": "状态",
+      "questions": "{{count}} 道题"
+    },
+    "scoreBadge": {
+      "excellent": "优秀",
+      "good": "良好",
+      "average": "一般",
+      "needsWork": "需要改进"
+    },
+    "empty": {
+      "noResults": "还没有已完成的测试",
+      "noFilterMatch": "没有符合筛选的结果",
+      "testFallback": "测试"
+    },
+    "loadMore": "显示更多(还剩 {{count}})",
+    "overtime": {
+      "title": "可改进领域:时间管理",
+      "desc": "你在以下 {{count}} 道测试中比允许的时间晚提交。考试条件下不允许延迟提交 — 专注于时间管理可以显著提升你的表现。",
+      "delay": "延迟",
+      "score": "分数",
+      "tip": "💡 提示:目标是每道题平均花费 {{seconds}} 秒。标记困难的题目跳过,最后再回来。"
+    },
+    "duration": {
+      "min": "{{m}} 分钟",
+      "sec": "{{s}} 秒",
+      "minSec": "{{m}}分钟{{s}}秒"
+    },
+    "xlsxColumns": {
+      "test": "测试",
+      "score": "分数",
+      "correct": "正确",
+      "wrong": "错误",
+      "blank": "空白",
+      "totalQ": "总题数",
+      "durationMin": "时长(分钟)",
+      "date": "日期",
+      "delaySec": "延迟(秒)",
+      "status": "状态"
+    }
+  },
+  "profileSettings": {
+    "userFallback": "用户",
+    "avatarHint": "点击图片设置个人头像",
+    "tabs": {
+      "contact": "联系方式",
+      "notifications": "通知",
+      "exams": "考试偏好",
+      "financial": "财务"
+    },
+    "contact": {
+      "phoneLabel": "电话",
+      "phonePlaceholder": "05XX XXX XX XX",
+      "phoneInvalid": "无效的电话号码",
+      "websiteLabel": "网站/博客",
+      "linkedinLabel": "LinkedIn",
+      "urlInvalid": "请输入有效的 URL(https://...)"
+    },
+    "sensitiveOtp": {
+      "title": "验证联系信息变更",
+      "intro": "我们将向您的邮箱发送 6 位验证码。",
+      "sending": "正在发送验证码...",
+      "sentTo": "验证码已发送至 {{email}}。有效期 10 分钟。",
+      "codeLabel": "验证码",
+      "codeHint": "请输入发送到您邮箱的 6 位验证码。",
+      "codeInvalid": "验证码必须是 6 位。",
+      "verify": "验证并保存",
+      "verifying": "正在验证...",
+      "verified": "您的信息已更新。",
+      "verifyFailed": "验证失败。",
+      "expired": "验证码已过期。请重新申请。",
+      "mismatch": "验证码错误。请重试。",
+      "resend": "重新发送验证码",
+      "resent": "已发送新验证码。",
+      "requestFailed": "无法发送验证码。请稍后重试。"
+    },
+    "notifications": {
+      "newTests": "新测试通知",
+      "newTestsDesc": "新测试发布时接收通知",
+      "promotions": "促销活动",
+      "promotionsDesc": "接收有关折扣和特别优惠的信息",
+      "educatorUpdates": "教育者更新",
+      "educatorUpdatesDesc": "接收你关注的教育者的更新",
+      "testReminders": "测试提醒",
+      "testRemindersDesc": "接收你开始的测试的提醒"
+    },
+    "exams": {
+      "title": "我感兴趣的考试",
+      "desc": "选择你感兴趣的考试,这些考试相关的测试将在你的主页优先显示",
+      "noExamTypes": "未找到考试类型"
+    },
+    "financial": {
+      "requestRefund": "申请退款",
+      "searchPlaceholder": "搜索测试...",
+      "all": "全部",
+      "purchases": "购买",
+      "refunds": "退款",
+      "purchased": "已购买",
+      "statusLabels": {
+        "PENDING": "教育者审核中",
+        "EDUCATOR_APPROVED": "教育者已批准",
+        "EDUCATOR_REJECTED": "教育者已拒绝",
+        "APPEAL_PENDING": "申诉审核中",
+        "ESCALATED": "管理员审核中",
+        "APPROVED": "退款已批准",
+        "REJECTED": "已拒绝",
+        "pending": "待处理",
+        "approved": "已批准",
+        "rejected": "已拒绝"
+      },
+      "canAppealHint": "教育者拒绝了退款。你可以提交申诉。",
+      "appealButton": "申诉",
+      "noResults": "没有结果",
+      "noTransactions": "你没有任何财务记录"
+    },
+    "refundModal": {
+      "title": "申请退款",
+      "noPurchases": "还没有购买记录",
+      "noEligible": "没有符合退款条件的测试",
+      "notFound": "未找到测试",
+      "eligibleHint": "退款申请仅可用于尚未打开的测试。",
+      "cancel": "取消"
+    },
+    "appealDialog": {
+      "title": "申诉请求",
+      "rejected": "教育者拒绝了这次退款。写下你的申诉理由提交给管理员审核。",
+      "placeholder": "写下你的申诉理由(至少 5 个字符)...",
+      "cancel": "取消",
+      "submit": "提交申诉"
+    },
+    "saveButton": "保存更改",
+    "saving": "正在保存...",
+    "toasts": {
+      "invalidImage": "请上传 JPG、PNG 或 WebP 格式的图片",
+      "imageTooBig": "图片大小最多 5MB",
+      "imageUploaded": "个人头像已更新",
+      "imageUploadFailed": "图片上传失败",
+      "profileUpdated": "个人资料已更新",
+      "updateFailed": "更新失败",
+      "refundRequested": "退款申请已提交",
+      "refundFailed": "退款申请提交失败",
+      "appealSubmitted": "你的申诉已提交。将由管理员审核。",
+      "appealFailed": "申诉提交失败"
+    }
+  },
+  "educatorOnboarding": {
+    "title": "完善你的教育者档案",
+    "subtitle": "我们还需要几个细节,以便向考生展示你的专业能力。",
+    "requiredHint": "所有字段都是必填的",
+    "saving": "正在保存…",
+    "submit": "完成并继续",
+    "success": "你的档案已完成。",
+    "cvUploaded": "CV 上传成功",
+    "cvSection": {
+      "title": "简历(CV)",
+      "desc": "上传一份简短的简历,展示你的学术背景和专长(PDF,最大 5MB)。",
+      "upload": "上传 CV",
+      "uploading": "上传中…",
+      "uploaded": "CV 已上传",
+      "viewFile": "查看文件",
+      "change": "更换",
+      "format": "PDF(最大 5MB)"
+    },
+    "expertiseSection": {
+      "title": "专业领域",
+      "desc": "你在哪些考试方面有专长?至少选择一项。",
+      "empty": "未找到考试类型。",
+      "selectedCount": "已选择 {{count}} 项考试"
+    },
+    "errors": {
+      "invalidPdf": "请上传 PDF 文件",
+      "fileTooBig": "文件大小最多为 5MB",
+      "uploadFailed": "CV 上传失败",
+      "cvRequired": "必须上传 CV",
+      "examsRequired": "至少选择一个专业领域",
+      "saveFailed": "档案保存失败"
+    }
+  }
+}

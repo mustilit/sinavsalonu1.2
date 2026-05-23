@@ -1,21 +1,28 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { createPageUrl } from "@/utils";
 import QRCode from "react-qr-code";
 import { liveSessions as liveApi } from "@/api/dalClient";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import {
+  Dialog, DialogContent, DialogHeader, DialogTitle,
+  DialogDescription, DialogFooter,
+} from "@/components/ui/dialog";
 import { toast } from "sonner";
 import {
   ChevronLeft, ChevronRight, BarChart2, EyeOff, Users,
   Play, Square, Zap, Copy, CheckCircle2,
-  RefreshCw, TrendingUp, TrendingDown, Minus,
+  RefreshCw, TrendingUp, TrendingDown, Minus, AlertTriangle,
+  Home, List,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 // ─── Grup karşılaştırma bölümü ────────────────────────────────────────────────
 function ComparisonPanel({ sessionId }) {
+  const { t } = useTranslation(["pages"]);
   const { data: cmp, isLoading } = useQuery({
     queryKey: ["liveComparison", sessionId],
     queryFn: () => liveApi.getComparison(sessionId),
@@ -23,54 +30,64 @@ function ComparisonPanel({ sessionId }) {
   });
 
   if (isLoading) return <div className="h-24 bg-slate-50 rounded-xl animate-pulse mt-4" />;
-  if (!cmp) return null;
+  // Guard: API henüz parent (Tur 1) bilgisini döndürmediyse veya tek-tur oturumsa
+  // panelı hiç render etme — eksik alanlar üzerinde optional chaining yapılmasına
+  // gerek kalmaz, layout temiz kalır.
+  if (!cmp || !cmp.round1 || !cmp.round2) return null;
 
-  const diff = cmp.improvement;
+  const diff = cmp.improvement ?? 0;
   const DiffIcon = diff > 0 ? TrendingUp : diff < 0 ? TrendingDown : Minus;
   const diffColor = diff > 0 ? "text-emerald-600" : diff < 0 ? "text-rose-600" : "text-slate-500";
+
+  const r1Avg = cmp.round1.avgPct ?? 0;
+  const r2Avg = cmp.round2.avgPct ?? 0;
+  const r1Count = cmp.round1.participantCount ?? 0;
+  const r2Count = cmp.round2.participantCount ?? 0;
+  const r1Questions = Array.isArray(cmp.round1.questions) ? cmp.round1.questions : [];
+  const r2Questions = Array.isArray(cmp.round2.questions) ? cmp.round2.questions : [];
 
   return (
     <div className="mt-5 bg-white rounded-2xl border border-slate-200 p-5">
       <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-4">
-        Grup Ön-Test / Son-Test Karşılaştırması
+        {t("pages:liveHost.comparison.title")}
       </p>
 
       {/* Overall */}
       <div className="grid grid-cols-3 gap-3 mb-5">
         <div className="bg-blue-50 rounded-xl p-3 text-center">
-          <p className="text-xs text-blue-600 mb-1">1. Tur Ort.</p>
-          <p className="text-2xl font-black text-blue-700">%{cmp.round1.avgPct}</p>
-          <p className="text-xs text-blue-500">{cmp.round1.participantCount} kişi</p>
+          <p className="text-xs text-blue-600 mb-1">{t("pages:liveHost.comparison.round1Avg")}</p>
+          <p className="text-2xl font-black text-blue-700">%{r1Avg}</p>
+          <p className="text-xs text-blue-500">{t("pages:liveHost.comparison.peopleCount", { count: r1Count })}</p>
         </div>
         <div className={`rounded-xl p-3 text-center flex flex-col items-center justify-center ${diff > 0 ? "bg-emerald-50" : diff < 0 ? "bg-rose-50" : "bg-slate-50"}`}>
           <DiffIcon className={`w-6 h-6 mb-1 ${diffColor}`} />
           <p className={`text-xl font-black ${diffColor}`}>{diff > 0 ? "+" : ""}{diff}%</p>
-          <p className="text-xs text-slate-500">gelişim</p>
+          <p className="text-xs text-slate-500">{t("pages:liveHost.comparison.improvement")}</p>
         </div>
         <div className="bg-indigo-50 rounded-xl p-3 text-center">
-          <p className="text-xs text-indigo-600 mb-1">2. Tur Ort.</p>
-          <p className="text-2xl font-black text-indigo-700">%{cmp.round2.avgPct}</p>
-          <p className="text-xs text-indigo-500">{cmp.round2.participantCount} kişi</p>
+          <p className="text-xs text-indigo-600 mb-1">{t("pages:liveHost.comparison.round2Avg")}</p>
+          <p className="text-2xl font-black text-indigo-700">%{r2Avg}</p>
+          <p className="text-xs text-indigo-500">{t("pages:liveHost.comparison.peopleCount", { count: r2Count })}</p>
         </div>
       </div>
 
       {/* Per-question */}
       <div className="space-y-2">
-        {cmp.round1.questions.map((q1, idx) => {
-          const q2 = cmp.round2.questions[idx];
+        {r1Questions.map((q1, idx) => {
+          const q2 = r2Questions[idx];
           if (!q2) return null;
-          const qDiff = q2.pct - q1.pct;
+          const qDiff = (q2.pct ?? 0) - (q1.pct ?? 0);
           return (
             <div key={q1.questionId} className="flex items-center gap-3">
               <span className="w-6 h-6 rounded-full bg-slate-100 text-slate-500 text-xs font-bold flex items-center justify-center shrink-0">
                 {idx + 1}
               </span>
               <p className="flex-1 text-xs text-slate-600 truncate">{q1.questionContent}</p>
-              <span className="text-xs text-blue-600 font-semibold w-10 text-right">%{q1.pct}</span>
+              <span className="text-xs text-blue-600 font-semibold w-10 text-right">%{q1.pct ?? 0}</span>
               <span className={`text-xs font-bold w-10 text-center ${qDiff > 0 ? "text-emerald-600" : qDiff < 0 ? "text-rose-500" : "text-slate-400"}`}>
                 {qDiff > 0 ? `+${qDiff}` : qDiff}%
               </span>
-              <span className="text-xs text-indigo-600 font-semibold w-10 text-left">%{q2.pct}</span>
+              <span className="text-xs text-indigo-600 font-semibold w-10 text-left">%{q2.pct ?? 0}</span>
             </div>
           );
         })}
@@ -120,11 +137,15 @@ function _StatsBar({ stats }) {
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 export default function LiveSessionHost() {
+  const { t } = useTranslation(["pages"]);
   const navigate = useNavigate();
   const urlParams = new URLSearchParams(window.location.search);
   const sessionId = urlParams.get("id");
   const queryClient = useQueryClient();
   const [copied, setCopied] = useState(false);
+  // Onay dialog'ları — native confirm() yerine site-içi modal kullanılır.
+  const [endConfirmOpen, setEndConfirmOpen] = useState(false);
+  const [round2ConfirmOpen, setRound2ConfirmOpen] = useState(false);
 
   const { data: state, isLoading } = useQuery({
     queryKey: ["liveState", sessionId],
@@ -146,7 +167,7 @@ export default function LiveSessionHost() {
         d?.error?.code ||
         d?.code ||
         e?.message ||
-        "Hata";
+        t("pages:liveHost.toasts.genericError");
       toast.error(msg);
     },
   });
@@ -159,7 +180,7 @@ export default function LiveSessionHost() {
     ...mut(() => liveApi.end(sessionId)),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["liveState", sessionId] });
-      toast.success("Oturum sonlandırıldı");
+      toast.success(t("pages:liveHost.toasts.ended"));
     },
   });
 
@@ -169,13 +190,13 @@ export default function LiveSessionHost() {
       queryClient.invalidateQueries({ queryKey: ["liveState", sessionId] });
       const newId = data?.id ?? data?.sessionId;
       if (!newId) {
-        toast.error("2. tur oluşturuldu ancak yönlendirme yapılamadı");
+        toast.error(t("pages:liveHost.toasts.round2NoNav"));
         return;
       }
-      toast.success(`2. tur oluşturuldu! Kod: ${data.joinCode}`);
+      toast.success(t("pages:liveHost.toasts.round2Created", { code: data.joinCode }));
       navigate(createPageUrl("LiveSessionHost") + "?id=" + newId);
     },
-    onError: (e) => toast.error(e?.response?.data?.message || "2. tur oluşturulamadı"),
+    onError: (e) => toast.error(e?.response?.data?.message || t("pages:liveHost.toasts.round2Failed")),
   });
 
   const joinUrl = `${window.location.origin}${createPageUrl("LiveSessionJoin")}?code=${state?.joinCode ?? ""}`;
@@ -194,7 +215,7 @@ export default function LiveSessionHost() {
     );
   }
 
-  if (!state) return <p className="text-center py-20 text-slate-500">Oturum bulunamadı</p>;
+  if (!state) return <p className="text-center py-20 text-slate-500">{t("pages:liveHost.notFound")}</p>;
 
   const q = state.currentQuestion;
   const isDraft  = state.status === "DRAFT";
@@ -220,18 +241,22 @@ export default function LiveSessionHost() {
                 isActive ? "bg-emerald-100 text-emerald-700" :
                 "bg-rose-100 text-rose-700"
               )}>
-                {isDraft ? "Başlamadı" : isActive ? "Canlı" : "Bitti"}
+                {isDraft
+                  ? t("pages:liveHost.status.draft")
+                  : isActive
+                  ? t("pages:liveHost.status.active")
+                  : t("pages:liveHost.status.ended")}
               </Badge>
               <div className="flex items-center gap-3">
                 <span className="text-xs text-slate-500 flex items-center gap-1.5">
                   <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse inline-block" />
                   <span className="font-semibold text-emerald-700">{state.activeParticipantCount ?? 0}</span>
-                  <span>aktif</span>
+                  <span>{t("pages:liveHost.participants.active")}</span>
                 </span>
                 <span className="text-xs text-slate-400 flex items-center gap-1">
                   <Users className="w-3.5 h-3.5" />
                   {state.participantCount}
-                  {state.maxParticipants != null && `/${state.maxParticipants}`} toplam
+                  {state.maxParticipants != null && `/${state.maxParticipants}`} {t("pages:liveHost.participants.total")}
                 </span>
               </div>
             </div>
@@ -245,17 +270,17 @@ export default function LiveSessionHost() {
               disabled={startMut.isPending}
               className="bg-emerald-600 hover:bg-emerald-700 gap-2"
             >
-              <Play className="w-4 h-4 fill-white" /> Başlat
+              <Play className="w-4 h-4 fill-white" /> {t("pages:liveHost.controls.start")}
             </Button>
           )}
           {isActive && (
             <Button
               variant="outline"
               className="text-rose-600 border-rose-200 hover:bg-rose-50 gap-2"
-              onClick={() => { if (confirm("Oturumu bitirmek istediğinize emin misiniz?")) endMut.mutate(); }}
+              onClick={() => setEndConfirmOpen(true)}
               disabled={endMut.isPending}
             >
-              <Square className="w-4 h-4" /> Bitir
+              <Square className="w-4 h-4" /> {t("pages:liveHost.controls.end")}
             </Button>
           )}
         </div>
@@ -266,11 +291,11 @@ export default function LiveSessionHost() {
         <div className="bg-white rounded-2xl border border-slate-200 p-6">
           <div className="mb-4">
             <span className="text-xs font-medium text-slate-400 uppercase tracking-wide">
-              Soru {state.currentQuestionIdx + 1}
+              {t("pages:liveHost.question.label", { n: state.currentQuestionIdx + 1 })}
             </span>
             {q?.mediaUrl && (
               <div className="mt-2 w-full max-h-64 rounded-xl overflow-hidden border border-slate-100">
-                <img src={q.mediaUrl} alt="soru" className="w-full h-full object-contain" />
+                <img src={q.mediaUrl} alt={t("pages:liveHost.question.mediaAlt")} className="w-full h-full object-contain" />
               </div>
             )}
             <p className="text-slate-700 text-lg mt-3 leading-relaxed">
@@ -342,7 +367,7 @@ export default function LiveSessionHost() {
                         <div className="relative flex items-center gap-3 shrink-0 ml-2">
                           {isRound2 && r1 && (
                             <div className="flex flex-col items-end text-xs leading-tight">
-                              <span className="text-slate-400">Tur 1: %{r1.pct}</span>
+                              <span className="text-slate-400">{t("pages:liveHost.round.round1", { pct: r1.pct })}</span>
                               {delta != null && delta !== 0 && (
                                 <span
                                   className={cn(
@@ -362,9 +387,9 @@ export default function LiveSessionHost() {
                               "text-sm font-semibold tabular-nums",
                               isCorrect ? "text-emerald-700" : "text-slate-700",
                             )}
-                            title={`${stat.count} kişi`}
+                            title={t("pages:liveHost.question.peopleTooltip", { count: stat.count })}
                           >
-                            {isRound2 && <span className="text-xs text-slate-500 mr-1">Tur 2:</span>}
+                            {isRound2 && <span className="text-xs text-slate-500 mr-1">{t("pages:liveHost.round.round2Prefix")}</span>}
                             %{stat.pct}
                             <span className="text-xs text-slate-400 font-normal ml-1">({stat.count})</span>
                           </span>
@@ -381,7 +406,7 @@ export default function LiveSessionHost() {
           })()}
         </div>
 
-          {/* Controls — ACTIVE: canlı yönetim; ENDED: gözden geçirme navigasyonu */}
+          {/* Controls — ACTIVE: canlı yönetim; ENDED: inceleme navigasyonu */}
           {(isActive || isEnded) && (
             <div className="flex items-center justify-between gap-3 flex-wrap">
               <Button
@@ -389,7 +414,7 @@ export default function LiveSessionHost() {
                 onClick={() => prevMut.mutate()}
                 disabled={isFirst || prevMut.isPending}
               >
-                <ChevronLeft className="w-4 h-4 mr-1" /> Önceki
+                <ChevronLeft className="w-4 h-4 mr-1" /> {t("pages:liveHost.controls.previous")}
               </Button>
 
               <Button
@@ -399,8 +424,8 @@ export default function LiveSessionHost() {
                 className={state.showStats ? "bg-indigo-50 text-indigo-700 border-indigo-200" : ""}
               >
                 {state.showStats
-                  ? <><EyeOff className="w-4 h-4 mr-1" /> İstatistikleri Gizle</>
-                  : <><BarChart2 className="w-4 h-4 mr-1" /> İstatistikleri Göster</>}
+                  ? <><EyeOff className="w-4 h-4 mr-1" /> {t("pages:liveHost.controls.hideStats")}</>
+                  : <><BarChart2 className="w-4 h-4 mr-1" /> {t("pages:liveHost.controls.showStats")}</>}
               </Button>
 
               <Button
@@ -408,7 +433,7 @@ export default function LiveSessionHost() {
                 disabled={isLast || nextMut.isPending}
                 className="bg-indigo-600 hover:bg-indigo-700"
               >
-                Sonraki <ChevronRight className="w-4 h-4 ml-1" />
+                {t("pages:liveHost.controls.next")} <ChevronRight className="w-4 h-4 ml-1" />
               </Button>
             </div>
           )}
@@ -418,10 +443,10 @@ export default function LiveSessionHost() {
               <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 text-center">
                 <CheckCircle2 className="w-8 h-8 text-emerald-500 mx-auto mb-2" />
                 <p className="font-semibold text-emerald-800">
-                  {state.roundNumber === 2 ? "Son-Test Tamamlandı!" : "Oturum tamamlandı"}
+                  {state.roundNumber === 2 ? t("pages:liveHost.ended.round2Title") : t("pages:liveHost.ended.round1Title")}
                 </p>
                 <p className="text-sm text-emerald-700 mt-1">
-                  {state.participantCount} katılımcı • {state.totalQuestions} soru
+                  {t("pages:liveHost.ended.summary", { participants: state.participantCount, questions: state.totalQuestions })}
                 </p>
               </div>
 
@@ -429,29 +454,48 @@ export default function LiveSessionHost() {
               {state.roundNumber === 1 && !state.round2 && (
                 <Button
                   className="w-full bg-indigo-600 hover:bg-indigo-700 gap-2"
-                  onClick={() => {
-                    if (confirm("Aynı soruları kullanarak 2. tur (son-test) oluşturmak istiyor musunuz?\nYalnızca bu tura katılan adaylar girebilir."))
-                      round2Mut.mutate();
-                  }}
+                  onClick={() => setRound2ConfirmOpen(true)}
                   disabled={round2Mut.isPending}
                 >
                   <RefreshCw className="w-4 h-4" />
-                  İkinci Kez Uygula (Son-Test)
+                  {t("pages:liveHost.ended.createRound2")}
                 </Button>
               )}
 
               {/* Round 2 already exists */}
               {state.roundNumber === 1 && state.round2 && (
                 <div className="bg-indigo-50 border border-indigo-200 rounded-xl p-3 text-center text-sm text-indigo-700">
-                  2. tur mevcut — Kod: <strong className="font-mono">{state.round2.joinCode}</strong>
+                  {t("pages:liveHost.ended.round2Exists")} <strong className="font-mono">{state.round2.joinCode}</strong>
                   <Button
                     size="sm" variant="ghost" className="ml-3 text-indigo-600"
                     onClick={() => navigate(createPageUrl("LiveSessionHost") + "?id=" + state.round2.id)}
                   >
-                    Oturuma Git →
+                    {t("pages:liveHost.ended.goToRound2")}
                   </Button>
                 </div>
               )}
+
+              {/* Oturum sonu navigasyon butonları — eğitici nereye gideceğini seçer.
+                  Round 2 son-test ise Round 2 oluşturma butonu zaten yok; tek seçenek
+                  dashboard'a dönmek. Round 1 ise hem Round 2 oluşturma hem dönüş seçeneği var. */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                <Button
+                  variant="outline"
+                  className="w-full gap-2"
+                  onClick={() => navigate(createPageUrl("MyLiveSessions"))}
+                >
+                  <List className="w-4 h-4" />
+                  {t("pages:liveHost.ended.backToLiveSessions")}
+                </Button>
+                <Button
+                  variant="outline"
+                  className="w-full gap-2"
+                  onClick={() => navigate(createPageUrl("EducatorDashboard"))}
+                >
+                  <Home className="w-4 h-4" />
+                  {t("pages:liveHost.ended.backToDashboard")}
+                </Button>
+              </div>
             </div>
           )}
 
@@ -465,14 +509,14 @@ export default function LiveSessionHost() {
           {/* Sol: Aktif katılımcılar — İlerleme zaten soru kartı başlığında var, ayrı bloka gerek yok */}
           <div className="bg-white rounded-xl border border-slate-200 p-4 space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-slate-700">Aktif Katılımcılar</span>
+              <span className="text-sm font-medium text-slate-700">{t("pages:liveHost.participants.activeTitle")}</span>
               <div className="flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                 <span className="text-lg font-bold text-emerald-700">{state.activeParticipantCount ?? 0}</span>
               </div>
             </div>
             <div className="flex items-center justify-between text-sm text-slate-500">
-              <span>Toplam katılan</span>
+              <span>{t("pages:liveHost.participants.totalJoined")}</span>
               <span className="font-medium">
                 {state.participantCount}
                 {state.maxParticipants != null && (
@@ -494,7 +538,7 @@ export default function LiveSessionHost() {
           <div className="bg-white rounded-xl border border-slate-200 p-4">
             <div className="flex items-center justify-between gap-4">
               <div className="flex-1 min-w-0">
-                <p className="text-xs font-medium text-slate-500 mb-1 uppercase tracking-wide">Katılım Kodu</p>
+                <p className="text-xs font-medium text-slate-500 mb-1 uppercase tracking-wide">{t("pages:liveHost.join.codeLabel")}</p>
                 <div className="text-2xl font-black tracking-widest text-indigo-700 font-mono break-all">
                   {state.joinCode}
                 </div>
@@ -503,9 +547,9 @@ export default function LiveSessionHost() {
                   className="mt-1 text-xs text-slate-500 hover:text-indigo-600 flex items-center gap-1"
                 >
                   {copied ? <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
-                  {copied ? "Kopyalandı!" : "Kodu kopyala"}
+                  {copied ? t("pages:liveHost.join.copied") : t("pages:liveHost.join.copyCode")}
                 </button>
-                <p className="text-xs text-slate-400 mt-2">QR kodu ile katılım</p>
+                <p className="text-xs text-slate-400 mt-2">{t("pages:liveHost.join.qrHint")}</p>
               </div>
               {/* QR kodu — eski 140 px'in %50'si */}
               <div className="bg-white p-2 rounded-lg border border-slate-100 shrink-0">
@@ -515,6 +559,68 @@ export default function LiveSessionHost() {
           </div>
         </div>
       </div>
+
+      {/* ── Oturum bitirme onay modal'ı (site-içi, native confirm yerine) ── */}
+      <Dialog open={endConfirmOpen} onOpenChange={setEndConfirmOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-rose-700">
+              <AlertTriangle className="w-5 h-5" aria-hidden="true" />
+              {t("pages:liveHost.endDialog.title")}
+            </DialogTitle>
+            <DialogDescription>
+              {t("pages:liveHost.endDialog.description")}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="gap-2 sm:gap-0">
+            <Button variant="outline" onClick={() => setEndConfirmOpen(false)}>
+              {t("pages:liveHost.endDialog.cancel")}
+            </Button>
+            <Button
+              className="bg-rose-600 hover:bg-rose-700 text-white"
+              disabled={endMut.isPending}
+              onClick={() => {
+                setEndConfirmOpen(false);
+                endMut.mutate();
+              }}
+            >
+              <Square className="w-4 h-4 mr-2" />
+              {endMut.isPending ? t("pages:liveHost.controls.ending") : t("pages:liveHost.endDialog.confirm")}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* ── 2. tur (son-test) onay modal'ı ── */}
+      <Dialog open={round2ConfirmOpen} onOpenChange={setRound2ConfirmOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-indigo-700">
+              <RefreshCw className="w-5 h-5" aria-hidden="true" />
+              {t("pages:liveHost.round2Dialog.title")}
+            </DialogTitle>
+            <DialogDescription>
+              {t("pages:liveHost.round2Dialog.description")}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="gap-2 sm:gap-0">
+            <Button variant="outline" onClick={() => setRound2ConfirmOpen(false)}>
+              {t("pages:liveHost.round2Dialog.cancel")}
+            </Button>
+            <Button
+              className="bg-indigo-600 hover:bg-indigo-700 text-white"
+              disabled={round2Mut.isPending}
+              onClick={() => {
+                setRound2ConfirmOpen(false);
+                round2Mut.mutate();
+              }}
+            >
+              <RefreshCw className="w-4 h-4 mr-2" />
+              {round2Mut.isPending ? t("pages:liveHost.ended.creatingRound2") : t("pages:liveHost.round2Dialog.confirm")}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

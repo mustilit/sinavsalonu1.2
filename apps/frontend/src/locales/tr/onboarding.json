@@ -1,0 +1,86 @@
+{
+  "ui": {
+    "skip": "Atla",
+    "skipAria": "Turu atla",
+    "back": "Geri",
+    "next": "İleri",
+    "letsStart": "Hadi Başlayalım!",
+    "stepAria": "Adım {{n}}"
+  },
+  "candidateWelcome": {
+    "s0": {
+      "title": "Sınav Salonu'na Hoş Geldin! 🎉",
+      "description": "Sınav hazırlığını bir adım öteye taşıyacak platforma katıldın. Bu kısa turda seni bekleyen özellikleri tanıyalım."
+    },
+    "s1": {
+      "title": "Sınav Türlerini Keşfet",
+      "description": "YKS, KPSS, ALES gibi onlarca sınav türü için hazırlanmış test paketlerini 'Testleri Keşfet' bölümünden inceleyebilirsin."
+    },
+    "s2": {
+      "title": "Test Paketlerini İncele",
+      "description": "Eğiticiler tarafından hazırlanmış test paketlerini satın al. Her paket birden fazla test içerebilir ve ilerlemenizi takip eder."
+    },
+    "s3": {
+      "title": "Eğiticileri Takip Et",
+      "description": "Alanında uzman eğiticilerin profillerini inceleyerek onların diğer paketlerine de göz atabilirsin."
+    }
+  },
+  "candidateTest": {
+    "s0": {
+      "title": "Test Ekranına Hoş Geldin",
+      "description": "Test başladığında süre sayacı çalışmaya başlar (süreli testlerde). Soruları dikkatlice oku ve cevabını seç."
+    },
+    "s1": {
+      "title": "Soru Navigasyonu",
+      "description": "Sol paneldeki numara kutucuklarına tıklayarak istediğin soruya atlayabilirsin. Yeşil = cevaplandı, sarı = işaretlendi."
+    },
+    "s2": {
+      "title": "Cevabını Değiştir",
+      "description": "Seçtiğin şıkka tekrar tıklarsan seçimini iptal edebilirsin. Farklı şıkka tıklayarak cevabını değiştirebilirsin."
+    },
+    "s3": {
+      "title": "Soruları İşaretle 🚩",
+      "description": "Emin olmadığın soruları bayrak ikonuyla işaretleyebilirsin. Test bitmeden işaretli sorulara kolayca geri dönebilirsin."
+    },
+    "s4": {
+      "title": "Testi Tamamla",
+      "description": "Tüm soruları bitirince 'Testi Bitir' butonuna bas. Sonuçlarında doğru/yanlış dağılımını ve süre istatistiklerini göreceksin."
+    }
+  },
+  "educatorWelcome": {
+    "s0": {
+      "title": "Eğitici Paneline Hoş Geldin! 🏫",
+      "description": "Kendi test paketlerini oluşturabileceğin, satışlarını takip edebileceğin ve adaylarla buluşabileceğin platforma katıldın."
+    },
+    "s1": {
+      "title": "Test Paketlerini Oluştur",
+      "description": "'Yeni Test Oluştur' butonuyla sorular ekleyebilir, süre ve puan ayarları yapabilirsin. Hazır olunca tek tıkla yayınla."
+    },
+    "s2": {
+      "title": "Satışlarını Takip Et",
+      "description": "'Satışlarım' sayfasından aylık gelir grafiği, hangi paketin ne kadar sattığı ve kazanç özetini görebilirsin."
+    },
+    "s3": {
+      "title": "Profilini Tamamla",
+      "description": "Profil sayfana biyografi, uzmanlık alanları ve ödeme bilgileri (IBAN) ekle. Eksiksiz profil daha fazla aday çeker."
+    }
+  },
+  "educatorCreate": {
+    "s0": {
+      "title": "Test Bilgilerini Gir",
+      "description": "Başlık, açıklama, sınav türü, konu ve fiyat bilgilerini gir. 'Süreli' seçeneğiyle sınav süresini de belirleyebilirsin."
+    },
+    "s1": {
+      "title": "Soruları Ekle",
+      "description": "Her soru için metin, şıklar ve doğru cevabı belirt. Görsel de ekleyebilirsin. Sorular istediğin sırayla sürüklenebilir."
+    },
+    "s2": {
+      "title": "Çözümler Ekle",
+      "description": "Her soru için detaylı çözüm açıklaması ekleyebilirsin. Adaylar testi bitirdikten sonra çözümleri görebilir."
+    },
+    "s3": {
+      "title": "Yayınla!",
+      "description": "Tüm hazırlıklar tamam mı? 'Yayınla' toggle'ını açınca paket anında adaylara görünür hale gelir. İstediğin zaman yayından kaldırabilirsin."
+    }
+  }
+}

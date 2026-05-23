@@ -18,4 +18,9 @@ export class UpdatePackageDto {
   @IsInt()
   @Min(0)
   priceCents?: number;
+
+  @ApiPropertyOptional({ description: 'Paket kapak görseli URL — null gönderilirse mevcut görsel silinir' })
+  @IsOptional()
+  @IsString()
+  coverImageUrl?: string | null;
 }

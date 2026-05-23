@@ -22,4 +22,9 @@ export class CreatePackageDto {
   @IsString()
   @IsIn(['easy', 'medium', 'hard'])
   difficulty?: string;
+
+  @ApiPropertyOptional({ description: 'Paket kapak görseli URL (yükleme sonrası /uploads/... döner)' })
+  @IsOptional()
+  @IsString()
+  coverImageUrl?: string | null;
 }

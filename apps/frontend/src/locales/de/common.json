@@ -1,0 +1,171 @@
+{
+  "actions": {
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "delete": "Löschen",
+    "edit": "Bearbeiten",
+    "submit": "Senden",
+    "next": "Weiter",
+    "back": "Zurück",
+    "close": "Schließen",
+    "search": "Suchen",
+    "filter": "Filtern",
+    "sort": "Sortieren",
+    "loading": "Wird geladen…",
+    "retry": "Erneut versuchen"
+  },
+  "navigation": {
+    "home": "Startseite",
+    "explore": "Entdecken",
+    "myTests": "Meine Tests",
+    "myResults": "Meine Ergebnisse",
+    "myPackages": "Meine Pakete",
+    "notifications": "Benachrichtigungen",
+    "settings": "Einstellungen",
+    "profile": "Profil",
+    "logout": "Abmelden",
+    "login": "Anmelden",
+    "register": "Registrieren"
+  },
+  "common": {
+    "yes": "Ja",
+    "no": "Nein",
+    "or": "oder",
+    "and": "und",
+    "all": "Alle",
+    "none": "Keine",
+    "today": "Heute",
+    "yesterday": "Gestern",
+    "tomorrow": "Morgen"
+  },
+  "errors": {
+    "generic": "Ein Fehler ist aufgetreten. Bitte erneut versuchen.",
+    "network": "Verbindungsproblem. Bitte Internetverbindung prüfen.",
+    "unauthorized": "Sie haben keine Berechtigung für diese Aktion.",
+    "notFound": "Die angeforderte Seite wurde nicht gefunden.",
+    "validation": "Bitte korrigieren Sie die Fehler im Formular.",
+    "tooMany": "Zu viele Anfragen. Bitte warten Sie.",
+    "serverError": "Serverfehler. Wir arbeiten an einer Lösung."
+  },
+  "empty": {
+    "noResults": "Keine Ergebnisse gefunden.",
+    "noData": "Noch keine Daten vorhanden.",
+    "noNotifications": "Keine neuen Benachrichtigungen."
+  },
+  "language": {
+    "label": "Sprache",
+    "tr": "Türkisch",
+    "en": "Englisch",
+    "es": "Spanisch",
+    "zh": "Chinesisch",
+    "de": "Deutsch"
+  },
+  "theme": {
+    "label": "Thema"
+  },
+  "roles": {
+    "candidate": "Kandidat",
+    "educator": "Ausbilder",
+    "admin": "Administrator",
+    "worker": "Mitarbeiter"
+  },
+  "sidebar": {
+    "ariaNav": "Hauptnavigation",
+    "brandName": "Sınav Salonu",
+    "profileAlt": "Profil",
+    "pendingApproval": "⚠️ Kontogenehmigung ausstehend",
+    "candidate": {
+      "home": "Startseite",
+      "explore": "Tests entdecken",
+      "myTests": "Gekaufte Tests",
+      "myResults": "Leistungsberichte",
+      "myTopicReport": "Themenleistung",
+      "myObjections": "Meine Meldungen",
+      "profileSettings": "Profileinstellungen"
+    },
+    "educator": {
+      "dashboard": "Dashboard",
+      "myTestPackages": "Meine Testpakete",
+      "createTest": "Neuen Test erstellen",
+      "mySales": "Meine Verkäufe",
+      "myDiscountCodes": "Rabattcodes",
+      "myAds": "Meine Anzeigen",
+      "myLiveSessions": "Meine Live-Tests",
+      "refunds": "Rückerstattungsanträge",
+      "questionReports": "Fehlermeldungen",
+      "settings": "Profileinstellungen",
+      "moderationStatus": "Inhaltsstatus"
+    },
+    "admin": {
+      "dashboard": "Admin-Panel",
+      "candidateReport": "Kandidatenbericht",
+      "educatorReport": "Ausbilderbericht",
+      "examTypes": "Testtypen",
+      "topics": "Themen",
+      "users": "Benutzer",
+      "tests": "Alle Tests",
+      "discountCodes": "Rabattcodes",
+      "claims": "Anträge",
+      "revenue": "Einnahmen",
+      "systemControls": "Systemsteuerung",
+      "liveTiers": "Live-Testpakete",
+      "emailManagement": "E-Mail-Verwaltung",
+      "riskyContent": "Riskante Inhalte"
+    },
+    "collapseAria": "Seitenleiste einklappen",
+    "expandAria": "Seitenleiste ausklappen"
+  },
+  "pagination": {
+    "previous": "Zurück",
+    "next": "Weiter",
+    "pageOf": "Seite {{current}} / {{total}}"
+  },
+  "errorBoundary": {
+    "title": "Etwas ist schiefgelaufen",
+    "messageProd": "Ein Fehler ist aufgetreten. Bitte lade die Seite neu.",
+    "messageUnknown": "Unbekannter Fehler",
+    "reload": "Seite neu laden"
+  },
+  "pageNotFound": {
+    "title": "Seite nicht gefunden",
+    "desc": "Die Seite \"{{name}}\" konnte in dieser Anwendung nicht gefunden werden.",
+    "adminNoteTitle": "Admin-Notiz",
+    "adminNoteBody": "Diese Seitenroute existiert im aktuellen Build nicht.",
+    "goHome": "Zur Startseite"
+  },
+  "accessRestricted": {
+    "title": "Zugriff eingeschränkt",
+    "desc": "Du bist nicht für die Nutzung dieser Anwendung registriert. Bitte wende dich an den App-Administrator, um Zugriff anzufordern.",
+    "listIntro": "Wenn du glaubst, dass dies ein Fehler ist, kannst du:",
+    "listItem1": "Überprüfen, ob du mit dem richtigen Konto angemeldet bist",
+    "listItem2": "Den App-Administrator für den Zugriff kontaktieren",
+    "listItem3": "Versuchen, dich abzumelden und erneut anzumelden"
+  },
+  "apiErrors": {
+    "UNAUTHORIZED": "Deine Sitzung ist abgelaufen. Bitte melde dich erneut an.",
+    "FORBIDDEN": "Du hast keine Berechtigung für diese Aktion.",
+    "NOT_FOUND": "Die angeforderte Ressource wurde nicht gefunden.",
+    "BAD_REQUEST": "Ungültige Anfrage.",
+    "TOO_MANY_REQUESTS": "Zu viele Versuche. Versuche es in 60 Sekunden erneut.",
+    "TOO_MANY_REQUESTS_WITH_TIME": "Zu viele Versuche. Versuche es in {{seconds}} Sekunden erneut.",
+    "CAPTCHA_REQUIRED": "Verifizierung ist zum Fortfahren erforderlich.",
+    "CAPTCHA_INVALID": "Verifizierung fehlgeschlagen. Bitte versuche es erneut.",
+    "INTERNAL_ERROR": "Ein Fehler ist aufgetreten. Bitte versuche es später erneut.",
+    "ERR_NETWORK": "Server nicht erreichbar. Überprüfe deine Verbindung.",
+    "TIMEOUT": "Die Anfrage ist abgelaufen.",
+    "UNEXPECTED_RESPONSE": "Unerwartete Serverantwort"
+  },
+  "offlineBanner": {
+    "reconnectedTitle": "Verbindung wiederhergestellt",
+    "syncing": "Antworten werden synchronisiert...",
+    "allSaved": "Alle Antworten gespeichert ✓",
+    "disconnectedTitle": "Verbindung verloren",
+    "disconnectedDesc": "Keine Internetverbindung. Bitte überprüfe deine Verbindung, um den Test fortzusetzen.",
+    "pendingCount_one": "<strong>{{count}}</strong> Antwort ausstehend — wird bei Wiederverbindung automatisch gesendet",
+    "pendingCount_other": "<strong>{{count}}</strong> Antworten ausstehend — werden bei Wiederverbindung automatisch gesendet",
+    "noPending": "Alle deine ausgewählten Antworten sind sicher ✓",
+    "remainingSeconds": "{{count}} Sekunden",
+    "countdownDesc": "Wenn du dich nicht rechtzeitig wieder verbindest, wird dein Fortschritt gespeichert und du wirst beendet",
+    "exitNow": "Jetzt beenden und speichern"
+  }
+}

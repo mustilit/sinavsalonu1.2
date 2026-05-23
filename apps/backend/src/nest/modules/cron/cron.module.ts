@@ -25,16 +25,48 @@ import { PrismaModerationActionRepository } from '../../../infrastructure/reposi
 @Module({
   imports: [ScheduleModule.forRoot()],
   providers: [
-    CronService,
-    EmailCronService,
-    ModerationCronService,
     PrismaModerationViolationRepository,
     PrismaEducatorRiskScoreRepository,
     PrismaModerationActionRepository,
+    // ModerationCronService: explicit factory ile bağımlılıkları ver.
+    // Aynı EmailCronService'te yaşanan tip-tabanlı DI sorununa karşı önlem
+    // (tsx + reflect-metadata gibi belirli koşullarda inject çözümlenmiyor).
+    {
+      provide: ModerationCronService,
+      useFactory: (
+        v: PrismaModerationViolationRepository,
+        r: PrismaEducatorRiskScoreRepository,
+        a: PrismaModerationActionRepository,
+      ) => new ModerationCronService(v, r, a),
+      inject: [
+        PrismaModerationViolationRepository,
+        PrismaEducatorRiskScoreRepository,
+        PrismaModerationActionRepository,
+      ],
+    },
     { provide: AnonymizeOldEmailLogsUseCase, useFactory: () => new AnonymizeOldEmailLogsUseCase() },
     { provide: CheckBounceRateAlertUseCase, useFactory: () => new CheckBounceRateAlertUseCase() },
     { provide: ResetProviderDailyCountUseCase, useFactory: () => new ResetProviderDailyCountUseCase() },
     { provide: ExpireSuppressionsUseCase, useFactory: () => new ExpireSuppressionsUseCase() },
+    // EmailCronService: tip-tabanlı DI bağımlılıkları çözmediği için explicit factory.
+    // Önceki `EmailCronService,` shorthand'i constructor parametrelerini undefined
+    // bırakıyor ve cron tetikleyicide "Cannot read properties of undefined (reading
+    // 'execute')" hatasına yol açıyordu.
+    {
+      provide: EmailCronService,
+      useFactory: (
+        bc: CheckBounceRateAlertUseCase,
+        dr: ResetProviderDailyCountUseCase,
+        an: AnonymizeOldEmailLogsUseCase,
+        es: ExpireSuppressionsUseCase,
+      ) => new EmailCronService(bc, dr, an, es),
+      inject: [
+        CheckBounceRateAlertUseCase,
+        ResetProviderDailyCountUseCase,
+        AnonymizeOldEmailLogsUseCase,
+        ExpireSuppressionsUseCase,
+      ],
+    },
     PrismaNotificationPreferenceRepository,
     PrismaFollowRepository,
     PrismaUserRepository,
@@ -63,6 +95,23 @@ import { PrismaModerationActionRepository } from '../../../infrastructure/reposi
       provide: EscalateOverdueRefundsUseCase,
       useFactory: (r: PrismaRefundRepository) => new EscalateOverdueRefundsUseCase(r),
       inject: [PrismaRefundRepository],
+    },
+    // CronService: haftalık/aylık ve eskalasyon cron'ları için use-case'leri
+    // explicit factory ile bağla — tip-tabanlı DI'ya güvenme.
+    {
+      provide: CronService,
+      useFactory: (
+        weekly: SendWeeklyFollowDigestUseCase,
+        monthly: SendMonthlyInactiveReminderUseCase,
+        escalate: EscalateOverdueObjectionsUseCase,
+        escalateRefunds: EscalateOverdueRefundsUseCase,
+      ) => new CronService(weekly, monthly, escalate, escalateRefunds),
+      inject: [
+        SendWeeklyFollowDigestUseCase,
+        SendMonthlyInactiveReminderUseCase,
+        EscalateOverdueObjectionsUseCase,
+        EscalateOverdueRefundsUseCase,
+      ],
     },
   ],
   exports: [CronService, EmailCronService, ModerationCronService],

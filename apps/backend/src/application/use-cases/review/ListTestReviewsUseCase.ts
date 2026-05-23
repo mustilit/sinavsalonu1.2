@@ -1,20 +1,23 @@
 import { IReviewRepository } from '../../../domain/interfaces/IReviewRepository';
+import { prisma } from '../../../infrastructure/database/prisma';
 
 /**
- * Belirli bir teste ait yorumları (review) sayfalayarak listeler.
- * İmleç tabanlı (cursor-based) sayfalama kullanılır.
+ * Belirli bir test için review listesi — geri uyumluluk amacıyla mevcut.
+ *
+ * Yeni model (paket bazlı review) gereği, testId'den paket bulunup paketin
+ * review'ları döner. Aday başına tek satır.
  */
 export class ListTestReviewsUseCase {
   constructor(private readonly reviewRepo: IReviewRepository) {}
 
-  /**
-   * Teste ait yorumları cursor tabanlı sayfalama ile getirir.
-   * @param testId - Yorumları getirilecek testin ID'si.
-   * @param limit  - Sayfa başına maksimum kayıt sayısı. Varsayılan: 20.
-   * @param cursor - Sayfalama için önceki sayfanın son elemanının imleci (opsiyonel).
-   */
   async execute(testId: string, limit = 20, cursor?: string) {
-    return this.reviewRepo.listReviewsForTest(testId, limit, cursor);
+    if (!testId) return { items: [], nextCursor: undefined };
+    const test = await prisma.examTest.findUnique({
+      where: { id: testId },
+      select: { packageId: true },
+    });
+    const packageId = (test as any)?.packageId;
+    if (!packageId) return { items: [], nextCursor: undefined };
+    return this.reviewRepo.listReviewsForPackage(packageId, limit, cursor);
   }
 }
-

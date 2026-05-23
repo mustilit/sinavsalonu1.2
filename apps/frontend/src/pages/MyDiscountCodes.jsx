@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { entities } from "@/api/dalClient";
 import api from "@/lib/api/apiClient";
 import { useAuth } from "@/lib/AuthContext";
@@ -26,6 +27,7 @@ import { tr } from "date-fns/locale";
  * Kodlar eğiticinin e-postasına bağlıdır; maksimum indirim oranı %50 ile sınırlandırılmıştır.
  */
 export default function MyDiscountCodes() {
+  const { t } = useTranslation(["pages"]);
   const { user } = useAuth();
   const isAdmin = (user?.role || "").toUpperCase() === "ADMIN";
   // Yeni kod oluşturma diyaloğunun açık/kapalı durumu
@@ -121,13 +123,13 @@ export default function MyDiscountCodes() {
             is_active: true,
           }),
     onSuccess: () => {
-      toast.success("İndirim kodu oluşturuldu");
+      toast.success(t("pages:myDiscountCodes.toasts.created"));
       queryClient.invalidateQueries({ queryKey: ["discountCodes"] });
       setShowDialog(false);
       setFormData({ code: "", discount_percent: 10, max_uses: 100, test_package_id: "", valid_until: "" });
     },
     onError: (err) => {
-      const msg = err?.response?.data?.message || err?.message || "İndirim kodu oluşturulamadı";
+      const msg = err?.response?.data?.message || err?.message || t("pages:myDiscountCodes.toasts.createFailed");
       toast.error(msg);
     },
   });
@@ -135,12 +137,12 @@ export default function MyDiscountCodes() {
   const toggleMutation = useMutation({
     mutationFn: (id) => isAdmin ? entities.DiscountCode.adminToggle(id) : entities.DiscountCode.toggle(id),
     onSuccess: (data) => {
-      const msg = data?.isActive ? "İndirim kodu aktive edildi" : "İndirim kodu pasife alındı";
+      const msg = data?.isActive ? t("pages:myDiscountCodes.toasts.activated") : t("pages:myDiscountCodes.toasts.deactivated");
       toast.success(msg);
       queryClient.invalidateQueries({ queryKey: ["discountCodes"] });
     },
     onError: (err) => {
-      toast.error(err?.response?.data?.message || err?.message || "İşlem başarısız");
+      toast.error(err?.response?.data?.message || err?.message || t("pages:myDiscountCodes.toasts.toggleFailed"));
     },
   });
 
@@ -149,11 +151,11 @@ export default function MyDiscountCodes() {
   // Admin için: 1-100 aralığında esnek (admin override).
   const handleSubmit = () => {
     if (!formData.code || formData.discount_percent < 1) {
-      toast.error("Lütfen gerekli alanları doldurun");
+      toast.error(t("pages:myDiscountCodes.toasts.fillRequired"));
       return;
     }
     if (formData.discount_percent > effectiveMaxDiscount) {
-      toast.error(`İndirim oranı maksimum %${effectiveMaxDiscount} olabilir`);
+      toast.error(t("pages:myDiscountCodes.toasts.maxPercent", { max: effectiveMaxDiscount }));
       return;
     }
     createMutation.mutate(formData);
@@ -162,7 +164,7 @@ export default function MyDiscountCodes() {
   // Kodu panoya kopyalar ve kullanıcıya bildirim gösterir
   const copyCode = (code) => {
     navigator.clipboard.writeText(code);
-    toast.success("Kod kopyalandı");
+    toast.success(t("pages:myDiscountCodes.toasts.codeCopied"));
   };
 
   return (
@@ -170,17 +172,15 @@ export default function MyDiscountCodes() {
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-3xl font-bold text-slate-900">
-            {isAdmin ? "İndirim Kodları" : "İndirim Kodlarım"}
+            {t("pages:titles.myDiscountCodes")}
           </h1>
           <p className="text-slate-500 mt-2">
-            {isAdmin
-              ? "Tüm eğitici ve admin indirim kodlarını yönet"
-              : "Test paketlerin için indirim kodları oluştur"}
+            {t("pages:titles.myDiscountCodesDesc")}
           </p>
         </div>
         <Button onClick={() => setShowDialog(true)} className="bg-indigo-600 hover:bg-indigo-700">
           <Plus className="w-4 h-4 mr-2" />
-          Yeni Kod
+          {t("pages:myDiscountCodes.newCode")}
         </Button>
       </div>
 
@@ -190,12 +190,12 @@ export default function MyDiscountCodes() {
           <div className="flex flex-wrap gap-3 items-end">
             {/* Kod arama */}
             <div className="flex-1 min-w-[160px] space-y-1">
-              <Label className="text-xs text-slate-500">Kod</Label>
+              <Label className="text-xs text-slate-500">{t("pages:myDiscountCodes.filter.codeLabel")}</Label>
               <div className="relative">
                 <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" />
                 <Input
                   className="pl-8 h-9 text-sm"
-                  placeholder="Kod ara…"
+                  placeholder={t("pages:myDiscountCodes.filter.codePlaceholder")}
                   value={filters.search}
                   onChange={(e) => setFilters((f) => ({ ...f, search: e.target.value }))}
                 />
@@ -204,7 +204,7 @@ export default function MyDiscountCodes() {
 
             {/* İndirim oranı aralığı */}
             <div className="space-y-1 min-w-[80px]">
-              <Label className="text-xs text-slate-500">Min % İndirim</Label>
+              <Label className="text-xs text-slate-500">{t("pages:myDiscountCodes.filter.minPercent")}</Label>
               <Input
                 type="number"
                 min="1"
@@ -216,7 +216,7 @@ export default function MyDiscountCodes() {
               />
             </div>
             <div className="space-y-1 min-w-[80px]">
-              <Label className="text-xs text-slate-500">Max % İndirim</Label>
+              <Label className="text-xs text-slate-500">{t("pages:myDiscountCodes.filter.maxPercent")}</Label>
               <Input
                 type="number"
                 min="1"
@@ -230,7 +230,7 @@ export default function MyDiscountCodes() {
 
             {/* Oluşturma tarihi aralığı */}
             <div className="space-y-1 min-w-[140px]">
-              <Label className="text-xs text-slate-500">Başlangıç Tarihi</Label>
+              <Label className="text-xs text-slate-500">{t("pages:myDiscountCodes.filter.dateFrom")}</Label>
               <Input
                 type="date"
                 className="h-9 text-sm"
@@ -239,7 +239,7 @@ export default function MyDiscountCodes() {
               />
             </div>
             <div className="space-y-1 min-w-[140px]">
-              <Label className="text-xs text-slate-500">Bitiş Tarihi</Label>
+              <Label className="text-xs text-slate-500">{t("pages:myDiscountCodes.filter.dateTo")}</Label>
               <Input
                 type="date"
                 className="h-9 text-sm"
@@ -252,7 +252,7 @@ export default function MyDiscountCodes() {
             {activeFilterCount > 0 && (
               <Button variant="ghost" size="sm" className="h-9 text-slate-500 hover:text-slate-800 gap-1.5" onClick={clearFilters}>
                 <X className="w-3.5 h-3.5" />
-                Temizle
+                {t("pages:myDiscountCodes.filter.clear")}
                 <Badge className="bg-indigo-100 text-indigo-700 ml-0.5">{activeFilterCount}</Badge>
               </Button>
             )}
@@ -271,13 +271,13 @@ export default function MyDiscountCodes() {
           ) : codes.length === 0 ? (
             <div className="text-center py-12">
               <Percent className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-              <p className="text-slate-500">Henüz indirim kodu oluşturmadınız</p>
+              <p className="text-slate-500">{t("pages:myDiscountCodes.empty.noCodes")}</p>
             </div>
           ) : filteredCodes.length === 0 ? (
             <div className="text-center py-12">
               <Search className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-              <p className="text-slate-500">Filtreyle eşleşen kod bulunamadı</p>
-              <Button variant="link" className="text-indigo-600 mt-1" onClick={clearFilters}>Filtreleri temizle</Button>
+              <p className="text-slate-500">{t("pages:myDiscountCodes.empty.noResults")}</p>
+              <Button variant="link" className="text-indigo-600 mt-1" onClick={clearFilters}>{t("pages:myDiscountCodes.empty.clearFilters")}</Button>
             </div>
           ) : (
             <div className="divide-y divide-slate-100">
@@ -295,15 +295,20 @@ export default function MyDiscountCodes() {
                         </button>
                       </div>
                       <p className="text-sm text-slate-500">
-                        %{code.percentOff ?? code.discount_percent} indirim • {code.usedCount ?? code.current_uses ?? 0}/{code.maxUses ?? code.max_uses ?? "∞"} kullanım
+                        {t("pages:myDiscountCodes.card.discountUsage", {
+                          pct: code.percentOff ?? code.discount_percent,
+                          used: code.usedCount ?? code.current_uses ?? 0,
+                          max: code.maxUses ?? code.max_uses ?? t("pages:myDiscountCodes.card.infinite"),
+                        })}
                       </p>
                       {isAdmin && code.creatorUsername && (
                         <p className="text-xs text-slate-400 mt-0.5">
-                          Oluşturan:{" "}
+                          {t("pages:myDiscountCodes.card.createdBy")}{" "}
+                          {/* creatorUsername user-generated */}
                           <span className="font-medium text-slate-600">{code.creatorUsername}</span>
                           {code.creatorRole && (
                             <Badge className={`ml-1.5 ${code.creatorRole === "ADMIN" ? "bg-indigo-100 text-indigo-700" : "bg-emerald-100 text-emerald-700"}`}>
-                              {code.creatorRole === "ADMIN" ? "Yönetici" : "Eğitici"}
+                              {code.creatorRole === "ADMIN" ? t("pages:myDiscountCodes.card.roles.admin") : t("pages:myDiscountCodes.card.roles.educator")}
                             </Badge>
                           )}
                         </p>
@@ -324,10 +329,10 @@ export default function MyDiscountCodes() {
                         const used    = code.usedCount ?? code.current_uses ?? 0;
                         const max     = code.maxUses  ?? code.max_uses;
                         const expired = code.validUntil && new Date(code.validUntil) < new Date();
-                        if (!active)                    return "Pasif";
-                        if (expired)                    return "Süresi Doldu";
-                        if (max != null && used >= max) return "Limit Doldu";
-                        return "Aktif";
+                        if (!active)                    return t("pages:myDiscountCodes.card.status.passive");
+                        if (expired)                    return t("pages:myDiscountCodes.card.status.expired");
+                        if (max != null && used >= max) return t("pages:myDiscountCodes.card.status.limitReached");
+                        return t("pages:myDiscountCodes.card.status.active");
                       })()}
                     </Badge>
                     {(code.validUntil ?? code.valid_until) && (
@@ -340,7 +345,7 @@ export default function MyDiscountCodes() {
                       size="sm"
                       disabled={toggleMutation.isPending}
                       className={code.isActive ?? code.is_active ? "text-slate-400 hover:text-rose-600" : "text-emerald-600 hover:text-emerald-700"}
-                      title={code.isActive ?? code.is_active ? "Pasife al" : "Aktive et"}
+                      title={code.isActive ?? code.is_active ? t("pages:myDiscountCodes.card.toggleDeactivate") : t("pages:myDiscountCodes.card.toggleActivate")}
                       onClick={() => toggleMutation.mutate(code.id)}
                     >
                       {code.isActive ?? code.is_active
@@ -358,21 +363,21 @@ export default function MyDiscountCodes() {
       <Dialog open={showDialog} onOpenChange={setShowDialog}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Yeni İndirim Kodu</DialogTitle>
+            <DialogTitle>{t("pages:myDiscountCodes.dialog.title")}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 mt-4">
             <div className="space-y-2">
-              <Label>İndirim Kodu *</Label>
+              <Label>{t("pages:myDiscountCodes.dialog.codeLabel")}</Label>
               <Input
                 value={formData.code}
                 onChange={(e) => setFormData({ ...formData, code: e.target.value.toUpperCase() })}
-                placeholder="Örn: YENI2024"
+                placeholder={t("pages:myDiscountCodes.dialog.codePlaceholder")}
                 className="uppercase"
               />
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label>İndirim Oranı (%) *</Label>
+                <Label>{t("pages:myDiscountCodes.dialog.percentLabel")}</Label>
                 <Input
                   type="number"
                   min="1"
@@ -381,12 +386,12 @@ export default function MyDiscountCodes() {
                   onChange={(e) => setFormData({ ...formData, discount_percent: Number(e.target.value) })}
                 />
                 <p className="text-xs text-slate-500">
-                  Maksimum %{effectiveMaxDiscount}
-                  {isAdmin && " (admin override)"}
+                  {t("pages:myDiscountCodes.dialog.percentMax", { max: effectiveMaxDiscount })}
+                  {isAdmin && t("pages:myDiscountCodes.dialog.adminOverride")}
                 </p>
               </div>
               <div className="space-y-2">
-                <Label>Kullanım Limiti</Label>
+                <Label>{t("pages:myDiscountCodes.dialog.maxUsesLabel")}</Label>
                 <Input
                   type="number"
                   min="1"
@@ -396,13 +401,14 @@ export default function MyDiscountCodes() {
               </div>
             </div>
             <div className="space-y-2">
-              <Label>Geçerli Test (Opsiyonel)</Label>
+              <Label>{t("pages:myDiscountCodes.dialog.validForLabel")}</Label>
               <Select value={formData.test_package_id} onValueChange={(v) => setFormData({ ...formData, test_package_id: v })}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Tüm testler" />
+                  <SelectValue placeholder={t("pages:myDiscountCodes.dialog.allTests")} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value={null}>Tüm testler</SelectItem>
+                  <SelectItem value={null}>{t("pages:myDiscountCodes.dialog.allTests")}</SelectItem>
+                  {/* test.title user-generated — çevrilmez */}
                   {myTests.map((test) => (
                     <SelectItem key={test.id} value={test.id}>{test.title}</SelectItem>
                   ))}
@@ -410,7 +416,7 @@ export default function MyDiscountCodes() {
               </Select>
             </div>
             <div className="space-y-2">
-              <Label>Geçerlilik Tarihi (Opsiyonel)</Label>
+              <Label>{t("pages:myDiscountCodes.dialog.validUntilLabel")}</Label>
               <Input
                 type="date"
                 value={formData.valid_until}
@@ -418,13 +424,13 @@ export default function MyDiscountCodes() {
               />
             </div>
             <div className="flex gap-3 justify-end pt-4">
-              <Button variant="outline" onClick={() => setShowDialog(false)}>İptal</Button>
-              <Button 
+              <Button variant="outline" onClick={() => setShowDialog(false)}>{t("pages:myDiscountCodes.dialog.cancel")}</Button>
+              <Button
                 onClick={handleSubmit}
                 disabled={createMutation.isPending}
                 className="bg-indigo-600 hover:bg-indigo-700"
               >
-                Oluştur
+                {t("pages:myDiscountCodes.dialog.create")}
               </Button>
             </div>
           </div>

@@ -30,6 +30,8 @@ export const PAGE_ROLES = {
   ExamTypes: [ROLES.PUBLIC],
   EducatorProfile: [ROLES.PUBLIC],
   ForgotPassword: [ROLES.PUBLIC],
+  // DeviceVerify: e-postadaki "Cihazı doğrula" linki — public erişim
+  DeviceVerify: [ROLES.PUBLIC],
   Login: [ROLES.PUBLIC],
   Register: [ROLES.PUBLIC],
   ResetPassword: [ROLES.PUBLIC],
@@ -46,6 +48,7 @@ export const PAGE_ROLES = {
   SelectExamTypes: [ROLES.CANDIDATE],
 
   EducatorDashboard: [ROLES.EDUCATOR],
+  EducatorOnboarding: [ROLES.EDUCATOR],
   EducatorSettings: [ROLES.EDUCATOR],
   MyTestPackages: [ROLES.EDUCATOR],
   MySales: [ROLES.EDUCATOR],
@@ -152,8 +155,8 @@ export function getHomeForRole(role, user) {
   return 'Explore';
 }
 
-/** Giriş/kayıt sayfaları - giriş yapmışsa ana sayfaya yönlendirilir */
-export const AUTH_PAGES = ['Login', 'Register'];
+/** Giriş/kayıt sayfaları - sidebar yok, giriş yapmışsa ana sayfaya yönlendirilir */
+export const AUTH_PAGES = ['Login', 'Register', 'VerifyEmail', 'ForgotPassword', 'ResetPassword'];
 
 /** Sayfa korumalı mı (giriş gerekli) */
 export function isProtectedPage(pageName) {

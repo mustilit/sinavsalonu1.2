@@ -11,6 +11,7 @@ export class CreateTestPackageUseCase {
     description?: string | null;
     priceCents: number;
     difficulty?: string;
+    coverImageUrl?: string | null;
   }) {
     // Kill-switch kontrolü
     const settings = await prisma.adminSettings.findFirst({ where: { id: 1 } });
@@ -48,6 +49,7 @@ export class CreateTestPackageUseCase {
       description: input.description ?? null,
       priceCents: input.priceCents,
       difficulty,
+      coverImageUrl: input.coverImageUrl ?? null,
     });
   }
 }

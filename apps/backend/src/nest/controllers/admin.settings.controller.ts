@@ -52,6 +52,7 @@ export class AdminSettingsController {
         twoFactorSystemEnabled: dto.twoFactorSystemEnabled,
         minPackagePriceCents: dto.minPackagePriceCents,
         maxDiscountPercent: dto.maxDiscountPercent,
+        googleClientId: dto.googleClientId,
         minQuestionsPerTest: dto.minQuestionsPerTest,
         maxQuestionsPerTest: dto.maxQuestionsPerTest,
         maxTestsPerPackage: dto.maxTestsPerPackage,

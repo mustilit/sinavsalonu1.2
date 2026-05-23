@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { liveSessions as liveApi } from "@/api/dalClient";
 import { useAuth } from "@/lib/AuthContext";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -15,10 +16,11 @@ import { toast } from "sonner";
 import { format } from "date-fns";
 import { tr } from "date-fns/locale";
 
+// status label artık i18n key — render anında t() ile çözülür.
 const STATUS_CONFIG = {
-  DRAFT:  { label: "Taslak",     color: "bg-slate-100 text-slate-600",     icon: FileEdit    },
-  ACTIVE: { label: "Aktif",      color: "bg-emerald-100 text-emerald-700", icon: Radio       },
-  ENDED:  { label: "Tamamlandı", color: "bg-blue-100 text-blue-700",       icon: CheckCircle2 },
+  DRAFT:  { labelKey: "pages:myLiveSessions.status.draft",  color: "bg-slate-100 text-slate-600",     icon: FileEdit    },
+  ACTIVE: { labelKey: "pages:myLiveSessions.status.active", color: "bg-emerald-100 text-emerald-700", icon: Radio       },
+  ENDED:  { labelKey: "pages:myLiveSessions.status.ended",  color: "bg-blue-100 text-blue-700",       icon: CheckCircle2 },
 };
 
 function safeDate(iso) {
@@ -30,11 +32,12 @@ function safeDate(iso) {
 /**
  * Oturum kartı — Tur 1 (parent) için tüm yaşam döngüsünü tek satırda yönetir:
  *  - DRAFT/ACTIVE: tıkla → host (eski davranış)
- *  - ENDED + Tur 2 yok: "Gözden Geçir" + "İkinci Turu Başlat"
- *  - ENDED + Tur 2 DRAFT/ACTIVE: "Gözden Geçir" + "Tur 2'ye Git"
- *  - ENDED + Tur 2 ENDED: "Tur 1 Gözden Geçir" + "Tur 2 Gözden Geçir"
+ *  - ENDED + Tur 2 yok: "İncele" + "İkinci Turu Başlat"
+ *  - ENDED + Tur 2 DRAFT/ACTIVE: "İncele" + "Tur 2'ye Git"
+ *  - ENDED + Tur 2 ENDED: "Tur 1 İncele" + "Tur 2 İncele"
  */
 function SessionCard({ session, round2, onOpenHost, onCreateRound2, creating }) {
+  const { t } = useTranslation(["pages"]);
   const cfg        = STATUS_CONFIG[session.status] ?? STATUS_CONFIG.DRAFT;
   const StatusIcon = cfg.icon;
   const qCount     = session.questions?.length ?? session._count?.questions ?? 0;
@@ -65,10 +68,14 @@ function SessionCard({ session, round2, onOpenHost, onCreateRound2, creating }) 
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 flex-wrap mb-1">
                 <h3 className="font-semibold text-slate-900 truncate">{session.title}</h3>
-                <Badge className={cfg.color}>{cfg.label}</Badge>
+                <Badge className={cfg.color}>{t(cfg.labelKey)}</Badge>
                 {round2 && (
                   <Badge className="bg-indigo-100 text-indigo-700">
-                    Tur 2 {r2Ended ? "tamamlandı" : r2Status === "ACTIVE" ? "aktif" : "taslak"}
+                    {r2Ended
+                      ? t("pages:myLiveSessions.round2.completedBadge")
+                      : r2Status === "ACTIVE"
+                      ? t("pages:myLiveSessions.round2.activeBadge")
+                      : t("pages:myLiveSessions.round2.draftBadge")}
                   </Badge>
                 )}
               </div>
@@ -76,12 +83,12 @@ function SessionCard({ session, round2, onOpenHost, onCreateRound2, creating }) 
               <div className="flex items-center gap-4 text-xs text-slate-500 flex-wrap">
                 <span className="flex items-center gap-1">
                   <Zap className="w-3 h-3" />
-                  {qCount} soru
+                  {t("pages:myLiveSessions.card.questions", { count: qCount })}
                 </span>
                 {pCount > 0 && (
                   <span className="flex items-center gap-1">
                     <Users className="w-3 h-3" />
-                    {pCount} katılımcı
+                    {t("pages:myLiveSessions.card.participants", { count: pCount })}
                   </span>
                 )}
                 {session.tier?.label && (
@@ -101,7 +108,7 @@ function SessionCard({ session, round2, onOpenHost, onCreateRound2, creating }) 
               {/* Katılım kodu — DRAFT/ACTIVE turlarda göster */}
               {(isDraft || isActive) && session.joinCode && (
                 <div className="mt-2 inline-flex items-center gap-1.5 bg-amber-50 border border-amber-200 rounded-lg px-2.5 py-1">
-                  <span className="text-xs text-amber-600 font-medium">Kod:</span>
+                  <span className="text-xs text-amber-600 font-medium">{t("pages:myLiveSessions.card.joinCode")}</span>
                   <span className="text-sm font-mono font-bold text-amber-800 tracking-widest">
                     {session.joinCode}
                   </span>
@@ -111,7 +118,7 @@ function SessionCard({ session, round2, onOpenHost, onCreateRound2, creating }) 
               {/* Tur 2 katılım kodu — Tur 1 ENDED + Tur 2 DRAFT/ACTIVE */}
               {isEnded && round2 && !r2Ended && round2.joinCode && (
                 <div className="mt-2 inline-flex items-center gap-1.5 bg-indigo-50 border border-indigo-200 rounded-lg px-2.5 py-1">
-                  <span className="text-xs text-indigo-600 font-medium">Tur 2 Kod:</span>
+                  <span className="text-xs text-indigo-600 font-medium">{t("pages:myLiveSessions.card.round2JoinCode")}</span>
                   <span className="text-sm font-mono font-bold text-indigo-800 tracking-widest">
                     {round2.joinCode}
                   </span>
@@ -125,15 +132,15 @@ function SessionCard({ session, round2, onOpenHost, onCreateRound2, creating }) 
             {(isDraft || isActive) && (
               <Button size="sm" variant="outline" onClick={() => onOpenHost(session.id)}>
                 <ChevronRight className="w-4 h-4 ml-1" />
-                Yönet
+                {t("pages:myLiveSessions.card.manage")}
               </Button>
             )}
             {isEnded && (
               <div className="flex flex-col items-end gap-2">
-                {/* Tur 1 gözden geçir */}
+                {/* Tur 1 incele */}
                 <Button size="sm" variant="outline" onClick={() => onOpenHost(session.id)} className="gap-1">
                   <Eye className="w-3.5 h-3.5" />
-                  {round2 ? "Tur 1 Gözden Geçir" : "Gözden Geçir"}
+                  {round2 ? t("pages:myLiveSessions.card.reviewRound1") : t("pages:myLiveSessions.card.review")}
                 </Button>
                 {/* Tur 2 yoksa: İkinci Turu Başlat */}
                 {!round2 && (
@@ -144,7 +151,7 @@ function SessionCard({ session, round2, onOpenHost, onCreateRound2, creating }) 
                     disabled={creating}
                   >
                     <RefreshCw className="w-3.5 h-3.5" />
-                    İkinci Turu Başlat
+                    {t("pages:myLiveSessions.card.startRound2")}
                   </Button>
                 )}
                 {/* Tur 2 var ama bitmemiş: Tur 2'ye Git */}
@@ -155,10 +162,10 @@ function SessionCard({ session, round2, onOpenHost, onCreateRound2, creating }) 
                     onClick={() => onOpenHost(round2.id)}
                   >
                     <ChevronRight className="w-3.5 h-3.5" />
-                    Tur 2'ye Git
+                    {t("pages:myLiveSessions.card.goRound2")}
                   </Button>
                 )}
-                {/* Tur 2 de bitmiş: Gözden Geçir */}
+                {/* Tur 2 de bitmiş: İncele */}
                 {round2 && r2Ended && (
                   <Button
                     size="sm"
@@ -167,7 +174,7 @@ function SessionCard({ session, round2, onOpenHost, onCreateRound2, creating }) 
                     onClick={() => onOpenHost(round2.id)}
                   >
                     <Eye className="w-3.5 h-3.5" />
-                    Tur 2 Gözden Geçir
+                    {t("pages:myLiveSessions.card.reviewRound2")}
                   </Button>
                 )}
               </div>
@@ -180,6 +187,7 @@ function SessionCard({ session, round2, onOpenHost, onCreateRound2, creating }) 
 }
 
 export default function MyLiveSessions() {
+  const { t } = useTranslation(["pages"]);
   const { user }       = useAuth();
   const navigate       = useNavigate();
   const queryClient    = useQueryClient();
@@ -205,7 +213,7 @@ export default function MyLiveSessions() {
   const round2Mut = useMutation({
     mutationFn: (id) => liveApi.createRound2(id),
     onSuccess: (data) => {
-      toast.success(`2. tur oluşturuldu! Kod: ${data?.joinCode ?? "—"}`);
+      toast.success(t("pages:myLiveSessions.toasts.round2Created", { code: data?.joinCode ?? "—" }));
       queryClient.invalidateQueries({ queryKey: ["myLiveSessions"] });
       const newId = data?.id ?? data?.sessionId;
       if (newId) {
@@ -214,7 +222,7 @@ export default function MyLiveSessions() {
     },
     onError: (e) => {
       const d = e?.response?.data;
-      toast.error(d?.error?.message || d?.message || "2. tur oluşturulamadı");
+      toast.error(d?.error?.message || d?.message || t("pages:myLiveSessions.toasts.round2Failed"));
     },
   });
 
@@ -244,7 +252,7 @@ export default function MyLiveSessions() {
           round2={round2ByParent.get(s.id) ?? null}
           onOpenHost={goToHost}
           onCreateRound2={(id) => {
-            if (confirm("Aynı soruları kullanarak 2. tur (son-test) oluşturmak istiyor musunuz?\nYalnızca bu tura katılan adaylar girebilir."))
+            if (confirm(t("pages:myLiveSessions.confirms.round2")))
               round2Mut.mutate(id);
           }}
           creating={round2Mut.isPending}
@@ -259,15 +267,15 @@ export default function MyLiveSessions() {
         <div>
           <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
             <Zap className="w-6 h-6 text-amber-500" />
-            Canlı Testlerim
+            {t("pages:titles.myLiveSessions")}
           </h1>
           <p className="text-slate-500 mt-1 text-sm">
-            Oluşturduğunuz canlı test oturumlarını yönetin.
+            {t("pages:myLiveSessions.subtitle")}
           </p>
         </div>
         <Button onClick={goToCreate} className="bg-amber-500 hover:bg-amber-600 gap-2 shrink-0">
           <Plus className="w-4 h-4" />
-          Yeni Canlı Test
+          {t("pages:myLiveSessions.newButton")}
         </Button>
       </div>
 
@@ -277,14 +285,14 @@ export default function MyLiveSessions() {
             <Zap className="w-10 h-10 text-amber-400" />
           </div>
           <h2 className="text-xl font-semibold text-slate-900 mb-2">
-            Henüz canlı test oluşturmadınız
+            {t("pages:myLiveSessions.empty.title")}
           </h2>
           <p className="text-slate-500 mb-6 max-w-sm mx-auto">
-            Canlı bir oturum başlatın, katılımcılar QR kod veya kod ile katılsın.
+            {t("pages:myLiveSessions.empty.desc")}
           </p>
           <Button onClick={goToCreate} className="bg-amber-500 hover:bg-amber-600 gap-2">
             <Plus className="w-4 h-4" />
-            İlk Canlı Testimi Oluştur
+            {t("pages:myLiveSessions.empty.firstButton")}
           </Button>
         </div>
       )}
@@ -294,7 +302,7 @@ export default function MyLiveSessions() {
           <div className="flex items-center gap-2 mb-3">
             <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
             <h2 className="text-sm font-semibold text-emerald-700 uppercase tracking-wide">
-              Aktif ({active.length})
+              {t("pages:myLiveSessions.sections.active", { count: active.length })}
             </h2>
           </div>
           {renderList(active)}
@@ -304,7 +312,7 @@ export default function MyLiveSessions() {
       {draft.length > 0 && (
         <section className="mb-6">
           <h2 className="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-3">
-            Taslak ({draft.length})
+            {t("pages:myLiveSessions.sections.draft", { count: draft.length })}
           </h2>
           {renderList(draft)}
         </section>
@@ -313,7 +321,7 @@ export default function MyLiveSessions() {
       {ended.length > 0 && (
         <section>
           <h2 className="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-3">
-            Tamamlanan ({ended.length})
+            {t("pages:myLiveSessions.sections.ended", { count: ended.length })}
           </h2>
           {renderList(ended)}
         </section>

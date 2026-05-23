@@ -1,8 +1,10 @@
-import { Controller, Get, Patch, Body, Req } from '@nestjs/common';
+import { Controller, Get, Patch, Post, Body, Req } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth, ApiOkResponse, ApiForbiddenResponse } from '@nestjs/swagger';
 import { Roles } from '../decorators/roles.decorator';
 import { GetUserPreferencesUseCase } from '../../application/use-cases/notification/GetUserPreferencesUseCase';
 import { UpdateUserPreferencesUseCase } from '../../application/use-cases/notification/UpdateUserPreferencesUseCase';
+import { RequestSensitiveProfileOtpUseCase } from '../../application/use-cases/notification/RequestSensitiveProfileOtpUseCase';
+import { VerifySensitiveProfileChangeUseCase } from '../../application/use-cases/notification/VerifySensitiveProfileChangeUseCase';
 import { PrismaUserPreferenceRepository } from '../../infrastructure/repositories/PrismaUserPreferenceRepository';
 
 /**
@@ -33,6 +35,41 @@ export class MePreferencesController {
     const userId = (req as any).user?.id ?? (req as any).user?.sub;
     const repo = new PrismaUserPreferenceRepository();
     const uc = new UpdateUserPreferencesUseCase(repo);
+    // allowSensitive default false → phone/website/linkedin silently stripped.
+    // Bu alanlar yalnızca /me/preferences/sensitive/verify üzerinden değişebilir.
+    return uc.execute(userId, body);
+  }
+
+  /**
+   * Hassas profil alanları (telefon, website, LinkedIn) için doğrulama kodu iste.
+   * 6 haneli kod kullanıcının e-postasına gönderilir, 10 dakika geçerli.
+   */
+  @Post('preferences/sensitive/request')
+  @Roles('CANDIDATE', 'EDUCATOR', 'ADMIN')
+  @ApiBearerAuth('bearer')
+  @ApiOkResponse({ description: 'OTP sent to user email' })
+  async requestSensitiveOtp(@Req() req: any) {
+    const userId = (req as any).user?.id ?? (req as any).user?.sub;
+    const uc = new RequestSensitiveProfileOtpUseCase();
+    return uc.execute(userId);
+  }
+
+  /**
+   * 6 haneli kodu doğrula ve hassas alanları uygula.
+   * Body: { code, phone?, website?, linkedin? }
+   */
+  @Post('preferences/sensitive/verify')
+  @Roles('CANDIDATE', 'EDUCATOR', 'ADMIN')
+  @ApiBearerAuth('bearer')
+  @ApiOkResponse({ description: 'Sensitive fields applied' })
+  async verifySensitive(
+    @Req() req: any,
+    @Body() body: { code: string; phone?: string; website?: string; linkedin?: string },
+  ) {
+    const userId = (req as any).user?.id ?? (req as any).user?.sub;
+    const repo = new PrismaUserPreferenceRepository();
+    const updatePrefsUC = new UpdateUserPreferencesUseCase(repo);
+    const uc = new VerifySensitiveProfileChangeUseCase(updatePrefsUC);
     return uc.execute(userId, body);
   }
 }

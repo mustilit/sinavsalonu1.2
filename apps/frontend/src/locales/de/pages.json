@@ -1,0 +1,1623 @@
+{
+  "card": {
+    "free": "Kostenlos",
+    "boosted": "Hervorgehoben",
+    "timed": "Mit Zeitlimit",
+    "viewDetails": "Ansehen",
+    "seeAll": "Alle anzeigen",
+    "personalized": "Für Sie",
+    "questionsCount_one": "{{count}} Frage",
+    "questionsCount_other": "{{count}} Fragen",
+    "salesCount_one": "{{count}} Verkauf",
+    "salesCount_other": "{{count}} Verkäufe",
+    "testsCount_one": "{{count}} Test",
+    "testsCount_other": "{{count}} Tests"
+  },
+  "home": {
+    "nav": {
+      "explore": "Tests entdecken",
+      "educators": "Ausbilder",
+      "login": "Anmelden"
+    },
+    "hero": {
+      "titleLine1": "Bereiten Sie sich",
+      "titleLine2": "sicher vor",
+      "subtitle": "Lösen Sie Tausende von Tests erfahrener Ausbilder, verfolgen Sie Ihre Leistung und erreichen Sie Ihre Ziele.",
+      "searchPlaceholder": "Tests, Themen oder Ausbilder suchen...",
+      "searchButton": "Suchen",
+      "features": {
+        "uniqueTests": "Originale Tests",
+        "experiencedEducators": "Erfahrene Ausbilder",
+        "performanceTracking": "Leistungsverfolgung"
+      }
+    },
+    "sections": {
+      "continue": "Fortsetzen",
+      "examTypes": "Testtypen",
+      "testPackages": "Testpakete",
+      "educators": "Ausbilder"
+    },
+    "interestedExamType": "Ihr Interesse",
+    "continueAria": "Fortsetzen",
+    "completedAria": "Abgeschlossen",
+    "empty": {
+      "noPackages": "Noch keine veröffentlichten Testpakete",
+      "noEducators": "Keine Ausbilder gefunden"
+    },
+    "stats": {
+      "testsValue": "Live",
+      "testsLabel": "Tests",
+      "contentValue": "Original",
+      "contentLabel": "Testinhalt",
+      "educatorsValue": "Erfahren",
+      "educatorsLabel": "Ausbilder",
+      "performanceValue": "Leistung",
+      "performanceLabel": "Verfolgung"
+    },
+    "cta": {
+      "candidateTitle": "Als Kandidat beitreten",
+      "candidateDesc": "Lösen Sie Tausende von Tests erfahrener Ausbilder, verfolgen Sie Ihre Leistung und erreichen Sie Ihre Ziele.",
+      "educatorTitle": "Als Ausbilder beitreten",
+      "educatorDesc": "Erstellen Sie Testpakete in Ihrem Fachgebiet, erreichen Sie Tausende von Kandidaten und erzielen Sie Einkommen.",
+      "startNow": "Jetzt starten"
+    },
+    "footer": {
+      "tagline": "Die zuverlässigste Plattform zur Prüfungsvorbereitung. Lösen Sie Tests erfahrener Ausbilder und verfolgen Sie Ihre Leistung.",
+      "corporate": "Unternehmen",
+      "support": "Support",
+      "supportLink": "Hilfe und Support",
+      "rights": "Alle Rechte vorbehalten.",
+      "links": {
+        "about": "Über uns",
+        "contact": "Kontakt",
+        "privacy": "Datenschutz",
+        "partnership": "Partnerschaft"
+      }
+    },
+    "fallbackPackageTitle": "Testpaket"
+  },
+  "testCard": {
+    "difficulty": {
+      "easy": "Einfach",
+      "medium": "Mittel",
+      "hard": "Schwer"
+    },
+    "examTypeFallback": "Allgemein",
+    "solutionsSuffix": " — Mit Lösungen",
+    "testsLabel_one": "{{count}} Test",
+    "testsLabel_other": "{{count}} Tests",
+    "questionsLabel_one": "{{count}} Frage",
+    "questionsLabel_other": "{{count}} Fragen",
+    "minutes": "{{count}} Min.",
+    "free": "Kostenlos",
+    "review": "Überprüfen",
+    "continue": "Fortsetzen",
+    "start": "Test starten",
+    "buy": "Kaufen",
+    "durationFull": "{{h}} Std. {{m}} Min.",
+    "durationShort": "{{m}} Min. {{s}} Sek."
+  },
+  "explore": {
+    "title": "Tests entdecken",
+    "subtitle": "Finden Sie den richtigen Test aus Tausenden",
+    "searchPlaceholder": "Tests, Themen oder Ausbilder suchen...",
+    "filtersButton": "Filter",
+    "filter": {
+      "examType": "Testtyp",
+      "examTypeAria": "Testtyp-Filter",
+      "difficulty": "Schwierigkeit",
+      "difficultyAria": "Schwierigkeitsfilter",
+      "price": "Preis",
+      "priceAria": "Preisfilter",
+      "educator": "Ausbilder",
+      "educatorAria": "Ausbilder-Filter",
+      "ratingAria": "Minimaler Bewertungsfilter",
+      "all": "Alle",
+      "allEducators": "Alle Ausbilder",
+      "priceFree": "Kostenlos",
+      "priceUnder50": "Unter ₺50",
+      "price50to100": "₺50 – ₺100",
+      "priceOver100": "Über ₺100",
+      "active": "Aktive Filter:",
+      "clear": "Löschen"
+    },
+    "empty": {
+      "title": "Keine Ergebnisse gefunden",
+      "description": "Versuchen Sie andere Filter oder ändern Sie Ihren Suchbegriff"
+    },
+    "countFound_one": "{{count}} Test gefunden",
+    "countFound_other": "{{count}} Tests gefunden"
+  },
+  "testDetail": {
+    "backToTests": "Zurück zu Tests",
+    "errorLoading": "Test konnte nicht geladen werden",
+    "errorLoadingDesc": "Server nicht erreichbar. Bitte Seite neu laden.",
+    "notFound": "Test nicht gefunden",
+    "notFoundDesc": "Dieser Test existiert nicht oder wurde zurückgezogen.",
+    "reload": "Neu laden",
+    "rate": {
+      "title": "Paket bewerten",
+      "packageAverage": "Ihr Paketdurchschnitt: {{avg}}/5 ({{count}} Tests).",
+      "updateAvailable": "Sie können Ihre aktuelle Bewertung aktualisieren.",
+      "shareExperience": "Sie haben diesen Test abgeschlossen. Teilen Sie Ihre Erfahrung!",
+      "commentPlaceholder": "Ihr Kommentar (optional)",
+      "submitNew": "Bewertung absenden",
+      "submitUpdate": "Bewertung aktualisieren",
+      "successUpdated": "Ihre Bewertung wurde aktualisiert!",
+      "successSaved": "Ihre Testbewertung wurde gespeichert!",
+      "errorGeneric": "Etwas ist schiefgelaufen!",
+      "titleUpdate": "Paketbewertung aktualisieren",
+      "cancel": "Abbrechen"
+    },
+    "about": {
+      "title": "Über diesen Test",
+      "noDescription": "Für dieses Testpaket wurde noch keine Beschreibung hinzugefügt."
+    },
+    "educator": {
+      "title": "Ausbilder",
+      "fallbackName": "Ausbilder",
+      "follow": "Folgen",
+      "following": "Folge",
+      "unfollowed": "Nicht mehr gefolgt",
+      "followed": "Gefolgt"
+    },
+    "reviews": {
+      "title": "Bewertungen",
+      "unknownCandidate": "Unbekannter Kandidat",
+      "ratedTestCount_one": "(Durchschnitt von {{count}} Test)",
+      "ratedTestCount_other": "(Durchschnitt von {{count}} Tests)",
+      "prev": "Zurück",
+      "next": "Weiter",
+      "pageOf": "Seite {{current}} / {{total}}"
+    },
+    "features": {
+      "title": "Merkmale",
+      "testCount": "Anzahl Tests",
+      "questionCount": "Anzahl Fragen",
+      "difficulty": "Schwierigkeit",
+      "rating": "Bewertung"
+    },
+    "purchase": {
+      "totalSales_one": "{{count}} Person hat gekauft",
+      "totalSales_other": "{{count}} Personen haben gekauft",
+      "testsListTitle": "Tests",
+      "testMeta": "{{questions}} Fragen • {{minutes}} Min.",
+      "servicesPaused": "🔧 Kaufservices werden gewartet",
+      "servicesPausedDesc": "Bitte versuchen Sie es später erneut.",
+      "servicesPausedToast": "Unsere Kaufservices werden gewartet. Bitte versuchen Sie es später erneut.",
+      "features": {
+        "unlimitedAccess": "Unbegrenzter Zugang",
+        "detailedSolutions": "Detaillierte Lösungen",
+        "performanceAnalysis": "Leistungsanalyse",
+        "mobileFriendly": "Mobilfreundlich"
+      }
+    },
+    "packageRating": {
+      "title": "Paketbewertung",
+      "outOf": "/ 5",
+      "noReviews": "Noch keine Bewertungen",
+      "reviewerCount_one": "Bewertung von {{count}} Kandidaten",
+      "reviewerCount_other": "Bewertungen von {{count}} Kandidaten",
+      "rateButton": "Bewerten",
+      "updateButton": "Bewertung aktualisieren"
+    }
+  },
+  "titles": {
+    "myObjections": "Meine Meldungen",
+    "myObjectionsDesc": "Verfolgen Sie Ihre Meldungen und erhaltenen Antworten",
+    "myResults": "Meine Leistungsberichte",
+    "myResultsDesc": "Ergebnisse und Statistiken Ihrer absolvierten Tests",
+    "myTopicReport": "Themenleistung",
+    "myTopicReportDesc": "Verfolgen Sie Genauigkeit und Zeit je Thema",
+    "profileSettings": "Profileinstellungen",
+    "profileSettingsDesc": "Kontoinformationen und Einstellungen aktualisieren",
+    "takeTest": "Test",
+    "educatorDashboard": "Ausbilder-Dashboard",
+    "educatorDashboardDesc": "Verfolgen Sie Testpakete, Verkäufe und Statistiken",
+    "myTestPackages": "Meine Testpakete",
+    "myTestPackagesDesc": "Verwalten Sie Ihre Testpakete",
+    "createTest": "Neuen Test erstellen",
+    "createTestDesc": "Starten Sie ein neues Testpaket",
+    "editTest": "Test bearbeiten",
+    "mySales": "Meine Verkäufe",
+    "mySalesDesc": "Verkaufshistorie und Einnahmen",
+    "myDiscountCodes": "Rabattcodes",
+    "myDiscountCodesDesc": "Rabattcodes erstellen und verwalten",
+    "myAds": "Meine Anzeigen",
+    "myAdsDesc": "Verwalten Sie Ihre Werbekampagnen",
+    "myLiveSessions": "Meine Live-Tests",
+    "myLiveSessionsDesc": "Verwalten Sie Ihre Live-Sitzungen",
+    "educatorRefunds": "Rückerstattungsanträge",
+    "educatorRefundsDesc": "Prüfen Sie Rückerstattungsanträge von Kandidaten",
+    "questionReports": "Fehlermeldungen",
+    "questionReportsDesc": "Prüfen Sie von Kandidaten eingereichte Fehlermeldungen",
+    "educatorSettings": "Profileinstellungen",
+    "educatorSettingsDesc": "Ausbilder-Kontoeinstellungen und Einstellungen",
+    "myModerationStatus": "Inhaltsstatus",
+    "myModerationStatusDesc": "Moderationsstatus und Risikobewertung Ihrer Fragen",
+    "educators": "Ausbilder",
+    "educatorsDesc": "Entdecken Sie alle Ausbilder",
+    "educatorProfile": "Ausbilder-Profil",
+    "examTypes": "Testtypen",
+    "paymentSuccess": "Zahlung erfolgreich",
+    "paymentSuccessDesc": "Ihr Kauf ist abgeschlossen",
+    "about": "Über uns",
+    "contact": "Kontakt",
+    "privacy": "Datenschutz",
+    "partnership": "Partnerschaft",
+    "support": "Hilfe und Support"
+  },
+  "liveHost": {
+    "status": {
+      "draft": "Nicht gestartet",
+      "active": "Live",
+      "ended": "Beendet"
+    },
+    "participants": {
+      "active": "aktiv",
+      "total": "gesamt",
+      "activeTitle": "Aktive Teilnehmer",
+      "totalJoined": "Insgesamt beigetreten"
+    },
+    "controls": {
+      "start": "Starten",
+      "end": "Beenden",
+      "ending": "Wird beendet…",
+      "previous": "Zurück",
+      "next": "Weiter",
+      "showStats": "Statistiken anzeigen",
+      "hideStats": "Statistiken ausblenden"
+    },
+    "question": {
+      "label": "Frage {{n}}",
+      "mediaAlt": "Frage",
+      "peopleTooltip_one": "{{count}} Person",
+      "peopleTooltip_other": "{{count}} Personen"
+    },
+    "round": {
+      "round1": "Runde 1: {{pct}}%",
+      "round2Prefix": "Runde 2:"
+    },
+    "ended": {
+      "round1Title": "Sitzung abgeschlossen",
+      "round2Title": "Nachtest abgeschlossen!",
+      "summary": "{{participants}} Teilnehmer • {{questions}} Fragen",
+      "createRound2": "Erneut durchführen (Nachtest)",
+      "creatingRound2": "Wird erstellt…",
+      "round2Exists": "Runde 2 vorhanden — Code:",
+      "goToRound2": "Zur Sitzung →",
+      "backToDashboard": "Zum Dashboard",
+      "backToLiveSessions": "Zu meinen Live-Tests"
+    },
+    "join": {
+      "codeLabel": "Beitrittscode",
+      "copyCode": "Code kopieren",
+      "copied": "Kopiert!",
+      "qrHint": "Per QR-Code beitreten"
+    },
+    "endDialog": {
+      "title": "Sitzung beenden",
+      "description": "Möchten Sie diese Sitzung wirklich jetzt beenden? Dies kann nicht rückgängig gemacht werden; aktuelle Teilnehmer können keine Antworten mehr einreichen.",
+      "cancel": "Abbrechen",
+      "confirm": "Ja, beenden"
+    },
+    "round2Dialog": {
+      "title": "Runde 2 starten",
+      "description": "Eine zweite Runde (Nachtest) wird mit denselben Fragen erstellt. Nur Kandidaten aus dieser Runde können der neuen Sitzung beitreten.",
+      "cancel": "Abbrechen",
+      "confirm": "Runde 2 erstellen"
+    },
+    "comparison": {
+      "title": "Gruppen-Vortest / Nachtest-Vergleich",
+      "round1Avg": "Ø Runde 1",
+      "round2Avg": "Ø Runde 2",
+      "improvement": "Verbesserung",
+      "peopleCount_one": "{{count}} Person",
+      "peopleCount_other": "{{count}} Personen"
+    },
+    "toasts": {
+      "ended": "Sitzung beendet",
+      "round2Created": "Runde 2 erstellt! Code: {{code}}",
+      "round2NoNav": "Runde 2 erstellt, Navigation fehlgeschlagen",
+      "round2Failed": "Runde 2 konnte nicht erstellt werden",
+      "genericError": "Fehler"
+    },
+    "notFound": "Sitzung nicht gefunden"
+  },
+  "testForm": {
+    "steps": {
+      "package": "Paket",
+      "tests": "Tests",
+      "preview": "Vorschau"
+    },
+    "nav": {
+      "backToPackages": "Meine Testpakete",
+      "back": "← Zurück",
+      "backToTests": "← Zurück (Tests)",
+      "next": "Weiter →",
+      "previewNext": "Vorschau →"
+    },
+    "package": {
+      "sectionTitle": "Paketinformationen",
+      "titleLabel": "Pakettitel *",
+      "titlePlaceholder": "z. B. KPSS Allgemeine Fähigkeit",
+      "descLabel": "Beschreibung",
+      "descPlaceholder": "Kurze Info zum Paket...",
+      "examTypeLabel": "Testtyp (Optional)",
+      "examTypePlaceholder": "Auswählen",
+      "examTypeNone": "— Keine —",
+      "priceLabel": "Preis (₺) *",
+      "pricePlaceholder": "z. B. 49",
+      "priceMin": "Minimum: {{min}} ₺",
+      "difficultyLabel": "Schwierigkeitsgrad",
+      "difficulty": {
+        "easy": "🟢 Einfach",
+        "medium": "🟡 Mittel",
+        "hard": "🔴 Schwer"
+      },
+      "cover": {
+        "label": "Paket-Titelbild",
+        "hint": "Lade ein Vorschaubild hoch, das auf Listen- und Detailseiten angezeigt wird. Kandidaten sehen dieses Bild.",
+        "upload": "Bild hochladen",
+        "change": "Bild ändern",
+        "remove": "Entfernen",
+        "uploading": "Wird hochgeladen…",
+        "uploaded": "Titelbild hochgeladen",
+        "format": "PNG, JPG oder WebP — max. 5 MB",
+        "previewTitleFallback": "Pakettitel erscheint hier",
+        "errors": {
+          "invalidFormat": "Bitte wähle ein PNG-, JPG- oder WebP-Bild aus",
+          "tooBig": "Die Bildgröße darf höchstens 5 MB betragen",
+          "uploadFailed": "Bild konnte nicht hochgeladen werden. Bitte erneut versuchen."
+        }
+      }
+    },
+    "testCard": {
+      "titleLabel": "Testtitel *",
+      "titlePlaceholder": "z. B. YKS Mathematik",
+      "timedToggle": "Mit Zeitlimit",
+      "durationLabel": "Dauer (Min.)",
+      "deleteTest": "Test löschen",
+      "questionCountStat": "{{count}} Fragen",
+      "completedSuffix": "({{count}} abgeschlossen)",
+      "addQuestion": "Frage hinzufügen",
+      "indexLabel": "Test {{index}}",
+      "completedShort": "{{count}} abgeschlossen",
+      "collapseAria": "Diesen Test einklappen"
+    },
+    "question": {
+      "editDialogTitle": "Frage {{n}} bearbeiten",
+      "label": "Frage {{n}}",
+      "contentLabel": "Fragetext",
+      "contentPlaceholder": "Fragetext eingeben...",
+      "duplicateCheck": "Wird geprüft...",
+      "duplicateTitle": "Ähnliche Frage",
+      "duplicateSimilarity": "Ähnlichkeit: {{pct}}%",
+      "duplicateToast": "Eine ähnliche Frage wurde gefunden.",
+      "imageLabel": "Bild (Optional)",
+      "selectImage": "Bild auswählen",
+      "clearImage": "Löschen",
+      "topicLabel": "Thema (Optional)",
+      "topicPlaceholder": "Thema auswählen",
+      "topicNone": "— Keine —",
+      "optionsLabel": "Optionen",
+      "optionPlaceholder": "Option {{letter}}",
+      "optionImage": "Bild",
+      "selectedCount": "{{filled}}/5 Optionen",
+      "correctMissing": "• Richtige Option nicht ausgewählt",
+      "correctIs": "• Richtig: {{letter}}",
+      "edit": "Bearbeiten",
+      "delete": "Löschen",
+      "rejectedNotice": "Diese Frage verstößt gegen die Inhaltsrichtlinie."
+    },
+    "dialog": {
+      "cancel": "Abbrechen",
+      "saving": "Wird gespeichert...",
+      "newQuestion": "Neue Frage",
+      "complete": "Fertig",
+      "validateNoCorrect": "Markieren Sie die richtige Option",
+      "genericError": "Fehler"
+    },
+    "testsStep": {
+      "title": "Tests & Fragen",
+      "subtitleEdit": "Vorhandene Fragen bearbeiten oder neue hinzufügen",
+      "subtitleCreate": "Erstellen Sie Ihren ersten Test und fügen Sie Fragen hinzu",
+      "addTest": "Test hinzufügen",
+      "validateAtLeastOne": "Mindestens ein abgeschlossener Test und eine Frage erforderlich"
+    },
+    "preview": {
+      "sectionTitle": "Paketzusammenfassung",
+      "packageTitleLabel": "Pakettitel",
+      "descriptionLabel": "Beschreibung",
+      "testsCount_one": "{{count}} Test",
+      "testsCount_other": "{{count}} Tests",
+      "validQuestions_one": "{{count}} gültige Frage",
+      "validQuestions_other": "{{count}} gültige Fragen",
+      "free": "Kostenlos",
+      "testsListTitle": "Tests",
+      "untitled": "Ohne Titel"
+    },
+    "validations": {
+      "titleRequired": "Pakettitel ist erforderlich",
+      "priceMin": "Preis muss mindestens {{min}} ₺ sein"
+    },
+    "editPage": {
+      "publishedBadge": "Veröffentlicht",
+      "draftBadge": "Entwurf",
+      "notFoundId": "Paket-ID nicht gefunden",
+      "loadFailed": "Paket konnte nicht geladen werden",
+      "saveChanges": "Änderungen speichern",
+      "saving": "Wird gespeichert...",
+      "publishing": "Wird veröffentlicht...",
+      "saveAndPublish": "Speichern & Veröffentlichen",
+      "unpublishing": "Wird verarbeitet...",
+      "unpublish": "Zurückziehen",
+      "cannotDeleteAnswered": "Beantwortete Frage übersprungen: kann nicht gelöscht werden.",
+      "moderationPendingError": "Einige Fragen dieses Tests warten auf die Moderation. Veröffentlichung erst nach Freigabe möglich.",
+      "savedAndPublished": "Paket aktualisiert und veröffentlicht!",
+      "unpublished": "Paket zurückgezogen.",
+      "savedChanges": "Änderungen gespeichert.",
+      "saveFailed": "Speichern fehlgeschlagen",
+      "autoSave": {
+        "saving": "Speichern...",
+        "savedAt": "Automatisch gespeichert · {{time}}"
+      },
+      "draftDialog": {
+        "title": "Unvollständige Bearbeitung gefunden",
+        "description": "Sie haben eine unvollständige Bearbeitungssitzung für dieses Paket. Möchten Sie dort weitermachen, wo Sie aufgehört haben?",
+        "restore": "Fortsetzen",
+        "discard": "Verwerfen und zurücksetzen",
+        "loaded": "Vorherige Bearbeitung wiederhergestellt."
+      }
+    },
+    "createPage": {
+      "subtitle": "Neues Testpaket erstellen",
+      "submit": "Paket erstellen",
+      "submitting": "Wird erstellt...",
+      "submitAndPublish": "Erstellen & Veröffentlichen",
+      "submitFailed": "Paket konnte nicht erstellt werden",
+      "created": "Paket erstellt!",
+      "createdAndPublished": "Paket erstellt und veröffentlicht!",
+      "draftRestored": "Entwurf wiederhergestellt",
+      "draftSaving": "Wird automatisch gespeichert…",
+      "draftSaved": "{{time}} • Automatisch gespeichert",
+      "discardDraft": "Entwurf verwerfen",
+      "discardConfirm": "Aktueller Entwurf wird verworfen. Fortfahren?",
+      "discarded": "Entwurf verworfen",
+      "backToDashboard": "Zum Dashboard",
+      "headerSubtitle": "Bereiten Sie Ihre Tests in 3 Schritten vor und veröffentlichen Sie sie.",
+      "publishHint": "Nach Veröffentlichung können Kandidaten das Paket sehen und kaufen.",
+      "draftSave": "Entwurf speichern",
+      "publish": "Veröffentlichen",
+      "publishing": "Wird veröffentlicht...",
+      "saving": "Wird gespeichert...",
+      "publishedToast": "Paket erstellt und veröffentlicht!",
+      "draftedToast": "Paket als Entwurf gespeichert.",
+      "saveFailed": "Speichern fehlgeschlagen",
+      "moderationPending": "Einige Fragen warten auf die Moderation. Veröffentlichung erst nach Freigabe möglich.",
+      "noTestsYet": "Noch keine Tests hinzugefügt",
+      "untitled": "Test ohne Titel",
+      "imageAdded": "Bild hinzugefügt",
+      "atLeastOneValid": "Sie müssen mindestens einen gültigen Test erstellen",
+      "validations": {
+        "titleRequired": "Pakettitel ist erforderlich",
+        "priceMin": "Preis muss mindestens {{min}} ₺ sein",
+        "testTitleRequired": "Testtitel ist erforderlich",
+        "atLeastOneValidQuestion": "Mindestens eine abgeschlossene Frage erforderlich"
+      },
+      "questionDialog": {
+        "contentRequired": "Fragetext oder Bild erforderlich",
+        "atLeast2Options": "Mindestens 2 Optionen müssen ausgefüllt werden",
+        "correctRequired": "Markieren Sie die richtige Option (A–E)",
+        "duplicateToast": "Ähnliche Frage gefunden. Sie können fortfahren, wenn Sie möchten.",
+        "duplicateWarning": "Warnung: Ähnliche Frage gefunden",
+        "duplicateLoading": "Wird auf Duplikate geprüft...",
+        "imageLabel": "Fragebild (Optional)",
+        "saveError": "Fehler beim Speichern"
+      },
+      "docx": {
+        "button": "DOCX importieren",
+        "loading": "Wird geladen...",
+        "dialogTitle": "Fragen aus DOCX importieren",
+        "dialogDesc": "Wählen Sie eine Word-Datei. Fragen werden automatisch analysiert.",
+        "selectFile": "DOCX-Datei auswählen",
+        "parseError": "Fragen konnten nicht aus DOCX analysiert werden. Bitte manuell hinzufügen.",
+        "mammothMissing": "DOCX-Import-Paket nicht installiert",
+        "importError": "DOCX-Import fehlgeschlagen: {{msg}}",
+        "unknownError": "Unbekannter Fehler",
+        "added_one": "{{count}} Frage hinzugefügt",
+        "added_other": "{{count}} Fragen hinzugefügt"
+      },
+      "draftDialog": {
+        "title": "Nicht gespeicherter Entwurf",
+        "found": "Ein nicht gespeicherter Entwurf mit dem Titel <strong>\"{{title}}\"</strong> wurde gefunden.",
+        "continue": "Fortfahren",
+        "discardRestart": "Verwerfen, neu starten",
+        "loaded": "Entwurf geladen"
+      },
+      "guards": {
+        "loginRequired": "Melden Sie sich an, um einen Test zu erstellen",
+        "loginButton": "Anmelden",
+        "maintenanceTitle": "Wartungsmodus",
+        "maintenanceDesc": "Testerstellung ist vorübergehend deaktiviert.",
+        "pendingApprovalTitle": "Kontofreigabe ausstehend",
+        "pendingApprovalDesc": "Ihr Konto muss von einem Administrator freigegeben werden, bevor Sie Tests erstellen können.",
+        "goToSettings": "Zu Profileinstellungen"
+      },
+      "questionItem": {
+        "selectedCount": "{{filled}}/5 Optionen ausgefüllt",
+        "correctIs": "• Richtig: {{letter}}",
+        "correctMissing": "• Richtige Option nicht ausgewählt"
+      },
+      "duration": "Dauer (Minuten)"
+    }
+  },
+  "myTestPackages": {
+    "searchPlaceholder": "Tests suchen...",
+    "filter": {
+      "statusPlaceholder": "Status",
+      "allStatuses": "Alle Status",
+      "published": "Veröffentlicht",
+      "draft": "Entwurf",
+      "examTypePlaceholder": "Testtyp",
+      "allExamTypes": "Alle Testtypen",
+      "exportExcel": "Excel exportieren",
+      "clear": "Löschen"
+    },
+    "empty": {
+      "errorLoad": "Tests konnten nicht geladen werden. Bitte Seite neu laden.",
+      "noTestsTitle": "Sie haben noch keine Tests erstellt",
+      "noTestsDesc": "Erstellen Sie Ihr erstes Testpaket und beginnen Sie mit dem Verkauf",
+      "createFirst": "Ersten Test erstellen",
+      "noResultsTitle": "Keine Ergebnisse gefunden",
+      "noResultsDesc": "Versuchen Sie, die Filter zu ändern",
+      "clearFilters": "Filter löschen"
+    },
+    "card": {
+      "stats": "{{tests}} Tests · {{questions}} Fragen",
+      "salesCount_one": "{{count}} Verkauf",
+      "salesCount_other": "{{count}} Verkäufe",
+      "noRating": "Noch keine Bewertungen",
+      "viewsAria": "Aufrufe: {{count}}",
+      "viewsTooltip": "Gesamt: {{total}} · Eindeutige Aufrufe: {{unique}} · Letzte 7 Tage: {{last7}}",
+      "viewsLast7": "+{{count}} / 7T",
+      "editTitle": "Bearbeiten",
+      "publishTitle": "Veröffentlichen",
+      "unpublishTitle": "Zurückziehen"
+    },
+    "toasts": {
+      "statusUpdated": "Paketstatus aktualisiert",
+      "actionFailed": "Aktion fehlgeschlagen",
+      "excelDownloaded": "Excel-Datei heruntergeladen"
+    },
+    "excel": {
+      "headers": {
+        "title": "Titel",
+        "examType": "Testtyp",
+        "status": "Status",
+        "testCount": "Testanzahl",
+        "questionCount": "Fragenanzahl",
+        "price": "Preis (₺)",
+        "sales": "Verkäufe",
+        "rating": "Bewertung",
+        "createdAt": "Erstellt am"
+      },
+      "published": "Veröffentlicht",
+      "draft": "Entwurf",
+      "sheetName": "Testpakete",
+      "filePrefix": "meine-testpakete"
+    }
+  },
+  "mySales": {
+    "stats": {
+      "totalSales": "Verkäufe gesamt",
+      "totalRevenue": "Einnahmen gesamt",
+      "monthRevenue": "Diesen Monat",
+      "uniqueBuyers": "Einzelne Käufer"
+    },
+    "searchPlaceholder": "Käufer oder Test suchen...",
+    "filter": {
+      "statusPlaceholder": "Status",
+      "allStatuses": "Alle Status",
+      "completed": "Abgeschlossen",
+      "pending": "Ausstehend",
+      "refunded": "Erstattet",
+      "datePlaceholder": "Datum",
+      "allDates": "Gesamter Zeitraum",
+      "today": "Heute",
+      "lastWeek": "Letzte 7 Tage",
+      "lastMonth": "Letzte 30 Tage",
+      "exportExcel": "Excel exportieren",
+      "clear": "Löschen"
+    },
+    "tableTitle": "Verkaufshistorie",
+    "empty": {
+      "noSales": "Noch keine Verkäufe",
+      "noResults": "Keine Ergebnisse gefunden",
+      "clearFilters": "Filter löschen"
+    },
+    "table": {
+      "buyer": "Käufer",
+      "test": "Test",
+      "amount": "Betrag",
+      "status": "Status",
+      "date": "Datum",
+      "buyerFallback": "Nutzer"
+    },
+    "excel": {
+      "headers": {
+        "buyer": "Käufer",
+        "email": "E-Mail",
+        "test": "Test",
+        "amount": "Betrag",
+        "status": "Status",
+        "date": "Datum"
+      },
+      "filePrefix": "meine-verkaeufe"
+    },
+    "toasts": {
+      "excelDownloaded": "Excel-Datei heruntergeladen"
+    }
+  },
+  "myDiscountCodes": {
+    "newCode": "Neuer Code",
+    "filter": {
+      "codeLabel": "Code",
+      "codePlaceholder": "Code suchen…",
+      "minPercent": "Min. % Rabatt",
+      "maxPercent": "Max. % Rabatt",
+      "dateFrom": "Startdatum",
+      "dateTo": "Enddatum",
+      "clear": "Löschen"
+    },
+    "empty": {
+      "noCodes": "Sie haben noch keine Rabattcodes erstellt",
+      "noResults": "Keine Codes entsprechen dem Filter",
+      "clearFilters": "Filter löschen"
+    },
+    "card": {
+      "discountUsage": "{{pct}}% Rabatt • {{used}}/{{max}} Nutzungen",
+      "infinite": "∞",
+      "createdBy": "Erstellt von:",
+      "roles": {
+        "admin": "Administrator",
+        "educator": "Ausbilder"
+      },
+      "status": {
+        "passive": "Inaktiv",
+        "expired": "Abgelaufen",
+        "limitReached": "Limit erreicht",
+        "active": "Aktiv"
+      },
+      "toggleActivate": "Aktivieren",
+      "toggleDeactivate": "Deaktivieren"
+    },
+    "dialog": {
+      "title": "Neuer Rabattcode",
+      "codeLabel": "Rabattcode *",
+      "codePlaceholder": "z. B. NEU2024",
+      "percentLabel": "Rabatt (%) *",
+      "percentMax": "Maximum {{max}}%",
+      "adminOverride": " (Admin-Override)",
+      "maxUsesLabel": "Nutzungslimit",
+      "validForLabel": "Gültig für Test (Optional)",
+      "allTests": "Alle Tests",
+      "validUntilLabel": "Gültig bis (Optional)",
+      "cancel": "Abbrechen",
+      "create": "Erstellen"
+    },
+    "toasts": {
+      "created": "Rabattcode erstellt",
+      "createFailed": "Rabattcode konnte nicht erstellt werden",
+      "activated": "Rabattcode aktiviert",
+      "deactivated": "Rabattcode deaktiviert",
+      "toggleFailed": "Aktion fehlgeschlagen",
+      "fillRequired": "Bitte erforderliche Felder ausfüllen",
+      "maxPercent": "Maximaler Rabatt beträgt {{max}}%",
+      "codeCopied": "Code kopiert"
+    }
+  },
+  "myAds": {
+    "tabs": {
+      "stats": "Statistiken",
+      "purchases": "Meine Anzeigen",
+      "buy": "Neue Anzeige"
+    },
+    "stats": {
+      "totalImpressions": "Gesamte Impressionen",
+      "activeAds": "Aktive Anzeigen",
+      "last7Days": "Letzte 7 Tage",
+      "last30Days": "Impressionen der letzten 30 Tage",
+      "noData": "Noch keine Impressionsdaten",
+      "performanceDetail": "Anzeigenleistung",
+      "profileBoost": "Profil hervorheben",
+      "validUntil": "Gültig bis {{date}}",
+      "active": "Aktiv",
+      "completed": "Abgeschlossen",
+      "noDataPrompt": "Kaufen Sie Ihre erste Anzeige, um Ihre Tests hervorzuheben.",
+      "buyAd": "Anzeige kaufen"
+    },
+    "purchases": {
+      "noneYet": "Sie haben noch keine Anzeigen gekauft",
+      "buyFirst": "Erste Anzeige kaufen",
+      "impressionsRemaining": "{{count}} Impressionen verbleibend"
+    },
+    "buy": {
+      "servicesPaused": "Anzeigenkäufe sind vorübergehend ausgesetzt.",
+      "servicesPausedDesc": "Bitte versuchen Sie es später erneut.",
+      "howItWorks": "Wie funktioniert es?",
+      "howItWorks1": "<strong>10%</strong> der Empfehlungen auf der Startseite sind anzeigenbasiert.",
+      "howItWorks2": "Personalisierte Empfehlungen sind nicht betroffen — Anzeigen bieten zusätzliche Sichtbarkeit.",
+      "howItWorks3": "Die Anzeige endet automatisch, wenn die Impressionen Ihres Pakets aufgebraucht sind.",
+      "targetType": "Hervorhebungstyp",
+      "targetTest": "Testpaket",
+      "targetTestDesc": "Heben Sie einen bestimmten Test hervor",
+      "targetEducator": "Mein Profil",
+      "targetEducatorDesc": "Heben Sie Ihr Ausbilder-Profil hervor",
+      "whichTest": "Welcher Test?",
+      "noPublishedTests": "Sie haben keine veröffentlichten Tests. Bitte zuerst einen veröffentlichen.",
+      "selectTest": "Test wählen",
+      "adPackage": "Anzeigenpaket",
+      "noPackages": "Aktuell sind keine Pakete verfügbar.",
+      "packageInfo": "{{impressions}} Impressionen · gültig {{days}} Tage",
+      "processing": "Wird verarbeitet...",
+      "buyAd": "Anzeige kaufen"
+    },
+    "toasts": {
+      "purchased": "Anzeige gekauft! Impressionen beginnen sofort.",
+      "purchaseFailed": "Kauf fehlgeschlagen",
+      "selectPackage": "Bitte ein Paket auswählen",
+      "selectTest": "Bitte den hervorzuhebenden Test auswählen"
+    }
+  },
+  "myLiveSessions": {
+    "subtitle": "Verwalten Sie Ihre Live-Test-Sitzungen.",
+    "newButton": "Neuer Live-Test",
+    "empty": {
+      "title": "Sie haben noch keine Live-Tests erstellt",
+      "desc": "Starten Sie eine Live-Sitzung; Teilnehmer treten per QR-Code oder Code bei.",
+      "firstButton": "Meinen ersten Live-Test erstellen"
+    },
+    "sections": {
+      "active": "Aktiv ({{count}})",
+      "draft": "Entwürfe ({{count}})",
+      "ended": "Abgeschlossen ({{count}})"
+    },
+    "status": {
+      "draft": "Entwurf",
+      "active": "Aktiv",
+      "ended": "Abgeschlossen"
+    },
+    "round2": {
+      "completedBadge": "Runde 2 abgeschlossen",
+      "activeBadge": "Runde 2 aktiv",
+      "draftBadge": "Runde 2 Entwurf"
+    },
+    "card": {
+      "questions": "{{count}} Fragen",
+      "participants": "{{count}} Teilnehmer",
+      "joinCode": "Code:",
+      "round2JoinCode": "Runde 2 Code:",
+      "manage": "Verwalten",
+      "review": "Überprüfen",
+      "reviewRound1": "Runde 1 überprüfen",
+      "reviewRound2": "Runde 2 überprüfen",
+      "startRound2": "Runde 2 starten",
+      "goRound2": "Zu Runde 2"
+    },
+    "confirms": {
+      "round2": "Runde 2 (Nachtest) mit denselben Fragen erstellen?\nNur Kandidaten dieser Runde können teilnehmen."
+    },
+    "toasts": {
+      "round2Created": "Runde 2 erstellt! Code: {{code}}",
+      "round2Failed": "Runde 2 konnte nicht erstellt werden"
+    }
+  },
+  "educatorRefunds": {
+    "accessDenied": "Zugriff verweigert",
+    "deadlineWarning": "Einige Anfragen laufen bald ab. Innerhalb 7 Tagen unbeantwortete Anfragen werden an Admin eskaliert.",
+    "tabs": {
+      "pending": "Ausstehend",
+      "reviewed": "Bearbeitet"
+    },
+    "empty": {
+      "noPending": "Keine ausstehenden Rückerstattungen",
+      "noReviewed": "Noch keine bearbeiteten Anfragen"
+    },
+    "card": {
+      "testFallback": "Test",
+      "reasonFallback": "Kein Grund angegeben",
+      "deadline": "Frist: {{when}}",
+      "review": "Prüfen"
+    },
+    "status": {
+      "PENDING": "Ausstehend",
+      "EDUCATOR_APPROVED": "Genehmigt",
+      "EDUCATOR_REJECTED": "Abgelehnt",
+      "APPEAL_PENDING": "Einspruch",
+      "ESCALATED": "Eskaliert",
+      "APPROVED": "Erstattet",
+      "REJECTED": "Erledigt"
+    },
+    "reasons": {
+      "wrong_content": "Inhalt entspricht nicht den Erwartungen",
+      "defective_questions": "Fehlerhafte Fragen",
+      "not_working": "Technisches Problem",
+      "quality_issue": "Qualitätsproblem",
+      "other": "Sonstiges"
+    },
+    "dialog": {
+      "title": "Rückerstattung prüfen",
+      "testLabel": "Test:",
+      "reasonLabel": "Grund:",
+      "descLabel": "Beschreibung:",
+      "deadlineLabel": "Prüfungsfrist:",
+      "rejectPlaceholder": "Ablehnungsgrund (optional, min. 5 Zeichen)...",
+      "back": "Zurück",
+      "reject": "Ablehnen",
+      "approve": "Genehmigen → An Admin senden"
+    },
+    "toasts": {
+      "approved": "Rückerstattung genehmigt. An Admin weitergeleitet.",
+      "rejected": "Rückerstattung abgelehnt.",
+      "actionFailed": "Aktion fehlgeschlagen"
+    }
+  },
+  "questionReports": {
+    "tabs": {
+      "pending": "Ausstehend",
+      "resolved": "Erledigt"
+    },
+    "filterBar": {
+      "status": "Status",
+      "test": "Test",
+      "reporter": "Melder",
+      "reason": "Fehlerart / Grund",
+      "allStatuses": "Alle",
+      "allTests": "Alle Tests",
+      "selectTest": "Test wählen...",
+      "searchTest": "Test suchen...",
+      "testFilterAria": "Testfilter",
+      "allReporters": "Alle Kandidaten",
+      "selectReporter": "Kandidat wählen...",
+      "searchReporter": "Kandidat suchen...",
+      "reporterFilterAria": "Melder-Filter",
+      "noResult": "Keine Ergebnisse",
+      "reasonPlaceholder": "z. B. falsche Antwort...",
+      "reasonAria": "Fehlerart oder Grund suchen",
+      "count": "{{filtered}} / {{total}} Meldungen",
+      "clear": "Filter löschen",
+      "unnamed": "(Ohne Titel)",
+      "unknown": "(Unbekannt)"
+    },
+    "statusConfig": {
+      "OPEN": "Ausstehend",
+      "ANSWERED": "Beantwortet",
+      "ESCALATED": "An Admin eskaliert"
+    },
+    "card": {
+      "reporter": "Gemeldet von: {{name}}",
+      "daysLeft": "{{count}} Tage übrig",
+      "deadlineExpired": "Abgelaufen",
+      "adminNote": "Admin-Notiz",
+      "yourAnswer": "Ihre Antwort:",
+      "respondedAt": "Beantwortet: {{date}}",
+      "respond": "Antworten"
+    },
+    "empty": {
+      "noPending": "Keine ausstehenden Meldungen",
+      "noResolved": "Keine erledigten Meldungen",
+      "noResults": "Keine Meldung entspricht den Filtern"
+    },
+    "dialog": {
+      "title": "Meldung beantworten",
+      "testLabel": "Test",
+      "questionLabel": "Frage (erste 150 Zeichen)",
+      "reportLabel": "Meldung des Kandidaten",
+      "responsePlaceholder": "Antwort schreiben (min. 5 Zeichen)...",
+      "cancel": "Abbrechen",
+      "submit": "Antworten",
+      "submitting": "Wird gesendet..."
+    },
+    "toasts": {
+      "sent": "Antwort gesendet",
+      "sendFailed": "Antwort konnte nicht gesendet werden",
+      "min5Chars": "Mindestens 5 Zeichen schreiben"
+    }
+  },
+  "educatorSettings": {
+    "tabs": {
+      "profile": "Profil",
+      "verification": "Verifizierung",
+      "contact": "Kontakt",
+      "exams": "Testeinstellungen",
+      "notifications": "Benachrichtigungen",
+      "payment": "Zahlung"
+    },
+    "notices": {
+      "rejected": {
+        "title": "Ihr Antrag wurde abgelehnt",
+        "reason": "Ablehnungsgrund:",
+        "desc": "Bitte aktualisieren Sie Ihr Profil und reichen Sie den Antrag erneut ein.",
+        "resubmit": "Antrag erneut einreichen",
+        "resubmitting": "Wird gesendet...",
+        "resubmittedToast": "Ihr Antrag wurde erneut eingereicht"
+      },
+      "pending": {
+        "title": "Kontofreigabe ausstehend",
+        "desc": "Ihr Ausbilder-Antrag wird vom Administrator geprüft. Vervollständigen Sie alle Informationen für eine schnellere Freigabe."
+      },
+      "approved": {
+        "title": "Ihr Konto ist freigegeben",
+        "desc": "Sie können nun Tests erstellen und Ihr Profil ist für Kandidaten sichtbar."
+      }
+    },
+    "profile": {
+      "title": "Profilinformationen",
+      "educationLabel": "Ausbildung",
+      "educationPlaceholder": "z. B. Istanbul Universität — Mathematik",
+      "educationHint": "Ihre Universität und Ihr Fachbereich",
+      "bioLabel": "Bio",
+      "bioPlaceholder": "Stellen Sie sich vor, erwähnen Sie Ihre Fachgebiete...",
+      "bioHint": "Bio, die auf Ihrem Profil angezeigt wird"
+    },
+    "verification": {
+      "title": "Akademische Verifizierung",
+      "gscholarLabel": "Google Scholar Profil",
+      "gscholarHint": "Fügen Sie Ihren Google Scholar Link hinzu, um Ihren akademischen Hintergrund zu verifizieren",
+      "cvLabel": "Lebenslauf hochladen",
+      "cvUploaded": "Lebenslauf hochgeladen",
+      "cvView": "Datei ansehen",
+      "cvChange": "Ändern",
+      "cvUpload": "Lebenslauf hochladen",
+      "cvUploading": "Wird hochgeladen...",
+      "cvFormat": "PDF (max. 5MB)",
+      "cvHint": "Laden Sie Ihren Lebenslauf hoch, um Kandidaten Ihren beruflichen Hintergrund zu zeigen"
+    },
+    "contact": {
+      "title": "Kontaktinformationen",
+      "phoneLabel": "Telefon",
+      "cityLabel": "Stadt",
+      "websiteLabel": "Website/Blog",
+      "linkedinLabel": "LinkedIn"
+    },
+    "exams": {
+      "title": "Meine Fachgebiete",
+      "desc": "Wählen Sie aus, auf welche Tests Sie sich spezialisieren. Diese Information wird auf Ihrem Profil angezeigt.",
+      "noExamTypes": "Keine Testtypen gefunden"
+    },
+    "notifications": {
+      "title": "Benachrichtigungseinstellungen",
+      "newTests": "Benachrichtigungen über neue Tests",
+      "newTestsDesc": "Benachrichtigung erhalten, wenn neue Tests veröffentlicht werden",
+      "promotions": "Aktionen",
+      "promotionsDesc": "Informationen zu Rabatten und Sonderangeboten erhalten",
+      "educatorUpdates": "Ausbilder-Updates",
+      "educatorUpdatesDesc": "Updates von Ausbildern erhalten, denen Sie folgen",
+      "testReminders": "Test-Erinnerungen",
+      "testRemindersDesc": "Erinnerungen für gestartete Tests erhalten"
+    },
+    "payment": {
+      "title": "Zahlungsinformationen",
+      "desc": "Geben Sie das Bankkonto an, auf das Provisionszahlungen überwiesen werden. Diese Information ist nur für Administratoren sichtbar.",
+      "ibanLabel": "IBAN",
+      "ibanPlaceholder": "TR00 0000 0000 0000 0000 0000 00",
+      "ibanError": "IBAN-Format: beginnt mit TR, 26 Zeichen (TR + 24 Ziffern)",
+      "ibanHint": "Türkisches IBAN-Format: beginnt mit TR, insgesamt 26 Zeichen",
+      "holderLabel": "Kontoinhaber",
+      "holderPlaceholder": "Vollständiger Name",
+      "holderHint": "Name, der bei der Bank registriert ist",
+      "bankLabel": "Bank",
+      "bankPlaceholder": "z. B. Ziraat Bank",
+      "important": "Wichtig:",
+      "importantDesc": "Damit Provisionszahlungen rechtzeitig erfolgen, füllen Sie IBAN und Kontoinhaber vollständig aus. Ihre Daten werden verschlüsselt gespeichert."
+    },
+    "saveButton": "Änderungen speichern",
+    "saving": "Wird gespeichert...",
+    "toasts": {
+      "profileUpdated": "Profilinformationen aktualisiert",
+      "updateFailed": "Aktualisierung fehlgeschlagen",
+      "invalidPdf": "Bitte eine PDF-Datei hochladen",
+      "fileTooBig": "Dateigröße darf 5MB nicht überschreiten",
+      "cvUploaded": "Lebenslauf erfolgreich hochgeladen",
+      "cvUploadFailed": "Lebenslauf konnte nicht hochgeladen werden",
+      "invalidImage": "Bitte JPG, PNG oder WebP hochladen",
+      "imageTooBig": "Bildgröße darf 5MB nicht überschreiten",
+      "imageUploaded": "Profilbild aktualisiert",
+      "imageUploadFailed": "Bild konnte nicht hochgeladen werden"
+    }
+  },
+  "myModerationStatus": {
+    "errorLoad": "Moderationsstatus konnte nicht geladen werden. Bitte später erneut versuchen.",
+    "banned": {
+      "title": "Ihr Konto ist dauerhaft gesperrt",
+      "desc": "Ihr Konto wurde aufgrund von Richtlinienverstößen dauerhaft geschlossen. Bei Fragen wenden Sie sich an: support@sinav-salonu.com"
+    },
+    "suspended": {
+      "title": "Ihr Konto ist gesperrt",
+      "desc": "Ihr Konto ist bis <strong>{{date}}</strong> gesperrt.",
+      "countdown": "Verbleibende Zeit: {{days}} Tage {{hours}} Stunden"
+    },
+    "risk": {
+      "title": "Risikoprofil",
+      "scoreLabel": "Risikopunktzahl",
+      "progressLabel": "Risikostufe",
+      "openViolations": "Offene Verstöße",
+      "totalViolations": "Verstöße gesamt",
+      "highSeverity": "Hohe Schwere",
+      "lastViolation": "Letzter Verstoß: {{when}}"
+    },
+    "activeAction": {
+      "title": "Aktive Aktion",
+      "actionType": "Aktionsart",
+      "reason": "Grund",
+      "expiresAt": "Ablaufdatum"
+    },
+    "recent": {
+      "title": "Verstöße der letzten 30 Tage",
+      "noViolations": "Keine Verstöße in den letzten 30 Tagen. Ihre Inhalte sind sauber!"
+    },
+    "entityTypes": {
+      "question": "Frage",
+      "test": "Test",
+      "content": "Inhalt"
+    },
+    "severity": {
+      "label": "Schwere: {{level}}/5"
+    }
+  },
+  "myTests": {
+    "title": "Meine Tests",
+    "subtitle": "Sehen Sie sich die gekauften Tests an und lösen Sie sie",
+    "filter": {
+      "title": "Filtern",
+      "clear": "Filter löschen",
+      "examTypeLabel": "Testtyp",
+      "educatorLabel": "Ausbilder",
+      "completionLabel": "Abschlussstatus",
+      "all": "Alle",
+      "pending": "Ausstehend",
+      "completed": "Abgeschlossen",
+      "examTypeAria": "Testtyp-Filter",
+      "educatorAria": "Ausbilder-Filter",
+      "completionAria": "Abschlussstatus-Filter"
+    },
+    "empty": {
+      "title": "Sie haben noch keine Tests gekauft",
+      "desc": "Entdecken Sie Tests und beginnen Sie mit der Vorbereitung",
+      "cta": "Tests entdecken"
+    }
+  },
+  "about": {
+    "backToHome": "Zur Startseite",
+    "subtitle": "Sınav Salonu ist die umfassendste Online-Prüfungsvorbereitungsplattform der Türkei.",
+    "missionTitle": "Unsere Mission",
+    "missionBody": "Auf dem Weg zum Erfolg der zuverlässigste Wegweiser zu sein, indem wir Prüfungskandidaten qualitativ hochwertige, aktuelle und effektive Testinhalte bereitstellen. Jeder Kandidat kann in seinem eigenen Tempo lernen, seine Fortschritte verfolgen und seine Ziele erreichen.",
+    "visionTitle": "Unsere Vision",
+    "visionBody": "Die erste Plattform zu sein, die einem bei der Prüfungsvorbereitung in der Türkei in den Sinn kommt. Indem wir Technologie und Bildung zusammenbringen, bieten wir jedem Kandidaten gleiche Chancen und sind Vorreiter der digitalen Transformation in der Bildung.",
+    "valuesTitle": "Unsere Werte",
+    "value1Title": "Qualität",
+    "value1Body": "Jedes Testpaket wird sorgfältig von Experten im jeweiligen Fachgebiet erstellt und kontinuierlich aktualisiert.",
+    "value2Title": "Transparenz",
+    "value2Body": "Wir verbessern uns kontinuierlich durch das Feedback unserer Kandidaten und Educator und pflegen eine offene Kommunikation.",
+    "value3Title": "Zugänglichkeit",
+    "value3Body": "Wir bieten erschwingliche und leicht zugängliche Inhalte, damit jeder Zugang zu hochwertiger Bildung hat.",
+    "value4Title": "Innovation",
+    "value4Body": "Wir verbessern das Lernerlebnis kontinuierlich durch die Nutzung der Kraft der Technologie.",
+    "whyTitle": "Warum Sınav Salonu?",
+    "why1Title": "Erfahrenes Educator-Team",
+    "why1Body": "Experten in ihren Fachgebieten und aktuelle Testinhalte.",
+    "why2Title": "Detaillierte Leistungsanalyse",
+    "why2Body": "Verfolge deinen Fortschritt, entdecke deine Stärken und Schwächen.",
+    "why3Title": "Jederzeit, überall",
+    "why3Body": "Lerne wann und wo du willst mit unserer mobilfreundlichen Plattform."
+  },
+  "contact": {
+    "backToHome": "Zur Startseite",
+    "subtitle": "Kontaktiere uns bei Fragen oder Anregungen.",
+    "formTitle": "Nachricht senden",
+    "nameLabel": "Vor- und Nachname *",
+    "namePlaceholder": "Dein Vor- und Nachname",
+    "emailLabel": "E-Mail *",
+    "emailPlaceholder": "beispiel@mail.com",
+    "subjectLabel": "Betreff",
+    "subjectPlaceholder": "Betreff deiner Nachricht",
+    "messageLabel": "Deine Nachricht *",
+    "messagePlaceholder": "Schreibe hier deine Nachricht...",
+    "sendButton": "Nachricht senden",
+    "sending": "Wird gesendet...",
+    "emailTitle": "E-Mail",
+    "addressTitle": "Adresse",
+    "addressBody": "Sınav Salonu Eğitim Teknolojileri A.Ş.\nMaslak Mahallesi, Büyükdere Caddesi\nNo: 123, Sarıyer\nİstanbul, Türkiye",
+    "toasts": {
+      "missingFields": "Bitte fülle alle Pflichtfelder aus",
+      "sent": "Deine Nachricht wurde erfolgreich gesendet! Wir melden uns in Kürze."
+    }
+  },
+  "partnership": {
+    "backToHome": "Zur Startseite",
+    "subtitle": "Werde Partner von Sınav Salonu und mache den Unterschied in der Bildungstechnologie.",
+    "type1Title": "Unternehmens-Vertriebspartnerschaft",
+    "type1Body": "Wir bieten maßgeschneiderte Testpakete und Sammelverkaufsmöglichkeiten für dein Unternehmen oder deine Organisation.",
+    "type2Title": "Kooperation mit Bildungseinrichtungen",
+    "type2Body": "Maßgeschneiderte Integrationen und Inhaltspartnerschaften für Vorbereitungsschulen, Universitäten und Bildungseinrichtungen.",
+    "type3Title": "Technologiepartnerschaft",
+    "type3Body": "Kooperationsmöglichkeiten für Unternehmen, die API-Integrationen und Technologielösungen entwickeln möchten.",
+    "formTitle": "Partnerschaftsantrag",
+    "companyLabel": "Firmenname *",
+    "companyPlaceholder": "Dein Firmenname",
+    "nameLabel": "Ansprechpartner *",
+    "namePlaceholder": "Dein Vor- und Nachname",
+    "emailLabel": "E-Mail *",
+    "emailPlaceholder": "beispiel@firma.com",
+    "phoneLabel": "Telefon",
+    "phonePlaceholder": "+90 5XX XXX XX XX",
+    "messageLabel": "Partnerschaftsdetails *",
+    "messagePlaceholder": "Erzähle uns von der Art und den Details der Partnerschaft...",
+    "submitButton": "Antrag senden",
+    "submitting": "Wird gesendet...",
+    "advantagesTitle": "Vorteile einer Partnerschaft",
+    "adv1Title": "Sonderpreise",
+    "adv1Body": "Exklusive Rabattpreise für Unternehmenskunden",
+    "adv2Title": "Priorisierter Support",
+    "adv2Body": "24/7 priorisierter technischer Support",
+    "adv3Title": "Maßgeschneiderte Inhalte",
+    "adv3Body": "Auf deine Bedürfnisse zugeschnittene Testinhalte",
+    "adv4Title": "Detaillierte Berichte",
+    "adv4Body": "Umfassende Analyse- und Reporting-Tools",
+    "toasts": {
+      "missingFields": "Bitte fülle alle Pflichtfelder aus",
+      "submitted": "Dein Antrag ist eingegangen! Wir setzen uns in Kürze mit dir in Verbindung."
+    }
+  },
+  "privacy": {
+    "backToHome": "Zur Startseite",
+    "lastUpdated": "Zuletzt aktualisiert: 17. Februar 2026",
+    "s1Title": "1. Allgemeine Informationen",
+    "s1Body": "Bei Sınav Salonu respektieren wir die Privatsphäre unserer Nutzer und legen großen Wert auf den Schutz deiner personenbezogenen Daten. Diese Datenschutzrichtlinie beschreibt unsere Praktiken zur Erhebung, Verarbeitung und Speicherung personenbezogener Daten auf unserer Plattform.",
+    "s2Title": "2. Erhobene Daten",
+    "s2Intro": "Während der Nutzung der Plattform können folgende personenbezogene Daten erhoben werden:",
+    "s2List": [
+      "Vor- und Nachname, E-Mail-Adresse und Telefonnummer",
+      "Informationen zur Kontoerstellung und Anmeldung",
+      "Testergebnisse und Leistungsdaten",
+      "Zahlungsinformationen (über sichere Zahlungssysteme)",
+      "Nutzungsstatistiken und Präferenzen der Plattform",
+      "Kommunikationsaufzeichnungen und Feedback"
+    ],
+    "s3Title": "3. Datennutzung",
+    "s3Intro": "Die erhobenen personenbezogenen Daten werden für folgende Zwecke verwendet:",
+    "s3List": [
+      "Bereitstellung und Betrieb der Plattform",
+      "Verwaltung von Nutzerkonten",
+      "Speicherung und Berichterstellung von Testergebnissen",
+      "Abwicklung von Zahlungen",
+      "Bereitstellung von Kundensupport",
+      "Verbesserung der Plattform und Entwicklung neuer Funktionen",
+      "Erfüllung gesetzlicher Verpflichtungen"
+    ],
+    "s4Title": "4. Datensicherheit",
+    "s4Body": "Wir verwenden branchenübliche Sicherheitsmaßnahmen, um die Sicherheit deiner personenbezogenen Daten zu gewährleisten. Deine Daten werden über verschlüsselte Verbindungen übertragen und auf sicheren Servern gespeichert. Technische und administrative Maßnahmen gegen unbefugten Zugriff, Änderung oder Offenlegung wurden ergriffen.",
+    "s5Title": "5. Datenfreigabe",
+    "s5Intro": "Deine personenbezogenen Daten werden nicht an Dritte weitergegeben, verkauft oder vermietet. In folgenden Fällen können deine Daten jedoch geteilt werden:",
+    "s5List": [
+      "Gesetzliche Verpflichtungen und Gerichtsbeschlüsse",
+      "Vertrauenswürdige Zahlungsanbieter für die Zahlungsabwicklung",
+      "Cloud-Dienstleister für die Plattforminfrastruktur",
+      "Bestimmte Fälle mit deiner ausdrücklichen Zustimmung"
+    ],
+    "s6Title": "6. Nutzerrechte",
+    "s6Intro": "Nach der Datenschutzgesetzgebung hast du folgende Rechte:",
+    "s6List": [
+      "Zu erfahren, ob deine personenbezogenen Daten verarbeitet werden",
+      "Informationen über deine verarbeiteten personenbezogenen Daten anzufordern",
+      "Die Berichtigung deiner personenbezogenen Daten zu verlangen",
+      "Die Löschung oder Vernichtung deiner personenbezogenen Daten zu verlangen",
+      "Die Dritten zu kennen, an die deine personenbezogenen Daten übermittelt werden"
+    ],
+    "s7Title": "7. Cookies",
+    "s7Body": "Unsere Plattform verwendet Cookies, um das Nutzererlebnis zu verbessern. Cookies sind kleine Textdateien, die von deinem Browser auf deinem Computer gespeichert werden. Du kannst Cookies über deine Browsereinstellungen verwalten oder blockieren.",
+    "s8Title": "8. Änderungen",
+    "s8Body": "Diese Datenschutzrichtlinie kann von Zeit zu Zeit aktualisiert werden. Wichtige Änderungen werden per E-Mail mitgeteilt. Die fortgesetzte Nutzung der Plattform bedeutet, dass du die aktualisierte Richtlinie akzeptierst."
+  },
+  "support": {
+    "backToHome": "Zur Startseite",
+    "subtitle": "Häufig gestellte Fragen und Informationen, die dir helfen können",
+    "cat1Title": "Allgemein",
+    "cat2Title": "Tests und Inhalte",
+    "cat3Title": "Zahlung und Erstattungen",
+    "cat4Title": "Educator werden",
+    "cat5Title": "Konto und Einstellungen",
+    "noAnswerTitle": "Deine Frage ist nicht dabei?",
+    "noAnswerDesc": "Für weitere Fragen kontaktiere bitte unser Support-Team",
+    "contactButton": "Kontakt aufnehmen",
+    "cat1Items": [
+      {
+        "q": "Was ist Sınav Salonu?",
+        "a": "Sınav Salonu ist eine umfassende Bildungsplattform, die Prüfungskandidaten Online-Tests anbietet und Inhalte beherbergt, die von Experten in ihren Fachgebieten erstellt wurden."
+      },
+      {
+        "q": "Wie kann ich mich registrieren?",
+        "a": "Durch Klicken auf den Button 'Anmelden' auf der Startseite kannst du dich als Kandidat oder Educator registrieren. Du kannst ein Konto mit deiner E-Mail-Adresse erstellen und sofort mit dem Lösen von Tests beginnen."
+      },
+      {
+        "q": "Ist die Plattform kostenlos?",
+        "a": "Die Registrierung ist kostenlos. Du kannst Tests entdecken und Educator ansehen. Nach dem Kauf von Testpaketen kannst du mit dem Lösen beginnen."
+      }
+    ],
+    "cat2Items": [
+      {
+        "q": "Wie kann ich Tests kaufen?",
+        "a": "Wähle den gewünschten Test aus und klicke auf der Detailseite auf den Button 'Kaufen'. Nach Abschluss der Zahlung kannst du sofort auf den Test zugreifen."
+      },
+      {
+        "q": "Wie lange kann ich auf gekaufte Tests zugreifen?",
+        "a": "Du hast unbegrenzten Zugriff auf die von dir gekauften Testpakete. Du kannst sie jederzeit und so oft du möchtest lösen."
+      },
+      {
+        "q": "Wie kann ich meine Testergebnisse einsehen?",
+        "a": "Auf der Seite 'Meine Ergebnisse' kannst du alle deine Testergebnisse, detaillierten Analysen und Leistungsdiagramme einsehen."
+      },
+      {
+        "q": "Wie melde ich eine fehlerhafte Frage?",
+        "a": "Während du einen Test löst, kannst du Fragen, die du für fehlerhaft hältst, über den Button 'Frage melden' an der Frage melden."
+      }
+    ],
+    "cat3Items": [
+      {
+        "q": "Welche Zahlungsmethoden akzeptiert ihr?",
+        "a": "Du kannst mit Kredit- und Debitkarten zahlen. Alle Zahlungen werden über eine sichere Zahlungsinfrastruktur abgewickelt."
+      },
+      {
+        "q": "Wie lautet eure Rückerstattungsrichtlinie?",
+        "a": "Falls es Probleme mit dem von dir gekauften Testpaket gibt, kannst du dich auf der Seite 'Erstattung beantragen' bewerben. Deine Meldungen zu fehlerhaften Fragen werden geprüft, und bei berechtigten Meldungen wird deine Rückerstattung abgewickelt."
+      }
+    ],
+    "cat4Items": [
+      {
+        "q": "Wie kann ich mich als Educator bewerben?",
+        "a": "Registriere dich als Educator, vervollständige deine Profilangaben und Fachgebiete. Lade die für die akademische Verifizierung erforderlichen Dokumente hoch. Nach Genehmigung kannst du mit dem Erstellen von Tests beginnen."
+      },
+      {
+        "q": "Wie viel kann ich als Educator verdienen?",
+        "a": "Du erhältst Einnahmen zu dem festgelegten Provisionssatz aus den Testverkäufen. Deine Einnahmen steigen mit deiner Verkaufsleistung."
+      },
+      {
+        "q": "Wie funktioniert der Testerstellungsprozess?",
+        "a": "Gib auf der Seite 'Test erstellen' die Testinformationen ein, füge Fragen hinzu und veröffentliche. Nachdem deine Tests genehmigt wurden, werden sie den Kandidaten angeboten."
+      }
+    ],
+    "cat5Items": [
+      {
+        "q": "Wie kann ich mein Passwort ändern?",
+        "a": "Du kannst dein Passwort auf der Seite Profileinstellungen ändern. Gib dein aktuelles Passwort ein und lege ein neues fest."
+      },
+      {
+        "q": "Wie kann ich mein Konto löschen?",
+        "a": "Um dein Konto zu löschen, kontaktiere bitte unser Support-Team. Nachdem deine Anfrage geprüft wurde, wird dein Konto gelöscht."
+      },
+      {
+        "q": "Wie kann ich meine Benachrichtigungseinstellungen verwalten?",
+        "a": "Auf der Seite Profileinstellungen kannst du E-Mail-Benachrichtigungen, Testerinnerungen und andere Benachrichtigungen ein- und ausschalten."
+      }
+    ]
+  },
+  "myObjections": {
+    "stats": {
+      "total": "Gesamt",
+      "pending": "Ausstehend",
+      "answered": "Beantwortet",
+      "escalated": "Eskaliert"
+    },
+    "status": {
+      "OPEN": "Ausstehend",
+      "ANSWERED": "Beantwortet",
+      "ESCALATED": "An Admin eskaliert"
+    },
+    "filterBar": {
+      "statusLabel": "Status",
+      "allStatuses": "Alle Status",
+      "testLabel": "Test",
+      "allTests": "Alle Tests",
+      "selectTest": "Test auswählen...",
+      "searchTest": "Test suchen...",
+      "noResult": "Kein Ergebnis",
+      "testFilterAria": "Test-Filter",
+      "reasonLabel": "Fehlertyp / Grund",
+      "reasonPlaceholder": "z. B. falsche Antwort, fehlende Info...",
+      "reasonAria": "Fehlertyp oder Grund suchen",
+      "count": "{{filtered}} / {{total}} Meldungen",
+      "clear": "Filter löschen",
+      "unnamed": "(Unbenannt)"
+    },
+    "empty": {
+      "noneYet": "Du hast noch keine Fehlermeldungen",
+      "hint": "Während du einen Test löst, kannst du Fehler in den Fragen melden.",
+      "noResults": "Keine Meldungen entsprechen den ausgewählten Filtern"
+    },
+    "card": {
+      "educator": "Educator:",
+      "educatorYes": "Educator hat geantwortet",
+      "educatorNo": "Educator hat noch nicht geantwortet",
+      "adminYes": "Admin hat geantwortet",
+      "adminNo": "Admin hat noch nicht geantwortet",
+      "educatorChip": "Educator",
+      "adminChip": "Admin",
+      "daysLeft": "{{count}} Tage",
+      "deadlineExpired": "abgelaufen",
+      "viewDetails": "Details ansehen"
+    },
+    "dialog": {
+      "title": "Meldungsdetails",
+      "reportedAt": "Gemeldet:",
+      "slaEnd": "SLA endet:",
+      "testLabel": "Test",
+      "educatorLabel": "Educator",
+      "questionLabel": "Frage (erste 150 Zeichen)",
+      "reasonLabel": "Deine Meldung",
+      "educatorReply": "Educator-Antwort:",
+      "educatorNoReply": "Educator hat noch nicht geantwortet.",
+      "adminNote": "Admin-Notiz",
+      "adminNoNote": "Admin hat noch keine Notiz hinzugefügt.",
+      "close": "Schließen"
+    }
+  },
+  "myTopicReport": {
+    "errorLoad": "Beim Laden des Berichts ist ein Fehler aufgetreten. Bitte lade die Seite neu.",
+    "empty": {
+      "title": "Noch keine Daten",
+      "desc": "Die Themenleistung deiner abgeschlossenen Tests wird hier angezeigt. Nachdem du mit dem Lösen von Tests begonnen hast, wird dein Bericht erstellt."
+    },
+    "stats": {
+      "topicCount": "Themenanzahl",
+      "totalAttempts": "Versuche gesamt",
+      "totalQuestions": "Fragen gesamt",
+      "overallAvg": "Gesamtdurchschnitt"
+    },
+    "filterAll": "Alle",
+    "noGroupForExamType": "Keine Themen für diese Prüfungsart gefunden.",
+    "card": {
+      "overtimeBadge": "{{count}}x überzogen",
+      "correct": "{{count}} Richtig",
+      "wrong": "{{count}} Falsch",
+      "blank": "{{count}} Leer",
+      "summary": "{{attempts}} Versuche · {{questions}} Fragen",
+      "overtimeWarning": "Du hast bei {{count}} Versuchen in diesem Thema die Zeit überschritten.",
+      "overtimeWarningEmphasis": "Zeitmanagement",
+      "overtimeWarningSuffix": "ist ein Verbesserungsbereich.",
+      "showChart": "Zeitreihe anzeigen",
+      "hideChart": "Diagramm ausblenden",
+      "tooltipCorrect": "✓ {{count}} Richtig",
+      "tooltipWrong": "✗ {{count}} Falsch",
+      "tooltipBlank": "— {{count}} Leer",
+      "tooltipTotal": "Gesamt: {{count}} Fragen",
+      "tooltipOvertime": "⏱ +{{m}}min {{s}}s Verzögerung",
+      "tooltipCorrectAlt": "Richtig: {{count}}",
+      "tooltipWrongAlt": "Falsch: {{count}}",
+      "tooltipBlankAlt": "Leer: {{count}}"
+    }
+  },
+  "myResults": {
+    "errorLoad": "Beim Laden der Ergebnisse ist ein Fehler aufgetreten. Bitte lade die Seite neu.",
+    "filters": {
+      "packageAria": "Testpaket-Filter",
+      "allPackages": "Alle Pakete",
+      "examTypeAria": "Prüfungsart-Filter",
+      "allExamTypes": "Alle Prüfungsarten",
+      "timeAria": "Zeitraum-Filter",
+      "allTime": "Alle Zeiten",
+      "lastWeek": "Letzte Woche",
+      "lastMonth": "Letzter Monat",
+      "last3Months": "Letzte 3 Monate",
+      "clear": "Filter löschen"
+    },
+    "shareButton": "Teilen",
+    "sharePreparing": "Wird vorbereitet…",
+    "shareTitle": "Dein Sınav Salonu Bericht",
+    "stats": {
+      "totalTests": "Tests gesamt",
+      "avgScore": "Durchschnittspunkte",
+      "totalCorrect": "Richtig gesamt",
+      "totalWrong": "Falsch gesamt"
+    },
+    "progress": "Fortschritt",
+    "chartTypeAria": "Diagrammtyp-Auswahl",
+    "chartType": {
+      "performance": "Leistung",
+      "questions": "Gelöste Fragen",
+      "time": "Lernzeit"
+    },
+    "tooltip": {
+      "avg": "Durchschnitt: {{value}}",
+      "testCount": "Testanzahl: {{count}}",
+      "questionCount": "Fragenanzahl: {{count}}",
+      "time": "Dauer: {{label}}"
+    },
+    "history": "Testhistorie",
+    "exportXlsx": "Nach Excel exportieren",
+    "sheetName": "MeineErgebnisse",
+    "table": {
+      "test": "Test",
+      "score": "Punkte",
+      "dyb": "R / F / L",
+      "time": "Zeit",
+      "date": "Datum",
+      "overtime": "Verzögerung",
+      "status": "Status",
+      "questions": "{{count}} Fragen"
+    },
+    "scoreBadge": {
+      "excellent": "Hervorragend",
+      "good": "Gut",
+      "average": "Mittelmäßig",
+      "needsWork": "Verbesserungsbedürftig"
+    },
+    "empty": {
+      "noResults": "Noch keine abgeschlossenen Tests",
+      "noFilterMatch": "Keine Ergebnisse entsprechen dem Filter",
+      "testFallback": "Test"
+    },
+    "loadMore": "Mehr anzeigen ({{count}} verbleibend)",
+    "overtime": {
+      "title": "Verbesserungsbereich: Zeitmanagement",
+      "desc": "Du hast {{count}} Tests später als erlaubt eingereicht. Unter Prüfungsbedingungen ist verspätete Einreichung nicht möglich — der Fokus auf Zeitmanagement kann deine Leistung erheblich verbessern.",
+      "delay": "Verzögerung",
+      "score": "Punkte",
+      "tip": "💡 Tipp: Ziele darauf ab, im Durchschnitt {{seconds}} Sekunden pro Frage aufzuwenden. Markiere schwierige Fragen zum Überspringen und kehre am Ende zurück."
+    },
+    "duration": {
+      "min": "{{m}} Min",
+      "sec": "{{s}} Sek",
+      "minSec": "{{m}}m {{s}}s"
+    },
+    "xlsxColumns": {
+      "test": "Test",
+      "score": "Punkte",
+      "correct": "Richtig",
+      "wrong": "Falsch",
+      "blank": "Leer",
+      "totalQ": "Fragen gesamt",
+      "durationMin": "Dauer (Min)",
+      "date": "Datum",
+      "delaySec": "Verzögerung (Sek)",
+      "status": "Status"
+    }
+  },
+  "profileSettings": {
+    "userFallback": "Nutzer",
+    "avatarHint": "Klicke auf das Bild, um ein Profilfoto hinzuzufügen",
+    "tabs": {
+      "contact": "Kontakt",
+      "notifications": "Benachrichtigungen",
+      "exams": "Prüfungspräferenzen",
+      "financial": "Finanzen"
+    },
+    "contact": {
+      "phoneLabel": "Telefon",
+      "phonePlaceholder": "05XX XXX XX XX",
+      "phoneInvalid": "Ungültige Telefonnummer",
+      "websiteLabel": "Webseite/Blog",
+      "linkedinLabel": "LinkedIn",
+      "urlInvalid": "Gib eine gültige URL ein (https://...)"
+    },
+    "sensitiveOtp": {
+      "title": "Änderung der Kontaktinformationen bestätigen",
+      "intro": "Wir senden einen 6-stelligen Bestätigungscode an deine E-Mail.",
+      "sending": "Code wird gesendet...",
+      "sentTo": "Bestätigungscode an {{email}} gesendet. 10 Minuten gültig.",
+      "codeLabel": "Bestätigungscode",
+      "codeHint": "Gib den 6-stelligen Code ein, den wir an deine E-Mail gesendet haben.",
+      "codeInvalid": "Der Code muss 6 Stellen haben.",
+      "verify": "Bestätigen und Speichern",
+      "verifying": "Wird bestätigt...",
+      "verified": "Deine Daten wurden aktualisiert.",
+      "verifyFailed": "Bestätigung fehlgeschlagen.",
+      "expired": "Der Code ist abgelaufen. Fordere einen neuen an.",
+      "mismatch": "Falscher Code. Bitte versuche es erneut.",
+      "resend": "Code erneut senden",
+      "resent": "Neuer Code gesendet.",
+      "requestFailed": "Code konnte nicht gesendet werden. Bitte später erneut versuchen."
+    },
+    "notifications": {
+      "newTests": "Benachrichtigungen zu neuen Tests",
+      "newTestsDesc": "Erhalte Benachrichtigungen, wenn neue Tests veröffentlicht werden",
+      "promotions": "Kampagnen und Aktionen",
+      "promotionsDesc": "Erhalte Infos zu Rabatten und Sonderangeboten",
+      "educatorUpdates": "Educator-Updates",
+      "educatorUpdatesDesc": "Erhalte Updates von Educators, denen du folgst",
+      "testReminders": "Test-Erinnerungen",
+      "testRemindersDesc": "Erhalte Erinnerungen für Tests, die du begonnen hast"
+    },
+    "exams": {
+      "title": "Prüfungen, die mich interessieren",
+      "desc": "Wähle die Prüfungen aus, die dich interessieren, damit Tests zu diesen Prüfungen auf deiner Startseite priorisiert werden",
+      "noExamTypes": "Keine Prüfungsarten gefunden"
+    },
+    "financial": {
+      "requestRefund": "Erstattung anfordern",
+      "searchPlaceholder": "Test suchen...",
+      "all": "Alle",
+      "purchases": "Käufe",
+      "refunds": "Erstattungen",
+      "purchased": "Gekauft",
+      "statusLabels": {
+        "PENDING": "Educator prüft",
+        "EDUCATOR_APPROVED": "Educator genehmigt",
+        "EDUCATOR_REJECTED": "Educator abgelehnt",
+        "APPEAL_PENDING": "Einspruch wird geprüft",
+        "ESCALATED": "Admin prüft",
+        "APPROVED": "Erstattung genehmigt",
+        "REJECTED": "Abgelehnt",
+        "pending": "Ausstehend",
+        "approved": "Genehmigt",
+        "rejected": "Abgelehnt"
+      },
+      "canAppealHint": "Der Educator hat die Erstattung abgelehnt. Du kannst Einspruch einlegen.",
+      "appealButton": "Einspruch",
+      "noResults": "Keine Ergebnisse",
+      "noTransactions": "Du hast keine Finanztransaktionen"
+    },
+    "refundModal": {
+      "title": "Erstattung anfordern",
+      "noPurchases": "Noch keine Käufe",
+      "noEligible": "Kein erstattungsfähiger Test",
+      "notFound": "Test nicht gefunden",
+      "eligibleHint": "Erstattungsanträge können nur für Tests gestellt werden, die noch nicht geöffnet wurden.",
+      "cancel": "Abbrechen"
+    },
+    "appealDialog": {
+      "title": "Einspruchsantrag",
+      "rejected": "Der Educator hat diese Erstattung abgelehnt. Schreibe deinen Einspruchsgrund, um ihn dem Admin zur Prüfung vorzulegen.",
+      "placeholder": "Schreibe deinen Einspruchsgrund (mindestens 5 Zeichen)...",
+      "cancel": "Abbrechen",
+      "submit": "Einspruch senden"
+    },
+    "saveButton": "Änderungen speichern",
+    "saving": "Wird gespeichert...",
+    "toasts": {
+      "invalidImage": "Bitte lade ein JPG-, PNG- oder WebP-Bild hoch",
+      "imageTooBig": "Die Bildgröße darf höchstens 5 MB betragen",
+      "imageUploaded": "Profilbild aktualisiert",
+      "imageUploadFailed": "Bild konnte nicht hochgeladen werden",
+      "profileUpdated": "Profilinformationen aktualisiert",
+      "updateFailed": "Aktualisierung fehlgeschlagen",
+      "refundRequested": "Erstattungsantrag gesendet",
+      "refundFailed": "Erstattungsantrag konnte nicht gesendet werden",
+      "appealSubmitted": "Dein Einspruch wurde gesendet. Er wird vom Admin geprüft.",
+      "appealFailed": "Einspruch konnte nicht gesendet werden"
+    }
+  },
+  "educatorOnboarding": {
+    "title": "Educator-Profil vervollständigen",
+    "subtitle": "Wir brauchen noch ein paar Details, um Vertrauen bei den Kandidaten aufzubauen.",
+    "requiredHint": "Alle Felder sind erforderlich",
+    "saving": "Wird gespeichert…",
+    "submit": "Abschließen und Fortfahren",
+    "success": "Dein Profil ist vollständig.",
+    "cvUploaded": "Lebenslauf erfolgreich hochgeladen",
+    "cvSection": {
+      "title": "Lebenslauf (CV)",
+      "desc": "Lade einen kurzen Lebenslauf hoch, der deinen akademischen Hintergrund und deine Expertise zeigt (PDF, max. 5MB).",
+      "upload": "CV hochladen",
+      "uploading": "Wird hochgeladen…",
+      "uploaded": "CV hochgeladen",
+      "viewFile": "Datei ansehen",
+      "change": "Ändern",
+      "format": "PDF (max. 5MB)"
+    },
+    "expertiseSection": {
+      "title": "Fachgebiete",
+      "desc": "Für welche Prüfungen bist du Experte? Wähle mindestens eine aus.",
+      "empty": "Keine Prüfungsarten gefunden.",
+      "selectedCount": "{{count}} Prüfung(en) ausgewählt"
+    },
+    "errors": {
+      "invalidPdf": "Bitte lade eine PDF-Datei hoch",
+      "fileTooBig": "Die Dateigröße darf höchstens 5 MB betragen",
+      "uploadFailed": "Lebenslauf konnte nicht hochgeladen werden",
+      "cvRequired": "Lebenslauf-Upload ist erforderlich",
+      "examsRequired": "Wähle mindestens ein Fachgebiet aus",
+      "saveFailed": "Profil konnte nicht gespeichert werden"
+    }
+  }
+}

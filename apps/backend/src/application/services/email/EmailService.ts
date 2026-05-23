@@ -13,6 +13,9 @@ export type SendEmailInput = {
   forceQueue?: EmailQueue;
   relatedEntity?: { type: string; id: string };
   bypassPreferences?: boolean;        // sadece CRITICAL kullanımı
+  // Saat penceresini (quiet hours) tamamen atla — admin penceresinden bağımsız anında gönderilir.
+  // Yalnızca güvenlik kritik bildirimleri için kullanılır (yeni cihaz uyarısı vb).
+  bypassSendWindow?: boolean;
 };
 
 /**
@@ -105,8 +108,11 @@ export class EmailService {
     }
 
     // Gönderim saat penceresi — pencere dışıysa job'u geciktir (reddetme).
+    // bypassSendWindow=true ise saat penceresi tamamen atlanır (ör. yeni cihaz uyarısı,
+    // güvenlik kritik bildirimleri — adminden bağımsız anında gönderilmeli).
     const settings = await this.db.adminSettings.findFirst({ where: { id: 1 } });
     const windowDecision =
+      !input.bypassSendWindow &&
       settings?.emailSendWindowEnabled &&
       (queue !== 'CRITICAL' || settings.emailSendWindowAppliesToCritical)
         ? evaluateWindow(new Date(), {

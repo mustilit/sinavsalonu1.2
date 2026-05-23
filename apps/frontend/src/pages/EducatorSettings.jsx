@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { entities, auth } from "@/api/dalClient";
 import api from "@/lib/api/apiClient";
 import { useAuth } from "@/lib/AuthContext";
@@ -8,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import SensitiveProfileOtpDialog from "@/components/settings/SensitiveProfileOtpDialog";
 import { toast } from "sonner";
 import { User, Save, Globe, Linkedin, Phone, MapPin, FileText, Upload, CheckCircle, GraduationCap, ShieldCheck, Bell, Award, Camera, CreditCard, Building2 } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
@@ -36,6 +38,7 @@ function resizeImageToBase64(file, maxPx = 256) {
 }
 
 export default function EducatorSettings() {
+  const { t } = useTranslation(["pages"]);
   const { user, checkAppState } = useAuth();
   const [initialFormData, setInitialFormData] = useState(null);
   const [formData, setFormData] = useState({
@@ -97,58 +100,93 @@ export default function EducatorSettings() {
     setInitialFormData(initialData);
   }, [user]);
 
+  // OTP akışı için state
+  const [otpDialogOpen, setOtpDialogOpen] = useState(false);
+  const [pendingSensitiveFields, setPendingSensitiveFields] = useState(null);
+
+  const detectSensitiveChanges = () => {
+    if (!initialFormData) return null;
+    const changes = {};
+    for (const k of ["phone", "website", "linkedin"]) {
+      if ((formData[k] ?? "") !== (initialFormData[k] ?? "")) {
+        changes[k] = formData[k] ?? "";
+      }
+    }
+    return Object.keys(changes).length ? changes : null;
+  };
+
+  const syncEducatorProfile = async () => {
+    try {
+      const existingProfiles = await entities.EducatorProfile.filter({ educator_email: user.email });
+      if (existingProfiles.length > 0) {
+        await entities.EducatorProfile.update(existingProfiles[0].id, {
+          educator_email: user.email,
+          educator_name: user.full_name,
+          bio: formData.bio,
+          education: formData.education,
+          website: formData.website,
+          linkedin: formData.linkedin,
+          specialized_exam_types: formData.specialized_exam_types,
+          profile_image_url: formData.profile_image_url
+        });
+      } else {
+        await entities.EducatorProfile.create({
+          educator_email: user.email,
+          educator_name: user.full_name,
+          bio: formData.bio,
+          education: formData.education,
+          website: formData.website,
+          linkedin: formData.linkedin,
+          specialized_exam_types: formData.specialized_exam_types,
+          profile_image_url: formData.profile_image_url
+        });
+      }
+    } catch (e) {
+      console.log("EducatorProfile sync error:", e);
+    }
+  };
+
   const updateMutation = useMutation({
     mutationFn: async () => {
+      const sensitive = detectSensitiveChanges();
+      // Non-sensitive alanları her zaman gönder (backend hassas alanları strip edecek)
       await auth.updateMe(formData);
-      // Eğitici profil bilgilerini EducatorProfile entitesine kaydet
-      try {
-        const existingProfiles = await entities.EducatorProfile.filter({ educator_email: user.email });
-        if (existingProfiles.length > 0) {
-          await entities.EducatorProfile.update(existingProfiles[0].id, {
-            educator_email: user.email,
-            educator_name: user.full_name,
-            bio: formData.bio,
-            education: formData.education,
-            website: formData.website,
-            linkedin: formData.linkedin,
-            specialized_exam_types: formData.specialized_exam_types,
-            profile_image_url: formData.profile_image_url
-          });
-        } else {
-          await entities.EducatorProfile.create({
-            educator_email: user.email,
-            educator_name: user.full_name,
-            bio: formData.bio,
-            education: formData.education,
-            website: formData.website,
-            linkedin: formData.linkedin,
-            specialized_exam_types: formData.specialized_exam_types,
-            profile_image_url: formData.profile_image_url
-          });
-        }
-      } catch (e) {
-        console.log("EducatorProfile sync error:", e);
+      await syncEducatorProfile();
+      if (sensitive) {
+        setPendingSensitiveFields(sensitive);
+        setOtpDialogOpen(true);
+        return { needsOtp: true };
       }
+      return { needsOtp: false };
     },
-    onSuccess: () => {
-      toast.success("Profil bilgileri güncellendi");
+    onSuccess: (result) => {
+      if (result?.needsOtp) return; // OTP başarılı olunca toast göstereceğiz
+      toast.success(t("pages:educatorSettings.toasts.profileUpdated"));
       setInitialFormData(formData);
       queryClient.invalidateQueries({ queryKey: ["educatorUser"] });
     },
     onError: () => {
-      toast.error("Güncelleme başarısız oldu");
+      toast.error(t("pages:educatorSettings.toasts.updateFailed"));
     }
   });
 
+  // OTP dialog başarılı tamamlandığında çağrılır
+  const handleOtpSuccess = () => {
+    setInitialFormData(formData);
+    setPendingSensitiveFields(null);
+    queryClient.invalidateQueries({ queryKey: ["educatorUser"] });
+    toast.success(t("pages:educatorSettings.toasts.profileUpdated"));
+  };
+
   const resubmitApplicationMutation = useMutation({
     mutationFn: async () => {
-      await auth.updateMe({ 
+      await auth.updateMe({
         educator_status: "pending",
-        rejection_reason: null 
+        rejection_reason: null
       });
     },
     onSuccess: async () => {
-      toast.success("Başvurunuz yeniden gönderildi");
+      toast.success(t("pages:educatorSettings.notices.rejected.resubmittedToast"));
       await checkAppState();
       queryClient.invalidateQueries({ queryKey: ["educatorUser"] });
     },
@@ -161,13 +199,12 @@ export default function EducatorSettings() {
     // Check file type
     const allowedTypes = ['application/pdf'];
     if (!allowedTypes.includes(file.type)) {
-      toast.error("Lütfen PDF dosyası yükleyin");
+      toast.error(t("pages:educatorSettings.toasts.invalidPdf"));
       return;
     }
 
-    // Check file size (max 5MB)
     if (file.size > 5 * 1024 * 1024) {
-      toast.error("Dosya boyutu en fazla 5MB olabilir");
+      toast.error(t("pages:educatorSettings.toasts.fileTooBig"));
       return;
     }
 
@@ -178,9 +215,9 @@ export default function EducatorSettings() {
       const res = await api.post("/upload/image", fd, { headers: { "Content-Type": "multipart/form-data" } });
       const file_url = res.data.url || res.data.fileUrl || res.data.file_url;
       setFormData({ ...formData, cv_url: file_url });
-      toast.success("CV başarıyla yüklendi");
+      toast.success(t("pages:educatorSettings.toasts.cvUploaded"));
     } catch (error) {
-      toast.error("CV yüklenemedi");
+      toast.error(t("pages:educatorSettings.toasts.cvUploadFailed"));
     } finally {
       setUploadingCV(false);
     }
@@ -192,11 +229,11 @@ export default function EducatorSettings() {
 
     const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
     if (!allowedTypes.includes(file.type)) {
-      toast.error("Lütfen JPG, PNG veya WebP formatında resim yükleyin");
+      toast.error(t("pages:educatorSettings.toasts.invalidImage"));
       return;
     }
     if (file.size > 5 * 1024 * 1024) {
-      toast.error("Resim boyutu en fazla 5MB olabilir");
+      toast.error(t("pages:educatorSettings.toasts.imageTooBig"));
       return;
     }
 
@@ -205,9 +242,9 @@ export default function EducatorSettings() {
       const dataUrl = await resizeImageToBase64(file, 256);
       await auth.updateMe({ profile_image_url: dataUrl });
       setFormData(prev => ({ ...prev, profile_image_url: dataUrl }));
-      toast.success("Profil resmi güncellendi");
+      toast.success(t("pages:educatorSettings.toasts.imageUploaded"));
     } catch {
-      toast.error("Resim yüklenemedi");
+      toast.error(t("pages:educatorSettings.toasts.imageUploadFailed"));
     } finally {
       setUploadingImage(false);
       e.target.value = '';
@@ -225,8 +262,8 @@ export default function EducatorSettings() {
   return (
     <div className="max-w-3xl mx-auto">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-slate-900">Profil Ayarları</h1>
-        <p className="text-slate-500 mt-2">Profil bilgilerinizi güncelleyin</p>
+        <h1 className="text-3xl font-bold text-slate-900">{t("pages:titles.educatorSettings")}</h1>
+        <p className="text-slate-500 mt-2">{t("pages:titles.educatorSettingsDesc")}</p>
       </div>
 
       {/* Rejection Notice */}
@@ -237,19 +274,19 @@ export default function EducatorSettings() {
               <ShieldCheck className="w-5 h-5 text-rose-600" />
             </div>
             <div className="flex-1">
-              <h3 className="text-lg font-semibold text-rose-900 mb-2">Başvurunuz Reddedildi</h3>
+              <h3 className="text-lg font-semibold text-rose-900 mb-2">{t("pages:educatorSettings.notices.rejected.title")}</h3>
               <p className="text-sm text-rose-700 mb-4">
-                <strong>Red Nedeni:</strong> {user.rejection_reason}
+                <strong>{t("pages:educatorSettings.notices.rejected.reason")}</strong> {user.rejection_reason}
               </p>
               <p className="text-sm text-rose-600 mb-4">
-                Lütfen profilinizi güncelleyin ve başvurunuzu yeniden gönderin.
+                {t("pages:educatorSettings.notices.rejected.desc")}
               </p>
               <Button
                 onClick={() => resubmitApplicationMutation.mutate()}
                 disabled={resubmitApplicationMutation.isPending}
                 className="bg-rose-600 hover:bg-rose-700"
               >
-                {resubmitApplicationMutation.isPending ? "Gönderiliyor..." : "Başvuruyu Yeniden Gönder"}
+                {resubmitApplicationMutation.isPending ? t("pages:educatorSettings.notices.rejected.resubmitting") : t("pages:educatorSettings.notices.rejected.resubmit")}
               </Button>
             </div>
           </div>
@@ -264,9 +301,9 @@ export default function EducatorSettings() {
               <ShieldCheck className="w-5 h-5 text-amber-600" />
             </div>
             <div className="flex-1">
-              <h3 className="text-lg font-semibold text-amber-900 mb-2">Hesap Onayı Bekleniyor</h3>
+              <h3 className="text-lg font-semibold text-amber-900 mb-2">{t("pages:educatorSettings.notices.pending.title")}</h3>
               <p className="text-sm text-amber-700">
-                Eğitici başvurunuz yönetici tarafından inceleniyor. Onay sürecini hızlandırmak için lütfen tüm bilgilerinizi eksiksiz doldurun.
+                {t("pages:educatorSettings.notices.pending.desc")}
               </p>
             </div>
           </div>
@@ -281,9 +318,9 @@ export default function EducatorSettings() {
               <CheckCircle className="w-5 h-5 text-emerald-600" />
             </div>
             <div className="flex-1">
-              <h3 className="text-lg font-semibold text-emerald-900 mb-2">Hesabınız Onaylandı</h3>
+              <h3 className="text-lg font-semibold text-emerald-900 mb-2">{t("pages:educatorSettings.notices.approved.title")}</h3>
               <p className="text-sm text-emerald-700">
-                Artık test oluşturabilir ve profil sayfanız adaylar tarafından görüntülenebilir.
+                {t("pages:educatorSettings.notices.approved.desc")}
               </p>
             </div>
           </div>
@@ -328,12 +365,12 @@ export default function EducatorSettings() {
 
         <Tabs defaultValue="profile" className="w-full">
           <TabsList className="grid w-full grid-cols-6 mb-8">
-            <TabsTrigger value="profile">Profil</TabsTrigger>
-            <TabsTrigger value="verification">Doğrulama</TabsTrigger>
-            <TabsTrigger value="contact">İletişim</TabsTrigger>
-            <TabsTrigger value="exams">Sınav Tercihleri</TabsTrigger>
-            <TabsTrigger value="notifications">Bildirimler</TabsTrigger>
-            <TabsTrigger value="payment">Ödeme</TabsTrigger>
+            <TabsTrigger value="profile">{t("pages:educatorSettings.tabs.profile")}</TabsTrigger>
+            <TabsTrigger value="verification">{t("pages:educatorSettings.tabs.verification")}</TabsTrigger>
+            <TabsTrigger value="contact">{t("pages:educatorSettings.tabs.contact")}</TabsTrigger>
+            <TabsTrigger value="exams">{t("pages:educatorSettings.tabs.exams")}</TabsTrigger>
+            <TabsTrigger value="notifications">{t("pages:educatorSettings.tabs.notifications")}</TabsTrigger>
+            <TabsTrigger value="payment">{t("pages:educatorSettings.tabs.payment")}</TabsTrigger>
           </TabsList>
 
           {/* Profil Tab */}
@@ -342,32 +379,32 @@ export default function EducatorSettings() {
               <div>
                 <h3 className="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
                   <GraduationCap className="w-5 h-5 text-indigo-600" />
-                  Profil Bilgileri
+                  {t("pages:educatorSettings.profile.title")}
                 </h3>
                 
                 <div className="space-y-6">
                   <div>
-                    <Label htmlFor="education">Mezuniyet Bilgisi</Label>
+                    <Label htmlFor="education">{t("pages:educatorSettings.profile.educationLabel")}</Label>
                     <Input
                       id="education"
-                      placeholder="Örn: İstanbul Üniversitesi - Matematik Bölümü"
+                      placeholder={t("pages:educatorSettings.profile.educationPlaceholder")}
                       value={formData.education}
                       onChange={(e) => setFormData({ ...formData, education: e.target.value })}
                       className="mt-2"
                     />
-                    <p className="text-xs text-slate-500 mt-1">Mezun olduğunuz üniversite ve bölüm bilgisi</p>
+                    <p className="text-xs text-slate-500 mt-1">{t("pages:educatorSettings.profile.educationHint")}</p>
                   </div>
 
                   <div>
-                    <Label htmlFor="bio">Tanıtım Metni</Label>
+                    <Label htmlFor="bio">{t("pages:educatorSettings.profile.bioLabel")}</Label>
                     <Textarea
                       id="bio"
-                      placeholder="Kendinizi tanıtın, uzmanlık alanlarınızdan bahsedin..."
+                      placeholder={t("pages:educatorSettings.profile.bioPlaceholder")}
                       value={formData.bio}
                       onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
                       className="mt-2 min-h-32"
                     />
-                    <p className="text-xs text-slate-500 mt-1">Profil sayfanızda görünecek tanıtım metni</p>
+                    <p className="text-xs text-slate-500 mt-1">{t("pages:educatorSettings.profile.bioHint")}</p>
                   </div>
                 </div>
               </div>
@@ -378,7 +415,7 @@ export default function EducatorSettings() {
                 disabled={updateMutation.isPending || !hasChanges}
               >
                 <Save className="w-4 h-4 mr-2" />
-                {updateMutation.isPending ? "Kaydediliyor..." : "Değişiklikleri Kaydet"}
+                {updateMutation.isPending ? t("pages:educatorSettings.saving") : t("pages:educatorSettings.saveButton")}
               </Button>
             </form>
           </TabsContent>
@@ -389,14 +426,14 @@ export default function EducatorSettings() {
               <div>
                 <h3 className="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
                   <ShieldCheck className="w-5 h-5 text-indigo-600" />
-                  Akademik Doğrulama
+                  {t("pages:educatorSettings.verification.title")}
                 </h3>
 
                 <div className="space-y-6">
               <div>
                 <Label htmlFor="google_scholar" className="flex items-center gap-2">
                   <Globe className="w-4 h-4" />
-                  Google Scholar Profil Linki
+                  {t("pages:educatorSettings.verification.gscholarLabel")}
                 </Label>
                 <Input
                   id="google_scholar"
@@ -405,27 +442,27 @@ export default function EducatorSettings() {
                   onChange={(e) => setFormData({ ...formData, google_scholar_url: e.target.value })}
                   className="mt-2"
                 />
-                <p className="text-xs text-slate-500 mt-1">Akademik geçmişinizi doğrulamak için Google Scholar profil linkinizi ekleyin</p>
+                <p className="text-xs text-slate-500 mt-1">{t("pages:educatorSettings.verification.gscholarHint")}</p>
               </div>
 
               <div>
                 <Label className="flex items-center gap-2">
                   <FileText className="w-4 h-4" />
-                  CV Yükle
+                  {t("pages:educatorSettings.verification.cvLabel")}
                 </Label>
                 <div className="mt-2">
                   {formData.cv_url ? (
                     <div className="flex items-center gap-3 p-4 bg-emerald-50 border border-emerald-200 rounded-lg">
                       <CheckCircle className="w-5 h-5 text-emerald-600" />
                       <div className="flex-1">
-                        <p className="text-sm font-medium text-emerald-900">CV yüklendi</p>
-                        <a 
-                          href={formData.cv_url} 
-                          target="_blank" 
+                        <p className="text-sm font-medium text-emerald-900">{t("pages:educatorSettings.verification.cvUploaded")}</p>
+                        <a
+                          href={formData.cv_url}
+                          target="_blank"
                           rel="noopener noreferrer"
                           className="text-xs text-emerald-600 hover:underline"
                         >
-                          Dosyayı görüntüle
+                          {t("pages:educatorSettings.verification.cvView")}
                         </a>
                       </div>
                       <Button
@@ -435,7 +472,7 @@ export default function EducatorSettings() {
                         onClick={() => document.getElementById('cv-upload').click()}
                         disabled={uploadingCV}
                       >
-                        Değiştir
+                        {t("pages:educatorSettings.verification.cvChange")}
                       </Button>
                     </div>
                   ) : (
@@ -448,9 +485,9 @@ export default function EducatorSettings() {
                       <div className="flex flex-col items-center gap-2">
                         <Upload className="w-8 h-8 text-slate-400" />
                         <p className="text-sm font-medium text-slate-900">
-                          {uploadingCV ? "Yükleniyor..." : "CV Yükle"}
+                          {uploadingCV ? t("pages:educatorSettings.verification.cvUploading") : t("pages:educatorSettings.verification.cvUpload")}
                         </p>
-                        <p className="text-xs text-slate-500">PDF (Max 5MB)</p>
+                        <p className="text-xs text-slate-500">{t("pages:educatorSettings.verification.cvFormat")}</p>
                       </div>
                     </button>
                   )}
@@ -462,7 +499,7 @@ export default function EducatorSettings() {
                     className="hidden"
                   />
                 </div>
-                <p className="text-xs text-slate-500 mt-1">CV'nizi yükleyerek profesyonel geçmişinizi adaylara gösterebilirsiniz</p>
+                <p className="text-xs text-slate-500 mt-1">{t("pages:educatorSettings.verification.cvHint")}</p>
                 </div>
                 </div>
               </div>
@@ -473,7 +510,7 @@ export default function EducatorSettings() {
                 disabled={updateMutation.isPending || !hasChanges}
               >
                 <Save className="w-4 h-4 mr-2" />
-                {updateMutation.isPending ? "Kaydediliyor..." : "Değişiklikleri Kaydet"}
+                {updateMutation.isPending ? t("pages:educatorSettings.saving") : t("pages:educatorSettings.saveButton")}
               </Button>
             </form>
           </TabsContent>
@@ -484,14 +521,14 @@ export default function EducatorSettings() {
               <div>
                 <h3 className="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
                   <Phone className="w-5 h-5 text-indigo-600" />
-                  İletişim Bilgileri
+                  {t("pages:educatorSettings.contact.title")}
                 </h3>
             
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <Label htmlFor="phone" className="flex items-center gap-2">
                   <Phone className="w-4 h-4" />
-                  Telefon
+                  {t("pages:educatorSettings.contact.phoneLabel")}
                 </Label>
                 <Input
                   id="phone"
@@ -505,7 +542,7 @@ export default function EducatorSettings() {
               <div>
                 <Label htmlFor="city" className="flex items-center gap-2">
                   <MapPin className="w-4 h-4" />
-                  Şehir
+                  {t("pages:educatorSettings.contact.cityLabel")}
                 </Label>
                 <Input
                   id="city"
@@ -519,7 +556,7 @@ export default function EducatorSettings() {
               <div>
                 <Label htmlFor="website" className="flex items-center gap-2">
                   <Globe className="w-4 h-4" />
-                  Website/Blog
+                  {t("pages:educatorSettings.contact.websiteLabel")}
                 </Label>
                 <Input
                   id="website"
@@ -533,7 +570,7 @@ export default function EducatorSettings() {
               <div>
                 <Label htmlFor="linkedin" className="flex items-center gap-2">
                   <Linkedin className="w-4 h-4" />
-                  LinkedIn
+                  {t("pages:educatorSettings.contact.linkedinLabel")}
                 </Label>
                 <Input
                   id="linkedin"
@@ -552,7 +589,7 @@ export default function EducatorSettings() {
                 disabled={updateMutation.isPending || !hasChanges}
               >
                 <Save className="w-4 h-4 mr-2" />
-                {updateMutation.isPending ? "Kaydediliyor..." : "Değişiklikleri Kaydet"}
+                {updateMutation.isPending ? t("pages:educatorSettings.saving") : t("pages:educatorSettings.saveButton")}
               </Button>
             </form>
           </TabsContent>
@@ -563,10 +600,10 @@ export default function EducatorSettings() {
               <div>
                 <h3 className="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
                   <Award className="w-5 h-5 text-indigo-600" />
-                  Uzmanlık Alanlarım
+                  {t("pages:educatorSettings.exams.title")}
                 </h3>
                 <p className="text-sm text-slate-500 mb-6">
-                  Hangi sınavlar için hazırlık konusunda uzman olduğunuzu seçin. Bu bilgi profil sayfanızda görünecektir.
+                  {t("pages:educatorSettings.exams.desc")}
                 </p>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -602,7 +639,7 @@ export default function EducatorSettings() {
                 </div>
 
                 {examTypes.length === 0 && (
-                  <p className="text-center text-slate-500 py-8">Sınav türü bulunamadı</p>
+                  <p className="text-center text-slate-500 py-8">{t("pages:educatorSettings.exams.noExamTypes")}</p>
                 )}
               </div>
 
@@ -612,7 +649,7 @@ export default function EducatorSettings() {
                 disabled={updateMutation.isPending || !hasChanges}
               >
                 <Save className="w-4 h-4 mr-2" />
-                {updateMutation.isPending ? "Kaydediliyor..." : "Değişiklikleri Kaydet"}
+                {updateMutation.isPending ? t("pages:educatorSettings.saving") : t("pages:educatorSettings.saveButton")}
               </Button>
             </form>
           </TabsContent>
@@ -623,14 +660,14 @@ export default function EducatorSettings() {
               <div>
                 <h3 className="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
                   <Bell className="w-5 h-5 text-indigo-600" />
-                  Bildirim Tercihleri
+                  {t("pages:educatorSettings.notifications.title")}
                 </h3>
-            
+
                 <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="font-medium text-slate-900">Yeni Test Bildirimleri</p>
-                  <p className="text-sm text-slate-500">Yeni testler yayınlandığında bildirim al</p>
+                  <p className="font-medium text-slate-900">{t("pages:educatorSettings.notifications.newTests")}</p>
+                  <p className="text-sm text-slate-500">{t("pages:educatorSettings.notifications.newTestsDesc")}</p>
                 </div>
                 <Switch
                   checked={formData.notification_preferences.email_new_tests}
@@ -648,8 +685,8 @@ export default function EducatorSettings() {
 
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="font-medium text-slate-900">Kampanya ve Promosyonlar</p>
-                  <p className="text-sm text-slate-500">İndirimler ve özel fırsatlar hakkında bilgi al</p>
+                  <p className="font-medium text-slate-900">{t("pages:educatorSettings.notifications.promotions")}</p>
+                  <p className="text-sm text-slate-500">{t("pages:educatorSettings.notifications.promotionsDesc")}</p>
                 </div>
                 <Switch
                   checked={formData.notification_preferences.email_promotions}
@@ -667,8 +704,8 @@ export default function EducatorSettings() {
 
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="font-medium text-slate-900">Eğitici Güncellemeleri</p>
-                  <p className="text-sm text-slate-500">Takip ettiğim eğiticilerden güncellemeler al</p>
+                  <p className="font-medium text-slate-900">{t("pages:educatorSettings.notifications.educatorUpdates")}</p>
+                  <p className="text-sm text-slate-500">{t("pages:educatorSettings.notifications.educatorUpdatesDesc")}</p>
                 </div>
                 <Switch
                   checked={formData.notification_preferences.email_educator_updates}
@@ -686,8 +723,8 @@ export default function EducatorSettings() {
 
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="font-medium text-slate-900">Test Hatırlatmaları</p>
-                  <p className="text-sm text-slate-500">Başladığın testler için hatırlatma al</p>
+                  <p className="font-medium text-slate-900">{t("pages:educatorSettings.notifications.testReminders")}</p>
+                  <p className="text-sm text-slate-500">{t("pages:educatorSettings.notifications.testRemindersDesc")}</p>
                 </div>
                 <Switch
                   checked={formData.notification_preferences.email_test_reminders}
@@ -711,7 +748,7 @@ export default function EducatorSettings() {
                 disabled={updateMutation.isPending || !hasChanges}
               >
                 <Save className="w-4 h-4 mr-2" />
-                {updateMutation.isPending ? "Kaydediliyor..." : "Değişiklikleri Kaydet"}
+                {updateMutation.isPending ? t("pages:educatorSettings.saving") : t("pages:educatorSettings.saveButton")}
               </Button>
             </form>
           </TabsContent>
@@ -721,21 +758,21 @@ export default function EducatorSettings() {
               <div>
                 <h3 className="text-lg font-semibold text-slate-900 mb-2 flex items-center gap-2">
                   <CreditCard className="w-5 h-5 text-indigo-600" />
-                  Ödeme Bilgileri
+                  {t("pages:educatorSettings.payment.title")}
                 </h3>
                 <p className="text-sm text-slate-500 mb-6">
-                  Komisyon ödemelerinizin aktarılacağı banka hesabı bilgilerini girin. Bu bilgiler yalnızca yöneticiler tarafından görülür.
+                  {t("pages:educatorSettings.payment.desc")}
                 </p>
 
                 <div className="space-y-6">
                   <div>
                     <Label htmlFor="iban" className="flex items-center gap-2">
                       <CreditCard className="w-4 h-4" />
-                      IBAN <span className="text-rose-500 ml-1">*</span>
+                      {t("pages:educatorSettings.payment.ibanLabel")} <span className="text-rose-500 ml-1">*</span>
                     </Label>
                     <Input
                       id="iban"
-                      placeholder="TR00 0000 0000 0000 0000 0000 00"
+                      placeholder={t("pages:educatorSettings.payment.ibanPlaceholder")}
                       value={formData.iban}
                       onChange={(e) => {
                         // normalize: uppercase, keep only alphanumeric
@@ -748,34 +785,34 @@ export default function EducatorSettings() {
                       maxLength={34} // TR + 24 digits + spaces
                     />
                     {formData.iban && !/^TR\d{24}$/.test(formData.iban.replace(/\s/g, '')) && (
-                      <p className="text-xs text-rose-500 mt-1">IBAN formatı: TR ile başlayan 26 karakter (TR + 24 rakam)</p>
+                      <p className="text-xs text-rose-500 mt-1">{t("pages:educatorSettings.payment.ibanError")}</p>
                     )}
-                    <p className="text-xs text-slate-500 mt-1">Türkiye IBAN formatı: TR ile başlar, toplam 26 karakter</p>
+                    <p className="text-xs text-slate-500 mt-1">{t("pages:educatorSettings.payment.ibanHint")}</p>
                   </div>
 
                   <div>
                     <Label htmlFor="accountHolder" className="flex items-center gap-2">
                       <User className="w-4 h-4" />
-                      Hesap Sahibi Adı <span className="text-rose-500 ml-1">*</span>
+                      {t("pages:educatorSettings.payment.holderLabel")} <span className="text-rose-500 ml-1">*</span>
                     </Label>
                     <Input
                       id="accountHolder"
-                      placeholder="Ad Soyad"
+                      placeholder={t("pages:educatorSettings.payment.holderPlaceholder")}
                       value={formData.accountHolder}
                       onChange={(e) => setFormData({ ...formData, accountHolder: e.target.value })}
                       className="mt-2"
                     />
-                    <p className="text-xs text-slate-500 mt-1">Banka hesabında kayıtlı ad ve soyadınız</p>
+                    <p className="text-xs text-slate-500 mt-1">{t("pages:educatorSettings.payment.holderHint")}</p>
                   </div>
 
                   <div>
                     <Label htmlFor="bankName" className="flex items-center gap-2">
                       <Building2 className="w-4 h-4" />
-                      Banka Adı
+                      {t("pages:educatorSettings.payment.bankLabel")}
                     </Label>
                     <Input
                       id="bankName"
-                      placeholder="Örn: Ziraat Bankası"
+                      placeholder={t("pages:educatorSettings.payment.bankPlaceholder")}
                       value={formData.bankName}
                       onChange={(e) => setFormData({ ...formData, bankName: e.target.value })}
                       className="mt-2"
@@ -785,7 +822,7 @@ export default function EducatorSettings() {
 
                 <div className="mt-6 p-4 bg-amber-50 border border-amber-200 rounded-xl">
                   <p className="text-sm text-amber-800">
-                    <strong>Önemli:</strong> Komisyon ödemelerinizin zamanında yapılabilmesi için IBAN ve hesap sahibi bilgilerinizi eksiksiz doldurun. Bilgileriniz şifreli olarak saklanmaktadır.
+                    <strong>{t("pages:educatorSettings.payment.important")}</strong> {t("pages:educatorSettings.payment.importantDesc")}
                   </p>
                 </div>
               </div>
@@ -796,12 +833,20 @@ export default function EducatorSettings() {
                 disabled={updateMutation.isPending || !hasChanges}
               >
                 <Save className="w-4 h-4 mr-2" />
-                {updateMutation.isPending ? "Kaydediliyor..." : "Değişiklikleri Kaydet"}
+                {updateMutation.isPending ? t("pages:educatorSettings.saving") : t("pages:educatorSettings.saveButton")}
               </Button>
             </form>
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* Telefon/Website/LinkedIn değişikliği için 6 haneli OTP dialog'u */}
+      <SensitiveProfileOtpDialog
+        open={otpDialogOpen}
+        onOpenChange={setOtpDialogOpen}
+        pendingFields={pendingSensitiveFields || {}}
+        onSuccess={handleOtpSuccess}
+      />
     </div>
   );
 }

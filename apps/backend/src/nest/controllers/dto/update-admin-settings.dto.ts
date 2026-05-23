@@ -1,5 +1,5 @@
 /** Admin uygulama ayarları güncelleme DTO'su — özellik bayrakları */
-import { IsOptional, IsInt, Min, Max, IsBoolean, IsPositive } from 'class-validator';
+import { IsOptional, IsInt, Min, Max, IsBoolean, IsPositive, IsString } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 
 export class UpdateAdminSettingsDto {
@@ -59,6 +59,11 @@ export class UpdateAdminSettingsDto {
   @Min(1)
   @Max(100)
   maxDiscountPercent?: number;
+
+  @ApiPropertyOptional({ example: '123456-abcdef.apps.googleusercontent.com', description: 'Google OAuth 2.0 Client ID — boş bırakılırsa Google ile giriş devre dışı' })
+  @IsOptional()
+  @IsString()
+  googleClientId?: string | null;
 
   @ApiPropertyOptional({ example: 1, description: 'Test başına minimum soru sayısı' })
   @IsOptional()

@@ -1,0 +1,171 @@
+{
+  "actions": {
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "submit": "Enviar",
+    "next": "Siguiente",
+    "back": "Atrás",
+    "close": "Cerrar",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "sort": "Ordenar",
+    "loading": "Cargando…",
+    "retry": "Reintentar"
+  },
+  "navigation": {
+    "home": "Inicio",
+    "explore": "Explorar",
+    "myTests": "Mis exámenes",
+    "myResults": "Mis resultados",
+    "myPackages": "Mis paquetes",
+    "notifications": "Notificaciones",
+    "settings": "Configuración",
+    "profile": "Perfil",
+    "logout": "Cerrar sesión",
+    "login": "Iniciar sesión",
+    "register": "Registrarse"
+  },
+  "common": {
+    "yes": "Sí",
+    "no": "No",
+    "or": "o",
+    "and": "y",
+    "all": "Todo",
+    "none": "Ninguno",
+    "today": "Hoy",
+    "yesterday": "Ayer",
+    "tomorrow": "Mañana"
+  },
+  "errors": {
+    "generic": "Se produjo un error. Inténtelo de nuevo.",
+    "network": "Problema de conexión. Compruebe su Internet.",
+    "unauthorized": "No tiene permiso para esta acción.",
+    "notFound": "No se encontró la página solicitada.",
+    "validation": "Por favor corrija los errores del formulario.",
+    "tooMany": "Demasiadas solicitudes. Por favor espere.",
+    "serverError": "Error del servidor. Estamos trabajando en ello."
+  },
+  "empty": {
+    "noResults": "No se encontraron resultados.",
+    "noData": "Aún no hay datos.",
+    "noNotifications": "No hay notificaciones nuevas."
+  },
+  "language": {
+    "label": "Idioma",
+    "tr": "Turco",
+    "en": "Inglés",
+    "es": "Español",
+    "zh": "Chino",
+    "de": "Alemán"
+  },
+  "theme": {
+    "label": "Tema"
+  },
+  "roles": {
+    "candidate": "Candidato",
+    "educator": "Educador",
+    "admin": "Administrador",
+    "worker": "Empleado"
+  },
+  "sidebar": {
+    "ariaNav": "Navegación principal",
+    "brandName": "Sınav Salonu",
+    "profileAlt": "Perfil",
+    "pendingApproval": "⚠️ Esperando aprobación de cuenta",
+    "candidate": {
+      "home": "Inicio",
+      "explore": "Explorar exámenes",
+      "myTests": "Exámenes comprados",
+      "myResults": "Informes de rendimiento",
+      "myTopicReport": "Rendimiento por tema",
+      "myObjections": "Mis reportes",
+      "profileSettings": "Ajustes de perfil"
+    },
+    "educator": {
+      "dashboard": "Panel",
+      "myTestPackages": "Mis paquetes de exámenes",
+      "createTest": "Crear examen nuevo",
+      "mySales": "Mis ventas",
+      "myDiscountCodes": "Códigos de descuento",
+      "myAds": "Mis anuncios",
+      "myLiveSessions": "Mis exámenes en vivo",
+      "refunds": "Solicitudes de reembolso",
+      "questionReports": "Reportes de errores",
+      "settings": "Ajustes de perfil",
+      "moderationStatus": "Estado de contenido"
+    },
+    "admin": {
+      "dashboard": "Panel de administración",
+      "candidateReport": "Informe de candidatos",
+      "educatorReport": "Informe de educadores",
+      "examTypes": "Tipos de examen",
+      "topics": "Temas de preguntas",
+      "users": "Usuarios",
+      "tests": "Todos los exámenes",
+      "discountCodes": "Códigos de descuento",
+      "claims": "Reclamaciones",
+      "revenue": "Ingresos",
+      "systemControls": "Controles del sistema",
+      "liveTiers": "Paquetes de exámenes en vivo",
+      "emailManagement": "Gestión de correo",
+      "riskyContent": "Contenido riesgoso"
+    },
+    "collapseAria": "Cerrar menú lateral",
+    "expandAria": "Expandir menú lateral"
+  },
+  "pagination": {
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "pageOf": "Página {{current}} / {{total}}"
+  },
+  "errorBoundary": {
+    "title": "Algo salió mal",
+    "messageProd": "Ocurrió un error. Por favor, recarga la página.",
+    "messageUnknown": "Error desconocido",
+    "reload": "Recargar página"
+  },
+  "pageNotFound": {
+    "title": "Página No Encontrada",
+    "desc": "La página \"{{name}}\" no se pudo encontrar en esta aplicación.",
+    "adminNoteTitle": "Nota del Admin",
+    "adminNoteBody": "Esta ruta de página no existe en la compilación actual.",
+    "goHome": "Ir al Inicio"
+  },
+  "accessRestricted": {
+    "title": "Acceso Restringido",
+    "desc": "No estás registrado para usar esta aplicación. Por favor, contacta al administrador para solicitar acceso.",
+    "listIntro": "Si crees que esto es un error, puedes:",
+    "listItem1": "Verificar que has iniciado sesión con la cuenta correcta",
+    "listItem2": "Contactar al administrador para obtener acceso",
+    "listItem3": "Intentar cerrar sesión y volver a iniciar"
+  },
+  "apiErrors": {
+    "UNAUTHORIZED": "Tu sesión ha expirado. Por favor, inicia sesión de nuevo.",
+    "FORBIDDEN": "No tienes permiso para esta acción.",
+    "NOT_FOUND": "No se encontró el recurso solicitado.",
+    "BAD_REQUEST": "Solicitud inválida.",
+    "TOO_MANY_REQUESTS": "Demasiados intentos. Intenta de nuevo en 60 segundos.",
+    "TOO_MANY_REQUESTS_WITH_TIME": "Demasiados intentos. Intenta de nuevo en {{seconds}} segundos.",
+    "CAPTCHA_REQUIRED": "Se requiere verificación para continuar.",
+    "CAPTCHA_INVALID": "Verificación fallida. Por favor, intenta de nuevo.",
+    "INTERNAL_ERROR": "Ocurrió un error. Por favor, intenta más tarde.",
+    "ERR_NETWORK": "No se pudo conectar al servidor. Comprueba tu conexión.",
+    "TIMEOUT": "La solicitud expiró.",
+    "UNEXPECTED_RESPONSE": "Respuesta inesperada del servidor"
+  },
+  "offlineBanner": {
+    "reconnectedTitle": "Conexión restaurada",
+    "syncing": "Sincronizando respuestas...",
+    "allSaved": "Todas las respuestas guardadas ✓",
+    "disconnectedTitle": "Conexión Perdida",
+    "disconnectedDesc": "No hay conexión a Internet. Por favor, comprueba tu conexión para continuar la prueba.",
+    "pendingCount_one": "<strong>{{count}}</strong> respuesta pendiente — se enviará automáticamente al reconectar",
+    "pendingCount_other": "<strong>{{count}}</strong> respuestas pendientes — se enviarán automáticamente al reconectar",
+    "noPending": "Todas tus respuestas seleccionadas están seguras ✓",
+    "remainingSeconds": "{{count}} segundos",
+    "countdownDesc": "Si no puedes reconectar a tiempo, tu progreso se guardará y serás desconectado",
+    "exitNow": "Salir Ahora y Guardar"
+  }
+}

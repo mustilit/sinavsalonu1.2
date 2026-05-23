@@ -1,13 +1,16 @@
 /**
  * Global error boundary - yakalanmamış React hatalarını yakalar.
  * Prod'da stack trace gösterilmez; sadece güvenli mesaj.
+ *
+ * i18n: class component olduğundan `withTranslation` HOC ile prop olarak `t` enjekte edilir.
  */
 import React from 'react';
 import * as Sentry from '@sentry/react';
+import { withTranslation } from 'react-i18next';
 
 const isProd = import.meta.env?.PROD ?? false;
 
-export class ErrorBoundary extends React.Component {
+class ErrorBoundaryImpl extends React.Component {
   constructor(props) {
     super(props);
     this.state = { hasError: false, error: null };
@@ -28,21 +31,22 @@ export class ErrorBoundary extends React.Component {
 
   render() {
     if (this.state.hasError) {
+      const { t } = this.props;
       const message = isProd
-        ? 'Bir hata oluştu. Lütfen sayfayı yenileyin.'
-        : this.state.error?.message || 'Bilinmeyen hata';
+        ? t('common:errorBoundary.messageProd')
+        : this.state.error?.message || t('common:errorBoundary.messageUnknown');
 
       return (
         <div className="min-h-screen flex items-center justify-center bg-slate-50 p-6" role="alert">
           <div className="max-w-md w-full text-center space-y-4">
-            <h1 className="text-2xl font-semibold text-slate-800">Bir şeyler ters gitti</h1>
+            <h1 className="text-2xl font-semibold text-slate-800">{t('common:errorBoundary.title')}</h1>
             <p className="text-slate-600">{message}</p>
             <button
               type="button"
               onClick={() => window.location.reload()}
               className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
             >
-              Sayfayı yenile
+              {t('common:errorBoundary.reload')}
             </button>
           </div>
         </div>
@@ -51,3 +55,5 @@ export class ErrorBoundary extends React.Component {
     return this.props.children;
   }
 }
+
+export const ErrorBoundary = withTranslation(['common'])(ErrorBoundaryImpl);

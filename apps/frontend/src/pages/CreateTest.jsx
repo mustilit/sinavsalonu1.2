@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { createPageUrl } from "@/utils";
 import { entities, topics as topicsApi } from "@/api/dalClient";
 import { useAuth } from "@/lib/AuthContext";
@@ -21,6 +22,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
   ArrowLeft, WrenchIcon, History, Plus, Package,
   BookOpen, Eye, CheckCircle2, Trash2, AlertTriangle, Upload, X, Loader2, ImagePlus,
+  ChevronDown, ChevronUp,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { buildPageUrl, useAppNavigate } from "@/lib/navigation";
@@ -33,12 +35,14 @@ import { format } from "date-fns";
 import { tr } from "date-fns/locale";
 import { TestPreviewModal } from "@/components/TestPreviewModal";
 import { ModerationStatusBadge } from "@/components/test/ModerationStatusBadge";
+import PackageCoverUpload from "@/components/test/PackageCoverUpload";
 
 // ─── Sabitler ───────────────────────────────────────────────────────────────
-const STEPS = [
-  { id: 1, label: "Paket",    icon: Package    },
-  { id: 2, label: "Testler",  icon: BookOpen   },
-  { id: 3, label: "Önizleme", icon: Eye        },
+// STEPS i18n'i gerektiren label içerdiği için fonksiyon (component içinde build edilir).
+const STEP_DEFS = [
+  { id: 1, key: "package", icon: Package  },
+  { id: 2, key: "tests",   icon: BookOpen },
+  { id: 3, key: "preview", icon: Eye      },
 ];
 
 const LETTERS = ["A", "B", "C", "D", "E"];
@@ -74,6 +78,8 @@ function emptyTest() {
 
 // ─── Adım göstergesi ────────────────────────────────────────────────────────
 function StepIndicator({ current }) {
+  const { t } = useTranslation(["pages"]);
+  const STEPS = STEP_DEFS.map((d) => ({ ...d, label: t(`pages:testForm.steps.${d.key}`) }));
   return (
     <div className="flex items-center justify-center mb-8">
       {STEPS.map((step, i) => {
@@ -118,6 +124,7 @@ async function doUpload(file) {
 
 // ─── Soru düzenleme dialog'u ─────────────────────────────────────────────────
 function QuestionEditDialog({ question, questionIndex, topicList, onSave, onSaveAndNew, onClose }) {
+  const { t } = useTranslation(["pages"]);
   const makeLocalState = (q) => ({
     ...q,
     _imgFile: null,
@@ -142,7 +149,7 @@ function QuestionEditDialog({ question, questionIndex, topicList, onSave, onSave
         });
         if (data?.isDuplicate) {
           setLocal(prev => ({ ...prev, duplicateWarning: data }));
-          toast.warning("Benzer bir soru bulundu. İsterseniz devam edebilirsiniz.");
+          toast.warning(t("pages:testForm.createPage.questionDialog.duplicateToast"));
         }
       } catch {
         // Sessiz hata (educator'lar 403 alabilir)
@@ -174,12 +181,12 @@ function QuestionEditDialog({ question, questionIndex, topicList, onSave, onSave
   const validate = () => {
     const errs = {};
     if (!local.content.trim() && !local.mediaUrl && !local._imgFile)
-      errs.content = "Soru metni veya görsel zorunludur";
+      errs.content = t("pages:testForm.createPage.questionDialog.contentRequired");
     const filledOpts = local.options.filter(o => o.content.trim() || o.mediaUrl || o._imgFile);
     if (filledOpts.length < 2)
-      errs.options = "En az 2 seçenek doldurulmalıdır";
+      errs.options = t("pages:testForm.createPage.questionDialog.atLeast2Options");
     if (!local.options.some(o => o.isCorrect))
-      errs.correct = "Doğru seçeneği işaretleyiniz (A–E)";
+      errs.correct = t("pages:testForm.createPage.questionDialog.correctRequired");
     setDialogErrors(errs);
     return Object.keys(errs).length === 0;
   };
@@ -193,7 +200,7 @@ function QuestionEditDialog({ question, questionIndex, topicList, onSave, onSave
       onClose();
     } catch (e) {
       console.error("Tamamla error:", e);
-      toast.error(e?.message || "Kaydedilirken hata oluştu");
+      toast.error(e?.message || t("pages:testForm.createPage.questionDialog.saveError"));
       setSubmitting(false);
     }
   };
@@ -210,7 +217,7 @@ function QuestionEditDialog({ question, questionIndex, topicList, onSave, onSave
       setLocal(makeLocalState(newQ));
     } catch (e) {
       console.error("Yeni Soru error:", e);
-      toast.error(e?.message || "Kaydedilirken hata oluştu");
+      toast.error(e?.message || t("pages:testForm.createPage.questionDialog.saveError"));
     } finally {
       setSubmitting(false);
     }
@@ -222,15 +229,15 @@ function QuestionEditDialog({ question, questionIndex, topicList, onSave, onSave
     <Dialog open onOpenChange={onClose}>
       <DialogContent className="max-w-2xl max-h-screen overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Soru {displayIndex + 1} Düzenle</DialogTitle>
+          <DialogTitle>{t("pages:testForm.question.editDialogTitle", { n: displayIndex + 1 })}</DialogTitle>
         </DialogHeader>
 
         <div className="space-y-5 py-2">
           {/* Soru metni */}
           <div className="space-y-2">
-            <Label>Soru Metni</Label>
+            <Label>{t("pages:testForm.question.contentLabel")}</Label>
             <Textarea
-              placeholder="Soru metnini giriniz..."
+              placeholder={t("pages:testForm.question.contentPlaceholder")}
               value={local.content}
               onChange={(e) => { setLocal(prev => ({ ...prev, content: e.target.value, duplicateWarning: null })); setDialogErrors(p => ({ ...p, content: "" })); }}
               onBlur={handleContentBlur}
@@ -244,14 +251,14 @@ function QuestionEditDialog({ question, questionIndex, topicList, onSave, onSave
             {duplicateLoading && (
               <p className="text-xs text-slate-500 flex items-center gap-1">
                 <Loader2 className="w-3 h-3 animate-spin" />
-                Kopya soru kontrol ediliyor...
+                {t("pages:testForm.createPage.questionDialog.duplicateLoading")}
               </p>
             )}
             {local.duplicateWarning && (
               <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 text-sm">
-                <p className="font-medium text-amber-900">Uyarı: Benzer bir soru bulundu</p>
+                <p className="font-medium text-amber-900">{t("pages:testForm.createPage.questionDialog.duplicateWarning")}</p>
                 <p className="text-amber-700 mt-1 text-xs">
-                  Benzerlik: {Math.round(local.duplicateWarning.similarity * 100)}%
+                  {t("pages:testForm.question.duplicateSimilarity", { pct: Math.round(local.duplicateWarning.similarity * 100) })}
                 </p>
               </div>
             )}
@@ -259,10 +266,10 @@ function QuestionEditDialog({ question, questionIndex, topicList, onSave, onSave
 
           {/* Soru görseli */}
           <div className="space-y-2">
-            <Label>Soru Görseli (İsteğe Bağlı)</Label>
+            <Label>{t("pages:testForm.createPage.questionDialog.imageLabel")}</Label>
             <div className="flex items-center gap-3 flex-wrap">
               <label className="cursor-pointer inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium border border-slate-200 bg-white hover:bg-slate-50 text-slate-600">
-                <ImagePlus className="w-4 h-4" /> Görsel Seç
+                <ImagePlus className="w-4 h-4" /> {t("pages:testForm.question.selectImage")}
                 <input
                   type="file"
                   accept="image/*"
@@ -289,7 +296,7 @@ function QuestionEditDialog({ question, questionIndex, topicList, onSave, onSave
                     }}
                     className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium border border-rose-200 bg-white hover:bg-rose-50 text-rose-600"
                   >
-                    <X className="w-4 h-4" />Temizle
+                    <X className="w-4 h-4" />{t("pages:testForm.question.clearImage")}
                   </button>
                 </>
               )}
@@ -298,17 +305,18 @@ function QuestionEditDialog({ question, questionIndex, topicList, onSave, onSave
 
           {/* Konu seçimi */}
           <div className="space-y-2">
-            <Label>Konu (İsteğe Bağlı)</Label>
+            <Label>{t("pages:testForm.question.topicLabel")}</Label>
             <Select
               value={local.topicId || "none"}
               onValueChange={(v) => setLocal(prev => ({ ...prev, topicId: v === "none" ? null : v }))}
             >
-              <SelectTrigger><SelectValue placeholder="Konu seçin" /></SelectTrigger>
+              <SelectTrigger><SelectValue placeholder={t("pages:testForm.question.topicPlaceholder")} /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="none">— Seçilmedi —</SelectItem>
-                {topicList.map((t) => (
-                  <SelectItem key={t.id} value={t.id}>
-                    {t.parentName ? `${t.parentName} / ${t.name}` : t.name}
+                <SelectItem value="none">{t("pages:testForm.question.topicNone")}</SelectItem>
+                {/* topic.name user-generated — çevrilmez */}
+                {topicList.map((tp) => (
+                  <SelectItem key={tp.id} value={tp.id}>
+                    {tp.parentName ? `${tp.parentName} / ${tp.name}` : tp.name}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -317,7 +325,7 @@ function QuestionEditDialog({ question, questionIndex, topicList, onSave, onSave
 
           {/* Seçenekler */}
           <div className="space-y-3">
-            <Label>Seçenekler</Label>
+            <Label>{t("pages:testForm.question.optionsLabel")}</Label>
             {local.options.map((opt, optIdx) => {
               const optImgDisplay = opt._imgPreview || opt.mediaUrl || null;
               return (
@@ -344,7 +352,7 @@ function QuestionEditDialog({ question, questionIndex, topicList, onSave, onSave
 
                     <div className="flex-1 space-y-2">
                       <Input
-                        placeholder={`Seçenek ${LETTERS[optIdx]}`}
+                        placeholder={t("pages:testForm.question.optionPlaceholder", { letter: LETTERS[optIdx] })}
                         value={opt.content}
                         onChange={(e) => setLocal(prev => ({
                           ...prev,
@@ -353,7 +361,7 @@ function QuestionEditDialog({ question, questionIndex, topicList, onSave, onSave
                       />
                       <div className="flex items-center gap-2 flex-wrap">
                         <label className="cursor-pointer inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium border border-slate-200 bg-white hover:bg-slate-50 text-slate-600">
-                          <ImagePlus className="w-3 h-3" />Görsel
+                          <ImagePlus className="w-3 h-3" />{t("pages:testForm.question.optionImage")}
                           <input
                             type="file"
                             accept="image/*"
@@ -420,7 +428,7 @@ function QuestionEditDialog({ question, questionIndex, topicList, onSave, onSave
         {/* Footer */}
         <div className="flex justify-end gap-3 pt-4 border-t flex-wrap">
           <Button variant="outline" onClick={onClose} disabled={submitting}>
-            İptal
+            {t("pages:testForm.dialog.cancel")}
           </Button>
           {onSaveAndNew && (
             <Button
@@ -430,8 +438,8 @@ function QuestionEditDialog({ question, questionIndex, topicList, onSave, onSave
               disabled={submitting}
             >
               {submitting
-                ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Kaydediliyor...</>
-                : <><Plus className="w-4 h-4 mr-1" />Yeni Soru</>
+                ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />{t("pages:testForm.dialog.saving")}</>
+                : <><Plus className="w-4 h-4 mr-1" />{t("pages:testForm.dialog.newQuestion")}</>
               }
             </Button>
           )}
@@ -440,7 +448,7 @@ function QuestionEditDialog({ question, questionIndex, topicList, onSave, onSave
             onClick={handleSave}
             disabled={submitting}
           >
-            {submitting ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Kaydediliyor...</> : "Tamamla"}
+            {submitting ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />{t("pages:testForm.dialog.saving")}</> : t("pages:testForm.dialog.complete")}
           </Button>
         </div>
       </DialogContent>
@@ -450,6 +458,7 @@ function QuestionEditDialog({ question, questionIndex, topicList, onSave, onSave
 
 // ─── Soru maddesi accordion ──────────────────────────────────────────────────
 function QuestionItem({ questionIndex, question, topicList, onUpdate, onDelete, onAddNew }) {
+  const { t } = useTranslation(["pages"]);
   const [editOpen, setEditOpen] = useState(false);
 
   const isComplete = (question.content.trim() || question.mediaUrl) &&
@@ -461,7 +470,7 @@ function QuestionItem({ questionIndex, question, topicList, onUpdate, onDelete, 
       <AccordionItem value={question._k}>
         <AccordionTrigger className="hover:no-underline">
           <div className="flex items-center gap-3 text-left flex-1">
-            <span className="text-sm font-semibold text-slate-600">Soru {questionIndex + 1}</span>
+            <span className="text-sm font-semibold text-slate-600">{t("pages:testForm.question.label", { n: questionIndex + 1 })}</span>
             {isComplete
               ? <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0" />
               : <div className="w-4 h-4 rounded-full border-2 border-slate-300 flex-shrink-0" />
@@ -481,23 +490,23 @@ function QuestionItem({ questionIndex, question, topicList, onUpdate, onDelete, 
           {/* Moderasyon REJECTED banner */}
           {question.moderationStatus === 'REJECTED' && (
             <div className="mb-3 px-3 py-2 bg-rose-50 border border-rose-200 rounded-lg text-xs text-rose-700">
-              Bu soru içerik politikasına aykırı bulundu.
+              {t("pages:testForm.question.rejectedNotice")}
             </div>
           )}
           {/* Ozet bilgi */}
           {question.mediaUrl && (
-            <p className="text-xs text-slate-500 mb-2">Görsel eklenmiş</p>
+            <p className="text-xs text-slate-500 mb-2">{t("pages:testForm.createPage.imageAdded")}</p>
           )}
           <p className="text-xs text-slate-500 mb-3">
-            {question.options.filter(o => o.content.trim()).length}/5 secenek dolu
+            {t("pages:testForm.createPage.questionItem.selectedCount", { filled: question.options.filter(o => o.content.trim()).length })}
             {question.options.find(o => o.isCorrect)
-              ? " • Dogru cevap: " + LETTERS[question.options.findIndex(o => o.isCorrect)]
-              : " • Dogru cevap secilmedi"
+              ? " " + t("pages:testForm.createPage.questionItem.correctIs", { letter: LETTERS[question.options.findIndex(o => o.isCorrect)] })
+              : " " + t("pages:testForm.createPage.questionItem.correctMissing")
             }
           </p>
           <div className="flex gap-2">
             <Button size="sm" variant="outline" onClick={() => setEditOpen(true)}>
-              <WrenchIcon className="w-3 h-3 mr-1" />Düzenle
+              <WrenchIcon className="w-3 h-3 mr-1" />{t("pages:testForm.question.edit")}
             </Button>
             <Button
               variant="ghost"
@@ -505,7 +514,7 @@ function QuestionItem({ questionIndex, question, topicList, onUpdate, onDelete, 
               className="text-rose-600 hover:text-rose-700 hover:bg-rose-50"
               onClick={() => onDelete(questionIndex)}
             >
-              <Trash2 className="w-4 h-4 mr-1" />Sil
+              <Trash2 className="w-4 h-4 mr-1" />{t("pages:testForm.question.delete")}
             </Button>
           </div>
         </AccordionContent>
@@ -529,7 +538,8 @@ function QuestionItem({ questionIndex, question, topicList, onUpdate, onDelete, 
 }
 
 // ─── Test kartı (Adım 2'de) ─────────────────────────────────────────────────
-function TestCard({ test, testIndex, examTypes, topicList, onTestUpdate, onTestDelete, error, onErrorClear }) {
+function TestCard({ test, testIndex, examTypes, topicList, onTestUpdate, onTestDelete, error, onErrorClear, totalTests, isExpanded, onToggleExpand }) {
+  const { t } = useTranslation(["pages"]);
   const [showDOCXDialog, setShowDOCXDialog] = useState(false);
   const [docxLoading, setDocxLoading] = useState(false);
 
@@ -612,19 +622,19 @@ function TestCard({ test, testIndex, examTypes, topicList, onTestUpdate, onTestD
       }
 
       if (questions.length === 0) {
-        toast.error("DOCX'ten soru parse edilemedi. Lütfen manuel ekleyiniz.");
+        toast.error(t("pages:testForm.createPage.docx.parseError"));
       } else {
         onTestUpdate({
           ...test,
           questions: [...test.questions, ...questions],
         });
-        toast.success(`${questions.length} soru eklendi`);
+        toast.success(t("pages:testForm.createPage.docx.added", { count: questions.length }));
       }
     } catch (err) {
       if (err.message?.includes("mammoth")) {
-        toast.error("DOCX import paketi yüklü değil");
+        toast.error(t("pages:testForm.createPage.docx.mammothMissing"));
       } else {
-        toast.error("DOCX import başarısız: " + (err?.message || "Bilinmeyen hata"));
+        toast.error(t("pages:testForm.createPage.docx.importError", { msg: err?.message || t("pages:testForm.createPage.docx.unknownError") }));
       }
     } finally {
       setDocxLoading(false);
@@ -637,16 +647,77 @@ function TestCard({ test, testIndex, examTypes, topicList, onTestUpdate, onTestD
     return (q.content.trim() || q.mediaUrl) && filled.length >= 2 && q.options.some((o) => o.isCorrect);
   });
 
+  // Collapsed kart — sadece kısa özet, accordion benzeri davranış.
+  if (!isExpanded) {
+    return (
+      <Card className="mb-3">
+        <button
+          type="button"
+          onClick={onToggleExpand}
+          className="w-full flex items-center justify-between gap-3 p-4 text-left hover:bg-slate-50 transition-colors rounded-xl"
+          aria-expanded="false"
+        >
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="text-xs font-semibold text-slate-500">
+                {t("pages:testForm.testCard.indexLabel", { index: testIndex + 1 })}
+              </span>
+              {/* test.title user-generated — çevrilmez */}
+              <span className="text-sm font-medium text-slate-900 truncate">
+                {test.title?.trim() || t("pages:testForm.preview.untitled")}
+              </span>
+              {error && <AlertTriangle className="w-3 h-3 text-rose-500 flex-shrink-0" />}
+            </div>
+            <div className="flex items-center gap-3 mt-1 text-xs text-slate-500">
+              <span>
+                {t("pages:testForm.testCard.questionCountStat", { count: test.questions.length })}
+              </span>
+              <span className="text-slate-400">·</span>
+              <span>
+                {t("pages:testForm.testCard.completedShort", { count: filledQuestions.length })}
+              </span>
+              {test.isTimed && (
+                <>
+                  <span className="text-slate-400">·</span>
+                  <span>{test.duration} dk</span>
+                </>
+              )}
+            </div>
+          </div>
+          <ChevronDown className="w-4 h-4 text-slate-400 flex-shrink-0" aria-hidden="true" />
+        </button>
+      </Card>
+    );
+  }
+
   return (
-    <Card className="mb-4">
+    <Card className="mb-4 ring-2 ring-indigo-200">
+      <button
+        type="button"
+        onClick={onToggleExpand}
+        className="w-full flex items-center justify-between gap-3 px-6 pt-4 -mb-2 text-left"
+        aria-expanded="true"
+        aria-label={t("pages:testForm.testCard.collapseAria")}
+      >
+        <div className="flex items-center gap-2 flex-wrap text-sm text-slate-600">
+          <span className="text-xs font-semibold text-indigo-600">
+            {t("pages:testForm.testCard.indexLabel", { index: testIndex + 1 })}
+          </span>
+          <span className="text-slate-300">·</span>
+          <span className="text-xs text-slate-500">
+            {t("pages:testForm.testCard.completedShort", { count: filledQuestions.length })} / {test.questions.length}
+          </span>
+        </div>
+        <ChevronUp className="w-4 h-4 text-slate-400" aria-hidden="true" />
+      </button>
       <CardHeader>
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1">
             <div className="space-y-2">
-              <Label htmlFor={`test-title-${test._k}`}>Test Başlığı *</Label>
+              <Label htmlFor={`test-title-${test._k}`}>{t("pages:testForm.testCard.titleLabel")}</Label>
               <Input
                 id={`test-title-${test._k}`}
-                placeholder="Örn: YKS Matematik"
+                placeholder={t("pages:testForm.testCard.titlePlaceholder")}
                 value={test.title}
                 onChange={(e) => {
                   onTestUpdate({ ...test, title: e.target.value });
@@ -661,11 +732,12 @@ function TestCard({ test, testIndex, examTypes, topicList, onTestUpdate, onTestD
               )}
             </div>
             <div className="space-y-2 mt-3">
-              <Label htmlFor={`test-type-${test._k}`}>Sınav Türü (İsteğe Bağlı)</Label>
+              <Label htmlFor={`test-type-${test._k}`}>{t("pages:testForm.package.examTypeLabel")}</Label>
               <Select value={test.examTypeId || "none"} onValueChange={(v) => onTestUpdate({ ...test, examTypeId: v === "none" ? "" : v })}>
-                <SelectTrigger id={`test-type-${test._k}`}><SelectValue placeholder="Seçin" /></SelectTrigger>
+                <SelectTrigger id={`test-type-${test._k}`}><SelectValue placeholder={t("pages:testForm.package.examTypePlaceholder")} /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="none">— Seçilmedi —</SelectItem>
+                  <SelectItem value="none">{t("pages:testForm.package.examTypeNone")}</SelectItem>
+                  {/* exam.name user-generated — çevrilmez */}
                   {(examTypes || []).map(e => <SelectItem key={e.id} value={e.id}>{e.name}</SelectItem>)}
                 </SelectContent>
               </Select>
@@ -674,11 +746,11 @@ function TestCard({ test, testIndex, examTypes, topicList, onTestUpdate, onTestD
           <div className="space-y-2">
             <div className="flex items-center gap-3">
               <Switch id={`timed-${test._k}`} checked={test.isTimed} onCheckedChange={(v) => onTestUpdate({ ...test, isTimed: v })} />
-              <Label htmlFor={`timed-${test._k}`} className="cursor-pointer">Süreli</Label>
+              <Label htmlFor={`timed-${test._k}`} className="cursor-pointer">{t("pages:testForm.testCard.timedToggle")}</Label>
             </div>
             {test.isTimed && (
               <div className="space-y-2">
-                <Label htmlFor={`duration-${test._k}`}>Süre (dakika)</Label>
+                <Label htmlFor={`duration-${test._k}`}>{t("pages:testForm.createPage.duration")}</Label>
                 <Input
                   id={`duration-${test._k}`}
                   type="number"
@@ -689,7 +761,7 @@ function TestCard({ test, testIndex, examTypes, topicList, onTestUpdate, onTestD
               </div>
             )}
           </div>
-          {test.title && (
+          {(test.title || totalTests > 1) && (
             <Button size="sm" variant="ghost" className="text-rose-600 hover:bg-rose-50"
               onClick={() => onTestDelete(testIndex)}>
               <Trash2 className="w-4 h-4" />
@@ -702,14 +774,16 @@ function TestCard({ test, testIndex, examTypes, topicList, onTestUpdate, onTestD
         <div>
           <div className="flex items-center justify-between mb-3">
             <p className="text-sm font-semibold text-slate-700">
-              {test.questions.length} soru ({filledQuestions.length} tamamlanmış)
+              {t("pages:testForm.testCard.questionCountStat", { count: test.questions.length })}
+              {' '}
+              {t("pages:testForm.testCard.completedSuffix", { count: filledQuestions.length })}
             </p>
             <Button size="sm" className="bg-indigo-600 hover:bg-indigo-700"
               onClick={() => onTestUpdate({
                 ...test,
                 questions: [...test.questions, emptyQuestion()],
               })}>
-              <Plus className="w-4 h-4 mr-1" />Soru Ekle
+              <Plus className="w-4 h-4 mr-1" />{t("pages:testForm.testCard.addQuestion")}
             </Button>
           </div>
           <Accordion type="single" collapsible className="space-y-2">
@@ -747,7 +821,7 @@ function TestCard({ test, testIndex, examTypes, topicList, onTestUpdate, onTestD
         <div className="border-t pt-4">
           <Button size="sm" variant="outline" className="gap-2" onClick={() => setShowDOCXDialog(true)} disabled={docxLoading}>
             <Upload className="w-4 h-4" />
-            {docxLoading ? "Yükleniyor..." : "DOCX İçeri Aktar"}
+            {docxLoading ? t("pages:testForm.createPage.docx.loading") : t("pages:testForm.createPage.docx.button")}
           </Button>
         </div>
 
@@ -755,16 +829,16 @@ function TestCard({ test, testIndex, examTypes, topicList, onTestUpdate, onTestD
         <Dialog open={showDOCXDialog} onOpenChange={setShowDOCXDialog}>
           <DialogContent className="max-w-sm">
             <DialogHeader>
-              <DialogTitle>DOCX'ten Sorular İçeri Aktar</DialogTitle>
+              <DialogTitle>{t("pages:testForm.createPage.docx.dialogTitle")}</DialogTitle>
             </DialogHeader>
             <div className="space-y-4">
               <p className="text-sm text-slate-600">
-                Word dosyasını seçin. Sorular otomatik olarak ayrıştırılacak.
+                {t("pages:testForm.createPage.docx.dialogDesc")}
               </p>
               <div className="border-2 border-dashed border-slate-300 rounded-lg p-6 text-center">
                 <label className="cursor-pointer flex flex-col items-center gap-2">
                   <Upload className="w-6 h-6 text-slate-400" />
-                  <span className="text-sm font-medium text-slate-600">DOCX Dosya Seç</span>
+                  <span className="text-sm font-medium text-slate-600">{t("pages:testForm.createPage.docx.selectFile")}</span>
                   <input
                     type="file"
                     accept=".docx"
@@ -788,6 +862,7 @@ function TestCard({ test, testIndex, examTypes, topicList, onTestUpdate, onTestD
 
 // ─── Ana bileşen ────────────────────────────────────────────────────────────
 export default function CreateTest() {
+  const { t } = useTranslation(["pages"]);
   const { user }     = useAuth();
   const navigate     = useAppNavigate();
   const { packageCreationEnabled, minPackagePriceCents = 100 } = useServiceStatus();
@@ -807,31 +882,60 @@ export default function CreateTest() {
     priceCents: 0,
     examTypeId: "",
     difficulty: "medium",
+    coverImageUrl: "",
   });
 
-  const [tests, setTests] = useState([emptyTest()]);
+  const [tests, setTests] = useState(() => [emptyTest()]);
+  const [expandedTestKey, setExpandedTestKey] = useState(() => null);
+
+  // İlk render'da varsayılan olarak ilk test açık kalsın.
+  useEffect(() => {
+    if (expandedTestKey === null && tests.length > 0) {
+      setExpandedTestKey(tests[0]._k);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // ─── Taslak kurtarma ────────────────────────────────────────────
   const [showDraftDialog, setShowDraftDialog] = useState(false);
   const [draftInfo, setDraftInfo] = useState(null);
   const draftKey = user?.id ? `createTestWizard_${user.id}` : null;
   const getFormData = useCallback(() => ({ pkgData, tests }), [pkgData, tests]);
-  const { hasDraft, loadDraft, clearDraft } = useAutoSave(
+  // lastSavedAt/isSaving şu an CreateTest UI'sında gösterilmiyor — EditTest'te
+  // kullanılıyor. Hook return'ünde tutmaya devam ediyoruz ki ileride header'a
+  // indicator eklenebilsin; unused-imports linter'ı için _ prefix yok çünkü
+  // destructure'da rename gerekmiyor.
+  const { scheduleSave, loadDraft, clearDraft } = useAutoSave(
     draftKey ?? "__noop__",
     getFormData,
-    { enabled: !!draftKey && step <= 2 },
+    {
+      enabled: !!draftKey && step <= 2,
+      // Sunucu yedeği: localStorage temizlense ya da cihaz değişse bile devam edilebilir
+      serverKey: user?.id ? "createTestWizard" : null,
+    },
   );
 
+  // Form değişimi → debounce'lu kayıt (2s sonra). Idle heartbeat 10s'de bir
+  // çağırıldığı için bu sadece "kullanıcı aktifken sık sık yedek al" amacı taşır.
   useEffect(() => {
     if (!draftKey) return;
-    if (hasDraft()) {
-      const draft = loadDraft();
+    scheduleSave();
+  }, [pkgData, tests, draftKey, scheduleSave]);
+
+  // Mount: lokal + sunucu taslağını birleştir, en yenisini sun.
+  useEffect(() => {
+    if (!draftKey) return;
+    let cancelled = false;
+    (async () => {
+      const draft = await loadDraft();
+      if (cancelled) return;
       if (draft?.data?.pkgData?.title) {
         setDraftInfo(draft);
         setShowDraftDialog(true);
       }
-    }
-  }, [draftKey]);
+    })();
+    return () => { cancelled = true; };
+  }, [draftKey, loadDraft]);
 
   // ─── Sorgular ─────────────────────────────────────────────────────
   const { data: examTypes = [] } = useQuery({
@@ -895,7 +999,7 @@ export default function CreateTest() {
       }
 
       if (createdTestIds.length === 0) {
-        throw new Error("En az bir geçerli test oluşturmalısınız");
+        throw new Error(t("pages:testForm.createPage.atLeastOneValid"));
       }
 
       // 2. TestPackage oluştur
@@ -905,6 +1009,7 @@ export default function CreateTest() {
         priceCents: Math.round((pkgData.priceCents || 0) * 100),
         examTypeId: pkgData.examTypeId || undefined,
         difficulty: pkgData.difficulty || "medium",
+        coverImageUrl: pkgData.coverImageUrl || undefined,
       });
 
       // 3. Testleri pakete ekle
@@ -922,18 +1027,18 @@ export default function CreateTest() {
     onSuccess: (result) => {
       clearDraft();
       if (result.publish) {
-        toast.success("Paket oluşturuldu ve yayınlandı!");
+        toast.success(t("pages:testForm.createPage.publishedToast"));
       } else {
-        toast.success("Paket taslak olarak kaydedildi.");
+        toast.success(t("pages:testForm.createPage.draftedToast"));
       }
       navigate(buildPageUrl("MyTestPackages"), { replace: true });
     },
     onError: (err) => {
       const code = err?.response?.data?.code || err?.response?.data?.error;
       if (code === 'MODERATION_PENDING') {
-        toast.error("Bu testin bazı soruları moderasyon onayı bekliyor. Onaylanmadan yayımlayamazsınız.");
+        toast.error(t("pages:testForm.createPage.moderationPending"));
       } else {
-        toast.error(err?.response?.data?.message || err?.message || "Kaydetme başarısız");
+        toast.error(err?.response?.data?.message || err?.message || t("pages:testForm.createPage.saveFailed"));
       }
     },
   });
@@ -942,9 +1047,9 @@ export default function CreateTest() {
   if (!user) {
     return (
       <div className="max-w-2xl mx-auto text-center py-20">
-        <p className="text-slate-600 mb-4">Test oluşturmak için giriş yapın</p>
+        <p className="text-slate-600 mb-4">{t("pages:testForm.createPage.guards.loginRequired")}</p>
         <Link to={createPageUrl("Login")}>
-          <Button className="bg-indigo-600 hover:bg-indigo-700">Giriş Yap</Button>
+          <Button className="bg-indigo-600 hover:bg-indigo-700">{t("pages:testForm.createPage.guards.loginButton")}</Button>
         </Link>
       </div>
     );
@@ -956,8 +1061,8 @@ export default function CreateTest() {
         <div className="w-20 h-20 mx-auto bg-amber-100 rounded-full flex items-center justify-center mb-4">
           <WrenchIcon className="w-10 h-10 text-amber-600" />
         </div>
-        <h2 className="text-2xl font-bold text-slate-900 mb-2">Bakım Modu</h2>
-        <p className="text-slate-600">Test oluşturma geçici olarak durdurulmuştur.</p>
+        <h2 className="text-2xl font-bold text-slate-900 mb-2">{t("pages:testForm.createPage.guards.maintenanceTitle")}</h2>
+        <p className="text-slate-600">{t("pages:testForm.createPage.guards.maintenanceDesc")}</p>
       </div>
     );
   }
@@ -965,12 +1070,12 @@ export default function CreateTest() {
   if (user.role === "EDUCATOR" && user?.status === "PENDING_EDUCATOR_APPROVAL") {
     return (
       <div className="max-w-2xl mx-auto text-center py-20">
-        <h2 className="text-2xl font-bold text-slate-900 mb-2">Hesap Onayı Bekleniyor</h2>
+        <h2 className="text-2xl font-bold text-slate-900 mb-2">{t("pages:testForm.createPage.guards.pendingApprovalTitle")}</h2>
         <p className="text-slate-600 mb-6">
-          Test oluşturabilmek için hesabınızın yönetici tarafından onaylanması gerekiyor.
+          {t("pages:testForm.createPage.guards.pendingApprovalDesc")}
         </p>
         <Link to={createPageUrl("EducatorSettings")}>
-          <Button className="bg-indigo-600 hover:bg-indigo-700">Profil Ayarlarına Git</Button>
+          <Button className="bg-indigo-600 hover:bg-indigo-700">{t("pages:testForm.createPage.guards.goToSettings")}</Button>
         </Link>
       </div>
     );
@@ -979,9 +1084,9 @@ export default function CreateTest() {
   // ─── Geçiş işleyicileri ────────────────────────────────────────
   const goToTests = () => {
     const errs = {};
-    if (!pkgData.title.trim()) errs.title = "Paket başlığı zorunludur";
+    if (!pkgData.title.trim()) errs.title = t("pages:testForm.createPage.validations.titleRequired");
     if (!pkgData.priceCents || pkgData.priceCents < minPriceTL)
-      errs.price = `Fiyat en az ${minPriceTL} ₺ olmalıdır`;
+      errs.price = t("pages:testForm.createPage.validations.priceMin", { min: minPriceTL });
     if (Object.keys(errs).length) {
       setPkgErrors(errs);
       return;
@@ -992,21 +1097,21 @@ export default function CreateTest() {
 
   const goToPreview = () => {
     const errs = {};
-    tests.forEach((t) => {
-      if (!t.title.trim()) {
-        errs[t._k] = "Test başlığı zorunludur";
+    tests.forEach((tt) => {
+      if (!tt.title.trim()) {
+        errs[tt._k] = t("pages:testForm.createPage.validations.testTitleRequired");
       } else {
-        const validQuestions = t.questions.filter((q) => {
+        const validQuestions = tt.questions.filter((q) => {
           const filledOpts = q.options.filter(o => o.content.trim() || o.mediaUrl);
           return (q.content.trim() || q.mediaUrl) && filledOpts.length >= 2 && q.options.some(o => o.isCorrect);
         });
         if (validQuestions.length === 0) {
-          errs[t._k] = "En az bir tamamlanmış soru gereklidir";
+          errs[tt._k] = t("pages:testForm.createPage.validations.atLeastOneValidQuestion");
         }
       }
     });
 
-    const validTests = tests.filter((t) => !errs[t._k]);
+    const validTests = tests.filter((tt) => !errs[tt._k]);
     if (validTests.length === 0) {
       setTestErrors(errs);
       return;
@@ -1034,12 +1139,15 @@ export default function CreateTest() {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <History className="w-5 h-5 text-indigo-600" />
-              Kaydedilmemiş Taslak
+              {t("pages:testForm.createPage.draftDialog.title")}
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <p className="text-sm text-slate-600">
-              <strong>"{draftInfo?.data?.pkgData?.title}"</strong> başlıklı kaydedilmemiş bir taslak bulundu.
+              {/* draftInfo title user-generated; interpolation ile değiştir */}
+              <span dangerouslySetInnerHTML={{
+                __html: t("pages:testForm.createPage.draftDialog.found", { title: draftInfo?.data?.pkgData?.title ?? "" })
+              }} />
               {draftSavedAt && <span className="text-slate-400"> ({draftSavedAt})</span>}
             </p>
             <div className="flex gap-3">
@@ -1047,14 +1155,17 @@ export default function CreateTest() {
                 if (draftInfo?.data) {
                   setPkgData(draftInfo.data.pkgData);
                   setTests(draftInfo.data.tests);
+                  if (draftInfo.data.tests?.length > 0) {
+                    setExpandedTestKey(draftInfo.data.tests[0]._k);
+                  }
                 }
-                toast.success("Taslak yüklendi");
+                toast.success(t("pages:testForm.createPage.draftDialog.loaded"));
                 setShowDraftDialog(false);
-              }}>Devam Et</Button>
+              }}>{t("pages:testForm.createPage.draftDialog.continue")}</Button>
               <Button variant="outline" className="flex-1" onClick={() => {
                 clearDraft();
                 setShowDraftDialog(false);
-              }}>Sil, Yeniden Başla</Button>
+              }}>{t("pages:testForm.createPage.draftDialog.discardRestart")}</Button>
             </div>
           </div>
         </DialogContent>
@@ -1073,11 +1184,11 @@ export default function CreateTest() {
       <Link to={createPageUrl("EducatorDashboard")}
         className="inline-flex items-center gap-2 text-slate-600 hover:text-slate-900 mb-6">
         <ArrowLeft className="w-4 h-4" />
-        Dashboard'a Dön
+        {t("pages:testForm.createPage.backToDashboard")}
       </Link>
 
-      <h1 className="text-2xl font-bold text-slate-900 mb-1">Yeni Test Paketi Oluştur</h1>
-      <p className="text-slate-500 mb-8">3 adımda testlerinizi hazırlayın ve yayınlayın.</p>
+      <h1 className="text-2xl font-bold text-slate-900 mb-1">{t("pages:titles.createTest")}</h1>
+      <p className="text-slate-500 mb-8">{t("pages:testForm.createPage.headerSubtitle")}</p>
 
       <StepIndicator current={step} />
 
@@ -1087,13 +1198,13 @@ export default function CreateTest() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Package className="w-5 h-5 text-indigo-600" />
-              Paket Bilgileri
+              {t("pages:testForm.package.sectionTitle")}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-5">
             <div className="space-y-2">
-              <Label htmlFor="pkg-title">Paket Başlığı *</Label>
-              <Input id="pkg-title" placeholder="Örn: KPSS Genel Yetenek Paket"
+              <Label htmlFor="pkg-title">{t("pages:testForm.package.titleLabel")}</Label>
+              <Input id="pkg-title" placeholder={t("pages:testForm.package.titlePlaceholder")}
                 value={pkgData.title}
                 onChange={(e) => { setPkgData({ ...pkgData, title: e.target.value }); setPkgErrors(p => ({ ...p, title: "" })); }}
                 className={pkgErrors.title ? "border-rose-500 focus-visible:ring-rose-500" : ""} />
@@ -1101,54 +1212,62 @@ export default function CreateTest() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="pkg-desc">Açıklama</Label>
-              <Textarea id="pkg-desc" placeholder="Paket hakkında..." rows={3}
+              <Label htmlFor="pkg-desc">{t("pages:testForm.package.descLabel")}</Label>
+              <Textarea id="pkg-desc" placeholder={t("pages:testForm.package.descPlaceholder")} rows={3}
                 value={pkgData.description}
                 onChange={(e) => setPkgData({ ...pkgData, description: e.target.value })} />
             </div>
 
+            <PackageCoverUpload
+              value={pkgData.coverImageUrl}
+              onChange={(url) => setPkgData({ ...pkgData, coverImageUrl: url })}
+              titlePreview={pkgData.title}
+              difficulty={pkgData.difficulty}
+            />
+
             <div className="space-y-2">
-              <Label htmlFor="pkg-type">Sınav Türü (İsteğe Bağlı)</Label>
+              <Label htmlFor="pkg-type">{t("pages:testForm.package.examTypeLabel")}</Label>
               <Select value={pkgData.examTypeId || "none"} onValueChange={(v) => setPkgData({ ...pkgData, examTypeId: v === "none" ? "" : v })}>
-                <SelectTrigger id="pkg-type"><SelectValue placeholder="Seçin" /></SelectTrigger>
+                <SelectTrigger id="pkg-type"><SelectValue placeholder={t("pages:testForm.package.examTypePlaceholder")} /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="none">— Seçilmedi —</SelectItem>
+                  <SelectItem value="none">{t("pages:testForm.package.examTypeNone")}</SelectItem>
+                  {/* exam.name user-generated — çevrilmez */}
                   {examTypes.map(e => <SelectItem key={e.id} value={e.id}>{e.name}</SelectItem>)}
                 </SelectContent>
               </Select>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="pkg-price">Fiyat (₺) *</Label>
-              <Input id="pkg-price" type="number" min="1" step="1" placeholder="Örn: 49"
+              <Label htmlFor="pkg-price">{t("pages:testForm.package.priceLabel")}</Label>
+              <Input id="pkg-price" type="number" min="1" step="1" placeholder={t("pages:testForm.package.pricePlaceholder")}
                 value={pkgData.priceCents || ""}
                 onChange={(e) => { setPkgData({ ...pkgData, priceCents: Number(e.target.value) }); setPkgErrors(p => ({ ...p, price: "" })); }}
                 className={pkgErrors.price ? "border-rose-500 focus-visible:ring-rose-500" : ""} />
               {pkgErrors.price
                 ? <p className="text-xs text-rose-500 mt-1 flex items-center gap-1"><AlertTriangle className="w-3 h-3" />{pkgErrors.price}</p>
-                : <p className="text-xs text-slate-500">Minimum fiyat: {minPriceTL} ₺</p>}
+                : <p className="text-xs text-slate-500">{t("pages:testForm.package.priceMin", { min: minPriceTL })}</p>}
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="pkg-difficulty">Zorluk Seviyesi *</Label>
+              <Label htmlFor="pkg-difficulty">{t("pages:testForm.package.difficultyLabel")}</Label>
               <Select
                 value={pkgData.difficulty}
                 onValueChange={(v) => setPkgData({ ...pkgData, difficulty: v })}
               >
                 <SelectTrigger id="pkg-difficulty">
-                  <SelectValue placeholder="Zorluk seçin" />
+                  <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="easy">🟢 Kolay</SelectItem>
-                  <SelectItem value="medium">🟡 Orta</SelectItem>
-                  <SelectItem value="hard">🔴 Zor</SelectItem>
+                  <SelectItem value="easy">{t("pages:testForm.package.difficulty.easy")}</SelectItem>
+                  <SelectItem value="medium">{t("pages:testForm.package.difficulty.medium")}</SelectItem>
+                  <SelectItem value="hard">{t("pages:testForm.package.difficulty.hard")}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
             <div className="flex justify-end pt-2">
               <Button onClick={goToTests} className="bg-indigo-600 hover:bg-indigo-700">
-                İleri →
+                {t("pages:testForm.nav.next")}
               </Button>
             </div>
           </CardContent>
@@ -1160,12 +1279,16 @@ export default function CreateTest() {
         <div className="space-y-5">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-lg font-semibold text-slate-900">Testler & Sorular</h2>
-              <p className="text-sm text-slate-500 mt-1">Her teste sorular ekleyip düzenleyin</p>
+              <h2 className="text-lg font-semibold text-slate-900">{t("pages:testForm.testsStep.title")}</h2>
+              <p className="text-sm text-slate-500 mt-1">{t("pages:testForm.testsStep.subtitleCreate")}</p>
             </div>
             <Button size="sm" className="bg-indigo-600 hover:bg-indigo-700"
-              onClick={() => setTests([...tests, emptyTest()])}>
-              <Plus className="w-4 h-4 mr-1" />Test Ekle
+              onClick={() => {
+                const newT = emptyTest();
+                setTests([...tests, newT]);
+                setExpandedTestKey(newT._k);
+              }}>
+              <Plus className="w-4 h-4 mr-1" />{t("pages:testForm.testsStep.addTest")}
             </Button>
           </div>
 
@@ -1177,12 +1300,17 @@ export default function CreateTest() {
               examTypes={examTypes}
               topicList={topicList}
               error={testErrors[test._k]}
+              totalTests={tests.length}
+              isExpanded={test._k === expandedTestKey}
+              onToggleExpand={() => setExpandedTestKey(prev => prev === test._k ? null : test._k)}
               onErrorClear={(key) => setTestErrors(p => ({ ...p, [key]: "" }))}
               onTestUpdate={(updated) => {
                 setTests(tests.map((t, i) => i === tIdx ? updated : t));
               }}
               onTestDelete={(idx) => {
+                const removed = tests[idx];
                 setTests(tests.filter((_, i) => i !== idx));
+                if (expandedTestKey === removed?._k) setExpandedTestKey(null);
               }}
               onAddQuestion={() => {
                 setTests(tests.map((t, i) =>
@@ -1196,15 +1324,15 @@ export default function CreateTest() {
             <Card>
               <CardContent className="py-12 text-center text-slate-500">
                 <BookOpen className="w-12 h-12 text-slate-200 mx-auto mb-3" />
-                <p className="font-medium">Henüz test eklenmedi</p>
+                <p className="font-medium">{t("pages:testForm.createPage.noTestsYet")}</p>
               </CardContent>
             </Card>
           )}
 
           <div className="flex justify-between">
-            <Button variant="outline" onClick={() => setStep(1)}>← Geri</Button>
+            <Button variant="outline" onClick={() => setStep(1)}>{t("pages:testForm.nav.back")}</Button>
             <Button onClick={goToPreview} className="bg-indigo-600 hover:bg-indigo-700">
-              Önizleme →
+              {t("pages:testForm.nav.previewNext")}
             </Button>
           </div>
         </div>
@@ -1217,30 +1345,32 @@ export default function CreateTest() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Eye className="w-5 h-5 text-indigo-600" />
-                Paket Özeti
+                {t("pages:testForm.preview.sectionTitle")}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="bg-slate-50 rounded-xl p-4 space-y-3">
                 <div>
-                  <p className="text-xs text-slate-500">Paket Başlığı</p>
+                  <p className="text-xs text-slate-500">{t("pages:testForm.preview.packageTitleLabel")}</p>
+                  {/* pkgData.title user-generated */}
                   <p className="text-lg font-semibold text-slate-900">{pkgData.title}</p>
                 </div>
                 {pkgData.description && (
                   <div>
-                    <p className="text-xs text-slate-500">Açıklama</p>
+                    <p className="text-xs text-slate-500">{t("pages:testForm.preview.descriptionLabel")}</p>
+                    {/* pkgData.description user-generated */}
                     <p className="text-sm text-slate-700">{pkgData.description}</p>
                   </div>
                 )}
                 <div className="flex flex-wrap gap-2">
-                  <Badge variant="outline">{tests.length} test</Badge>
+                  <Badge variant="outline">{t("pages:testForm.preview.testsCount", { count: tests.length })}</Badge>
                   <Badge variant="outline">
-                    {tests.reduce((acc, t) => acc + t.questions.filter(q => {
+                    {t("pages:testForm.preview.validQuestions", { count: tests.reduce((acc, tt) => acc + tt.questions.filter(q => {
                       const filled = q.options.filter(o => o.content.trim() || o.mediaUrl);
                       return (q.content.trim() || q.mediaUrl) && filled.length >= 2 && q.options.some(o => o.isCorrect);
-                    }).length, 0)} soru
+                    }).length, 0) })}
                   </Badge>
-                  <Badge variant="outline">{pkgData.priceCents === 0 ? "Ücretsiz" : `₺${pkgData.priceCents}`}</Badge>
+                  <Badge variant="outline">{pkgData.priceCents === 0 ? t("pages:testForm.preview.free") : `₺${pkgData.priceCents}`}</Badge>
                   {examTypes.find(e => e.id === pkgData.examTypeId)?.name && (
                     <Badge variant="outline" className="border-indigo-200 text-indigo-700 bg-indigo-50">
                       {examTypes.find(e => e.id === pkgData.examTypeId)?.name}
@@ -1251,18 +1381,19 @@ export default function CreateTest() {
 
               {/* Test listesi */}
               <div className="space-y-2">
-                <p className="text-sm font-semibold text-slate-700">Testler</p>
-                {tests.map((t, tIdx) => {
-                  const validQuestions = t.questions.filter(q => {
+                <p className="text-sm font-semibold text-slate-700">{t("pages:testForm.preview.testsListTitle")}</p>
+                {tests.map((tt, tIdx) => {
+                  const validQuestions = tt.questions.filter(q => {
                     const filled = q.options.filter(o => o.content.trim() || o.mediaUrl);
                     return (q.content.trim() || q.mediaUrl) && filled.length >= 2 && q.options.some(o => o.isCorrect);
                   });
                   return (
-                    <div key={t._k} className="p-3 rounded-lg bg-slate-50 border border-slate-100">
+                    <div key={tt._k} className="p-3 rounded-lg bg-slate-50 border border-slate-100">
                       <div className="flex items-start justify-between gap-3">
                         <div>
-                          <p className="font-medium text-slate-900">{t.title || "Başlıksız Test"}</p>
-                          <p className="text-sm text-slate-600">{validQuestions.length} soru</p>
+                          {/* tt.title user-generated */}
+                          <p className="font-medium text-slate-900">{tt.title || t("pages:testForm.createPage.untitled")}</p>
+                          <p className="text-sm text-slate-600">{t("pages:testForm.preview.validQuestions", { count: validQuestions.length })}</p>
                         </div>
                         <Button size="sm" variant="ghost" className="text-indigo-600"
                           onClick={() => {
@@ -1278,26 +1409,26 @@ export default function CreateTest() {
 
               <div className="border-t pt-4 space-y-3">
                 <p className="text-sm text-slate-500">
-                  Paket yayınlandığında öğrenciler tarafından görülebilir ve satın alınabilir hale gelir.
+                  {t("pages:testForm.createPage.publishHint")}
                 </p>
                 <div className="flex gap-3">
                   <Button variant="outline" className="flex-1"
                     disabled={publishMutation.isPending}
                     onClick={() => publishMutation.mutate(false)}>
-                    {publishMutation.isPending ? "Kaydediliyor..." : "Taslak Kaydet"}
+                    {publishMutation.isPending ? t("pages:testForm.createPage.saving") : t("pages:testForm.createPage.draftSave")}
                   </Button>
                   <Button className="flex-1 bg-emerald-600 hover:bg-emerald-700 gap-2"
                     disabled={publishMutation.isPending}
                     onClick={() => publishMutation.mutate(true)}>
                     <CheckCircle2 className="w-4 h-4" />
-                    {publishMutation.isPending ? "Yayınlanıyor..." : "Yayınla"}
+                    {publishMutation.isPending ? t("pages:testForm.createPage.publishing") : t("pages:testForm.createPage.publish")}
                   </Button>
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Button variant="outline" onClick={() => setStep(2)}>← Geri (Testler)</Button>
+          <Button variant="outline" onClick={() => setStep(2)}>{t("pages:testForm.nav.backToTests")}</Button>
         </div>
       )}
 

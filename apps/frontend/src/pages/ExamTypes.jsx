@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { createPageUrl } from "@/utils";
 import { entities } from "@/api/dalClient";
 import { useQuery } from "@tanstack/react-query";
@@ -8,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Search, BookOpen, GraduationCap } from "lucide-react";
 
 export default function ExamTypes() {
+  const { t } = useTranslation(["pages"]);
   const [searchQuery, setSearchQuery] = useState("");
 
   const { data: examTypes = [], isLoading } = useQuery({
@@ -33,8 +35,8 @@ export default function ExamTypes() {
   return (
     <div className="max-w-7xl mx-auto">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-slate-900">Sınav Türleri</h1>
-        <p className="text-slate-500 mt-2">Tüm sınav türlerini keşfet ve testleri incele</p>
+        <h1 className="text-3xl font-bold text-slate-900">{t("pages:titles.examTypes")}</h1>
+        <p className="text-slate-500 mt-2">{t("pages:titles.examTypesDesc", { defaultValue: "" })}</p>
       </div>
 
       {/* Search */}

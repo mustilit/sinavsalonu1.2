@@ -100,6 +100,8 @@ export type AdminSettings = {
   minPackagePriceCents: number;
   /** Eğiticinin tanımlayabileceği maksimum indirim oranı (% 1-100). */
   maxDiscountPercent: number;
+  /** Google OAuth 2.0 Client ID — admin panelinden yönetilir; boşsa Google ile giriş kapalı. */
+  googleClientId: string | null;
   /** Test başına minimum soru sayısı. Yayımlamada kontrol edilir. */
   minQuestionsPerTest: number;
   /** Test başına maksimum soru sayısı. Soru eklerken kontrol edilir. */

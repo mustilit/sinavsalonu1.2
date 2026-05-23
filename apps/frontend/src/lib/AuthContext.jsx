@@ -155,6 +155,28 @@ export const AuthProvider = ({ children }) => {
     return u;
   }, [setAuth]);
 
+  /**
+   * Google OAuth ile giriş — Google ID token alıp backend'e gönderir.
+   * Yeni kullanıcı oluşturulursa role parametresi (CANDIDATE/EDUCATOR) kullanılır.
+   */
+  const loginWithGoogle = useCallback(async (idToken, role) => {
+    authLog('googleLogin start');
+    queryClientInstance.clear();
+    const data = await base44.auth.loginWithGoogle(idToken, role);
+    const u = data?.user;
+    const token = data?.token;
+    if (!u || !token) {
+      throw new Error('Google girişi yanıtında kullanıcı veya token eksik.');
+    }
+    setAuth(u, token);
+    try {
+      const merged = await base44.auth.me();
+      if (merged) setAuth(merged, token);
+    } catch {}
+    authLog('googleLogin ok', { id: u?.id, role: u?.role, isNewUser: data.isNewUser });
+    return { user: u, isNewUser: data.isNewUser };
+  }, [setAuth]);
+
   return (
     <AuthContext.Provider
       value={{
@@ -166,6 +188,7 @@ export const AuthProvider = ({ children }) => {
         logout,
         navigateToLogin,
         login,
+        loginWithGoogle,
         setAuth,
         checkAppState: checkUserAuth,
       }}

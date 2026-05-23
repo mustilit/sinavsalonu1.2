@@ -7,11 +7,13 @@
  *   onSkip   : () => void    — "Atla" butonuna basılınca
  */
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { X, ChevronLeft, ChevronRight, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 export default function OnboardingTour({ steps = [], onComplete, onSkip }) {
+  const { t } = useTranslation(["onboarding"]);
   const [current, setCurrent] = useState(0);
   const [visible, setVisible] = useState(true);
 
@@ -47,7 +49,7 @@ export default function OnboardingTour({ steps = [], onComplete, onSkip }) {
         <button
           onClick={handleClose}
           className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 transition-colors z-10"
-          aria-label="Turu atla"
+          aria-label={t("onboarding:ui.skipAria")}
         >
           <X className="w-5 h-5" />
         </button>
@@ -69,7 +71,7 @@ export default function OnboardingTour({ steps = [], onComplete, onSkip }) {
                   ? "w-6 h-2 bg-indigo-600"
                   : "w-2 h-2 bg-slate-200 hover:bg-slate-300"
               )}
-              aria-label={`Adım ${idx + 1}`}
+              aria-label={t("onboarding:ui.stepAria", { n: idx + 1 })}
             />
           ))}
         </div>
@@ -79,8 +81,8 @@ export default function OnboardingTour({ steps = [], onComplete, onSkip }) {
           <p className="text-xs font-semibold text-indigo-500 uppercase tracking-wider mb-1">
             {current + 1} / {steps.length}
           </p>
-          <h2 className="text-xl font-bold text-slate-900 mb-2">{step.title}</h2>
-          <p className="text-sm text-slate-600 leading-relaxed">{step.description}</p>
+          <h2 className="text-xl font-bold text-slate-900 mb-2">{t(step.title)}</h2>
+          <p className="text-sm text-slate-600 leading-relaxed">{t(step.description)}</p>
         </div>
 
         {/* Actions */}
@@ -91,7 +93,7 @@ export default function OnboardingTour({ steps = [], onComplete, onSkip }) {
             onClick={handleClose}
             className="text-slate-400 hover:text-slate-600"
           >
-            Atla
+            {t("onboarding:ui.skip")}
           </Button>
 
           <div className="flex items-center gap-2">
@@ -103,7 +105,7 @@ export default function OnboardingTour({ steps = [], onComplete, onSkip }) {
                 className="flex items-center gap-1"
               >
                 <ChevronLeft className="w-4 h-4" />
-                Geri
+                {t("onboarding:ui.back")}
               </Button>
             )}
             <Button
@@ -119,11 +121,11 @@ export default function OnboardingTour({ steps = [], onComplete, onSkip }) {
               {isLast ? (
                 <>
                   <CheckCircle2 className="w-4 h-4" />
-                  Hadi Başlayalım!
+                  {t("onboarding:ui.letsStart")}
                 </>
               ) : (
                 <>
-                  İleri
+                  {t("onboarding:ui.next")}
                   <ChevronRight className="w-4 h-4" />
                 </>
               )}

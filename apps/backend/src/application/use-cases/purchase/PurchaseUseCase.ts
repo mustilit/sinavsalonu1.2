@@ -133,6 +133,67 @@ export class PurchaseUseCase {
         this.prisma.$transaction(async (tx) => {
         // testId: ExamTest ID'si (packageId varsa test.id kullanılır, yoksa orijinal testId)
         const examTestId = test.id;
+
+        // ─── İçerik snapshot'ı ─────────────────────────────────────────────
+        // Eğitici sonradan soru/seçenek güncellese bile bu satın alma
+        // dondurulmuş içeriği görür. Şekil için Purchase.testsSnapshot
+        // şema yorumuna bakınız.
+        const snapshotTestIds: string[] = packageId
+          ? (await tx.examTest.findMany({
+              where: { packageId, deletedAt: null },
+              select: { id: true },
+              orderBy: { createdAt: 'asc' },
+            })).map((r) => r.id)
+          : [examTestId];
+
+        const snapshotTests = await tx.examTest.findMany({
+          where: { id: { in: snapshotTestIds } },
+          select: {
+            id: true,
+            title: true,
+            isTimed: true,
+            duration: true,
+            createdAt: true,
+            questions: {
+              select: {
+                id: true,
+                content: true,
+                mediaUrl: true,
+                order: true,
+                solutionText: true,
+                solutionMediaUrl: true,
+                options: {
+                  select: { id: true, content: true, mediaUrl: true, isCorrect: true },
+                  orderBy: { id: 'asc' },
+                },
+              },
+              orderBy: [{ order: 'asc' }, { id: 'asc' }],
+            },
+          },
+          orderBy: { createdAt: 'asc' },
+        });
+
+        const testsSnapshot = snapshotTests.map((t) => ({
+          testId: t.id,
+          title: t.title,
+          isTimed: t.isTimed,
+          duration: t.duration,
+          questions: t.questions.map((q) => ({
+            id: q.id,
+            content: q.content,
+            mediaUrl: q.mediaUrl,
+            order: q.order,
+            solutionText: q.solutionText,
+            solutionMediaUrl: q.solutionMediaUrl,
+            options: q.options.map((o) => ({
+              id: o.id,
+              content: o.content,
+              mediaUrl: o.mediaUrl,
+              isCorrect: o.isCorrect,
+            })),
+          })),
+        }));
+
         const purchase = await tx.purchase.create({
           data: {
             tenantId,
@@ -141,6 +202,7 @@ export class PurchaseUseCase {
             amountCents: finalAmountCents,
             currency: purchaseCurrency,
             amountUsdCents: amountUsdCents ?? null,
+            testsSnapshot: testsSnapshot as any,
             ...(discountApplied ? { discountCodeId: discountApplied.id } : {}),
             ...(packageId ? { packageId } : {}),
             ...(paymentProvider ? { paymentProvider } : {}),

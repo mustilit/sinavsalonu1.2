@@ -42,36 +42,43 @@ import { CANDIDATE_TEST_STEPS } from "@/components/onboarding/tourSteps";
 import { useOffline } from "@/lib/useOffline";
 // Cevap kuyruğu: offline iken cevapları localStorage'da beklet
 import { useAnswerQueue } from "@/lib/useAnswerQueue";
+// Proctoring: anti-leak / anti-cheat eventleri yakala ve sunucuya raporla
+import { useTestProctoring } from "@/lib/useTestProctoring";
+import { TestWatermark } from "@/components/test/TestWatermark";
 // Offline overlay bileşeni
 import OfflineBanner from "@/components/ui/OfflineBanner";
 import QuestionCanvas from "@/components/test/QuestionCanvas";
 
-// Map Dal question/options to Sınav Salonu format
-function toUIStyle(questions, stateQuestions) {
-  const stateMap = new Map((stateQuestions || []).map((q) => [q.id, q]));
+// Map Dal question/options to Sınav Salonu format.
+// `stateQuestions`: GetAttemptStateUseCase response. Snapshot-based içerik
+// burada gelir — eğitici sonradan soruyu güncellese bile kullanıcı satın alma
+// anındaki versiyonu görür. isCorrect yalnızca attempt SUBMITTED/TIMEOUT
+// durumdayken backend tarafından açılır; IN_PROGRESS sırasında undefined.
+function toUIStyle(stateQuestions) {
   const letters = ["A", "B", "C", "D", "E"];
-  return (questions || []).map((q) => {
-    const state = stateMap.get(q.id);
+  return (stateQuestions || []).map((q) => {
     const options = (q.options || []).map((o) => ({
-      ...o,
-      isCorrect: o.isCorrect ?? o.is_correct,
+      id: o.id,
+      content: o.content ?? "",
+      mediaUrl: o.mediaUrl ?? null,
+      isCorrect: o.isCorrect ?? o.is_correct, // submit sonrası açık olur
     }));
-    const correctOpt = options.find((o) => o.isCorrect);
-    const correctLetter = correctOpt ? letters[options.indexOf(correctOpt)] : "A";
+    const correctIdx = options.findIndex((o) => o.isCorrect);
+    const correctLetter = correctIdx >= 0 ? letters[correctIdx] : null;
     const optMap = {};
     letters.forEach((l, i) => {
       if (options[i]) {
         optMap[`option_${l.toLowerCase()}`] = options[i].content;
       }
     });
-    const selectedOptionId = state?.selectedOptionId;
+    const selectedOptionId = q.selectedOptionId ?? null;
     const selectedLetter = selectedOptionId
       ? letters[options.findIndex((o) => o.id === selectedOptionId)]
       : null;
     return {
       id: q.id,
-      test_id: q.testId,
-      question_text: q.content,
+      question_text: q.content ?? "",
+      mediaUrl: q.mediaUrl ?? null,
       correct_answer: correctLetter,
       ...optMap,
       options,
@@ -107,9 +114,8 @@ export default function TakeTest() {
   const [showAnswerSheet, setShowAnswerSheet] = useState(false);
   const [activeAttemptId, setActiveAttemptId] = useState(attemptIdParam);
   const [testRating, setTestRating] = useState(0);
-  const [educatorRating, setEducatorRating] = useState(0);
+  // Eğitici puanı şu an UI'da gösterilmiyor (yeni model: paket başına tek review)
   const [testComment, setTestComment] = useState("");
-  const [educatorComment, setEducatorComment] = useState("");
   // Süre aşımı modu: timer sıfıra geldiğinde true, test hâlâ çözülebilir
   const [isOvertime, setIsOvertime] = useState(false);
   // Süre aşımı sayacı (saniye cinsinden, timer'ın üstüne eklenir)
@@ -122,6 +128,9 @@ export default function TakeTest() {
   const canvasRef = useRef(null);
   const navScrollRef = useRef(null);
   const answerSheetScrollRef = useRef(null);
+  // Proctoring container — UX engelleri bu DOM altında uygulanır
+  const proctorContainerRef = useRef(null);
+  const [showExitWarning, setShowExitWarning] = useState(false);
   // Her 3 cevapta bir DB checkpoint tetiklemek için sayaç
   const checkpointCountRef = useRef(0);
   const [navAtTop, setNavAtTop] = useState(true);
@@ -182,12 +191,12 @@ export default function TakeTest() {
   const accessDetermined = !!testDetail && !loadingPurchases;
   const hasAccess = purchases.length > 0;
 
-  // useMemo: questions her render'da yeni referans almasın (useEffect döngüsünü kırar)
+  // useMemo: questions her render'da yeni referans almasın (useEffect döngüsünü kırar).
+  // İçerik tamamen attemptState (snapshot) üzerinden gelir — eğitici güncellemeleri
+  // mevcut adaylara sızmaz.
   const questions = useMemo(
-    () => attemptState && testDetail
-      ? toUIStyle(testDetail.questions || [], attemptState.questions)
-      : [],
-    [attemptState, testDetail]
+    () => attemptState ? toUIStyle(attemptState.questions || []) : [],
+    [attemptState]
   );
   const isLoading = !!resolvedAttemptId && !!user && !attemptState;
 
@@ -220,37 +229,43 @@ export default function TakeTest() {
     enabled: !!resolvedAttemptId && !!user && testFinished,
   });
 
+  // Paket context: packageId, paketteki test sayısı (bu testin paketinin tüm üyeleri).
+  // Yeni model: review per-package — son test bitince modal paket puanını sorar.
+  const packageId = testDetail?.packageId ?? null;
+
+  const { data: packageTests = [] } = useQuery({
+    queryKey: ["package_tests_count", packageId],
+    queryFn: () => entities.Test.filter({ test_package_id: packageId }),
+    enabled: !!packageId,
+  });
+
   const { data: allResults = [] } = useQuery({
-    queryKey: ["testAverages", testId],
-    queryFn: () => entities.TestResult.filter({ user_email: user?.email, test_package_id: testId }),
-    enabled: !!testId && !!user && testFinished,
+    queryKey: ["packageResults", packageId, user?.id],
+    queryFn: () => entities.TestResult.filter({ user_email: user?.email, test_package_id: packageId }),
+    enabled: !!packageId && !!user && testFinished,
   });
 
-  const { data: existingTestReview } = useQuery({
-    queryKey: ["testReview", testId, user?.id],
-    queryFn: async () => {
-      const reviews = await entities.Review.filter({
-        test_package_id: testId,
-        reviewer_email: user.email,
-        review_type: "test",
-      });
-      return reviews[0] || null;
-    },
-    enabled: !!user?.email && !!testId && testFinished,
+  // Paket için mevcut review (yeni model — tek kayıt)
+  const { data: existingPackageReview } = useQuery({
+    queryKey: ["myPackageReview", packageId, user?.id],
+    queryFn: () => entities.Review.myPackageReview(packageId),
+    enabled: !!user?.email && !!packageId && testFinished,
   });
 
-  const { data: existingEducatorReview } = useQuery({
-    queryKey: ["educatorReview", testPackage?.educator_email, user?.email],
-    queryFn: async () => {
-      const reviews = await entities.Review.filter({
-        educator_email: testPackage?.educator_email,
-        reviewer_email: user.email,
-        review_type: "educator",
-      });
-      return reviews[0] || null;
-    },
-    enabled: !!user?.email && !!testPackage?.educator_email && testFinished,
-  });
+  // Bu test paketin SON TAMAMLANAN testi mi? → review modal'ı sadece o zaman çıkar.
+  // Sayım: paketteki test sayısı === adayın paket için SUBMITTED attempt sayısı.
+  const isLastTestInPackage =
+    packageTests.length > 0 && allResults.length >= packageTests.length;
+
+  // Pre-fill: paket için mevcut puan varsa formu doldur
+  useEffect(() => {
+    if (existingPackageReview?.rating != null) {
+      setTestRating(existingPackageReview.rating);
+      if (typeof existingPackageReview.comment === "string") {
+        setTestComment(existingPackageReview.comment);
+      }
+    }
+  }, [existingPackageReview]);
 
   useEffect(() => {
     if (isReviewMode && previousResult && questions.length > 0) {
@@ -283,8 +298,39 @@ export default function TakeTest() {
       setTestStarted(true);
       const started = attemptState.attempt?.startedAt ? new Date(attemptState.attempt.startedAt).getTime() : Date.now();
       setStartTime(started);
+
+      // UI state recovery: flagged sorular ve son görülen soru index'i yenilemeden
+      // önceki haliyle restore edilir. Cevaplar zaten server snapshot ile geliyor.
+      try {
+        const uiRaw = localStorage.getItem(`takeTestUi_${resolvedAttemptId}`);
+        if (uiRaw) {
+          const ui = JSON.parse(uiRaw);
+          if (Array.isArray(ui.flagged)) {
+            setFlagged(new Set(ui.flagged.filter((id) => questions.some((q) => q.id === id))));
+          }
+          if (typeof ui.currentIndex === "number" && ui.currentIndex >= 0 && ui.currentIndex < questions.length) {
+            setCurrentIndex(ui.currentIndex);
+          }
+        }
+      } catch { /* sessiz */ }
     }
-  }, [attemptState, questions, isReviewMode]);
+  }, [attemptState, questions, isReviewMode, resolvedAttemptId, testDetail?.isTimed]);
+
+  // UI state persist — flagged ve currentIndex localStorage'a yazılır.
+  // Tarayıcı kapansa bile aday tam kaldığı yere dönebilir.
+  useEffect(() => {
+    if (!resolvedAttemptId || !testStarted || isReviewMode) return;
+    try {
+      localStorage.setItem(
+        `takeTestUi_${resolvedAttemptId}`,
+        JSON.stringify({
+          flagged: Array.from(flagged),
+          currentIndex,
+          savedAt: Date.now(),
+        }),
+      );
+    } catch { /* sessiz */ }
+  }, [flagged, currentIndex, resolvedAttemptId, testStarted, isReviewMode]);
 
   // Reset solution panel when navigating between questions
   useEffect(() => {
@@ -304,44 +350,39 @@ export default function TakeTest() {
     },
   });
 
+  // Backend hatalarından anlamlı mesaj çıkar — Nest filtre çıktısı veya plain Axios
+  // hatasını uyumlu okur. Bilinmiyorsa generic mesaj döner.
+  const extractErrorMessage = (err, fallback) => {
+    const d = err?.response?.data;
+    return (
+      d?.error?.message ||
+      d?.message ||
+      d?.error?.code ||
+      d?.code ||
+      err?.message ||
+      fallback
+    );
+  };
+
+  // Paket review submit — yeni domain: 1 aday × 1 paket = 1 review (test bazında değil)
   const handleSubmitTestReview = async () => {
-    if (testRating === 0) return;
+    if (testRating === 0 || !packageId) return;
     try {
-      await entities.Review.create({
-        reviewer_email: user.email,
-        reviewer_name: user.username || user.full_name,
-        review_type: "test",
-        test_package_id: testId,
-        test_package_title: testPackage?.title,
-        educator_email: testPackage?.educator_email,
-        educator_name: testPackage?.educator_name,
+      await entities.Review.upsertPackageReview(packageId, {
         rating: testRating,
         comment: testComment,
       });
-      queryClient.invalidateQueries({ queryKey: ["testReview", testId, user?.id] });
-      toast.success("Test puanınız kaydedildi!");
-    } catch {
-      toast.error("Bir hata oluştu!");
-    }
-  };
-
-  const handleSubmitEducatorReview = async () => {
-    if (educatorRating === 0) return;
-    try {
-      await entities.Review.create({
-        reviewer_email: user.email,
-        reviewer_name: user.username || user.full_name,
-        review_type: "educator",
-        test_package_id: testId,
-        educator_email: testPackage?.educator_email,
-        educator_name: testPackage?.educator_name,
-        educator_rating: educatorRating,
-        comment: educatorComment,
-      });
-      queryClient.invalidateQueries({ queryKey: ["educatorReview", testPackage?.educator_email, user?.email] });
-      toast.success("Eğitici puanınız kaydedildi!");
-    } catch {
-      toast.error("Bir hata oluştu!");
+      queryClient.invalidateQueries({ queryKey: ["myPackageReview", packageId, user?.id] });
+      queryClient.invalidateQueries({ queryKey: ["packageReviews", packageId] });
+      toast.success(
+        existingPackageReview
+          ? "Paket puanınız güncellendi!"
+          : "Paket puanınız kaydedildi!",
+      );
+    } catch (err) {
+      const msg = extractErrorMessage(err, "Paket puanı kaydedilemedi");
+      console.error("[TakeTest] handleSubmitTestReview failed:", err);
+      toast.error(msg);
     }
   };
 
@@ -385,6 +426,9 @@ export default function TakeTest() {
     onSuccess: (data) => {
       setActiveAttemptId(data.attemptId);
       setTestStarted(true);
+      // Aday test başlatınca fullscreen iste — kullanıcı izin vermezse
+      // exit sayacı zaten devreye girer ve eğitici bunu raporda görür.
+      setTimeout(() => enterFullscreen(), 100);
       const now = Date.now();
       setStartTime(now);
       if (test?.is_timed && data.remainingSec) {
@@ -418,8 +462,9 @@ export default function TakeTest() {
         localStorage.setItem(`elapsed_${resolvedAttemptId}`, String(elapsedSec));
       }
       setResult(data);
-      // Test bitti — localStorage cevap kuyruğunu temizle
+      // Test bitti — localStorage cevap kuyruğunu + UI state'i temizle
       clearQueue();
+      try { localStorage.removeItem(`takeTestUi_${resolvedAttemptId}`); } catch { /* sessiz */ }
       queryClient.invalidateQueries({ queryKey: ["attemptState", resolvedAttemptId] });
       queryClient.invalidateQueries({ queryKey: ["myResults", user?.email] });
       queryClient.invalidateQueries({ queryKey: ["purchases", user?.id, testId] });
@@ -438,6 +483,34 @@ export default function TakeTest() {
     setTestFinished(true);
     finishMutation.mutate();
   }, [testFinished, finishMutation]);
+
+  // Proctoring: aday IN_PROGRESS attempt'i çözerken sağ tık / copy / klavye
+  // kısayolları engellenir, tab switch + fullscreen exit sayılır. exitLimit'e
+  // ulaşılınca test otomatik teslim edilir (sebep audit log'lara düşer).
+  const { exitCount, enterFullscreen } = useTestProctoring({
+    attemptId: resolvedAttemptId,
+    enabled: testStarted && !testFinished && !isReviewMode,
+    exitLimit: 3,
+    containerRef: proctorContainerRef,
+    onViolationLimit: ({ count, reason }) => {
+      toast.error(`Çoklu sekme/pencere çıkışı (${count}). Test otomatik teslim ediliyor.`);
+      // best-effort log, normal handleFinish akışı çalışır
+      try {
+        api.post(`/attempts/${resolvedAttemptId}/anomaly`, {
+          type: 'OTHER',
+          payload: { reason: 'auto-submit-after-exit-limit', exitReason: reason, count },
+        }).catch(() => {});
+      } catch { /* sessiz */ }
+      handleFinish();
+    },
+  });
+
+  // Çıkış sayısı 1 olduğunda uyarı banner'ı (1 ve 2 için uyarı, 3'te submit)
+  useEffect(() => {
+    if (exitCount > 0 && exitCount < 3 && testStarted && !testFinished && !isReviewMode) {
+      setShowExitWarning(true);
+    }
+  }, [exitCount, testStarted, testFinished, isReviewMode]);
 
   useEffect(() => {
     if (!testStarted || testFinished || isReviewMode) return;
@@ -743,10 +816,21 @@ export default function TakeTest() {
             </div>
           )}
 
-          {!existingTestReview && (
+          {/* Paket Puanlama — yalnızca SON test tamamlanınca çıkar (paketin tüm testleri SUBMITTED) */}
+          {isLastTestInPackage && (
             <div className="mt-8 bg-amber-50 border border-amber-200 rounded-2xl p-6">
-              <h3 className="font-semibold text-slate-900 mb-2">Bu testi değerlendir</h3>
-              <p className="text-sm text-slate-600 mb-4">{testPackage?.title}</p>
+              <h3 className="font-semibold text-slate-900 mb-2">Paketi değerlendir</h3>
+              {/* testPackage.title user-generated — çevrilmez */}
+              <p className="text-sm text-slate-600 mb-1">{testPackage?.title}</p>
+              {existingPackageReview ? (
+                <p className="text-xs text-amber-700 mb-4">
+                  Bu paket için daha önce puan vermiştiniz — istediğinizde güncelleyebilirsiniz.
+                </p>
+              ) : (
+                <p className="text-xs text-slate-500 mb-4">
+                  Paketin tüm testlerini tamamladın. Paketi puanlayarak deneyimini paylaş.
+                </p>
+              )}
               <div className="flex items-center gap-4 mb-3">
                 <StarRating value={testRating} onChange={setTestRating} size="lg" />
                 {testRating > 0 && (
@@ -762,39 +846,11 @@ export default function TakeTest() {
               />
               <Button
                 onClick={handleSubmitTestReview}
-                disabled={testRating === 0}
+                disabled={testRating === 0 || !packageId}
                 size="sm"
                 className="bg-amber-600 hover:bg-amber-700"
               >
-                Testi Puanla
-              </Button>
-            </div>
-          )}
-
-          {!existingEducatorReview && (
-            <div className="mt-4 bg-blue-50 border border-blue-200 rounded-2xl p-6">
-              <h3 className="font-semibold text-slate-900 mb-2">Eğiticiyi değerlendir</h3>
-              <p className="text-sm text-slate-600 mb-4">{testPackage?.educator_name}</p>
-              <div className="flex items-center gap-4 mb-3">
-                <StarRating value={educatorRating} onChange={setEducatorRating} size="lg" />
-                {educatorRating > 0 && (
-                  <span className="text-sm text-slate-600">{educatorRating}/5</span>
-                )}
-              </div>
-              <Textarea
-                placeholder="Yorumunuz (opsiyonel)"
-                value={educatorComment}
-                onChange={(e) => setEducatorComment(e.target.value)}
-                className="mb-3"
-                rows={2}
-              />
-              <Button
-                onClick={handleSubmitEducatorReview}
-                disabled={educatorRating === 0}
-                size="sm"
-                className="bg-blue-600 hover:bg-blue-700"
-              >
-                Eğiticiyi Puanla
+                {existingPackageReview ? "Puanı Güncelle" : "Paketi Puanla"}
               </Button>
             </div>
           )}
@@ -806,7 +862,7 @@ export default function TakeTest() {
                 navigate(buildPageUrl("TakeTest", { id: testId, review: true }), { replace: true });
               }}
             >
-              Gözden Geçir
+              İncele
             </Button>
             <Link to={createPageUrl("MyTests")}>
               <Button className="bg-indigo-600 hover:bg-indigo-700">Testlerime Dön</Button>
@@ -887,7 +943,47 @@ export default function TakeTest() {
   const optionsForCurrent = currentQuestion?.options || [];
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <div
+      ref={proctorContainerRef}
+      className="max-w-4xl mx-auto"
+      // CSS tarafı UX engelleri — devtools'tan stil silinebilir; bu yüzden
+      // event handler'lar (useTestProctoring) gerçek savunma
+      style={
+        testStarted && !isReviewMode && !testFinished
+          ? { userSelect: 'none', WebkitUserSelect: 'none', WebkitTouchCallout: 'none' }
+          : undefined
+      }
+    >
+      {/* Çoklu sekme/pencere çıkışı uyarısı — 1. ve 2. çıkışta gösterilir.
+          3.'de useTestProctoring onViolationLimit ile auto-submit eder. */}
+      <Dialog open={showExitWarning} onOpenChange={setShowExitWarning}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-amber-700">
+              <AlertCircle className="w-5 h-5" />
+              Sınav dışına çıktınız ({exitCount}/3)
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-3 text-sm text-slate-700">
+            <p>
+              Sınav sırasında başka sekmeye geçmek veya tam ekrandan çıkmak yasaktır.
+              3. çıkışta sınavınız otomatik olarak teslim edilir.
+            </p>
+            <p className="text-slate-500 text-xs">
+              Bu olay sunucuya kaydedildi ve eğiticiniz tarafından görülebilir.
+            </p>
+            <div className="flex justify-end gap-2 pt-2">
+              <Button
+                onClick={() => { enterFullscreen(); setShowExitWarning(false); }}
+                className="bg-indigo-600 hover:bg-indigo-700"
+              >
+                Tam ekrana dön
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
       {/* Offline overlay — bağlantı koptuğunda tüm test arayüzünü kapatır */}
       <OfflineBanner
         isOffline={isOffline}
@@ -902,7 +998,7 @@ export default function TakeTest() {
         <div className="flex items-center gap-3 flex-wrap">
           {isReviewMode ? (
             <>
-              <Badge className="bg-indigo-100 text-indigo-700">Gözden Geçirme Modu</Badge>
+              <Badge className="bg-indigo-100 text-indigo-700">İnceleme Modu</Badge>
               <Link to={createPageUrl("MyTests")}>
                 <Button variant="ghost" className="text-slate-600">Testlerime Dön</Button>
               </Link>
@@ -966,7 +1062,18 @@ export default function TakeTest() {
       </div>
 
       <div className="flex gap-4 mb-6">
-      <div className="flex-1 relative bg-white rounded-2xl border border-slate-200 p-8">
+      <div className="flex-1 relative bg-white rounded-2xl border border-slate-200 p-8 overflow-hidden">
+        {/* Görünür filigran — yalnızca IN_PROGRESS attempt sırasında, sadece
+            soru kutusunun içinde. Review/finish modunda gizli. */}
+        {testStarted && !isReviewMode && !testFinished && (
+          <TestWatermark
+            identity={{
+              name: user?.full_name || user?.username || user?.email,
+              email: user?.email,
+              attemptId: resolvedAttemptId,
+            }}
+          />
+        )}
         <QuestionCanvas
           ref={canvasRef}
           isActive={isDrawingMode}
@@ -1264,7 +1371,7 @@ export default function TakeTest() {
                     <span className={cn("w-7 text-center text-sm shrink-0", ansClass)}>
                       {ans || "—"}
                     </span>
-                    {/* Doğru cevap (gözden geçirme) */}
+                    {/* Doğru cevap (inceleme modu) */}
                     {isReviewMode && (
                       <span className="w-7 text-center text-xs text-emerald-600 shrink-0">
                         {q.correct_answer}

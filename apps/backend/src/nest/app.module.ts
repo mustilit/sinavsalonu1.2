@@ -139,6 +139,7 @@ import { CreateWorkerUseCase } from '../application/use-cases/admin/CreateWorker
 import { GetWorkerPermissionsUseCase } from '../application/use-cases/admin/GetWorkerPermissionsUseCase';
 import { UpdateWorkerPermissionsUseCase } from '../application/use-cases/admin/UpdateWorkerPermissionsUseCase';
 import { PackagesController } from './controllers/packages.controller';
+import { DraftsController } from './controllers/drafts.controller';
 import { PrismaTestPackageRepository } from '../infrastructure/repositories/PrismaTestPackageRepository';
 import { CreateTestPackageUseCase } from '../application/use-cases/package/CreateTestPackageUseCase';
 import { GetTestPackageUseCase } from '../application/use-cases/package/GetTestPackageUseCase';
@@ -195,6 +196,7 @@ import { HandleStripeWebhookUseCase } from '../application/use-cases/billing/Han
 import { HandleIyzicoWebhookUseCase } from '../application/use-cases/billing/HandleIyzicoWebhookUseCase';
 import { SetupTwoFactorUseCase } from '../application/use-cases/auth/SetupTwoFactorUseCase';
 import { VerifyTwoFactorLoginUseCase } from '../application/use-cases/auth/VerifyTwoFactorLoginUseCase';
+import { GoogleAuthUseCase } from '../application/use-cases/auth/GoogleAuthUseCase';
 import { DisableTwoFactorUseCase } from '../application/use-cases/auth/DisableTwoFactorUseCase';
 // ── İçerik Moderasyonu ───────────────────────────────────────────────────
 import { ContentSafetyModule } from './modules/content-safety/content-safety.module';
@@ -299,6 +301,8 @@ const throttleDisabled = process.env.THROTTLE_DISABLED === '1';
     AdminEmailController,
     MeEmailPreferencesController,
     EmailWebhookController,
+    // Server-side draft yedek endpoint'leri (autoSave)
+    DraftsController,
   ],
   providers: [
     SeedService,
@@ -683,6 +687,12 @@ const throttleDisabled = process.env.THROTTLE_DISABLED === '1';
     // 2FA use case'leri
     SetupTwoFactorUseCase,
     VerifyTwoFactorLoginUseCase,
+    {
+      provide: GoogleAuthUseCase,
+      useFactory: (userRepo: PrismaUserRepository, pwd: PasswordService, jwt: AppJwtService) =>
+        new GoogleAuthUseCase(userRepo, pwd, jwt, process.env.GOOGLE_CLIENT_ID),
+      inject: [USER_REPO, PasswordService, AppJwtService],
+    },
     DisableTwoFactorUseCase,
   ],
 })

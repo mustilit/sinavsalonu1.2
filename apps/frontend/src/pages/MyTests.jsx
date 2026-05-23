@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { createPageUrl } from "@/utils";
 import { entities } from "@/api/dalClient";
 import { useAuth } from "@/lib/AuthContext";
@@ -8,9 +9,13 @@ import { Button } from "@/components/ui/button";
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import TestPackageCard from "@/components/ui/TestPackageCard";
+import PaginationBar from "@/components/ui/PaginationBar";
 import { Search, ShoppingBag, Filter, X } from "lucide-react";
 
+const PAGE_SIZE = 10;
+
 export default function MyTests() {
+  const { t } = useTranslation(["pages"]);
   const { user } = useAuth();
   const [selectedExamType, setSelectedExamType] = useState("all");
   const [selectedEducator, setSelectedEducator] = useState("all");
@@ -64,6 +69,35 @@ export default function MyTests() {
 
   const completedTestIds = new Set(results.map(r => r.test_package_id));
   const inProgressTestIds = new Set(testProgress.map(p => p.test_package_id));
+
+  // Paket bazında özet durum — paket içindeki TÜM ExamTest'lerin agrega durumu:
+  //   allCompleted: hepsi tamamlanmış (SUBMITTED/TIMEOUT) → "İncele"
+  //   noneStarted:  hiçbiri başlamamış                    → "Teste Başla"
+  //   hasMixed:     karışık veya en az biri IN_PROGRESS   → "Devam Et"
+  // `purchase.package.tests[]` paketin tüm ExamTest id'leri; `purchase.attempts[]` ise
+  // tüm attempt durumlarını içerir (status alanıyla birlikte).
+  const packageAggregate = {}; // packageId → { allCompleted, noneStarted }
+  purchases.forEach((p) => {
+    const pkgId = p.package_id ?? p.packageId ?? p.test_package_id;
+    if (!pkgId) return;
+    const pkgTests = p.package?.tests ?? [];
+    if (pkgTests.length === 0) return;
+    const attempts = Array.isArray(p.attempts) ? p.attempts : [];
+    const statusByTest = new Map();
+    for (const a of attempts) {
+      if (a?.testId) statusByTest.set(a.testId, a.status);
+    }
+    let completedCount = 0;
+    let startedCount = 0;
+    for (const t of pkgTests) {
+      const s = statusByTest.get(t.id);
+      if (s === "SUBMITTED" || s === "TIMEOUT") completedCount++;
+      if (s) startedCount++;
+    }
+    const allCompleted = completedCount === pkgTests.length;
+    const noneStarted = startedCount === 0;
+    packageAggregate[pkgId] = { allCompleted, noneStarted };
+  });
   
   let purchasedTests = testsWithRealCounts.filter(t => purchasedTestIds.has(t.id));
   
@@ -85,6 +119,19 @@ export default function MyTests() {
   const pendingTests = purchasedTests.filter(t => !completedTestIds.has(t.id));
   const completedTests = purchasedTests.filter(t => completedTestIds.has(t.id));
 
+  // Paging — 10 paket / sayfa. Filtre değişimlerinde 1. sayfaya dön.
+  const [page, setPage] = useState(1);
+  useEffect(() => { setPage(1); }, [selectedExamType, selectedEducator, completionFilter]);
+  const totalPages = Math.max(1, Math.ceil(purchasedTests.length / PAGE_SIZE));
+  const currentPage = Math.min(page, totalPages);
+  const pagedTests = useMemo(
+    () => purchasedTests.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE),
+    // purchasedTests her render'da yeni referans olduğu için dep listesine eklenmedi;
+    // currentPage + filtreler tetikler.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [currentPage, selectedExamType, selectedEducator, completionFilter, purchases.length],
+  );
+
   // Get unique educators
   const educators = [...new Set(testsWithRealCounts.filter(t => purchasedTestIds.has(t.id)).map(t => ({
     email: t.educator_email,
@@ -104,15 +151,15 @@ export default function MyTests() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-slate-900">Testlerim</h1>
-        <p className="text-slate-500 mt-2">Satın aldığın testleri görüntüle ve çöz</p>
+        <h1 className="text-3xl font-bold text-slate-900">{t("pages:myTests.title")}</h1>
+        <p className="text-slate-500 mt-2">{t("pages:myTests.subtitle")}</p>
       </div>
 
       {!isLoading && purchases.length > 0 && (
         <div className="mb-6 bg-white rounded-xl border border-slate-200 p-4">
           <div className="flex items-center gap-2 mb-4">
             <Filter className="w-5 h-5 text-slate-600" />
-            <h2 className="font-semibold text-slate-900">Filtrele</h2>
+            <h2 className="font-semibold text-slate-900">{t("pages:myTests.filter.title")}</h2>
             {hasActiveFilters && (
               <Button
                 variant="ghost"
@@ -121,21 +168,22 @@ export default function MyTests() {
                 className="ml-auto text-indigo-600 hover:text-indigo-700"
               >
                 <X className="w-4 h-4 mr-1" />
-                Filtreleri Temizle
+                {t("pages:myTests.filter.clear")}
               </Button>
             )}
           </div>
           <div className="grid sm:grid-cols-3 gap-4">
             <div>
-              <label className="text-sm font-medium text-slate-700 mb-2 block">Sınav Türü</label>
+              <label className="text-sm font-medium text-slate-700 mb-2 block">{t("pages:myTests.filter.examTypeLabel")}</label>
               <Select value={selectedExamType} onValueChange={setSelectedExamType}>
-                <SelectTrigger aria-label="Sınav türü filtresi">
-                  <SelectValue placeholder="Tümü" />
+                <SelectTrigger aria-label={t("pages:myTests.filter.examTypeAria")}>
+                  <SelectValue placeholder={t("pages:myTests.filter.all")} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">Tümü</SelectItem>
+                  <SelectItem value="all">{t("pages:myTests.filter.all")}</SelectItem>
                   {examTypes.map((exam) => (
                     <SelectItem key={exam.id} value={exam.id}>
+                      {/* exam.name user-generated — çevrilmez */}
                       {exam.name}
                     </SelectItem>
                   ))}
@@ -143,15 +191,16 @@ export default function MyTests() {
               </Select>
             </div>
             <div>
-              <label className="text-sm font-medium text-slate-700 mb-2 block">Eğitici</label>
+              <label className="text-sm font-medium text-slate-700 mb-2 block">{t("pages:myTests.filter.educatorLabel")}</label>
               <Select value={selectedEducator} onValueChange={setSelectedEducator}>
-                <SelectTrigger aria-label="Eğitici filtresi">
-                  <SelectValue placeholder="Tümü" />
+                <SelectTrigger aria-label={t("pages:myTests.filter.educatorAria")}>
+                  <SelectValue placeholder={t("pages:myTests.filter.all")} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">Tümü</SelectItem>
+                  <SelectItem value="all">{t("pages:myTests.filter.all")}</SelectItem>
                   {educators.map((educator) => (
                     <SelectItem key={educator.email} value={educator.email}>
+                      {/* educator.name user-generated — çevrilmez */}
                       {educator.name}
                     </SelectItem>
                   ))}
@@ -159,15 +208,15 @@ export default function MyTests() {
               </Select>
             </div>
             <div>
-              <label className="text-sm font-medium text-slate-700 mb-2 block">Çözülme Durumu</label>
+              <label className="text-sm font-medium text-slate-700 mb-2 block">{t("pages:myTests.filter.completionLabel")}</label>
               <Select value={completionFilter} onValueChange={setCompletionFilter}>
-                <SelectTrigger aria-label="Çözülme durumu filtresi">
-                  <SelectValue placeholder="Tümü" />
+                <SelectTrigger aria-label={t("pages:myTests.filter.completionAria")}>
+                  <SelectValue placeholder={t("pages:myTests.filter.all")} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">Tümü</SelectItem>
-                  <SelectItem value="pending">Bekleyen</SelectItem>
-                  <SelectItem value="completed">Tamamlanan</SelectItem>
+                  <SelectItem value="all">{t("pages:myTests.filter.all")}</SelectItem>
+                  <SelectItem value="pending">{t("pages:myTests.filter.pending")}</SelectItem>
+                  <SelectItem value="completed">{t("pages:myTests.filter.completed")}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -192,29 +241,44 @@ export default function MyTests() {
           <div className="w-20 h-20 mx-auto bg-slate-100 rounded-full flex items-center justify-center mb-4">
             <ShoppingBag className="w-10 h-10 text-slate-400" />
           </div>
-          <h3 className="text-xl font-semibold text-slate-900">Henüz test satın almadın</h3>
-          <p className="text-slate-500 mt-2 mb-6">Testleri keşfet ve sınava hazırlanmaya başla</p>
+          <h3 className="text-xl font-semibold text-slate-900">{t("pages:myTests.empty.title")}</h3>
+          <p className="text-slate-500 mt-2 mb-6">{t("pages:myTests.empty.desc")}</p>
           <Link to={createPageUrl("Explore")}>
             <Button className="bg-indigo-600 hover:bg-indigo-700">
               <Search className="w-4 h-4 mr-2" />
-              Testleri Keşfet
+              {t("pages:myTests.empty.cta")}
             </Button>
           </Link>
         </div>
       ) : (
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {purchasedTests.map((test) => (
-            <TestPackageCard
-              key={test.id}
-              test={test}
-              isPurchased={true}
-              isCompleted={completedTestIds.has(test.id)}
-              isInProgress={inProgressTestIds.has(test.id)}
-              showEducator={true}
-              attempt={attemptByTestId[test.id] ?? null}
-            />
-          ))}
-        </div>
+        <>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {pagedTests.map((test) => {
+              const agg = packageAggregate[test.id];
+              // Agrega varsa kullan; yoksa eski tek-test mantığına düş (geriye dönük uyum)
+              const isCompleted = agg ? agg.allCompleted : completedTestIds.has(test.id);
+              const isInProgress = agg
+                ? (!agg.allCompleted && !agg.noneStarted)
+                : inProgressTestIds.has(test.id);
+              return (
+                <TestPackageCard
+                  key={test.id}
+                  test={test}
+                  isPurchased={true}
+                  isCompleted={isCompleted}
+                  isInProgress={isInProgress}
+                  showEducator={true}
+                  attempt={attemptByTestId[test.id] ?? null}
+                />
+              );
+            })}
+          </div>
+          <PaginationBar
+            page={currentPage}
+            totalPages={totalPages}
+            onPageChange={setPage}
+          />
+        </>
       )}
     </div>
   );

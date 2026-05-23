@@ -1,0 +1,17 @@
+Sınav Salonu — Yeni cihazdan giriş
+
+Merhaba {{user.username}},
+
+Hesabınıza daha önce kullanılmamış bir cihazdan giriş yapıldı.
+
+Tarih: {{loginAt}}
+Cihaz: {{userAgent}}
+IP:    {{ip}}
+
+Bu sizdiyseniz, cihazı doğrulamak için:
+{{verifyUrl}}
+
+Bu siz değilseniz, şifrenizi hemen sıfırlayın:
+{{resetUrl}}
+
+Bağlantılar 24 saat sonra geçersiz olur.

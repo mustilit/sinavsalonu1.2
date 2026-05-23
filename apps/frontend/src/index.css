@@ -86,3 +86,12 @@
     @apply bg-background text-foreground;
   }
 }
+/* Yatay otomatik kaydıran carousel'lerde scrollbar'ı gizle — kullanıcı yine de
+   mouse wheel veya touch ile manuel kaydırabilir. */
+.scrollbar-none {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}

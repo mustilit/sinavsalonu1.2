@@ -1,0 +1,86 @@
+{
+  "ui": {
+    "skip": "Überspringen",
+    "skipAria": "Tour überspringen",
+    "back": "Zurück",
+    "next": "Weiter",
+    "letsStart": "Los geht's!",
+    "stepAria": "Schritt {{n}}"
+  },
+  "candidateWelcome": {
+    "s0": {
+      "title": "Willkommen bei Sınav Salonu! 🎉",
+      "description": "Sie sind der Plattform beigetreten, die Ihre Prüfungsvorbereitung auf die nächste Stufe hebt. Lassen Sie uns die Funktionen kurz vorstellen."
+    },
+    "s1": {
+      "title": "Testtypen entdecken",
+      "description": "Durchstöbern Sie Testpakete für zahlreiche Testtypen (YKS, KPSS, ALES usw.) im Bereich 'Tests entdecken'."
+    },
+    "s2": {
+      "title": "Testpakete erkunden",
+      "description": "Kaufen Sie von Ausbildern erstellte Testpakete. Jedes Paket kann mehrere Tests enthalten und verfolgt Ihren Fortschritt."
+    },
+    "s3": {
+      "title": "Ausbildern folgen",
+      "description": "Sehen Sie die Profile von Fachausbildern und entdecken Sie ihre weiteren Pakete."
+    }
+  },
+  "candidateTest": {
+    "s0": {
+      "title": "Willkommen im Testbildschirm",
+      "description": "Der Timer startet, wenn der Test beginnt (bei zeitgesteuerten Tests). Lesen Sie jede Frage sorgfältig und wählen Sie Ihre Antwort."
+    },
+    "s1": {
+      "title": "Fragennavigation",
+      "description": "Klicken Sie auf die Zahlenfelder im linken Bereich, um zu jeder Frage zu springen. Grün = beantwortet, Gelb = markiert."
+    },
+    "s2": {
+      "title": "Antwort ändern",
+      "description": "Klicken Sie erneut auf die gewählte Option, um sie abzuwählen. Eine andere Option ändert Ihre Antwort."
+    },
+    "s3": {
+      "title": "Fragen markieren 🚩",
+      "description": "Markieren Sie unsichere Fragen. Sie können vor dem Absenden leicht zu ihnen zurückkehren."
+    },
+    "s4": {
+      "title": "Test abschließen",
+      "description": "Wenn Sie fertig sind, klicken Sie auf 'Test beenden'. Sie sehen richtig/falsch-Verteilung und Zeitstatistiken."
+    }
+  },
+  "educatorWelcome": {
+    "s0": {
+      "title": "Willkommen im Ausbilder-Dashboard! 🏫",
+      "description": "Sie sind der Plattform beigetreten, auf der Sie eigene Testpakete erstellen, Verkäufe verfolgen und Kandidaten erreichen können."
+    },
+    "s1": {
+      "title": "Testpakete erstellen",
+      "description": "Mit 'Neuen Test erstellen' fügen Sie Fragen hinzu und konfigurieren Dauer und Bewertung. Mit einem Klick veröffentlichen."
+    },
+    "s2": {
+      "title": "Verkäufe verfolgen",
+      "description": "Sehen Sie monatliche Umsatzdiagramme, Bestseller-Pakete und Ihre Einnahmenübersicht in 'Meine Verkäufe'."
+    },
+    "s3": {
+      "title": "Profil vervollständigen",
+      "description": "Fügen Sie Bio, Fachgebiete und Zahlungsdaten (IBAN) hinzu. Ein vollständiges Profil zieht mehr Kandidaten an."
+    }
+  },
+  "educatorCreate": {
+    "s0": {
+      "title": "Testdaten eingeben",
+      "description": "Geben Sie Titel, Beschreibung, Testtyp, Thema und Preis ein. Mit 'Zeitlimit' können Sie die Dauer festlegen."
+    },
+    "s1": {
+      "title": "Fragen hinzufügen",
+      "description": "Geben Sie Text, Optionen und richtige Antwort an. Sie können auch Bilder hinzufügen. Reihenfolge per Drag&Drop änderbar."
+    },
+    "s2": {
+      "title": "Lösungen hinzufügen",
+      "description": "Fügen Sie detaillierte Lösungserklärungen hinzu. Kandidaten sehen sie nach Testabschluss."
+    },
+    "s3": {
+      "title": "Veröffentlichen!",
+      "description": "Alles bereit? Mit 'Veröffentlichen' wird das Paket sofort für Kandidaten sichtbar. Sie können jederzeit zurückziehen."
+    }
+  }
+}

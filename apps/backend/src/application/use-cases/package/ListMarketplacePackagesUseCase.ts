@@ -12,6 +12,7 @@ export interface MarketplacePackageItem {
   id: string;
   title: string;
   description: string | null;
+  coverImageUrl: string | null;
   priceCents: number;
   difficulty: string;
   publishedAt: string;
@@ -65,6 +66,7 @@ export class ListMarketplacePackagesUseCase {
           tp.id,
           tp.title,
           tp.description,
+          tp."coverImageUrl",
           tp."priceCents",
           tp.difficulty,
           tp."publishedAt",
@@ -100,6 +102,7 @@ export class ListMarketplacePackagesUseCase {
           id: true,
           title: true,
           description: true,
+          coverImageUrl: true,
           priceCents: true,
           difficulty: true,
           publishedAt: true,
@@ -111,6 +114,7 @@ export class ListMarketplacePackagesUseCase {
         id: p.id,
         title: p.title,
         description: p.description,
+        coverImageUrl: p.coverImageUrl ?? null,
         priceCents: p.priceCents,
         difficulty: p.difficulty,
         publishedAt: p.publishedAt,
@@ -141,15 +145,14 @@ export class ListMarketplacePackagesUseCase {
       testsByPackage.get(t.packageId)!.push(t);
     }
 
-    // Rating aggregation
-    const allTestIds = testRows.map((t: any) => t.id);
-    const ratingRows: any[] = allTestIds.length
-      ? await prisma.review.groupBy({
-          by: ['testId'],
-          where: { testId: { in: allTestIds } },
+    // Rating aggregation — yeni model: paket bazlı, aday başına tek satır
+    const ratingRows: any[] = packageIds.length
+      ? await (prisma as any).review.groupBy({
+          by: ['packageId'],
+          where: { packageId: { in: packageIds } },
           _avg: { testRating: true },
           _count: { _all: true },
-        } as any)
+        })
       : [];
 
     // Sale aggregation
@@ -161,9 +164,11 @@ export class ListMarketplacePackagesUseCase {
         })
       : [];
 
-    const ratingByTestId = new Map<string, { avg: number; count: number }>();
+    const ratingByPackageId = new Map<string, { avg: number; count: number }>();
     for (const r of ratingRows) {
-      ratingByTestId.set(r.testId, { avg: r._avg.testRating ?? 0, count: r._count._all ?? 0 });
+      if (r.packageId) {
+        ratingByPackageId.set(r.packageId, { avg: r._avg.testRating ?? 0, count: r._count._all ?? 0 });
+      }
     }
 
     const saleByPackageId = new Map<string, number>();
@@ -178,15 +183,9 @@ export class ListMarketplacePackagesUseCase {
       const examTypeId: string | null = firstTestWithType?.examTypeId ?? null;
       const examTypeName: string | null = firstTestWithType?.examType?.name ?? null;
 
-      let ratingSum = 0;
-      let ratingCnt = 0;
-      for (const t of tests) {
-        const r = ratingByTestId.get(t.id);
-        if (r && r.count) {
-          ratingSum += r.avg * r.count;
-          ratingCnt += r.count;
-        }
-      }
+      const pkgRating = ratingByPackageId.get(pkg.id);
+      const ratingAvg = pkgRating && pkgRating.count > 0 ? pkgRating.avg : null;
+      const ratingCount = pkgRating?.count ?? 0;
 
       const publishedAt = pkg.publishedAt instanceof Date
         ? pkg.publishedAt.toISOString()
@@ -196,6 +195,7 @@ export class ListMarketplacePackagesUseCase {
         id: pkg.id,
         title: pkg.title,
         description: pkg.description ?? null,
+        coverImageUrl: pkg.coverImageUrl ?? null,
         priceCents: pkg.priceCents ?? 0,
         difficulty: pkg.difficulty ?? 'medium',
         publishedAt,
@@ -205,8 +205,8 @@ export class ListMarketplacePackagesUseCase {
         examTypeName,
         questionCount,
         testCount: tests.length,
-        ratingAvg: ratingCnt > 0 ? ratingSum / ratingCnt : null,
-        ratingCount: ratingCnt,
+        ratingAvg,
+        ratingCount,
         saleCount: saleByPackageId.get(pkg.id) ?? 0,
         tags: [],
       };

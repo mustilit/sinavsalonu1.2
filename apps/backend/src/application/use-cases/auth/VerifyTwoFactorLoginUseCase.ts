@@ -18,6 +18,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import * as jwt from 'jsonwebtoken';
+import { randomUUID } from 'crypto';
 import { prisma } from '../../../infrastructure/database/prisma';
 import { TwoFactorService } from '../../../infrastructure/security/TwoFactorService';
 import { decrypt } from '../../../infrastructure/security/encryption';
@@ -130,11 +131,23 @@ export class VerifyTwoFactorLoginUseCase {
       );
     }
 
+    // Tek aktif oturum — yeni sid üret ve User.activeSessionId'ye yaz.
+    const sid = randomUUID();
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { activeSessionId: sid } as any,
+    });
+    try {
+      const { RedisCache } = await import('../../../infrastructure/cache/RedisCache');
+      await new RedisCache().del(`userBanStatus:${user.id}`);
+    } catch { /* sessiz */ }
+
     // Asıl access token
     const accessToken = this.jwtService.sign({
       sub: user.id,
       email: user.email,
       role: user.role,
+      sid,
     });
 
     await this.audit.log(

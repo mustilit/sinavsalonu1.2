@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { createPageUrl } from "@/utils";
 import { ArrowLeft, Shield } from "lucide-react";
 
@@ -8,15 +9,40 @@ import { ArrowLeft, Shield } from "lucide-react";
  * açıklayan statik yasal bilgi sayfası.
  */
 export default function Privacy() {
+  const { t } = useTranslation(["pages"]);
+
+  const renderSection = (titleKey, bodyKey) => (
+    <section>
+      <h2 className="text-2xl font-bold text-slate-900 mb-4">{t(titleKey)}</h2>
+      <p className="text-slate-600 leading-relaxed">{t(bodyKey)}</p>
+    </section>
+  );
+
+  const renderListSection = (titleKey, introKey, listKey) => {
+    const items = t(listKey, { returnObjects: true });
+    const list = Array.isArray(items) ? items : [];
+    return (
+      <section>
+        <h2 className="text-2xl font-bold text-slate-900 mb-4">{t(titleKey)}</h2>
+        <p className="text-slate-600 leading-relaxed mb-3">{t(introKey)}</p>
+        <ul className="list-disc list-inside space-y-2 text-slate-600">
+          {list.map((item, idx) => (
+            <li key={idx}>{item}</li>
+          ))}
+        </ul>
+      </section>
+    );
+  };
+
   return (
     <div className="min-h-screen bg-white">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <Link 
-          to={createPageUrl("Home")} 
+        <Link
+          to={createPageUrl("Home")}
           className="inline-flex items-center gap-2 text-slate-600 hover:text-slate-900 mb-8"
         >
           <ArrowLeft className="w-4 h-4" />
-          Ana Sayfaya Dön
+          {t("pages:privacy.backToHome")}
         </Link>
 
         <div className="mb-12">
@@ -24,99 +50,30 @@ export default function Privacy() {
             <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{backgroundColor: 'rgba(0, 0, 205, 0.1)'}}>
               <Shield className="w-6 h-6" style={{color: '#0000CD'}} />
             </div>
-            <h1 className="text-4xl font-bold text-slate-900">Gizlilik Politikası</h1>
+            <h1 className="text-4xl font-bold text-slate-900">{t("pages:titles.privacy")}</h1>
           </div>
-          <p className="text-slate-600">Son güncelleme: 17 Şubat 2026</p>
+          <p className="text-slate-600">{t("pages:privacy.lastUpdated")}</p>
         </div>
 
         <div className="prose prose-slate max-w-none space-y-8">
-          <section>
-            <h2 className="text-2xl font-bold text-slate-900 mb-4">1. Genel Bilgiler</h2>
-            <p className="text-slate-600 leading-relaxed">
-              Sınav Salonu olarak, kullanıcılarımızın gizliliğine saygı duyuyor ve kişisel verilerinizin korunmasına büyük önem veriyoruz. Bu Gizlilik Politikası, platformumuz üzerinde toplanan, işlenen ve saklanan kişisel verilere ilişkin uygulamalarımızı açıklamaktadır.
-            </p>
-          </section>
+          {renderSection("pages:privacy.s1Title", "pages:privacy.s1Body")}
+          {renderListSection("pages:privacy.s2Title", "pages:privacy.s2Intro", "pages:privacy.s2List")}
+          {renderListSection("pages:privacy.s3Title", "pages:privacy.s3Intro", "pages:privacy.s3List")}
+          {renderSection("pages:privacy.s4Title", "pages:privacy.s4Body")}
 
           <section>
-            <h2 className="text-2xl font-bold text-slate-900 mb-4">2. Toplanan Veriler</h2>
-            <p className="text-slate-600 leading-relaxed mb-3">
-              Platform kullanımı sırasında aşağıdaki kişisel veriler toplanabilir:
-            </p>
-            <ul className="list-disc list-inside space-y-2 text-slate-600">
-              <li>Ad, soyad, e-posta adresi ve telefon numarası</li>
-              <li>Hesap oluşturma ve giriş bilgileri</li>
-              <li>Test sonuçları ve performans verileri</li>
-              <li>Ödeme bilgileri (güvenli ödeme sistemleri aracılığıyla)</li>
-              <li>Platform kullanım istatistikleri ve tercihleri</li>
-              <li>İletişim kayıtları ve geri bildirimler</li>
-            </ul>
-          </section>
-
-          <section>
-            <h2 className="text-2xl font-bold text-slate-900 mb-4">3. Verilerin Kullanımı</h2>
-            <p className="text-slate-600 leading-relaxed mb-3">
-              Toplanan kişisel veriler aşağıdaki amaçlarla kullanılır:
-            </p>
-            <ul className="list-disc list-inside space-y-2 text-slate-600">
-              <li>Platformun sunulması ve işletilmesi</li>
-              <li>Kullanıcı hesaplarının yönetimi</li>
-              <li>Test sonuçlarının saklanması ve raporlanması</li>
-              <li>Ödeme işlemlerinin gerçekleştirilmesi</li>
-              <li>Müşteri destek hizmetlerinin sağlanması</li>
-              <li>Platform iyileştirmeleri ve yeni özelliklerin geliştirilmesi</li>
-              <li>Yasal yükümlülüklerin yerine getirilmesi</li>
-            </ul>
-          </section>
-
-          <section>
-            <h2 className="text-2xl font-bold text-slate-900 mb-4">4. Veri Güvenliği</h2>
-            <p className="text-slate-600 leading-relaxed">
-              Kişisel verilerinizin güvenliğini sağlamak için endüstri standardı güvenlik önlemleri kullanıyoruz. Verileriniz şifrelenmiş bağlantılar üzerinden iletilir ve güvenli sunucularda saklanır. Yetkisiz erişim, değişiklik veya ifşaya karşı teknik ve idari önlemler alınmıştır.
-            </p>
-          </section>
-
-          <section>
-            <h2 className="text-2xl font-bold text-slate-900 mb-4">5. Veri Paylaşımı</h2>
-            <p className="text-slate-600 leading-relaxed">
-              Kişisel verileriniz üçüncü taraflarla paylaşılmaz, satılmaz veya kiralanmaz. Ancak, aşağıdaki durumlarda verileriniz paylaşılabilir:
-            </p>
+            <h2 className="text-2xl font-bold text-slate-900 mb-4">{t("pages:privacy.s5Title")}</h2>
+            <p className="text-slate-600 leading-relaxed">{t("pages:privacy.s5Intro")}</p>
             <ul className="list-disc list-inside space-y-2 text-slate-600 mt-3">
-              <li>Yasal zorunluluklar ve mahkeme kararları</li>
-              <li>Ödeme işlemleri için güvenilir ödeme sağlayıcıları</li>
-              <li>Platform altyapısı için bulut hizmet sağlayıcıları</li>
-              <li>Açık izninizle belirli durumlar</li>
+              {(t("pages:privacy.s5List", { returnObjects: true }) || []).map((item, idx) => (
+                <li key={idx}>{item}</li>
+              ))}
             </ul>
           </section>
 
-          <section>
-            <h2 className="text-2xl font-bold text-slate-900 mb-4">6. Kullanıcı Hakları</h2>
-            <p className="text-slate-600 leading-relaxed mb-3">
-              KVKK kapsamında aşağıdaki haklara sahipsiniz:
-            </p>
-            <ul className="list-disc list-inside space-y-2 text-slate-600">
-              <li>Kişisel verilerinizin işlenip işlenmediğini öğrenme</li>
-              <li>İşlenmiş kişisel verileriniz hakkında bilgi talep etme</li>
-              <li>Kişisel verilerinizin düzeltilmesini isteme</li>
-              <li>Kişisel verilerinizin silinmesini veya yok edilmesini isteme</li>
-              <li>Kişisel verilerinizin aktarıldığı üçüncü kişileri bilme</li>
-            </ul>
-          </section>
-
-          <section>
-            <h2 className="text-2xl font-bold text-slate-900 mb-4">7. Çerezler (Cookies)</h2>
-            <p className="text-slate-600 leading-relaxed">
-              Platformumuz, kullanıcı deneyimini iyileştirmek için çerezler kullanır. Çerezler, tarayıcınız tarafından bilgisayarınızda saklanan küçük metin dosyalarıdır. Tarayıcı ayarlarınızdan çerezleri yönetebilir veya engelleyebilirsiniz.
-            </p>
-          </section>
-
-          <section>
-            <h2 className="text-2xl font-bold text-slate-900 mb-4">8. Değişiklikler</h2>
-            <p className="text-slate-600 leading-relaxed">
-              Bu Gizlilik Politikası zaman zaman güncellenebilir. Önemli değişiklikler e-posta yoluyla bildirilecektir. Platform kullanımına devam etmeniz, güncellenmiş politikayı kabul ettiğiniz anlamına gelir.
-            </p>
-          </section>
-
-
+          {renderListSection("pages:privacy.s6Title", "pages:privacy.s6Intro", "pages:privacy.s6List")}
+          {renderSection("pages:privacy.s7Title", "pages:privacy.s7Body")}
+          {renderSection("pages:privacy.s8Title", "pages:privacy.s8Body")}
         </div>
       </div>
     </div>

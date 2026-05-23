@@ -14,6 +14,7 @@ export interface MarketplacePackageDetail {
   id: string;
   title: string;
   description: string | null;
+  coverImageUrl: string | null;
   priceCents: number;
   difficulty: string;
   publishedAt: string;
@@ -96,6 +97,7 @@ export class GetMarketplacePackageUseCase {
       id: pkg.id,
       title: pkg.title,
       description: pkg.description ?? null,
+      coverImageUrl: pkg.coverImageUrl ?? null,
       priceCents: pkg.priceCents,
       difficulty: pkg.difficulty ?? 'medium',
       publishedAt: (pkg.publishedAt as Date).toISOString(),

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { entities } from "@/api/dalClient";
 import { useAuth } from "@/lib/AuthContext";
 import { useQuery } from "@tanstack/react-query";
@@ -28,6 +29,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
 export default function MySales() {
+  const { t } = useTranslation(["pages"]);
   const { user } = useAuth();
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
@@ -83,13 +85,20 @@ export default function MySales() {
 
   const exportToExcel = () => {
     const csvContent = [
-      ["Alıcı", "Email", "Test", "Tutar", "Durum", "Tarih"],
+      [
+        t("pages:mySales.excel.headers.buyer"),
+        t("pages:mySales.excel.headers.email"),
+        t("pages:mySales.excel.headers.test"),
+        t("pages:mySales.excel.headers.amount"),
+        t("pages:mySales.excel.headers.status"),
+        t("pages:mySales.excel.headers.date"),
+      ],
       ...filteredSales.map(sale => [
-        sale.user_name || "Kullanıcı",
+        sale.user_name || t("pages:mySales.table.buyerFallback"),
         sale.user_email,
         sale.test_package_title,
         sale.price_paid,
-        sale.status === "completed" ? "Tamamlandı" : sale.status === "refunded" ? "İade" : "Beklemede",
+        sale.status === "completed" ? t("pages:mySales.filter.completed") : sale.status === "refunded" ? t("pages:mySales.filter.refunded") : t("pages:mySales.filter.pending"),
         sale.created_date && format(new Date(sale.created_date), "d MMM yyyy HH:mm", { locale: tr })
       ])
     ].map(row => row.join(",")).join("\n");
@@ -97,40 +106,41 @@ export default function MySales() {
     const blob = new Blob(["\uFEFF" + csvContent], { type: "text/csv;charset=utf-8;" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
-    link.download = `satislarim-${new Date().toISOString().split('T')[0]}.csv`;
+    const filePrefix = t("pages:mySales.excel.filePrefix");
+    link.download = `${filePrefix}-${new Date().toISOString().split('T')[0]}.csv`;
     link.click();
-    toast.success("Excel dosyası indirildi");
+    toast.success(t("pages:mySales.toasts.excelDownloaded"));
   };
 
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-slate-900">Satışlarım</h1>
-        <p className="text-slate-500 mt-2">Test satış geçmişin ve istatistiklerin</p>
+        <h1 className="text-3xl font-bold text-slate-900">{t("pages:titles.mySales")}</h1>
+        <p className="text-slate-500 mt-2">{t("pages:titles.mySalesDesc")}</p>
       </div>
 
       {/* Stats */}
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <StatCard
-          title="Toplam Satış"
+          title={t("pages:mySales.stats.totalSales")}
           value={sales.length}
           icon={ShoppingBag}
           bgColor="bg-indigo-500"
         />
         <StatCard
-          title="Toplam Gelir"
+          title={t("pages:mySales.stats.totalRevenue")}
           value={`₺${totalRevenue.toLocaleString()}`}
           icon={TrendingUp}
           bgColor="bg-emerald-500"
         />
         <StatCard
-          title="Bu Ay Gelir"
+          title={t("pages:mySales.stats.monthRevenue")}
           value={`₺${thisMonthRevenue.toLocaleString()}`}
           icon={DollarSign}
           bgColor="bg-violet-500"
         />
         <StatCard
-          title="Benzersiz Alıcı"
+          title={t("pages:mySales.stats.uniqueBuyers")}
           value={uniqueBuyers}
           icon={Users}
           bgColor="bg-amber-500"
@@ -144,7 +154,7 @@ export default function MySales() {
             <div className="flex-1 relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
               <Input
-                placeholder="Alıcı veya test ara..."
+                placeholder={t("pages:mySales.searchPlaceholder")}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-10"
@@ -152,24 +162,24 @@ export default function MySales() {
             </div>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
               <SelectTrigger className="w-full lg:w-40">
-                <SelectValue placeholder="Durum" />
+                <SelectValue placeholder={t("pages:mySales.filter.statusPlaceholder")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Tüm Durumlar</SelectItem>
-                <SelectItem value="completed">Tamamlandı</SelectItem>
-                <SelectItem value="pending">Beklemede</SelectItem>
-                <SelectItem value="refunded">İade</SelectItem>
+                <SelectItem value="all">{t("pages:mySales.filter.allStatuses")}</SelectItem>
+                <SelectItem value="completed">{t("pages:mySales.filter.completed")}</SelectItem>
+                <SelectItem value="pending">{t("pages:mySales.filter.pending")}</SelectItem>
+                <SelectItem value="refunded">{t("pages:mySales.filter.refunded")}</SelectItem>
               </SelectContent>
             </Select>
             <Select value={dateFilter} onValueChange={setDateFilter}>
               <SelectTrigger className="w-full lg:w-40">
-                <SelectValue placeholder="Tarih" />
+                <SelectValue placeholder={t("pages:mySales.filter.datePlaceholder")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Tüm Zamanlar</SelectItem>
-                <SelectItem value="today">Bugün</SelectItem>
-                <SelectItem value="week">Son 7 Gün</SelectItem>
-                <SelectItem value="month">Son 30 Gün</SelectItem>
+                <SelectItem value="all">{t("pages:mySales.filter.allDates")}</SelectItem>
+                <SelectItem value="today">{t("pages:mySales.filter.today")}</SelectItem>
+                <SelectItem value="week">{t("pages:mySales.filter.lastWeek")}</SelectItem>
+                <SelectItem value="month">{t("pages:mySales.filter.lastMonth")}</SelectItem>
               </SelectContent>
             </Select>
             <Button
@@ -178,12 +188,12 @@ export default function MySales() {
               className="w-full lg:w-auto"
             >
               <Download className="w-4 h-4 mr-2" />
-              Excel İndir
+              {t("pages:mySales.filter.exportExcel")}
             </Button>
             {hasActiveFilters && (
               <Button variant="ghost" onClick={clearFilters} className="w-full lg:w-auto">
                 <X className="w-4 h-4 mr-2" />
-                Temizle
+                {t("pages:mySales.filter.clear")}
               </Button>
             )}
           </div>
@@ -193,7 +203,7 @@ export default function MySales() {
       {/* Sales Table */}
       <Card>
         <CardHeader>
-          <CardTitle>Satış Geçmişi</CardTitle>
+          <CardTitle>{t("pages:mySales.tableTitle")}</CardTitle>
         </CardHeader>
         <CardContent>
           {isLoading ? (
@@ -205,15 +215,15 @@ export default function MySales() {
           ) : sales.length === 0 ? (
             <div className="text-center py-12">
               <ShoppingBag className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-              <p className="text-slate-500">Henüz satış yok</p>
+              <p className="text-slate-500">{t("pages:mySales.empty.noSales")}</p>
             </div>
           ) : filteredSales.length === 0 ? (
             <div className="text-center py-12">
               <Filter className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-              <p className="text-slate-500 mb-4">Sonuç bulunamadı</p>
+              <p className="text-slate-500 mb-4">{t("pages:mySales.empty.noResults")}</p>
               <Button variant="outline" onClick={clearFilters}>
                 <X className="w-4 h-4 mr-2" />
-                Filtreleri Temizle
+                {t("pages:mySales.empty.clearFilters")}
               </Button>
             </div>
           ) : (
@@ -221,11 +231,11 @@ export default function MySales() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Alıcı</TableHead>
-                    <TableHead>Test</TableHead>
-                    <TableHead className="text-right">Tutar</TableHead>
-                    <TableHead>Durum</TableHead>
-                    <TableHead>Tarih</TableHead>
+                    <TableHead>{t("pages:mySales.table.buyer")}</TableHead>
+                    <TableHead>{t("pages:mySales.table.test")}</TableHead>
+                    <TableHead className="text-right">{t("pages:mySales.table.amount")}</TableHead>
+                    <TableHead>{t("pages:mySales.table.status")}</TableHead>
+                    <TableHead>{t("pages:mySales.table.date")}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -233,11 +243,13 @@ export default function MySales() {
                     <TableRow key={sale.id}>
                       <TableCell>
                         <div>
-                          <p className="font-medium text-slate-900">{sale.user_name || "Kullanıcı"}</p>
+                          {/* user_name user-generated — fallback i18n */}
+                          <p className="font-medium text-slate-900">{sale.user_name || t("pages:mySales.table.buyerFallback")}</p>
                           <p className="text-sm text-slate-500">{sale.user_email}</p>
                         </div>
                       </TableCell>
                       <TableCell className="max-w-[200px] truncate">
+                        {/* test_package_title user-generated */}
                         {sale.test_package_title}
                       </TableCell>
                       <TableCell className="text-right font-semibold text-emerald-600">
@@ -245,14 +257,14 @@ export default function MySales() {
                       </TableCell>
                       <TableCell>
                         <Badge className={
-                          sale.status === "completed" 
+                          sale.status === "completed"
                             ? "bg-emerald-100 text-emerald-700"
                             : sale.status === "refunded"
                               ? "bg-rose-100 text-rose-700"
                               : "bg-amber-100 text-amber-700"
                         }>
-                          {sale.status === "completed" ? "Tamamlandı" 
-                            : sale.status === "refunded" ? "İade" : "Beklemede"}
+                          {sale.status === "completed" ? t("pages:mySales.filter.completed")
+                            : sale.status === "refunded" ? t("pages:mySales.filter.refunded") : t("pages:mySales.filter.pending")}
                         </Badge>
                       </TableCell>
                       <TableCell className="text-slate-500">

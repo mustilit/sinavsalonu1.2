@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import * as XLSX from "xlsx";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { createPageUrl } from "@/utils";
 import { entities } from "@/api/dalClient";
 import { useAuth } from "@/lib/AuthContext";
@@ -33,6 +34,7 @@ import {
 } from "@/components/ui/select";
 
 export default function MyTestPackages() {
+  const { t } = useTranslation(["pages"]);
   const { user } = useAuth();
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
@@ -56,6 +58,21 @@ export default function MyTestPackages() {
 
   const testsWithRealCounts = tests;
 
+  // Görüntülenme istatistikleri — paket başına totalViews, uniqueViewers, last7Days.
+  // Eğiticinin kendi paketleri için backend'de yetki kontrolü var; admin de aynı endpoint'i çağırabilir.
+  // Liste değiştikçe yenilenir (tests.length değiştiğinde).
+  const { data: viewStats = [] } = useQuery({
+    queryKey: ["myPackageViews", user?.id, tests.length],
+    queryFn: () => entities.PackageView.educatorViewStats(),
+    enabled: !!user && tests.length > 0,
+    staleTime: 30_000,
+  });
+  const viewStatsById = useMemo(() => {
+    const m = new Map();
+    for (const s of viewStats) m.set(s.packageId, s);
+    return m;
+  }, [viewStats]);
+
   const togglePublishMutation = useMutation({
     mutationFn: ({ id, is_published }) =>
       is_published
@@ -63,10 +80,10 @@ export default function MyTestPackages() {
         : api.put(`/packages/${id}/unpublish`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["myTestPackages"] });
-      toast.success("Paket durumu güncellendi");
+      toast.success(t("pages:myTestPackages.toasts.statusUpdated"));
     },
     onError: (err) => {
-      toast.error(err?.message || "İşlem başarısız");
+      toast.error(err?.message || t("pages:myTestPackages.toasts.actionFailed"));
     },
   });
 
@@ -105,12 +122,15 @@ export default function MyTestPackages() {
   };
 
   const exportToExcel = () => {
+    const h = t("pages:myTestPackages.excel.headers", { returnObjects: true });
+    const publishedLabel = t("pages:myTestPackages.excel.published");
+    const draftLabel = t("pages:myTestPackages.excel.draft");
     const rows = [
-      ["Başlık", "Sınav Türü", "Durum", "Test Sayısı", "Soru Sayısı", "Fiyat (₺)", "Satış", "Puan", "Oluşturma Tarihi"],
+      [h.title, h.examType, h.status, h.testCount, h.questionCount, h.price, h.sales, h.rating, h.createdAt],
       ...filteredTests.map(test => [
         test.title,
         test.exam_type_name || "-",
-        test.is_published ? "Yayında" : "Taslak",
+        test.is_published ? publishedLabel : draftLabel,
         (test.tests ?? []).length,
         test.question_count || 0,
         test.price,
@@ -122,22 +142,23 @@ export default function MyTestPackages() {
 
     const ws = XLSX.utils.aoa_to_sheet(rows);
     const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Test Paketleri");
-    XLSX.writeFile(wb, `test-paketlerim-${new Date().toISOString().split('T')[0]}.xlsx`);
-    toast.success("Excel dosyası indirildi");
+    XLSX.utils.book_append_sheet(wb, ws, t("pages:myTestPackages.excel.sheetName"));
+    const filePrefix = t("pages:myTestPackages.excel.filePrefix");
+    XLSX.writeFile(wb, `${filePrefix}-${new Date().toISOString().split('T')[0]}.xlsx`);
+    toast.success(t("pages:myTestPackages.toasts.excelDownloaded"));
   };
 
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">Test Paketlerim</h1>
-          <p className="text-slate-500 mt-2">Oluşturduğun tüm test paketleri</p>
+          <h1 className="text-3xl font-bold text-slate-900">{t("pages:titles.myTestPackages")}</h1>
+          <p className="text-slate-500 mt-2">{t("pages:titles.myTestPackagesDesc")}</p>
         </div>
         <Link to={createPageUrl("CreateTest")}>
           <Button className="bg-indigo-600 hover:bg-indigo-700">
             <Plus className="w-4 h-4 mr-2" />
-            Yeni Test
+            {t("pages:titles.createTest")}
           </Button>
         </Link>
       </div>
@@ -149,7 +170,7 @@ export default function MyTestPackages() {
             <div className="flex-1 relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
               <Input
-                placeholder="Test ara..."
+                placeholder={t("pages:myTestPackages.searchPlaceholder")}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-10"
@@ -157,21 +178,22 @@ export default function MyTestPackages() {
             </div>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
               <SelectTrigger className="w-full lg:w-40">
-                <SelectValue placeholder="Durum" />
+                <SelectValue placeholder={t("pages:myTestPackages.filter.statusPlaceholder")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Tüm Durumlar</SelectItem>
-                <SelectItem value="published">Yayında</SelectItem>
-                <SelectItem value="draft">Taslak</SelectItem>
+                <SelectItem value="all">{t("pages:myTestPackages.filter.allStatuses")}</SelectItem>
+                <SelectItem value="published">{t("pages:myTestPackages.filter.published")}</SelectItem>
+                <SelectItem value="draft">{t("pages:myTestPackages.filter.draft")}</SelectItem>
               </SelectContent>
             </Select>
             <Select value={examTypeFilter} onValueChange={setExamTypeFilter}>
               <SelectTrigger className="w-full lg:w-40">
-                <SelectValue placeholder="Sınav Türü" />
+                <SelectValue placeholder={t("pages:myTestPackages.filter.examTypePlaceholder")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Tüm Sınavlar</SelectItem>
+                <SelectItem value="all">{t("pages:myTestPackages.filter.allExamTypes")}</SelectItem>
                 {examTypes.map((exam) => (
+                  /* exam.name user-generated — çevrilmez */
                   <SelectItem key={exam.id} value={exam.id}>{exam.name}</SelectItem>
                 ))}
               </SelectContent>
@@ -182,12 +204,12 @@ export default function MyTestPackages() {
               className="w-full lg:w-auto"
             >
               <Download className="w-4 h-4 mr-2" />
-              Excel İndir
+              {t("pages:myTestPackages.filter.exportExcel")}
             </Button>
             {hasActiveFilters && (
               <Button variant="ghost" onClick={clearFilters} className="w-full lg:w-auto">
                 <X className="w-4 h-4 mr-2" />
-                Temizle
+                {t("pages:myTestPackages.filter.clear")}
               </Button>
             )}
           </div>
@@ -202,28 +224,28 @@ export default function MyTestPackages() {
         </div>
       ) : isError ? (
         <div className="text-center py-20 bg-white rounded-2xl border border-slate-200">
-          <p className="text-slate-500">Testler yüklenirken hata oluştu. Sayfayı yenileyin.</p>
+          <p className="text-slate-500">{t("pages:myTestPackages.empty.errorLoad")}</p>
         </div>
       ) : tests.length === 0 ? (
         <div className="text-center py-20 bg-white rounded-2xl border border-slate-200">
           <BookOpen className="w-16 h-16 text-slate-300 mx-auto mb-4" />
-          <h3 className="text-xl font-semibold text-slate-900">Henüz test oluşturmadın</h3>
-          <p className="text-slate-500 mt-2 mb-6">İlk test paketini oluştur ve satışa başla</p>
+          <h3 className="text-xl font-semibold text-slate-900">{t("pages:myTestPackages.empty.noTestsTitle")}</h3>
+          <p className="text-slate-500 mt-2 mb-6">{t("pages:myTestPackages.empty.noTestsDesc")}</p>
           <Link to={createPageUrl("CreateTest")}>
             <Button className="bg-indigo-600 hover:bg-indigo-700">
               <Plus className="w-4 h-4 mr-2" />
-              İlk Testini Oluştur
+              {t("pages:myTestPackages.empty.createFirst")}
             </Button>
           </Link>
         </div>
       ) : filteredTests.length === 0 ? (
         <div className="text-center py-20 bg-white rounded-2xl border border-slate-200">
           <Filter className="w-16 h-16 text-slate-300 mx-auto mb-4" />
-          <h3 className="text-xl font-semibold text-slate-900">Sonuç bulunamadı</h3>
-          <p className="text-slate-500 mt-2 mb-6">Filtreleri değiştirmeyi deneyin</p>
+          <h3 className="text-xl font-semibold text-slate-900">{t("pages:myTestPackages.empty.noResultsTitle")}</h3>
+          <p className="text-slate-500 mt-2 mb-6">{t("pages:myTestPackages.empty.noResultsDesc")}</p>
           <Button variant="outline" onClick={clearFilters}>
             <X className="w-4 h-4 mr-2" />
-            Filtreleri Temizle
+            {t("pages:myTestPackages.empty.clearFilters")}
           </Button>
         </div>
       ) : (
@@ -247,9 +269,30 @@ export default function MyTestPackages() {
                       )}
                     </div>
                     <div className="flex items-center gap-6 text-sm text-slate-500">
-                      <span>{(test.tests ?? []).length} test · {test.question_count || 0} soru</span>
+                      <span>{t("pages:myTestPackages.card.stats", { tests: (test.tests ?? []).length, questions: test.question_count || 0 })}</span>
                       <span className="font-semibold text-slate-900">₺{safePrice}</span>
-                      <span>{test.total_sales || 0} satış</span>
+                      <span>{t("pages:myTestPackages.card.salesCount", { count: test.total_sales || 0 })}</span>
+                      {(() => {
+                        const stats = viewStatsById.get(test.id);
+                        const total = stats?.totalViews ?? 0;
+                        const last7 = stats?.last7Days ?? 0;
+                        const unique = stats?.uniqueViewers ?? 0;
+                        return (
+                          <span
+                            className="flex items-center gap-1 text-slate-600"
+                            aria-label={t("pages:myTestPackages.card.viewsAria", { count: total })}
+                            title={t("pages:myTestPackages.card.viewsTooltip", { total, unique, last7 })}
+                          >
+                            <Eye className="w-3.5 h-3.5" aria-hidden="true" />
+                            <span>{total}</span>
+                            {last7 > 0 && (
+                              <span className="text-xs text-emerald-600 ml-1">
+                                {t("pages:myTestPackages.card.viewsLast7", { count: last7 })}
+                              </span>
+                            )}
+                          </span>
+                        );
+                      })()}
                       {test.average_rating != null ? (
                         <span className="flex items-center gap-1">
                           <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
@@ -257,15 +300,15 @@ export default function MyTestPackages() {
                           <span className="text-slate-400">({test.rating_count ?? 0})</span>
                         </span>
                       ) : (
-                        <span className="text-slate-400 text-xs">Henüz puan yok</span>
+                        <span className="text-slate-400 text-xs">{t("pages:myTestPackages.card.noRating")}</span>
                       )}
                     </div>
                   </div>
 
                   {/* Satır üstü aksiyonlar */}
                   <div className="flex items-center gap-2 flex-shrink-0">
-                    <Link to={createPageUrl("EditTest") + `?id=${test.id}`} title="Düzenle">
-                      <Button size="sm" variant="outline" className="w-8 h-8 p-0">
+                    <Link to={createPageUrl("EditTest") + `?id=${test.id}`} title={t("pages:myTestPackages.card.editTitle")}>
+                      <Button size="sm" variant="outline" className="w-8 h-8 p-0" aria-label={t("pages:myTestPackages.card.editTitle")}>
                         <Edit2 className="w-3.5 h-3.5" />
                       </Button>
                     </Link>
@@ -273,7 +316,12 @@ export default function MyTestPackages() {
                       size="sm"
                       variant="outline"
                       disabled={togglePublishMutation.isPending}
-                      title={test.is_published ? "Yayından Kaldır" : "Yayınla"}
+                      title={test.is_published
+                        ? t("pages:myTestPackages.card.unpublishTitle")
+                        : t("pages:myTestPackages.card.publishTitle")}
+                      aria-label={test.is_published
+                        ? t("pages:myTestPackages.card.unpublishTitle")
+                        : t("pages:myTestPackages.card.publishTitle")}
                       className={test.is_published
                         ? "w-8 h-8 p-0 border-amber-200 text-amber-700 hover:bg-amber-50"
                         : "w-8 h-8 p-0 border-emerald-200 text-emerald-700 hover:bg-emerald-50"}

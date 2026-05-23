@@ -267,6 +267,7 @@ model Tenant {
   adPurchases          AdPurchase[]
   subscriptions        Subscription[]
   testPackages         TestPackage[]
+  packageViews         PackageView[]
   emailProviderConfigs EmailProviderConfig[]
   emailTemplates       EmailTemplate[]
   emailLogs            EmailLog[]
@@ -287,7 +288,13 @@ model User {
   id                          String     @id @default(uuid())
   email                       String     @unique
   username                    String     @unique
+  // Eğitici kayıt akışında zorunlu; aday için opsiyonel.
+  // username brand-display için kullanılır; firstName/lastName resmi adlandırma içindir.
+  firstName                   String?
+  lastName                    String?
   passwordHash                String
+  // Google OAuth ile bağlanmışsa Google'ın "sub" alanı; e-posta ile eşleştirme yapılır
+  googleId                    String?    @unique
   bio                         String?
   role                        UserRole   @default(CANDIDATE)
   status                      UserStatus @default(ACTIVE)
@@ -295,6 +302,10 @@ model User {
   lastLoginAt                 DateTime?
   passwordResetToken          String?    @unique
   passwordResetTokenExpiresAt DateTime?
+  // Email doğrulama — yeni kayıtların onboarding adımı (aday e-postası tıklama ile aktive edilir)
+  emailVerified                   Boolean   @default(false)
+  emailVerificationToken          String?   @unique
+  emailVerificationTokenExpiresAt DateTime?
   metadata                    Json?
   twoFactorEnabled            Boolean    @default(false)
   twoFactorSecret             String? // AES-GCM encrypted; ASLA plain
@@ -307,6 +318,10 @@ model User {
   // objectionUpdates, liveSessionInvites, refundUpdates
   emailPreferences            Json       @default("{\"marketing\":false,\"productUpdates\":true,\"weeklyDigest\":true,\"reviewNotifications\":true,\"objectionUpdates\":true,\"liveSessionInvites\":true,\"refundUpdates\":true}")
   emailUnsubscribeToken       String?    @unique
+  // Tek aktif oturum kuralı — her başarılı login yeni bir sid (sessionId) üretir
+  // ve User.activeSessionId'yi günceller. JwtAuthGuard payload.sid ile bu değeri
+  // karşılaştırır; uyumsuzsa "başka bir cihazda giriş yapıldı" hatası döner.
+  activeSessionId             String?
   createdAt                   DateTime   @default(now())
   updatedAt                   DateTime   @updatedAt
   deletedAt                   DateTime?
@@ -328,9 +343,13 @@ model User {
   viewedAdImpressions     AdImpression[]           @relation("AdImpressionViewer")
   workerPermission        WorkerPermission?
   testPackages            TestPackage[]            @relation("educatorPackages")
+  drafts                  DraftSnapshot[]          @relation("userDrafts")
+  anomalyEvents           AttemptAnomalyEvent[]    @relation("candidateAnomalyEvents")
+  packageViews            PackageView[]            @relation("userPackageViews")
   liveSessions            LiveSession[]            @relation("EducatorLiveSessions")
   liveParticipations      LiveParticipant[]        @relation("UserLiveParticipations")
   emailLogs               EmailLog[]
+  devices                 UserDevice[]
 
   // ── İçerik Moderasyonu ──────────────────────────────────────────────────
   moderationResults    ModerationResult[]
@@ -511,10 +530,11 @@ model TestAttempt {
   // Eğitici sonradan soruları güncellese bile bu attempt için orijinal versiyon korunur.
   questionsSnapshot Json?
 
-  test       ExamTest        @relation(fields: [testId], references: [id], onDelete: Cascade)
-  candidate  User            @relation("userAttempts", fields: [candidateId], references: [id], onDelete: Cascade)
-  answers    AttemptAnswer[]
-  objections Objection[]
+  test          ExamTest              @relation(fields: [testId], references: [id], onDelete: Cascade)
+  candidate     User                  @relation("userAttempts", fields: [candidateId], references: [id], onDelete: Cascade)
+  answers       AttemptAnswer[]
+  objections    Objection[]
+  anomalyEvents AttemptAnomalyEvent[]
 
   @@unique([testId, candidateId])
   @@index([candidateId])
@@ -574,6 +594,32 @@ model Purchase {
 
   paymentProvider String? // "iyzico" | "google_pay" | "amazon_pay"
 
+  // Satın alma anında paketin testlerinin + sorularının + seçeneklerinin
+  // donmuş snapshot'ı. Eğitici sonradan içeriği güncellese bile bu adayın
+  // attempt'ları daima bu snapshot'tan beslenir. Yeni satışlar canlı içeriği
+  // snapshot olarak alır.
+  // Şekil: Array<{
+  //   testId: string;
+  //   title?: string;
+  //   isTimed?: boolean;
+  //   duration?: number | null;        // dakika
+  //   questions: Array<{
+  //     id: string;
+  //     content: string;
+  //     mediaUrl: string | null;
+  //     order: number;
+  //     solutionText: string | null;
+  //     solutionMediaUrl: string | null;
+  //     options: Array<{
+  //       id: string;
+  //       content: string;
+  //       mediaUrl: string | null;
+  //       isCorrect: boolean;
+  //     }>;
+  //   }>;
+  // }>
+  testsSnapshot Json?
+
   @@unique([testId, candidateId])
   @@index([tenantId])
   @@map("purchases")
@@ -585,6 +631,9 @@ model TestPackage {
   educatorId  String?
   title       String
   description String?
+  // Eğitici paket için kapak görseli yükler — TestPackageCard listesinde ve
+  // TestDetail hero bölümünde gösterilir. Boşsa default gradient + BookOpen ikonu.
+  coverImageUrl String?
   priceCents  Int
   currency    Currency  @default(TRY)
   difficulty  String    @default("medium")
@@ -598,14 +647,55 @@ model TestPackage {
   // Erişim için $queryRaw kullanın (apps/backend/src/application/services/...
   // dosyalarındaki tsvector aramaları gibi).
 
-  tenant    Tenant     @relation(fields: [tenantId], references: [id])
-  educator  User?      @relation("educatorPackages", fields: [educatorId], references: [id], onDelete: SetNull)
+  tenant    Tenant        @relation(fields: [tenantId], references: [id])
+  educator  User?         @relation("educatorPackages", fields: [educatorId], references: [id], onDelete: SetNull)
   tests     ExamTest[]
   purchases Purchase[]
+  views     PackageView[]
 
   @@index([tenantId])
   @@index([educatorId])
   @@map("test_packages")
+}
+
+// Paket görüntülenme olayı (event log).
+//
+// Kullanım hedefleri:
+//  1. Eğitici dashboard — paket başına toplam / son N günkü görüntülenme.
+//  2. Aday öneri sistemi — viewerId × packageId join'iyle aday ilgi profili.
+//  3. Reklam hedefleme — bir paketi görüntüleyen kullanıcılara reklam.
+//
+// Tekilleştirme: TestDetail her açıldığında bir satır yazılır (saf log).
+// "Tekil görüntülenme" istatistikleri agrega aşamada GROUP BY ile hesaplanır.
+//
+// Privacy:
+//  - viewerId: oturum varsa userId, anonim ise null
+//  - sessionId: anonim oturumun tekilleştirilmesi için
+//  - ipHash: sha256(ip + günlük_salt) — ham IP saklanmaz, abuse koruması için
+//  - referrer/userAgent: bot/kaynak analizi
+model PackageView {
+  id        String   @id @default(uuid())
+  tenantId  String
+  packageId String
+  viewerId  String?
+  sessionId String?  @db.VarChar(64)
+  ipHash    String?  @db.VarChar(64)
+  referrer  String?  @db.VarChar(500)
+  userAgent String?  @db.VarChar(500)
+  createdAt DateTime @default(now())
+
+  tenant  Tenant      @relation(fields: [tenantId], references: [id])
+  package TestPackage @relation(fields: [packageId], references: [id], onDelete: Cascade)
+  viewer  User?       @relation("userPackageViews", fields: [viewerId], references: [id], onDelete: SetNull)
+
+  // Eğitici raporu: paket + zaman penceresi
+  @@index([packageId, createdAt(sort: Desc)])
+  // Aday öneri sistemi: aday + zaman
+  @@index([viewerId, createdAt(sort: Desc)])
+  // Tekil görüntülenme tespiti (aynı kullanıcı + paket)
+  @@index([packageId, viewerId])
+  @@index([tenantId])
+  @@map("package_views")
 }
 
 enum FollowType {
@@ -753,8 +843,11 @@ model RefundRequest {
 }
 
 model Review {
-  id          String @id @default(uuid())
-  testId      String
+  id          String  @id @default(uuid())
+  // Yeni model: review per-package per-candidate. testId provenance amacıyla
+  // (hangi test bağlamından geldiği) saklanır — domain'de artık doğrudan kullanılmaz.
+  packageId   String?
+  testId      String?
   educatorId  String
   candidateId String
 
@@ -764,7 +857,9 @@ model Review {
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
-  @@unique([testId, candidateId])
+  // Bir aday bir paket için tek review yaratır
+  @@unique([packageId, candidateId])
+  @@index([packageId])
   @@index([educatorId])
   @@index([testId])
   @@map("reviews")
@@ -805,6 +900,30 @@ model ContractAcceptance {
   @@map("contract_acceptances")
 }
 
+// Kullanıcı cihaz kaydı — yeni cihazdan giriş uyarısı için kullanılır.
+// fingerprint = sha256(userAgent + ip) — aynı kullanıcı + fingerprint çifti tekil.
+// trusted=true olduğunda artık o cihazdan girişler uyarı tetiklemez.
+// trustToken ile aday/eğitici e-postadaki "Bu bendim" linkini kullanarak cihazı doğrular.
+model UserDevice {
+  id                  String    @id @default(uuid())
+  userId              String
+  fingerprint         String
+  userAgent           String?
+  ip                  String?
+  trusted             Boolean   @default(false)
+  trustToken          String?   @unique
+  trustTokenExpiresAt DateTime?
+  firstSeenAt         DateTime  @default(now())
+  lastSeenAt          DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, fingerprint])
+  @@index([userId])
+  @@index([trustToken])
+  @@map("user_devices")
+}
+
 model AdminSettings {
   id                               Int       @id @default(1)
   commissionPercent                Int       @default(20) // percent
@@ -818,6 +937,9 @@ model AdminSettings {
   twoFactorSystemEnabled           Boolean   @default(false) // 2FA sistem geneli aç/kapat (admin kontrolü)
   minPackagePriceCents             Int       @default(100) // Minimum paket fiyatı (kuruş)
   maxDiscountPercent               Int       @default(50) // Eğiticinin tanımlayabileceği maksimum indirim oranı (%)
+  // Google OAuth 2.0 Client ID — admin panelinden yönetilir. Boşken Google ile giriş devre dışı.
+  // Not: Client ID gizli değildir (tarayıcıya açıkça gönderilir); env'deki GOOGLE_CLIENT_ID fallback olarak kullanılır.
+  googleClientId                   String?
   minQuestionsPerTest              Int       @default(1) // Test başına minimum soru sayısı
   maxQuestionsPerTest              Int       @default(100) // Test başına maksimum soru sayısı
   maxTestsPerPackage               Int       @default(10) // Paket başına maksimum test sayısı
@@ -1420,4 +1542,63 @@ model EducatorRiskScore {
   @@index([tenantId, riskLevel, computedScore])
   @@index([tenantId, lastViolationAt])
   @@map("educator_risk_scores")
+}
+
+// Sunucu tarafı draft yedeği. Eğitici test/paket oluştururken veya düzenlerken
+// tarayıcı kapansa, localStorage temizlense ya da cihaz değişse bile devam
+// edebilsin diye periyodik olarak buraya da yazılır.
+//
+// key: client tarafında üretilen mantıksal anahtar
+//   - 'createTestWizard'                 → yeni paket oluşturma sihirbazı
+//   - 'editTestWizard:{packageId}'       → mevcut paketi düzenleme
+//
+// Cron 7 günden eski draft'ları temizler. Başarılı kaydetme sonrası frontend
+// DELETE çağırır.
+model DraftSnapshot {
+  id        String   @id @default(uuid())
+  ownerId   String
+  key       String
+  payload   Json
+  updatedAt DateTime @default(now()) @updatedAt
+  createdAt DateTime @default(now())
+
+  owner User @relation("userDrafts", fields: [ownerId], references: [id], onDelete: Cascade)
+
+  @@unique([ownerId, key])
+  @@index([updatedAt])
+  @@map("draft_snapshots")
+}
+
+
+// Aday'ın test çözme oturumundaki anti-leak / anti-cheat olayları.
+// Frontend proctoring hook'u (useTestProctoring) burada toplanan event'leri
+// POST /attempts/:id/anomaly endpoint'i ile sunucuya iletir.
+//
+// type değerleri (string literal — enum yapmadık ki ileride eklenmesi migration
+// gerektirmesin):
+//   - TAB_SWITCH           sekme değiştirildi / pencere odağı kayboldu
+//   - FULLSCREEN_EXIT      fullscreen'den çıkıldı
+//   - CONTEXT_MENU         sağ tık denemesi
+//   - COPY_ATTEMPT         Ctrl+C / copy event
+//   - CUT_ATTEMPT          Ctrl+X / cut event
+//   - PASTE_ATTEMPT        Ctrl+V / paste event
+//   - PRINT_KEY            Ctrl+P / PrintScreen
+//   - DEVTOOLS_HEURISTIC   pencere boyut farkından devtools açık tespiti
+//   - SHORTCUT_BLOCKED     diğer engellenen kısayollar (Ctrl+S, Ctrl+A)
+//   - RAPID_ANSWER         soru başlangıcından çok kısa sürede cevaplama
+//   - HEADLESS_DETECTED    navigator.webdriver veya headless fingerprint
+model AttemptAnomalyEvent {
+  id          String   @id @default(uuid())
+  attemptId   String
+  candidateId String
+  type        String
+  payload     Json?
+  createdAt   DateTime @default(now())
+
+  attempt   TestAttempt @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  candidate User        @relation("candidateAnomalyEvents", fields: [candidateId], references: [id], onDelete: Cascade)
+
+  @@index([attemptId, type])
+  @@index([candidateId, createdAt])
+  @@map("attempt_anomaly_events")
 }

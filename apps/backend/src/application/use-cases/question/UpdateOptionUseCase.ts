@@ -5,14 +5,21 @@ import { AppError } from '../../errors/AppError';
 import { ensureEducatorActive } from '../../policies/ensureEducatorActive';
 
 /**
- * Şık güncelleme. Satın alınmış/cevaplanmış testleri etkilemez:
- * - Seçilmiş şıklar (attempt_answers.selectedOptionId) güncellenemez
+ * Şık güncelleme. Eğitici her zaman güncelleyebilir; mevcut alıcılar
+ * Purchase.testsSnapshot ve TestAttempt.questionsSnapshot sayesinde
+ * satın alma anındaki içerik + doğru cevap kümesiyle korunur. Yeni
+ * satışlar canlı versiyonu snapshot olarak alır.
+ *
+ * SubmitAttempt skorlamayı snapshotCorrectMap üzerinden yapar — option
+ * ID değişmediği için AttemptAnswer.selectedOptionId snapshot ile
+ * birebir eşleşmeye devam eder.
  */
 export class UpdateOptionUseCase {
   constructor(
     private readonly examRepository: IExamRepository,
     private readonly userRepository: IUserRepository,
-    private readonly attemptRepository: IAttemptRepository,
+    // Geriye dönük constructor uyumluluğu için parametre korundu; artık kullanılmıyor.
+    private readonly _attemptRepository: IAttemptRepository,
   ) {}
 
   async execute(
@@ -34,15 +41,6 @@ export class UpdateOptionUseCase {
 
     if (actorId && test.educatorId && test.educatorId !== actorId) {
       throw new AppError('FORBIDDEN_NOT_OWNER', 'Only the educator who owns the test can update it', 403);
-    }
-
-    const hasAttemptAnswers = await this.attemptRepository.hasAnswersForOption(optionId);
-    if (hasAttemptAnswers) {
-      throw new AppError(
-        'OPTION_HAS_ATTEMPTS',
-        'Cannot update option: it has been selected. Purchased/attempted tests are not affected.',
-        409,
-      );
     }
 
     return this.examRepository.updateOption(optionId, updates);

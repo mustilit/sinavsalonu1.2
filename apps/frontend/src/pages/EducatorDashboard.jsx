@@ -1,6 +1,9 @@
-import { Link } from "react-router-dom";
+import { useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { createPageUrl } from "@/utils";
 import { useAuth } from "@/lib/AuthContext";
+import { auth } from "@/api/dalClient";
 import api from "@/lib/api/apiClient";
 import OnboardingTour from "@/components/onboarding/OnboardingTour";
 import { useShouldShowTour, useCompleteTour, TOUR_KEYS } from "@/lib/useOnboarding";
@@ -22,9 +25,23 @@ import { format } from "date-fns";
 import { tr } from "date-fns/locale";
 
 export default function EducatorDashboard() {
+  const { t } = useTranslation(["pages"]);
   const { user } = useAuth();
+  const navigate = useNavigate();
   const showWelcomeTour = useShouldShowTour(TOUR_KEYS.EDUCATOR_WELCOME);
   const completeTour = useCompleteTour();
+
+  // Eğitici onboarding (CV + uzmanlık alanı) tamamlanmamışsa dashboard'a izin verme.
+  // Direkt giriş veya Google ile giriş yapan eğiticiler de bu kontrolden geçer.
+  useEffect(() => {
+    if (!user || (user.role || "").toUpperCase() !== "EDUCATOR") return;
+    (async () => {
+      const status = await auth.educatorOnboardingStatus();
+      if (status && !status.complete) {
+        navigate(createPageUrl("EducatorOnboarding"), { replace: true });
+      }
+    })();
+  }, [user?.id, navigate]);
 
   const { data: myTests = [], isLoading: loadingTests } = useQuery({
     queryKey: ["myTests", user?.id],
@@ -62,14 +79,15 @@ export default function EducatorDashboard() {
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-3xl font-bold text-slate-900">
-            Hoş Geldin, {user?.username ?? user?.full_name?.split(" ")[0] ?? "Eğitici"}
+            {t("pages:titles.educatorDashboard")}
+            {(user?.username || user?.full_name) ? ` — ${user?.username ?? user?.full_name?.split(" ")[0]}` : ""}
           </h1>
-          <p className="text-slate-500 mt-2">Eğitici panelinize genel bakış</p>
+          <p className="text-slate-500 mt-2">{t("pages:titles.educatorDashboardDesc")}</p>
         </div>
         <Link to={createPageUrl("CreateTest")}>
           <Button className="bg-indigo-600 hover:bg-indigo-700">
             <Plus className="w-4 h-4 mr-2" />
-            Yeni Test Oluştur
+            {t("pages:titles.createTest")}
           </Button>
         </Link>
       </div>

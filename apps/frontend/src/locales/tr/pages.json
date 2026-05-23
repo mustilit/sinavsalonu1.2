@@ -1,0 +1,1623 @@
+{
+  "card": {
+    "free": "Ücretsiz",
+    "boosted": "Öne Çıkan",
+    "timed": "Süreli",
+    "viewDetails": "İncele",
+    "seeAll": "Tümünü Gör",
+    "personalized": "Size Özel",
+    "questionsCount_one": "{{count}} soru",
+    "questionsCount_other": "{{count}} soru",
+    "salesCount_one": "{{count}} satış",
+    "salesCount_other": "{{count}} satış",
+    "testsCount_one": "{{count}} test",
+    "testsCount_other": "{{count}} test"
+  },
+  "home": {
+    "nav": {
+      "explore": "Testleri Keşfet",
+      "educators": "Eğiticiler",
+      "login": "Giriş Yap"
+    },
+    "hero": {
+      "titleLine1": "Sınavlara",
+      "titleLine2": "Güvenle Hazırlan",
+      "subtitle": "Alanında uzman eğiticilerden binlerce test çöz, performansını takip et ve hedefine ulaş.",
+      "searchPlaceholder": "Test, konu veya eğitici ara...",
+      "searchButton": "Ara",
+      "features": {
+        "uniqueTests": "Özgün Testler",
+        "experiencedEducators": "Tecrübeli Eğiticiler",
+        "performanceTracking": "Performans Takibi"
+      }
+    },
+    "sections": {
+      "continue": "Devam Et",
+      "examTypes": "Sınav Türleri",
+      "testPackages": "Test Paketleri",
+      "educators": "Eğiticiler"
+    },
+    "interestedExamType": "İlgi alanınız",
+    "continueAria": "Devam et",
+    "completedAria": "Tamamlandı",
+    "empty": {
+      "noPackages": "Henüz yayınlanmış test paketi yok",
+      "noEducators": "Eğitici bulunamadı"
+    },
+    "stats": {
+      "testsValue": "Canlı",
+      "testsLabel": "Testler",
+      "contentValue": "Özgün",
+      "contentLabel": "Test İçeriği",
+      "educatorsValue": "Tecrübeli",
+      "educatorsLabel": "Eğiticiler",
+      "performanceValue": "Performans",
+      "performanceLabel": "Takibi"
+    },
+    "cta": {
+      "candidateTitle": "Aday Olarak Katıl",
+      "candidateDesc": "Alanında uzman eğiticilerden binlerce test çöz, performansını takip et ve hedefine ulaş.",
+      "educatorTitle": "Eğitici Olarak Katıl",
+      "educatorDesc": "Uzman olduğun konuda test paketleri oluştur, binlerce adaya ulaş ve gelir elde et.",
+      "startNow": "Hemen Başla"
+    },
+    "footer": {
+      "tagline": "Sınavlara hazırlık için en güvenilir platform. Alanında uzman eğiticilerden test çöz, performansını takip et.",
+      "corporate": "Kurumsal",
+      "support": "Destek",
+      "supportLink": "Yardım ve Destek",
+      "rights": "Tüm hakları saklıdır.",
+      "links": {
+        "about": "Hakkımızda",
+        "contact": "İletişim",
+        "privacy": "Gizlilik Politikası",
+        "partnership": "İş Ortaklığı"
+      }
+    },
+    "fallbackPackageTitle": "Test paketi"
+  },
+  "testCard": {
+    "difficulty": {
+      "easy": "Kolay",
+      "medium": "Orta",
+      "hard": "Zor"
+    },
+    "examTypeFallback": "Genel",
+    "solutionsSuffix": " - Çözümlü",
+    "testsLabel_one": "{{count}} Test",
+    "testsLabel_other": "{{count}} Test",
+    "questionsLabel_one": "{{count}} Soru",
+    "questionsLabel_other": "{{count}} Soru",
+    "minutes": "{{count}} dk",
+    "free": "Ücretsiz",
+    "review": "İncele",
+    "continue": "Devam Et",
+    "start": "Teste Başla",
+    "buy": "Satın Al",
+    "durationFull": "{{h}}s {{m}}dk",
+    "durationShort": "{{m}}dk {{s}}s"
+  },
+  "explore": {
+    "title": "Testleri Keşfet",
+    "subtitle": "Binlerce test arasından sana uygun olanı bul",
+    "searchPlaceholder": "Test, konu veya eğitici ara...",
+    "filtersButton": "Filtreler",
+    "filter": {
+      "examType": "Sınav Türü",
+      "examTypeAria": "Sınav türü filtresi",
+      "difficulty": "Zorluk",
+      "difficultyAria": "Zorluk filtresi",
+      "price": "Fiyat",
+      "priceAria": "Fiyat filtresi",
+      "educator": "Eğitici",
+      "educatorAria": "Eğitici filtresi",
+      "ratingAria": "Minimum puan filtresi",
+      "all": "Tümü",
+      "allEducators": "Tüm Eğiticiler",
+      "priceFree": "Ücretsiz",
+      "priceUnder50": "₺50 Altı",
+      "price50to100": "₺50 - ₺100",
+      "priceOver100": "₺100 Üstü",
+      "active": "Aktif filtreler:",
+      "clear": "Temizle"
+    },
+    "empty": {
+      "title": "Sonuç bulunamadı",
+      "description": "Farklı filtreler deneyin veya arama teriminizi değiştirin"
+    },
+    "countFound_one": "{{count}} test bulundu",
+    "countFound_other": "{{count}} test bulundu"
+  },
+  "testDetail": {
+    "backToTests": "Testlere Dön",
+    "errorLoading": "Test yüklenemedi",
+    "errorLoadingDesc": "Sunucuya ulaşılamadı, lütfen sayfayı yenileyin.",
+    "notFound": "Test bulunamadı",
+    "notFoundDesc": "Bu test mevcut değil veya yayından kaldırılmış olabilir.",
+    "reload": "Yenile",
+    "rate": {
+      "title": "Paketi Değerlendir",
+      "packageAverage": "Paket ortalama puanın: {{avg}}/5 ({{count}} test).",
+      "updateAvailable": "Mevcut puanınızı güncelleyebilirsiniz.",
+      "shareExperience": "Bu testi tamamladınız. Deneyiminizi paylaşın!",
+      "commentPlaceholder": "Yorumunuz (opsiyonel)",
+      "submitNew": "Puanı Gönder",
+      "submitUpdate": "Puanı Güncelle",
+      "successUpdated": "Puanınız güncellendi!",
+      "successSaved": "Test puanınız kaydedildi!",
+      "errorGeneric": "Bir hata oluştu!",
+      "titleUpdate": "Paket Puanını Güncelle",
+      "cancel": "Vazgeç"
+    },
+    "about": {
+      "title": "Test Hakkında",
+      "noDescription": "Bu test paketi hakkında henüz bir açıklama eklenmemiş."
+    },
+    "educator": {
+      "title": "Eğitici",
+      "fallbackName": "Eğitici",
+      "follow": "Takip Et",
+      "following": "Takipte",
+      "unfollowed": "Takipten çıkıldı",
+      "followed": "Takip edildi"
+    },
+    "reviews": {
+      "title": "Değerlendirmeler",
+      "unknownCandidate": "Bilinmeyen aday",
+      "ratedTestCount_one": "({{count}} test ortalaması)",
+      "ratedTestCount_other": "({{count}} test ortalaması)",
+      "prev": "Önceki",
+      "next": "Sonraki",
+      "pageOf": "Sayfa {{current}} / {{total}}"
+    },
+    "features": {
+      "title": "Özellikler",
+      "testCount": "Test Sayısı",
+      "questionCount": "Soru Sayısı",
+      "difficulty": "Zorluk",
+      "rating": "Puan"
+    },
+    "purchase": {
+      "totalSales_one": "{{count}} kişi satın aldı",
+      "totalSales_other": "{{count}} kişi satın aldı",
+      "testsListTitle": "Testler",
+      "testMeta": "{{questions}} soru • {{minutes}} dk",
+      "servicesPaused": "🔧 Satın alma servisleri bakımdadır",
+      "servicesPausedDesc": "Lütfen daha sonra tekrar deneyin.",
+      "servicesPausedToast": "Satın alma servislerimiz bakımdadır. Lütfen daha sonra tekrar deneyin.",
+      "features": {
+        "unlimitedAccess": "Sınırsız erişim",
+        "detailedSolutions": "Detaylı çözümler",
+        "performanceAnalysis": "Performans analizi",
+        "mobileFriendly": "Mobil uyumlu"
+      }
+    },
+    "packageRating": {
+      "title": "Paket Genel Puanı",
+      "outOf": "/ 5",
+      "noReviews": "Henüz değerlendirme yok",
+      "reviewerCount_one": "{{count}} adayın değerlendirmesi",
+      "reviewerCount_other": "{{count}} adayın değerlendirmesi",
+      "rateButton": "Değerlendir",
+      "updateButton": "Puanı Güncelle"
+    }
+  },
+  "titles": {
+    "myObjections": "Hata Bildirimlerim",
+    "myObjectionsDesc": "Yaptığınız hata bildirimlerini ve yanıtları izleyebilirsiniz",
+    "myResults": "Performans Raporlarım",
+    "myResultsDesc": "Çözdüğün testlerin sonuçlarını ve istatistiklerini gör",
+    "myTopicReport": "Konu Performansım",
+    "myTopicReportDesc": "Konu bazlı doğruluk ve zaman performansını izle",
+    "profileSettings": "Profil Ayarları",
+    "profileSettingsDesc": "Hesap bilgilerini ve tercihlerini güncelle",
+    "takeTest": "Test",
+    "educatorDashboard": "Eğitici Paneli",
+    "educatorDashboardDesc": "Test paketlerinizi, satışlarınızı ve istatistiklerinizi takip edin",
+    "myTestPackages": "Test Paketlerim",
+    "myTestPackagesDesc": "Oluşturduğun test paketlerini yönet",
+    "createTest": "Yeni Test Oluştur",
+    "createTestDesc": "Yeni bir test paketi başlat",
+    "editTest": "Testi Düzenle",
+    "mySales": "Satışlarım",
+    "mySalesDesc": "Satış geçmişini ve kazançlarını gör",
+    "myDiscountCodes": "İndirim Kodları",
+    "myDiscountCodesDesc": "İndirim kodlarını oluştur ve yönet",
+    "myAds": "Reklamlarım",
+    "myAdsDesc": "Reklam kampanyalarını yönet",
+    "myLiveSessions": "Canlı Testlerim",
+    "myLiveSessionsDesc": "Oluşturduğun canlı oturumları yönet",
+    "educatorRefunds": "İade Talepleri",
+    "educatorRefundsDesc": "Adayların iade taleplerini değerlendir",
+    "questionReports": "Hata Bildirimleri",
+    "questionReportsDesc": "Adayların soru için açtığı bildirimleri incele",
+    "educatorSettings": "Profil Ayarları",
+    "educatorSettingsDesc": "Eğitici hesap ayarları ve tercihler",
+    "myModerationStatus": "İçerik Durumum",
+    "myModerationStatusDesc": "Sorularının moderasyon durumu ve risk skorun",
+    "educators": "Eğiticiler",
+    "educatorsDesc": "Tüm eğiticileri keşfet",
+    "educatorProfile": "Eğitici Profili",
+    "examTypes": "Sınav Türleri",
+    "paymentSuccess": "Ödeme Başarılı",
+    "paymentSuccessDesc": "Satın alma işleminiz tamamlandı",
+    "about": "Hakkımızda",
+    "contact": "İletişim",
+    "privacy": "Gizlilik Politikası",
+    "partnership": "İş Ortaklığı",
+    "support": "Yardım ve Destek"
+  },
+  "liveHost": {
+    "status": {
+      "draft": "Başlamadı",
+      "active": "Canlı",
+      "ended": "Bitti"
+    },
+    "participants": {
+      "active": "aktif",
+      "total": "toplam",
+      "activeTitle": "Aktif Katılımcılar",
+      "totalJoined": "Toplam katılan"
+    },
+    "controls": {
+      "start": "Başlat",
+      "end": "Bitir",
+      "ending": "Bitiriliyor…",
+      "previous": "Önceki",
+      "next": "Sonraki",
+      "showStats": "İstatistikleri Göster",
+      "hideStats": "İstatistikleri Gizle"
+    },
+    "question": {
+      "label": "Soru {{n}}",
+      "mediaAlt": "soru",
+      "peopleTooltip_one": "{{count}} kişi",
+      "peopleTooltip_other": "{{count}} kişi"
+    },
+    "round": {
+      "round1": "Tur 1: %{{pct}}",
+      "round2Prefix": "Tur 2:"
+    },
+    "ended": {
+      "round1Title": "Oturum tamamlandı",
+      "round2Title": "Son-Test Tamamlandı!",
+      "summary": "{{participants}} katılımcı • {{questions}} soru",
+      "createRound2": "İkinci Kez Uygula (Son-Test)",
+      "creatingRound2": "Oluşturuluyor…",
+      "round2Exists": "2. tur mevcut — Kod:",
+      "goToRound2": "Oturuma Git →",
+      "backToDashboard": "Ana Sayfaya Dön",
+      "backToLiveSessions": "Canlı Testlerime Dön"
+    },
+    "join": {
+      "codeLabel": "Katılım Kodu",
+      "copyCode": "Kodu kopyala",
+      "copied": "Kopyalandı!",
+      "qrHint": "QR kodu ile katılım"
+    },
+    "endDialog": {
+      "title": "Oturumu bitir",
+      "description": "Oturumu şimdi bitirmek istediğinize emin misiniz? Bu işlem geri alınamaz; mevcut katılımcılar artık cevap gönderemez.",
+      "cancel": "Vazgeç",
+      "confirm": "Evet, bitir"
+    },
+    "round2Dialog": {
+      "title": "2. Tur Başlat",
+      "description": "Aynı soruları kullanarak 2. tur (son-test) oluşturulacak. Yalnızca bu tura katılan adaylar yeni oturuma girebilir.",
+      "cancel": "Vazgeç",
+      "confirm": "2. Turu Oluştur"
+    },
+    "comparison": {
+      "title": "Grup Ön-Test / Son-Test Karşılaştırması",
+      "round1Avg": "1. Tur Ort.",
+      "round2Avg": "2. Tur Ort.",
+      "improvement": "gelişim",
+      "peopleCount_one": "{{count}} kişi",
+      "peopleCount_other": "{{count}} kişi"
+    },
+    "toasts": {
+      "ended": "Oturum sonlandırıldı",
+      "round2Created": "2. tur oluşturuldu! Kod: {{code}}",
+      "round2NoNav": "2. tur oluşturuldu ancak yönlendirme yapılamadı",
+      "round2Failed": "2. tur oluşturulamadı",
+      "genericError": "Hata"
+    },
+    "notFound": "Oturum bulunamadı"
+  },
+  "testForm": {
+    "steps": {
+      "package": "Paket",
+      "tests": "Testler",
+      "preview": "Önizleme"
+    },
+    "nav": {
+      "backToPackages": "Test Paketlerim",
+      "back": "← Geri",
+      "backToTests": "← Geri (Testler)",
+      "next": "İleri →",
+      "previewNext": "Önizleme →"
+    },
+    "package": {
+      "sectionTitle": "Paket Bilgileri",
+      "titleLabel": "Paket Başlığı *",
+      "titlePlaceholder": "Örn: KPSS Genel Yetenek",
+      "descLabel": "Açıklama",
+      "descPlaceholder": "Paket hakkında kısa bilgi...",
+      "examTypeLabel": "Sınav Türü (İsteğe Bağlı)",
+      "examTypePlaceholder": "Seçin",
+      "examTypeNone": "— Seçilmedi —",
+      "priceLabel": "Fiyat (₺) *",
+      "pricePlaceholder": "Örn: 49",
+      "priceMin": "Minimum: {{min}} ₺",
+      "difficultyLabel": "Zorluk Seviyesi",
+      "difficulty": {
+        "easy": "🟢 Kolay",
+        "medium": "🟡 Orta",
+        "hard": "🔴 Zor"
+      },
+      "cover": {
+        "label": "Paket Kapak Görseli",
+        "hint": "Paketinin liste ve detay sayfalarındaki görsel önizlemesini buradan yükle. Adaylar bu görseli görecek.",
+        "upload": "Görsel Yükle",
+        "change": "Görseli Değiştir",
+        "remove": "Görseli Kaldır",
+        "uploading": "Yükleniyor…",
+        "uploaded": "Kapak görseli yüklendi",
+        "format": "PNG, JPG veya WebP — en fazla 5MB",
+        "previewTitleFallback": "Paket adı buraya gelir",
+        "errors": {
+          "invalidFormat": "Lütfen PNG, JPG veya WebP formatında bir görsel seçin",
+          "tooBig": "Görsel boyutu en fazla 5MB olabilir",
+          "uploadFailed": "Görsel yüklenemedi. Lütfen tekrar dene."
+        }
+      }
+    },
+    "testCard": {
+      "titleLabel": "Test Başlığı *",
+      "titlePlaceholder": "Örn: YKS Matematik",
+      "timedToggle": "Süreli",
+      "durationLabel": "Süre (dk)",
+      "deleteTest": "Testi Sil",
+      "questionCountStat": "{{count}} soru",
+      "completedSuffix": "({{count}} tamamlanmış)",
+      "addQuestion": "Soru Ekle",
+      "indexLabel": "Test {{index}}",
+      "completedShort": "{{count}} tamamlandı",
+      "collapseAria": "Bu testi kapat"
+    },
+    "question": {
+      "editDialogTitle": "Soru {{n}} Düzenle",
+      "label": "Soru {{n}}",
+      "contentLabel": "Soru Metni",
+      "contentPlaceholder": "Soru metnini giriniz...",
+      "duplicateCheck": "Kontrol ediliyor...",
+      "duplicateTitle": "Benzer soru",
+      "duplicateSimilarity": "Benzerlik: {{pct}}%",
+      "duplicateToast": "Benzer bir soru bulundu.",
+      "imageLabel": "Görsel (İsteğe Bağlı)",
+      "selectImage": "Görsel Seç",
+      "clearImage": "Temizle",
+      "topicLabel": "Konu (İsteğe Bağlı)",
+      "topicPlaceholder": "Konu seçin",
+      "topicNone": "— Seçilmedi —",
+      "optionsLabel": "Seçenekler",
+      "optionPlaceholder": "Seçenek {{letter}}",
+      "optionImage": "Görsel",
+      "selectedCount": "{{filled}}/5 seçenek",
+      "correctMissing": "• Doğru seçilmedi",
+      "correctIs": "• Doğru: {{letter}}",
+      "edit": "Düzenle",
+      "delete": "Sil",
+      "rejectedNotice": "Bu soru içerik politikasına aykırı bulundu."
+    },
+    "dialog": {
+      "cancel": "İptal",
+      "saving": "Kaydediliyor...",
+      "newQuestion": "Yeni Soru",
+      "complete": "Tamamla",
+      "validateNoCorrect": "Doğru seçeneği işaretleyin",
+      "genericError": "Hata"
+    },
+    "testsStep": {
+      "title": "Testler & Sorular",
+      "subtitleEdit": "Mevcut soruları düzenleyin veya yeni ekleyin",
+      "subtitleCreate": "İlk testinizi oluşturun ve sorularını ekleyin",
+      "addTest": "Test Ekle",
+      "validateAtLeastOne": "En az bir tamamlanmış test ve soru gerekli"
+    },
+    "preview": {
+      "sectionTitle": "Paket Özeti",
+      "packageTitleLabel": "Paket Başlığı",
+      "descriptionLabel": "Açıklama",
+      "testsCount_one": "{{count}} test",
+      "testsCount_other": "{{count}} test",
+      "validQuestions_one": "{{count}} geçerli soru",
+      "validQuestions_other": "{{count}} geçerli soru",
+      "free": "Ücretsiz",
+      "testsListTitle": "Testler",
+      "untitled": "Başlıksız"
+    },
+    "validations": {
+      "titleRequired": "Paket başlığı zorunlu",
+      "priceMin": "Fiyat en az {{min}} ₺ olmalı"
+    },
+    "editPage": {
+      "publishedBadge": "Yayında",
+      "draftBadge": "Taslak",
+      "notFoundId": "Paket ID bulunamadı",
+      "loadFailed": "Paket yüklenemedi",
+      "saveChanges": "Değişiklikleri Kaydet",
+      "saving": "Kaydediliyor...",
+      "publishing": "Yayınlanıyor...",
+      "saveAndPublish": "Kaydet & Yayınla",
+      "unpublishing": "İşleniyor...",
+      "unpublish": "Yayından Kaldır",
+      "cannotDeleteAnswered": "Cevaplanmış soru atlandı: silinemiyor.",
+      "moderationPendingError": "Bu testin bazı soruları moderasyon onayı bekliyor. Onaylanmadan yayımlayamazsınız.",
+      "savedAndPublished": "Paket güncellendi ve yayınlandı!",
+      "unpublished": "Paket yayından kaldırıldı.",
+      "savedChanges": "Değişiklikler kaydedildi.",
+      "saveFailed": "Kaydetme başarısız",
+      "autoSave": {
+        "saving": "Kaydediliyor...",
+        "savedAt": "Otomatik kaydedildi · {{time}}"
+      },
+      "draftDialog": {
+        "title": "Yarıda kalan düzenleme bulundu",
+        "description": "Bu paket üzerinde tamamlanmamış bir düzenleme oturumu var. Kaldığınız yerden devam etmek ister misiniz?",
+        "restore": "Devam Et",
+        "discard": "Vazgeç ve Sıfırla",
+        "loaded": "Önceki düzenleme yüklendi."
+      }
+    },
+    "createPage": {
+      "subtitle": "Yeni test paketi oluştur",
+      "submit": "Paketi Oluştur",
+      "submitting": "Oluşturuluyor...",
+      "submitAndPublish": "Oluştur & Yayınla",
+      "submitFailed": "Paket oluşturulamadı",
+      "created": "Paket oluşturuldu!",
+      "createdAndPublished": "Paket oluşturuldu ve yayınlandı!",
+      "draftRestored": "Taslak geri yüklendi",
+      "draftSaving": "Otomatik kaydediliyor…",
+      "draftSaved": "{{time}} • Otomatik kaydedildi",
+      "discardDraft": "Taslağı Sil",
+      "discardConfirm": "Mevcut taslak silinecek. Devam edilsin mi?",
+      "discarded": "Taslak silindi",
+      "backToDashboard": "Dashboard'a Dön",
+      "headerSubtitle": "3 adımda testlerinizi hazırlayın ve yayınlayın.",
+      "publishHint": "Paket yayınlandığında adaylar tarafından görülebilir ve satın alınabilir hale gelir.",
+      "draftSave": "Taslak Kaydet",
+      "publish": "Yayınla",
+      "publishing": "Yayınlanıyor...",
+      "saving": "Kaydediliyor...",
+      "publishedToast": "Paket oluşturuldu ve yayınlandı!",
+      "draftedToast": "Paket taslak olarak kaydedildi.",
+      "saveFailed": "Kaydetme başarısız",
+      "moderationPending": "Bu testin bazı soruları moderasyon onayı bekliyor. Onaylanmadan yayımlayamazsınız.",
+      "noTestsYet": "Henüz test eklenmedi",
+      "untitled": "Başlıksız Test",
+      "imageAdded": "Görsel eklenmiş",
+      "atLeastOneValid": "En az bir geçerli test oluşturmalısınız",
+      "validations": {
+        "titleRequired": "Paket başlığı zorunludur",
+        "priceMin": "Fiyat en az {{min}} ₺ olmalıdır",
+        "testTitleRequired": "Test başlığı zorunludur",
+        "atLeastOneValidQuestion": "En az bir tamamlanmış soru gereklidir"
+      },
+      "questionDialog": {
+        "contentRequired": "Soru metni veya görsel zorunludur",
+        "atLeast2Options": "En az 2 seçenek doldurulmalıdır",
+        "correctRequired": "Doğru seçeneği işaretleyiniz (A–E)",
+        "duplicateToast": "Benzer bir soru bulundu. İsterseniz devam edebilirsiniz.",
+        "duplicateWarning": "Uyarı: Benzer bir soru bulundu",
+        "duplicateLoading": "Kopya soru kontrol ediliyor...",
+        "imageLabel": "Soru Görseli (İsteğe Bağlı)",
+        "saveError": "Kaydedilirken hata oluştu"
+      },
+      "docx": {
+        "button": "DOCX İçeri Aktar",
+        "loading": "Yükleniyor...",
+        "dialogTitle": "DOCX'ten Sorular İçeri Aktar",
+        "dialogDesc": "Word dosyasını seçin. Sorular otomatik olarak ayrıştırılacak.",
+        "selectFile": "DOCX Dosya Seç",
+        "parseError": "DOCX'ten soru parse edilemedi. Lütfen manuel ekleyiniz.",
+        "mammothMissing": "DOCX import paketi yüklü değil",
+        "importError": "DOCX import başarısız: {{msg}}",
+        "unknownError": "Bilinmeyen hata",
+        "added_one": "{{count}} soru eklendi",
+        "added_other": "{{count}} soru eklendi"
+      },
+      "draftDialog": {
+        "title": "Kaydedilmemiş Taslak",
+        "found": "<strong>\"{{title}}\"</strong> başlıklı kaydedilmemiş bir taslak bulundu.",
+        "continue": "Devam Et",
+        "discardRestart": "Sil, Yeniden Başla",
+        "loaded": "Taslak yüklendi"
+      },
+      "guards": {
+        "loginRequired": "Test oluşturmak için giriş yapın",
+        "loginButton": "Giriş Yap",
+        "maintenanceTitle": "Bakım Modu",
+        "maintenanceDesc": "Test oluşturma geçici olarak durdurulmuştur.",
+        "pendingApprovalTitle": "Hesap Onayı Bekleniyor",
+        "pendingApprovalDesc": "Test oluşturabilmek için hesabınızın yönetici tarafından onaylanması gerekiyor.",
+        "goToSettings": "Profil Ayarlarına Git"
+      },
+      "questionItem": {
+        "selectedCount": "{{filled}}/5 seçenek dolu",
+        "correctIs": "• Doğru cevap: {{letter}}",
+        "correctMissing": "• Doğru cevap seçilmedi"
+      },
+      "duration": "Süre (dakika)"
+    }
+  },
+  "myTestPackages": {
+    "searchPlaceholder": "Test ara...",
+    "filter": {
+      "statusPlaceholder": "Durum",
+      "allStatuses": "Tüm Durumlar",
+      "published": "Yayında",
+      "draft": "Taslak",
+      "examTypePlaceholder": "Sınav Türü",
+      "allExamTypes": "Tüm Sınavlar",
+      "exportExcel": "Excel İndir",
+      "clear": "Temizle"
+    },
+    "empty": {
+      "errorLoad": "Testler yüklenirken hata oluştu. Sayfayı yenileyin.",
+      "noTestsTitle": "Henüz test oluşturmadın",
+      "noTestsDesc": "İlk test paketini oluştur ve satışa başla",
+      "createFirst": "İlk Testini Oluştur",
+      "noResultsTitle": "Sonuç bulunamadı",
+      "noResultsDesc": "Filtreleri değiştirmeyi deneyin",
+      "clearFilters": "Filtreleri Temizle"
+    },
+    "card": {
+      "stats": "{{tests}} test · {{questions}} soru",
+      "salesCount_one": "{{count}} satış",
+      "salesCount_other": "{{count}} satış",
+      "noRating": "Henüz puan yok",
+      "viewsAria": "Görüntülenme: {{count}}",
+      "viewsTooltip": "Toplam: {{total}} · Tekil aday: {{unique}} · Son 7 gün: {{last7}}",
+      "viewsLast7": "+{{count}} / 7g",
+      "editTitle": "Düzenle",
+      "publishTitle": "Yayınla",
+      "unpublishTitle": "Yayından Kaldır"
+    },
+    "toasts": {
+      "statusUpdated": "Paket durumu güncellendi",
+      "actionFailed": "İşlem başarısız",
+      "excelDownloaded": "Excel dosyası indirildi"
+    },
+    "excel": {
+      "headers": {
+        "title": "Başlık",
+        "examType": "Sınav Türü",
+        "status": "Durum",
+        "testCount": "Test Sayısı",
+        "questionCount": "Soru Sayısı",
+        "price": "Fiyat (₺)",
+        "sales": "Satış",
+        "rating": "Puan",
+        "createdAt": "Oluşturma Tarihi"
+      },
+      "published": "Yayında",
+      "draft": "Taslak",
+      "sheetName": "Test Paketleri",
+      "filePrefix": "test-paketlerim"
+    }
+  },
+  "mySales": {
+    "stats": {
+      "totalSales": "Toplam Satış",
+      "totalRevenue": "Toplam Gelir",
+      "monthRevenue": "Bu Ay Gelir",
+      "uniqueBuyers": "Benzersiz Alıcı"
+    },
+    "searchPlaceholder": "Alıcı veya test ara...",
+    "filter": {
+      "statusPlaceholder": "Durum",
+      "allStatuses": "Tüm Durumlar",
+      "completed": "Tamamlandı",
+      "pending": "Beklemede",
+      "refunded": "İade",
+      "datePlaceholder": "Tarih",
+      "allDates": "Tüm Zamanlar",
+      "today": "Bugün",
+      "lastWeek": "Son 7 Gün",
+      "lastMonth": "Son 30 Gün",
+      "exportExcel": "Excel İndir",
+      "clear": "Temizle"
+    },
+    "tableTitle": "Satış Geçmişi",
+    "empty": {
+      "noSales": "Henüz satış yok",
+      "noResults": "Sonuç bulunamadı",
+      "clearFilters": "Filtreleri Temizle"
+    },
+    "table": {
+      "buyer": "Alıcı",
+      "test": "Test",
+      "amount": "Tutar",
+      "status": "Durum",
+      "date": "Tarih",
+      "buyerFallback": "Kullanıcı"
+    },
+    "excel": {
+      "headers": {
+        "buyer": "Alıcı",
+        "email": "Email",
+        "test": "Test",
+        "amount": "Tutar",
+        "status": "Durum",
+        "date": "Tarih"
+      },
+      "filePrefix": "satislarim"
+    },
+    "toasts": {
+      "excelDownloaded": "Excel dosyası indirildi"
+    }
+  },
+  "myDiscountCodes": {
+    "newCode": "Yeni Kod",
+    "filter": {
+      "codeLabel": "Kod",
+      "codePlaceholder": "Kod ara…",
+      "minPercent": "Min % İndirim",
+      "maxPercent": "Max % İndirim",
+      "dateFrom": "Başlangıç Tarihi",
+      "dateTo": "Bitiş Tarihi",
+      "clear": "Temizle"
+    },
+    "empty": {
+      "noCodes": "Henüz indirim kodu oluşturmadınız",
+      "noResults": "Filtreyle eşleşen kod bulunamadı",
+      "clearFilters": "Filtreleri temizle"
+    },
+    "card": {
+      "discountUsage": "%{{pct}} indirim • {{used}}/{{max}} kullanım",
+      "infinite": "∞",
+      "createdBy": "Oluşturan:",
+      "roles": {
+        "admin": "Yönetici",
+        "educator": "Eğitici"
+      },
+      "status": {
+        "passive": "Pasif",
+        "expired": "Süresi Doldu",
+        "limitReached": "Limit Doldu",
+        "active": "Aktif"
+      },
+      "toggleActivate": "Aktive et",
+      "toggleDeactivate": "Pasife al"
+    },
+    "dialog": {
+      "title": "Yeni İndirim Kodu",
+      "codeLabel": "İndirim Kodu *",
+      "codePlaceholder": "Örn: YENI2024",
+      "percentLabel": "İndirim Oranı (%) *",
+      "percentMax": "Maksimum %{{max}}",
+      "adminOverride": " (admin override)",
+      "maxUsesLabel": "Kullanım Limiti",
+      "validForLabel": "Geçerli Test (Opsiyonel)",
+      "allTests": "Tüm testler",
+      "validUntilLabel": "Geçerlilik Tarihi (Opsiyonel)",
+      "cancel": "İptal",
+      "create": "Oluştur"
+    },
+    "toasts": {
+      "created": "İndirim kodu oluşturuldu",
+      "createFailed": "İndirim kodu oluşturulamadı",
+      "activated": "İndirim kodu aktive edildi",
+      "deactivated": "İndirim kodu pasife alındı",
+      "toggleFailed": "İşlem başarısız",
+      "fillRequired": "Lütfen gerekli alanları doldurun",
+      "maxPercent": "İndirim oranı maksimum %{{max}} olabilir",
+      "codeCopied": "Kod kopyalandı"
+    }
+  },
+  "myAds": {
+    "tabs": {
+      "stats": "İstatistikler",
+      "purchases": "Reklamlarım",
+      "buy": "Yeni Reklam"
+    },
+    "stats": {
+      "totalImpressions": "Toplam Gösterim",
+      "activeAds": "Aktif Reklam",
+      "last7Days": "Son 7 Gün",
+      "last30Days": "Son 30 Günlük Gösterimler",
+      "noData": "Henüz gösterim verisi yok",
+      "performanceDetail": "Reklam Başarım Detayı",
+      "profileBoost": "Profil Öne Çıkarma",
+      "validUntil": "{{date}} tarihine kadar",
+      "active": "Aktif",
+      "completed": "Tamamlandı",
+      "noDataPrompt": "İlk reklamınızı satın alarak testlerinizi öne çıkarmaya başlayın.",
+      "buyAd": "Reklam Satın Al"
+    },
+    "purchases": {
+      "noneYet": "Henüz reklam satın almadınız",
+      "buyFirst": "İlk Reklamı Al",
+      "impressionsRemaining": "{{count}} gösterim kaldı"
+    },
+    "buy": {
+      "servicesPaused": "Reklam satın alma geçici olarak durdurulmuştur.",
+      "servicesPausedDesc": "Lütfen daha sonra tekrar deneyin.",
+      "howItWorks": "Nasıl çalışır?",
+      "howItWorks1": "Ana sayfadaki test önerilerinin <strong>%10'u</strong> reklam bazlıdır.",
+      "howItWorks2": "Kişiselleştirilmiş öneriler etkilenmez — reklamlar ek görünürlük sağlar.",
+      "howItWorks3": "Satın aldığınız paket içindeki gösterimler tükenince reklam otomatik biter.",
+      "targetType": "Öne Çıkarma Türü",
+      "targetTest": "Test Paketi",
+      "targetTestDesc": "Belirli bir testinizi öne çıkarın",
+      "targetEducator": "Profilim",
+      "targetEducatorDesc": "Eğitici profilinizi öne çıkarın",
+      "whichTest": "Hangi Test?",
+      "noPublishedTests": "Yayında testiniz bulunmuyor. Önce bir test yayınlayın.",
+      "selectTest": "Test seçin",
+      "adPackage": "Reklam Paketi",
+      "noPackages": "Şu an satışta paket bulunmuyor.",
+      "packageInfo": "{{impressions}} gösterim · {{days}} gün geçerli",
+      "processing": "İşleniyor...",
+      "buyAd": "Reklamı Satın Al"
+    },
+    "toasts": {
+      "purchased": "Reklam satın alındı! Gösterimlere hemen başlanacak.",
+      "purchaseFailed": "Satın alma başarısız",
+      "selectPackage": "Lütfen bir paket seçin",
+      "selectTest": "Lütfen öne çıkarmak istediğiniz testi seçin"
+    }
+  },
+  "myLiveSessions": {
+    "subtitle": "Oluşturduğunuz canlı test oturumlarını yönetin.",
+    "newButton": "Yeni Canlı Test",
+    "empty": {
+      "title": "Henüz canlı test oluşturmadınız",
+      "desc": "Canlı bir oturum başlatın, katılımcılar QR kod veya kod ile katılsın.",
+      "firstButton": "İlk Canlı Testimi Oluştur"
+    },
+    "sections": {
+      "active": "Aktif ({{count}})",
+      "draft": "Taslak ({{count}})",
+      "ended": "Tamamlanan ({{count}})"
+    },
+    "status": {
+      "draft": "Taslak",
+      "active": "Aktif",
+      "ended": "Tamamlandı"
+    },
+    "round2": {
+      "completedBadge": "Tur 2 tamamlandı",
+      "activeBadge": "Tur 2 aktif",
+      "draftBadge": "Tur 2 taslak"
+    },
+    "card": {
+      "questions": "{{count}} soru",
+      "participants": "{{count}} katılımcı",
+      "joinCode": "Kod:",
+      "round2JoinCode": "Tur 2 Kod:",
+      "manage": "Yönet",
+      "review": "İncele",
+      "reviewRound1": "Tur 1 İncele",
+      "reviewRound2": "Tur 2 İncele",
+      "startRound2": "İkinci Turu Başlat",
+      "goRound2": "Tur 2'ye Git"
+    },
+    "confirms": {
+      "round2": "Aynı soruları kullanarak 2. tur (son-test) oluşturmak istiyor musunuz?\nYalnızca bu tura katılan adaylar girebilir."
+    },
+    "toasts": {
+      "round2Created": "2. tur oluşturuldu! Kod: {{code}}",
+      "round2Failed": "2. tur oluşturulamadı"
+    }
+  },
+  "educatorRefunds": {
+    "accessDenied": "Erişim Engellendi",
+    "deadlineWarning": "Bazı taleplerin inceleme süresi dolmak üzere. 7 gün içinde yanıtlanmayan talepler doğrudan admin'e iletilir.",
+    "tabs": {
+      "pending": "Bekleyen",
+      "reviewed": "İncelenenler"
+    },
+    "empty": {
+      "noPending": "Bekleyen iade talebi yok",
+      "noReviewed": "Henüz incelenmiş talep yok"
+    },
+    "card": {
+      "testFallback": "Test",
+      "reasonFallback": "Sebep belirtilmedi",
+      "deadline": "Son: {{when}}",
+      "review": "İncele"
+    },
+    "status": {
+      "PENDING": "Bekliyor",
+      "EDUCATOR_APPROVED": "Onaylandı",
+      "EDUCATOR_REJECTED": "Reddedildi",
+      "APPEAL_PENDING": "İtiraz",
+      "ESCALATED": "Üst incelemeye",
+      "APPROVED": "İade Yapıldı",
+      "REJECTED": "Sonuçlandı"
+    },
+    "reasons": {
+      "wrong_content": "İçerik beklentiyi karşılamadı",
+      "defective_questions": "Hatalı soru var",
+      "not_working": "Teknik sorun",
+      "quality_issue": "Kalite problemi",
+      "other": "Diğer"
+    },
+    "dialog": {
+      "title": "İade Talebini İncele",
+      "testLabel": "Test:",
+      "reasonLabel": "Sebep:",
+      "descLabel": "Açıklama:",
+      "deadlineLabel": "Son inceleme:",
+      "rejectPlaceholder": "Red gerekçesi (opsiyonel, min 5 karakter)...",
+      "back": "Geri",
+      "reject": "Reddet",
+      "approve": "Onayla → Admin'e İlet"
+    },
+    "toasts": {
+      "approved": "İade talebi onaylandı. Admin incelemesine iletildi.",
+      "rejected": "İade talebi reddedildi.",
+      "actionFailed": "İşlem başarısız"
+    }
+  },
+  "questionReports": {
+    "tabs": {
+      "pending": "Bekleyen",
+      "resolved": "Sonuçlanan"
+    },
+    "filterBar": {
+      "status": "Durum",
+      "test": "Test",
+      "reporter": "Bildiren Aday",
+      "reason": "Hata türü / sebep",
+      "allStatuses": "Tümü",
+      "allTests": "Tüm Testler",
+      "selectTest": "Test seçin...",
+      "searchTest": "Test ara...",
+      "testFilterAria": "Test filtresi",
+      "allReporters": "Tüm Adaylar",
+      "selectReporter": "Aday seçin...",
+      "searchReporter": "Aday ara...",
+      "reporterFilterAria": "Bildiren aday filtresi",
+      "noResult": "Sonuç yok",
+      "reasonPlaceholder": "örn. yanlış cevap, kötü içerik...",
+      "reasonAria": "Hata türü veya sebep ara",
+      "count": "{{filtered}} / {{total}} bildirim",
+      "clear": "Filtreleri Temizle",
+      "unnamed": "(Adsız)",
+      "unknown": "(Bilinmiyor)"
+    },
+    "statusConfig": {
+      "OPEN": "Beklemede",
+      "ANSWERED": "Yanıtlandı",
+      "ESCALATED": "Yöneticiye İletildi"
+    },
+    "card": {
+      "reporter": "Bildiren: {{name}}",
+      "daysLeft": "{{count}} gün kaldı",
+      "deadlineExpired": "Süre doldu",
+      "adminNote": "Admin Notu",
+      "yourAnswer": "Yanıtınız:",
+      "respondedAt": "Yanıtlandı: {{date}}",
+      "respond": "Yanıtla"
+    },
+    "empty": {
+      "noPending": "Bekleyen bildirim yok",
+      "noResolved": "Sonuçlanan bildirim yok",
+      "noResults": "Seçili filtrelere uyan bildirim yok"
+    },
+    "dialog": {
+      "title": "Bildirime Yanıt Ver",
+      "testLabel": "Test",
+      "questionLabel": "Soru (ilk 150 karakter)",
+      "reportLabel": "Aday Bildirimi",
+      "responsePlaceholder": "Yanıtınızı yazın (en az 5 karakter)...",
+      "cancel": "İptal",
+      "submit": "Yanıtla",
+      "submitting": "Gönderiliyor..."
+    },
+    "toasts": {
+      "sent": "Yanıt gönderildi",
+      "sendFailed": "Yanıt gönderilemedi",
+      "min5Chars": "En az 5 karakter yazın"
+    }
+  },
+  "educatorSettings": {
+    "tabs": {
+      "profile": "Profil",
+      "verification": "Doğrulama",
+      "contact": "İletişim",
+      "exams": "Sınav Tercihleri",
+      "notifications": "Bildirimler",
+      "payment": "Ödeme"
+    },
+    "notices": {
+      "rejected": {
+        "title": "Başvurunuz Reddedildi",
+        "reason": "Red Nedeni:",
+        "desc": "Lütfen profilinizi güncelleyin ve başvurunuzu yeniden gönderin.",
+        "resubmit": "Başvuruyu Yeniden Gönder",
+        "resubmitting": "Gönderiliyor...",
+        "resubmittedToast": "Başvurunuz yeniden gönderildi"
+      },
+      "pending": {
+        "title": "Hesap Onayı Bekleniyor",
+        "desc": "Eğitici başvurunuz yönetici tarafından inceleniyor. Onay sürecini hızlandırmak için lütfen tüm bilgilerinizi eksiksiz doldurun."
+      },
+      "approved": {
+        "title": "Hesabınız Onaylandı",
+        "desc": "Artık test oluşturabilir ve profil sayfanız adaylar tarafından görüntülenebilir."
+      }
+    },
+    "profile": {
+      "title": "Profil Bilgileri",
+      "educationLabel": "Mezuniyet Bilgisi",
+      "educationPlaceholder": "Örn: İstanbul Üniversitesi - Matematik Bölümü",
+      "educationHint": "Mezun olduğunuz üniversite ve bölüm bilgisi",
+      "bioLabel": "Tanıtım Metni",
+      "bioPlaceholder": "Kendinizi tanıtın, uzmanlık alanlarınızdan bahsedin...",
+      "bioHint": "Profil sayfanızda görünecek tanıtım metni"
+    },
+    "verification": {
+      "title": "Akademik Doğrulama",
+      "gscholarLabel": "Google Scholar Profil Linki",
+      "gscholarHint": "Akademik geçmişinizi doğrulamak için Google Scholar profil linkinizi ekleyin",
+      "cvLabel": "CV Yükle",
+      "cvUploaded": "CV yüklendi",
+      "cvView": "Dosyayı görüntüle",
+      "cvChange": "Değiştir",
+      "cvUpload": "CV Yükle",
+      "cvUploading": "Yükleniyor...",
+      "cvFormat": "PDF (Max 5MB)",
+      "cvHint": "CV'nizi yükleyerek profesyonel geçmişinizi adaylara gösterebilirsiniz"
+    },
+    "contact": {
+      "title": "İletişim Bilgileri",
+      "phoneLabel": "Telefon",
+      "cityLabel": "Şehir",
+      "websiteLabel": "Website/Blog",
+      "linkedinLabel": "LinkedIn"
+    },
+    "exams": {
+      "title": "Uzmanlık Alanlarım",
+      "desc": "Hangi sınavlar için hazırlık konusunda uzman olduğunuzu seçin. Bu bilgi profil sayfanızda görünecektir.",
+      "noExamTypes": "Sınav türü bulunamadı"
+    },
+    "notifications": {
+      "title": "Bildirim Tercihleri",
+      "newTests": "Yeni Test Bildirimleri",
+      "newTestsDesc": "Yeni testler yayınlandığında bildirim al",
+      "promotions": "Kampanya ve Promosyonlar",
+      "promotionsDesc": "İndirimler ve özel fırsatlar hakkında bilgi al",
+      "educatorUpdates": "Eğitici Güncellemeleri",
+      "educatorUpdatesDesc": "Takip ettiğim eğiticilerden güncellemeler al",
+      "testReminders": "Test Hatırlatmaları",
+      "testRemindersDesc": "Başladığın testler için hatırlatma al"
+    },
+    "payment": {
+      "title": "Ödeme Bilgileri",
+      "desc": "Komisyon ödemelerinizin aktarılacağı banka hesabı bilgilerini girin. Bu bilgiler yalnızca yöneticiler tarafından görülür.",
+      "ibanLabel": "IBAN",
+      "ibanPlaceholder": "TR00 0000 0000 0000 0000 0000 00",
+      "ibanError": "IBAN formatı: TR ile başlayan 26 karakter (TR + 24 rakam)",
+      "ibanHint": "Türkiye IBAN formatı: TR ile başlar, toplam 26 karakter",
+      "holderLabel": "Hesap Sahibi Adı",
+      "holderPlaceholder": "Ad Soyad",
+      "holderHint": "Banka hesabında kayıtlı ad ve soyadınız",
+      "bankLabel": "Banka Adı",
+      "bankPlaceholder": "Örn: Ziraat Bankası",
+      "important": "Önemli:",
+      "importantDesc": "Komisyon ödemelerinizin zamanında yapılabilmesi için IBAN ve hesap sahibi bilgilerinizi eksiksiz doldurun. Bilgileriniz şifreli olarak saklanmaktadır."
+    },
+    "saveButton": "Değişiklikleri Kaydet",
+    "saving": "Kaydediliyor...",
+    "toasts": {
+      "profileUpdated": "Profil bilgileri güncellendi",
+      "updateFailed": "Güncelleme başarısız oldu",
+      "invalidPdf": "Lütfen PDF dosyası yükleyin",
+      "fileTooBig": "Dosya boyutu en fazla 5MB olabilir",
+      "cvUploaded": "CV başarıyla yüklendi",
+      "cvUploadFailed": "CV yüklenemedi",
+      "invalidImage": "Lütfen JPG, PNG veya WebP formatında resim yükleyin",
+      "imageTooBig": "Resim boyutu en fazla 5MB olabilir",
+      "imageUploaded": "Profil resmi güncellendi",
+      "imageUploadFailed": "Resim yüklenemedi"
+    }
+  },
+  "myModerationStatus": {
+    "errorLoad": "Moderasyon durumu yüklenemedi. Lütfen daha sonra tekrar deneyin.",
+    "banned": {
+      "title": "Hesabınız Kalıcı Olarak Engellendi",
+      "desc": "Hesabınız platform politikası ihlalı nedeniyle kalıcı olarak kapatılmıştır. Sorularınız için destek ekibine ulaşabilirsiniz: support@sinav-salonu.com"
+    },
+    "suspended": {
+      "title": "Hesabınız Askıya Alınmıştır",
+      "desc": "Hesabınız <strong>{{date}}</strong> tarihine kadar askıya alınmıştır.",
+      "countdown": "Kalan süre: {{days}} gün {{hours}} saat"
+    },
+    "risk": {
+      "title": "Risk Profili",
+      "scoreLabel": "Risk Puanı",
+      "progressLabel": "Risk Seviyesi",
+      "openViolations": "Açık İhlal",
+      "totalViolations": "Toplam İhlal",
+      "highSeverity": "Yüksek Şiddet",
+      "lastViolation": "Son ihlal: {{when}}"
+    },
+    "activeAction": {
+      "title": "Aktif Aksiyon",
+      "actionType": "Aksiyon Türü",
+      "reason": "Neden",
+      "expiresAt": "Bitiş Tarihi"
+    },
+    "recent": {
+      "title": "Son 30 Gün İhlalleri",
+      "noViolations": "Son 30 günde ihlal yok. İçerikleriniz temiz görünüyor!"
+    },
+    "entityTypes": {
+      "question": "Soru",
+      "test": "Test",
+      "content": "İçerik"
+    },
+    "severity": {
+      "label": "Şiddet: {{level}}/5"
+    }
+  },
+  "myTests": {
+    "title": "Testlerim",
+    "subtitle": "Satın aldığın testleri görüntüle ve çöz",
+    "filter": {
+      "title": "Filtrele",
+      "clear": "Filtreleri Temizle",
+      "examTypeLabel": "Sınav Türü",
+      "educatorLabel": "Eğitici",
+      "completionLabel": "Çözülme Durumu",
+      "all": "Tümü",
+      "pending": "Bekleyen",
+      "completed": "Tamamlanan",
+      "examTypeAria": "Sınav türü filtresi",
+      "educatorAria": "Eğitici filtresi",
+      "completionAria": "Çözülme durumu filtresi"
+    },
+    "empty": {
+      "title": "Henüz test satın almadın",
+      "desc": "Testleri keşfet ve sınava hazırlanmaya başla",
+      "cta": "Testleri Keşfet"
+    }
+  },
+  "about": {
+    "backToHome": "Ana Sayfaya Dön",
+    "subtitle": "Sınav Salonu, Türkiye'nin en kapsamlı online sınav hazırlık platformudur.",
+    "missionTitle": "Misyonumuz",
+    "missionBody": "Sınavlara hazırlanan adaylara kaliteli, güncel ve etkili test içerikleri sunarak başarıya giden yolda en güvenilir rehber olmak. Her aday, kendi hızında ve istediği zaman çalışabilir, ilerlemesini takip edebilir ve hedeflerine ulaşabilir.",
+    "visionTitle": "Vizyonumuz",
+    "visionBody": "Türkiye'de sınav hazırlık alanında ilk akla gelen platform olmak. Teknoloji ve eğitimi bir araya getirerek, her adaya eşit fırsat sunmak ve eğitimde dijital dönüşümün öncüsü olmak.",
+    "valuesTitle": "Değerlerimiz",
+    "value1Title": "Kalite",
+    "value1Body": "Her test paketimiz alanında uzman eğiticiler tarafından özenle hazırlanır ve sürekli güncellenir.",
+    "value2Title": "Şeffaflık",
+    "value2Body": "Adaylarımızın ve eğiticilerimizin geri bildirimleriyle sürekli gelişir, açık iletişim kurarız.",
+    "value3Title": "Erişilebilirlik",
+    "value3Body": "Herkesin kaliteli eğitime ulaşabilmesi için uygun fiyatlı ve kolay erişilebilir içerikler sunuyoruz.",
+    "value4Title": "İnovasyon",
+    "value4Body": "Teknolojinin gücünden faydalanarak eğitim deneyimini sürekli iyileştiriyoruz.",
+    "whyTitle": "Neden Sınav Salonu?",
+    "why1Title": "Uzman Eğitici Kadrosu",
+    "why1Body": "Alanında uzman eğiticiler ve güncel test içerikleri.",
+    "why2Title": "Detaylı Performans Analizi",
+    "why2Body": "İlerlemeni takip et, güçlü ve zayıf yönlerini keşfet.",
+    "why3Title": "Her Zaman, Her Yerde",
+    "why3Body": "Mobil uyumlu platformumuzla istediğin zaman, istediğin yerden çalış."
+  },
+  "contact": {
+    "backToHome": "Ana Sayfaya Dön",
+    "subtitle": "Sorularınız veya önerileriniz için bizimle iletişime geçin.",
+    "formTitle": "Mesaj Gönderin",
+    "nameLabel": "Ad Soyad *",
+    "namePlaceholder": "Adınız ve soyadınız",
+    "emailLabel": "E-posta *",
+    "emailPlaceholder": "ornek@mail.com",
+    "subjectLabel": "Konu",
+    "subjectPlaceholder": "Mesajınızın konusu",
+    "messageLabel": "Mesajınız *",
+    "messagePlaceholder": "Mesajınızı buraya yazın...",
+    "sendButton": "Mesajı Gönder",
+    "sending": "Gönderiliyor...",
+    "emailTitle": "E-posta",
+    "addressTitle": "Adres",
+    "addressBody": "Sınav Salonu Eğitim Teknolojileri A.Ş.\nMaslak Mahallesi, Büyükdere Caddesi\nNo: 123, Sarıyer\nİstanbul, Türkiye",
+    "toasts": {
+      "missingFields": "Lütfen tüm zorunlu alanları doldurun",
+      "sent": "Mesajınız başarıyla gönderildi! En kısa sürede size dönüş yapacağız."
+    }
+  },
+  "partnership": {
+    "backToHome": "Ana Sayfaya Dön",
+    "subtitle": "Sınav Salonu ile iş ortağı olun, eğitim teknolojilerinde fark yaratın.",
+    "type1Title": "Kurumsal Satış Ortaklığı",
+    "type1Body": "Şirketiniz veya kurumunuz için özel test paketleri ve toplu satış fırsatları sunuyoruz.",
+    "type2Title": "Eğitim Kurumları İşbirliği",
+    "type2Body": "Dershaneler, üniversiteler ve eğitim kurumları için özel entegrasyon ve içerik işbirlikleri.",
+    "type3Title": "Teknoloji Ortaklığı",
+    "type3Body": "API entegrasyonları ve teknoloji çözümleri geliştirmek isteyen firmalar için işbirliği fırsatları.",
+    "formTitle": "Ortaklık Başvurusu",
+    "companyLabel": "Şirket Adı *",
+    "companyPlaceholder": "Şirket adınız",
+    "nameLabel": "Yetkili Kişi *",
+    "namePlaceholder": "Adınız ve soyadınız",
+    "emailLabel": "E-posta *",
+    "emailPlaceholder": "ornek@firma.com",
+    "phoneLabel": "Telefon",
+    "phonePlaceholder": "+90 5XX XXX XX XX",
+    "messageLabel": "Ortaklık Detayları *",
+    "messagePlaceholder": "Ortaklık türü ve detaylar hakkında bilgi verin...",
+    "submitButton": "Başvuruyu Gönder",
+    "submitting": "Gönderiliyor...",
+    "advantagesTitle": "İş Ortağı Olmanın Avantajları",
+    "adv1Title": "Özel Fiyatlandırma",
+    "adv1Body": "Kurumsal müşteriler için özel indirimli fiyatlar",
+    "adv2Title": "Öncelikli Destek",
+    "adv2Body": "7/24 öncelikli teknik destek hizmeti",
+    "adv3Title": "Özel İçerik",
+    "adv3Body": "İhtiyacınıza özel test içerikleri",
+    "adv4Title": "Detaylı Raporlama",
+    "adv4Body": "Kapsamlı analiz ve raporlama araçları",
+    "toasts": {
+      "missingFields": "Lütfen tüm zorunlu alanları doldurun",
+      "submitted": "Başvurunuz alındı! En kısa sürede sizinle iletişime geçeceğiz."
+    }
+  },
+  "privacy": {
+    "backToHome": "Ana Sayfaya Dön",
+    "lastUpdated": "Son güncelleme: 17 Şubat 2026",
+    "s1Title": "1. Genel Bilgiler",
+    "s1Body": "Sınav Salonu olarak, kullanıcılarımızın gizliliğine saygı duyuyor ve kişisel verilerinizin korunmasına büyük önem veriyoruz. Bu Gizlilik Politikası, platformumuz üzerinde toplanan, işlenen ve saklanan kişisel verilere ilişkin uygulamalarımızı açıklamaktadır.",
+    "s2Title": "2. Toplanan Veriler",
+    "s2Intro": "Platform kullanımı sırasında aşağıdaki kişisel veriler toplanabilir:",
+    "s2List": [
+      "Ad, soyad, e-posta adresi ve telefon numarası",
+      "Hesap oluşturma ve giriş bilgileri",
+      "Test sonuçları ve performans verileri",
+      "Ödeme bilgileri (güvenli ödeme sistemleri aracılığıyla)",
+      "Platform kullanım istatistikleri ve tercihleri",
+      "İletişim kayıtları ve geri bildirimler"
+    ],
+    "s3Title": "3. Verilerin Kullanımı",
+    "s3Intro": "Toplanan kişisel veriler aşağıdaki amaçlarla kullanılır:",
+    "s3List": [
+      "Platformun sunulması ve işletilmesi",
+      "Kullanıcı hesaplarının yönetimi",
+      "Test sonuçlarının saklanması ve raporlanması",
+      "Ödeme işlemlerinin gerçekleştirilmesi",
+      "Müşteri destek hizmetlerinin sağlanması",
+      "Platform iyileştirmeleri ve yeni özelliklerin geliştirilmesi",
+      "Yasal yükümlülüklerin yerine getirilmesi"
+    ],
+    "s4Title": "4. Veri Güvenliği",
+    "s4Body": "Kişisel verilerinizin güvenliğini sağlamak için endüstri standardı güvenlik önlemleri kullanıyoruz. Verileriniz şifrelenmiş bağlantılar üzerinden iletilir ve güvenli sunucularda saklanır. Yetkisiz erişim, değişiklik veya ifşaya karşı teknik ve idari önlemler alınmıştır.",
+    "s5Title": "5. Veri Paylaşımı",
+    "s5Intro": "Kişisel verileriniz üçüncü taraflarla paylaşılmaz, satılmaz veya kiralanmaz. Ancak, aşağıdaki durumlarda verileriniz paylaşılabilir:",
+    "s5List": [
+      "Yasal zorunluluklar ve mahkeme kararları",
+      "Ödeme işlemleri için güvenilir ödeme sağlayıcıları",
+      "Platform altyapısı için bulut hizmet sağlayıcıları",
+      "Açık izninizle belirli durumlar"
+    ],
+    "s6Title": "6. Kullanıcı Hakları",
+    "s6Intro": "KVKK kapsamında aşağıdaki haklara sahipsiniz:",
+    "s6List": [
+      "Kişisel verilerinizin işlenip işlenmediğini öğrenme",
+      "İşlenmiş kişisel verileriniz hakkında bilgi talep etme",
+      "Kişisel verilerinizin düzeltilmesini isteme",
+      "Kişisel verilerinizin silinmesini veya yok edilmesini isteme",
+      "Kişisel verilerinizin aktarıldığı üçüncü kişileri bilme"
+    ],
+    "s7Title": "7. Çerezler (Cookies)",
+    "s7Body": "Platformumuz, kullanıcı deneyimini iyileştirmek için çerezler kullanır. Çerezler, tarayıcınız tarafından bilgisayarınızda saklanan küçük metin dosyalarıdır. Tarayıcı ayarlarınızdan çerezleri yönetebilir veya engelleyebilirsiniz.",
+    "s8Title": "8. Değişiklikler",
+    "s8Body": "Bu Gizlilik Politikası zaman zaman güncellenebilir. Önemli değişiklikler e-posta yoluyla bildirilecektir. Platform kullanımına devam etmeniz, güncellenmiş politikayı kabul ettiğiniz anlamına gelir."
+  },
+  "support": {
+    "backToHome": "Ana Sayfaya Dön",
+    "subtitle": "Sık sorulan sorular ve size yardımcı olabilecek bilgiler",
+    "cat1Title": "Genel",
+    "cat2Title": "Test ve İçerik",
+    "cat3Title": "Ödeme ve İade",
+    "cat4Title": "Eğitici Olmak",
+    "cat5Title": "Hesap ve Ayarlar",
+    "noAnswerTitle": "Sorunuz Burada Yok mu?",
+    "noAnswerDesc": "Başka sorularınız için destek ekibimizle iletişime geçin",
+    "contactButton": "İletişime Geç",
+    "cat1Items": [
+      {
+        "q": "Sınav Salonu nedir?",
+        "a": "Sınav Salonu, çeşitli sınavlara hazırlanan adaylara online test çözme imkanı sunan, alanında uzman eğiticilerin oluşturduğu içerikleri barındıran kapsamlı bir eğitim platformudur."
+      },
+      {
+        "q": "Nasıl kayıt olabilirim?",
+        "a": "Ana sayfadaki 'Giriş Yap' butonuna tıklayarak aday veya eğitici olarak kayıt olabilirsiniz. E-posta adresiniz ile hesap oluşturabilir ve hemen test çözmeye başlayabilirsiniz."
+      },
+      {
+        "q": "Platform ücretsiz mi?",
+        "a": "Kayıt olmak ücretsizdir. Testleri keşfedebilir, eğiticileri inceleyebilirsiniz. Test paketlerini satın aldıktan sonra çözmeye başlayabilirsiniz."
+      }
+    ],
+    "cat2Items": [
+      {
+        "q": "Testleri nasıl satın alabilirim?",
+        "a": "İlgilendiğiniz testi seçin, detay sayfasında 'Satın Al' butonuna tıklayın. Ödeme işlemini tamamladıktan sonra teste anında erişebilirsiniz."
+      },
+      {
+        "q": "Satın aldığım testlere ne kadar süre erişebilirim?",
+        "a": "Satın aldığınız test paketlerine sınırsız erişiminiz vardır. İstediğiniz zaman, istediğiniz kadar çözebilirsiniz."
+      },
+      {
+        "q": "Test sonuçlarımı nasıl görebilirim?",
+        "a": "'Sonuçlarım' sayfasından tüm test sonuçlarınızı, detaylı analizlerinizi ve performans grafiklerinizi inceleyebilirsiniz."
+      },
+      {
+        "q": "Hatalı soru bildirimi nasıl yapılır?",
+        "a": "Test çözme sırasında soru üzerindeki 'Soruyu Bildir' butonunu kullanarak hatalı olduğunu düşündüğünüz soruları bildirebilirsiniz."
+      }
+    ],
+    "cat3Items": [
+      {
+        "q": "Hangi ödeme yöntemlerini kabul ediyorsunuz?",
+        "a": "Kredi kartı ve banka kartı ile ödeme yapabilirsiniz. Tüm ödemeleriniz güvenli ödeme altyapısı üzerinden gerçekleştirilir."
+      },
+      {
+        "q": "İade politikanız nedir?",
+        "a": "Satın aldığınız test paketinde sorun olması durumunda 'İade Talep' sayfasından başvurabilirsiniz. Hatalı soru bildirimleriniz değerlendirilir ve haklı bulunursanız iade işleminiz gerçekleştirilir."
+      }
+    ],
+    "cat4Items": [
+      {
+        "q": "Eğitici olarak nasıl başvurabilirim?",
+        "a": "Eğitici olarak kayıt olun, profil bilgilerinizi ve uzmanlık alanlarınızı tamamlayın. Akademik doğrulama için gerekli belgeleri yükleyin. Onay sonrası test oluşturmaya başlayabilirsiniz."
+      },
+      {
+        "q": "Eğitici olarak ne kadar kazanabilirim?",
+        "a": "Test satışlarından belirlenen komisyon oranında gelir elde edersiniz. Satış performansınıza göre kazançlarınız artar."
+      },
+      {
+        "q": "Test oluşturma süreci nasıl işler?",
+        "a": "'Test Oluştur' sayfasından test bilgilerini girin, soruları ekleyin ve yayınlayın. Testleriniz onaylandıktan sonra adaylara sunulur."
+      }
+    ],
+    "cat5Items": [
+      {
+        "q": "Şifremi nasıl değiştirebilirim?",
+        "a": "Profil ayarları sayfasından şifrenizi değiştirebilirsiniz. Mevcut şifrenizi girin ve yeni şifrenizi belirleyin."
+      },
+      {
+        "q": "Hesabımı nasıl silebilirim?",
+        "a": "Hesabınızı silmek için destek ekibimizle iletişime geçin. Talebiniz değerlendirildikten sonra hesabınız silinecektir."
+      },
+      {
+        "q": "Bildirim ayarlarımı nasıl yönetebilirim?",
+        "a": "Profil ayarları sayfasından e-posta bildirimlerini, test hatırlatmalarını ve diğer bildirimleri açıp kapatabilirsiniz."
+      }
+    ]
+  },
+  "myObjections": {
+    "stats": {
+      "total": "Toplam",
+      "pending": "Beklemede",
+      "answered": "Yanıtlandı",
+      "escalated": "İletildi"
+    },
+    "status": {
+      "OPEN": "Beklemede",
+      "ANSWERED": "Yanıtlandı",
+      "ESCALATED": "Yöneticiye İletildi"
+    },
+    "filterBar": {
+      "statusLabel": "Durum",
+      "allStatuses": "Tüm Durumlar",
+      "testLabel": "Test",
+      "allTests": "Tüm Testler",
+      "selectTest": "Test seçin...",
+      "searchTest": "Test ara...",
+      "noResult": "Sonuç yok",
+      "testFilterAria": "Test filtresi",
+      "reasonLabel": "Hata türü / sebep",
+      "reasonPlaceholder": "örn. yanlış cevap, eksik bilgi...",
+      "reasonAria": "Hata türü veya sebep ara",
+      "count": "{{filtered}} / {{total}} bildirim",
+      "clear": "Filtreleri Temizle",
+      "unnamed": "(Adsız)"
+    },
+    "empty": {
+      "noneYet": "Henüz hata bildiriminiz yok",
+      "hint": "Bir test çözerken sorularda gördüğünüz hataları bildirebilirsiniz.",
+      "noResults": "Seçili filtrelere uyan bildirim yok"
+    },
+    "card": {
+      "educator": "Eğitici:",
+      "educatorYes": "Eğitici yanıt verdi",
+      "educatorNo": "Eğitici henüz yanıt vermedi",
+      "adminYes": "Admin yanıt verdi",
+      "adminNo": "Admin henüz yanıt vermedi",
+      "educatorChip": "Eğitici",
+      "adminChip": "Admin",
+      "daysLeft": "{{count}} gün",
+      "deadlineExpired": "süresi geçti",
+      "viewDetails": "Detayı Görüntüle"
+    },
+    "dialog": {
+      "title": "Bildirim Detayı",
+      "reportedAt": "Bildirim:",
+      "slaEnd": "SLA bitiş:",
+      "testLabel": "Test",
+      "educatorLabel": "Eğitici",
+      "questionLabel": "Soru (ilk 150 karakter)",
+      "reasonLabel": "Bildiriminiz",
+      "educatorReply": "Eğitici Yanıtı:",
+      "educatorNoReply": "Eğitici henüz yanıt vermedi.",
+      "adminNote": "Admin Notu",
+      "adminNoNote": "Admin henüz not eklemedi.",
+      "close": "Kapat"
+    }
+  },
+  "myTopicReport": {
+    "errorLoad": "Rapor yüklenirken hata oluştu. Sayfayı yenileyin.",
+    "empty": {
+      "title": "Henüz veri yok",
+      "desc": "Tamamladığın testlerin konu performansı burada görünecek. Test çözmeye başladıktan sonra raporun oluşur."
+    },
+    "stats": {
+      "topicCount": "Konu Sayısı",
+      "totalAttempts": "Toplam Deneme",
+      "totalQuestions": "Toplam Soru",
+      "overallAvg": "Genel Ortalama"
+    },
+    "filterAll": "Tümü",
+    "noGroupForExamType": "Bu sınav türüne ait konu bulunamadı.",
+    "card": {
+      "overtimeBadge": "{{count}}x süre aşımı",
+      "correct": "{{count}} Doğru",
+      "wrong": "{{count}} Yanlış",
+      "blank": "{{count}} Boş",
+      "summary": "{{attempts}} deneme · {{questions}} soru",
+      "overtimeWarning": "Bu konuda {{count}} denemende süre aşımı yaşandı.",
+      "overtimeWarningEmphasis": "Süre yönetimi",
+      "overtimeWarningSuffix": "gelişime açık bir yön olarak öne çıkıyor.",
+      "showChart": "Zaman Serisini Göster",
+      "hideChart": "Grafiği Gizle",
+      "tooltipCorrect": "✓ {{count}} Doğru",
+      "tooltipWrong": "✗ {{count}} Yanlış",
+      "tooltipBlank": "— {{count}} Boş",
+      "tooltipTotal": "Toplam: {{count}} soru",
+      "tooltipOvertime": "⏱ +{{m}}dk {{s}}sn gecikme",
+      "tooltipCorrectAlt": "Doğru: {{count}}",
+      "tooltipWrongAlt": "Yanlış: {{count}}",
+      "tooltipBlankAlt": "Boş: {{count}}"
+    }
+  },
+  "myResults": {
+    "errorLoad": "Sonuçlar yüklenirken hata oluştu. Sayfayı yenileyin.",
+    "filters": {
+      "packageAria": "Test paketi filtresi",
+      "allPackages": "Tüm Paketler",
+      "examTypeAria": "Sınav türü filtresi",
+      "allExamTypes": "Tüm Sınav Türleri",
+      "timeAria": "Zaman aralığı filtresi",
+      "allTime": "Tüm Zamanlar",
+      "lastWeek": "Son 1 Hafta",
+      "lastMonth": "Son 1 Ay",
+      "last3Months": "Son 3 Ay",
+      "clear": "Filtreleri Temizle"
+    },
+    "shareButton": "Paylaş",
+    "sharePreparing": "Hazırlanıyor…",
+    "shareTitle": "Sınav Salonu Raporun",
+    "stats": {
+      "totalTests": "Toplam Test",
+      "avgScore": "Ortalama Puan",
+      "totalCorrect": "Toplam Doğru",
+      "totalWrong": "Toplam Yanlış"
+    },
+    "progress": "Gelişim",
+    "chartTypeAria": "Grafik türü seçimi",
+    "chartType": {
+      "performance": "Performans",
+      "questions": "Çözülen Soru",
+      "time": "Çalışma Süresi"
+    },
+    "tooltip": {
+      "avg": "Ortalama: {{value}}",
+      "testCount": "Test Sayısı: {{count}}",
+      "questionCount": "Soru Sayısı: {{count}}",
+      "time": "Süre: {{label}}"
+    },
+    "history": "Test Geçmişi",
+    "exportXlsx": "Excel'e Aktar",
+    "sheetName": "Sonuçlarım",
+    "table": {
+      "test": "Test",
+      "score": "Puan",
+      "dyb": "D / Y / B",
+      "time": "Süre",
+      "date": "Tarih",
+      "overtime": "Gecikme",
+      "status": "Durum",
+      "questions": "{{count}} soru"
+    },
+    "scoreBadge": {
+      "excellent": "Mükemmel",
+      "good": "İyi",
+      "average": "Orta",
+      "needsWork": "Geliştirilmeli"
+    },
+    "empty": {
+      "noResults": "Henüz tamamlanmış test yok",
+      "noFilterMatch": "Filtreye uygun sonuç bulunamadı",
+      "testFallback": "Test"
+    },
+    "loadMore": "Daha Fazla Göster ({{count}} kaldı)",
+    "overtime": {
+      "title": "Gelişime Açık Yön: Süre Yönetimi",
+      "desc": "Aşağıdaki {{count}} testte izin verilen süreden daha geç teslim yaptın. Sınav koşullarında gecikmeli teslim mümkün değildir — süre yönetimine odaklanmak performansını önemli ölçüde artırabilir.",
+      "delay": "Gecikme",
+      "score": "Puan",
+      "tip": "💡 İpucu: Her soruya ortalama {{seconds}} saniye ayırmayı hedefle. Zorlandığın soruları işaretleyip geç, sonunda dön."
+    },
+    "duration": {
+      "min": "{{m}} dk",
+      "sec": "{{s}} sn",
+      "minSec": "{{m}} dk {{s}} sn"
+    },
+    "xlsxColumns": {
+      "test": "Test",
+      "score": "Puan",
+      "correct": "Doğru",
+      "wrong": "Yanlış",
+      "blank": "Boş",
+      "totalQ": "Toplam Soru",
+      "durationMin": "Süre (dk)",
+      "date": "Tarih",
+      "delaySec": "Gecikme (sn)",
+      "status": "Durum"
+    }
+  },
+  "profileSettings": {
+    "userFallback": "Kullanıcı",
+    "avatarHint": "Resme tıklayarak profil fotoğrafı ekle",
+    "tabs": {
+      "contact": "İletişim",
+      "notifications": "Bildirimler",
+      "exams": "Sınav Tercihleri",
+      "financial": "Mali İşlemler"
+    },
+    "contact": {
+      "phoneLabel": "Telefon",
+      "phonePlaceholder": "05XX XXX XX XX",
+      "phoneInvalid": "Geçersiz telefon numarası",
+      "websiteLabel": "Website/Blog",
+      "linkedinLabel": "LinkedIn",
+      "urlInvalid": "Geçerli bir URL girin (https://...)"
+    },
+    "sensitiveOtp": {
+      "title": "İletişim bilgisi değişikliğini doğrulayın",
+      "intro": "E-posta adresinize 6 haneli bir doğrulama kodu göndereceğiz.",
+      "sending": "Kod gönderiliyor...",
+      "sentTo": "Doğrulama kodu {{email}} adresine gönderildi. 10 dakika geçerli.",
+      "codeLabel": "Doğrulama Kodu",
+      "codeHint": "E-postanıza gelen 6 haneli kodu girin.",
+      "codeInvalid": "Kod 6 hane olmalı.",
+      "verify": "Doğrula ve Kaydet",
+      "verifying": "Doğrulanıyor...",
+      "verified": "Bilgileriniz güncellendi.",
+      "verifyFailed": "Doğrulama başarısız.",
+      "expired": "Kodun süresi doldu. Yeni bir kod isteyin.",
+      "mismatch": "Kod hatalı. Lütfen tekrar deneyin.",
+      "resend": "Kodu Tekrar Gönder",
+      "resent": "Yeni kod gönderildi.",
+      "requestFailed": "Kod gönderilemedi. Lütfen biraz sonra tekrar deneyin."
+    },
+    "notifications": {
+      "newTests": "Yeni Test Bildirimleri",
+      "newTestsDesc": "Yeni testler yayınlandığında bildirim al",
+      "promotions": "Kampanya ve Promosyonlar",
+      "promotionsDesc": "İndirimler ve özel fırsatlar hakkında bilgi al",
+      "educatorUpdates": "Eğitici Güncellemeleri",
+      "educatorUpdatesDesc": "Takip ettiğim eğiticilerden güncellemeler al",
+      "testReminders": "Test Hatırlatmaları",
+      "testRemindersDesc": "Başladığın testler için hatırlatma al"
+    },
+    "exams": {
+      "title": "İlgilendiğim Sınavlar",
+      "desc": "İlgilendiğiniz sınavları seçin, ana sayfanızda bu sınavlara ait testler önceliklendirilsin",
+      "noExamTypes": "Sınav türü bulunamadı"
+    },
+    "financial": {
+      "requestRefund": "İade İste",
+      "searchPlaceholder": "Test ara...",
+      "all": "Tümü",
+      "purchases": "Satın Almalar",
+      "refunds": "İadeler",
+      "purchased": "Satın Alındı",
+      "statusLabels": {
+        "PENDING": "Eğitici İnceliyor",
+        "EDUCATOR_APPROVED": "Eğitici Onayladı",
+        "EDUCATOR_REJECTED": "Eğitici Reddetti",
+        "APPEAL_PENDING": "İtiraz İnceleniyor",
+        "ESCALATED": "Admin İnceliyor",
+        "APPROVED": "İade Onaylandı",
+        "REJECTED": "Reddedildi",
+        "pending": "Beklemede",
+        "approved": "Onaylandı",
+        "rejected": "Reddedildi"
+      },
+      "canAppealHint": "Eğitici iadeyi reddetti. İtiraz talebinde bulunabilirsiniz.",
+      "appealButton": "İtiraz Et",
+      "noResults": "Sonuç bulunamadı",
+      "noTransactions": "Mali işleminiz bulunmamaktadır"
+    },
+    "refundModal": {
+      "title": "İade İste",
+      "noPurchases": "Henüz satın alma yok",
+      "noEligible": "İade için uygun test yok",
+      "notFound": "Test bulunamadı",
+      "eligibleHint": "İade talebi yalnızca hiç açılmamış testler için yapılabilir.",
+      "cancel": "İptal"
+    },
+    "appealDialog": {
+      "title": "İtiraz Talebi",
+      "rejected": "Eğitici bu iade talebini reddetti. İtiraz gerekçenizi yazarak admin incelemesine sunabilirsiniz.",
+      "placeholder": "İtiraz gerekçenizi yazın (en az 5 karakter)...",
+      "cancel": "İptal",
+      "submit": "İtirazı Gönder"
+    },
+    "saveButton": "Değişiklikleri Kaydet",
+    "saving": "Kaydediliyor...",
+    "toasts": {
+      "invalidImage": "Lütfen JPG, PNG veya WebP formatında resim yükleyin",
+      "imageTooBig": "Resim boyutu en fazla 5MB olabilir",
+      "imageUploaded": "Profil resmi güncellendi",
+      "imageUploadFailed": "Resim yüklenemedi",
+      "profileUpdated": "Profil bilgileri güncellendi",
+      "updateFailed": "Güncelleme başarısız oldu",
+      "refundRequested": "İade talebi gönderildi",
+      "refundFailed": "İade talebi gönderilemedi",
+      "appealSubmitted": "İtirazınız iletildi. Admin tarafından incelenecek.",
+      "appealFailed": "İtiraz gönderilemedi"
+    }
+  },
+  "educatorOnboarding": {
+    "title": "Eğitici Profilini Tamamla",
+    "subtitle": "Adaylara güven verebilmen için son birkaç bilgiye ihtiyacımız var.",
+    "requiredHint": "Tüm alanlar zorunludur",
+    "saving": "Kaydediliyor…",
+    "submit": "Tamamla ve Devam Et",
+    "success": "Profilin tamamlandı.",
+    "cvUploaded": "CV başarıyla yüklendi",
+    "cvSection": {
+      "title": "Özgeçmiş (CV)",
+      "desc": "Akademik geçmişin ve uzmanlığın için kısa bir CV yükle (PDF, en fazla 5MB).",
+      "upload": "CV Yükle",
+      "uploading": "Yükleniyor…",
+      "uploaded": "CV yüklendi",
+      "viewFile": "Dosyayı görüntüle",
+      "change": "Değiştir",
+      "format": "PDF (Max 5MB)"
+    },
+    "expertiseSection": {
+      "title": "Uzmanlık Alanları",
+      "desc": "Hangi sınavlara hazırlık konusunda uzmansın? En az bir sınav seç.",
+      "empty": "Sınav türü bulunamadı.",
+      "selectedCount": "{{count}} sınav seçildi"
+    },
+    "errors": {
+      "invalidPdf": "Lütfen PDF dosyası yükleyin",
+      "fileTooBig": "Dosya boyutu en fazla 5MB olabilir",
+      "uploadFailed": "CV yüklenemedi",
+      "cvRequired": "CV yüklemek zorunludur",
+      "examsRequired": "En az bir uzmanlık alanı seç",
+      "saveFailed": "Profil kaydedilemedi"
+    }
+  }
+}

@@ -1,0 +1,1623 @@
+{
+  "card": {
+    "free": "Free",
+    "boosted": "Featured",
+    "timed": "Timed",
+    "viewDetails": "View",
+    "seeAll": "See all",
+    "personalized": "For you",
+    "questionsCount_one": "{{count}} question",
+    "questionsCount_other": "{{count}} questions",
+    "salesCount_one": "{{count}} sale",
+    "salesCount_other": "{{count}} sales",
+    "testsCount_one": "{{count}} test",
+    "testsCount_other": "{{count}} tests"
+  },
+  "home": {
+    "nav": {
+      "explore": "Explore Tests",
+      "educators": "Educators",
+      "login": "Log in"
+    },
+    "hero": {
+      "titleLine1": "Prepare with",
+      "titleLine2": "Confidence",
+      "subtitle": "Take thousands of tests from expert educators, track your performance, and reach your goals.",
+      "searchPlaceholder": "Search tests, topics or educators...",
+      "searchButton": "Search",
+      "features": {
+        "uniqueTests": "Original Tests",
+        "experiencedEducators": "Experienced Educators",
+        "performanceTracking": "Performance Tracking"
+      }
+    },
+    "sections": {
+      "continue": "Continue",
+      "examTypes": "Exam Types",
+      "testPackages": "Test Packages",
+      "educators": "Educators"
+    },
+    "interestedExamType": "Your interest",
+    "continueAria": "Continue",
+    "completedAria": "Completed",
+    "empty": {
+      "noPackages": "No published test packages yet",
+      "noEducators": "No educators found"
+    },
+    "stats": {
+      "testsValue": "Live",
+      "testsLabel": "Tests",
+      "contentValue": "Original",
+      "contentLabel": "Test Content",
+      "educatorsValue": "Experienced",
+      "educatorsLabel": "Educators",
+      "performanceValue": "Performance",
+      "performanceLabel": "Tracking"
+    },
+    "cta": {
+      "candidateTitle": "Join as a Candidate",
+      "candidateDesc": "Take thousands of tests from expert educators, track your performance, and reach your goals.",
+      "educatorTitle": "Join as an Educator",
+      "educatorDesc": "Create test packages in your area of expertise, reach thousands of candidates, and earn income.",
+      "startNow": "Get Started"
+    },
+    "footer": {
+      "tagline": "The most trusted platform for exam preparation. Take tests from expert educators and track your performance.",
+      "corporate": "Company",
+      "support": "Support",
+      "supportLink": "Help and Support",
+      "rights": "All rights reserved.",
+      "links": {
+        "about": "About",
+        "contact": "Contact",
+        "privacy": "Privacy Policy",
+        "partnership": "Partnership"
+      }
+    },
+    "fallbackPackageTitle": "Test package"
+  },
+  "testCard": {
+    "difficulty": {
+      "easy": "Easy",
+      "medium": "Medium",
+      "hard": "Hard"
+    },
+    "examTypeFallback": "General",
+    "solutionsSuffix": " — With Solutions",
+    "testsLabel_one": "{{count}} Test",
+    "testsLabel_other": "{{count}} Tests",
+    "questionsLabel_one": "{{count}} Question",
+    "questionsLabel_other": "{{count}} Questions",
+    "minutes": "{{count}} min",
+    "free": "Free",
+    "review": "Review",
+    "continue": "Continue",
+    "start": "Start Test",
+    "buy": "Buy",
+    "durationFull": "{{h}}h {{m}}m",
+    "durationShort": "{{m}}m {{s}}s"
+  },
+  "explore": {
+    "title": "Explore Tests",
+    "subtitle": "Find the right test from thousands available",
+    "searchPlaceholder": "Search tests, topics or educators...",
+    "filtersButton": "Filters",
+    "filter": {
+      "examType": "Exam Type",
+      "examTypeAria": "Exam type filter",
+      "difficulty": "Difficulty",
+      "difficultyAria": "Difficulty filter",
+      "price": "Price",
+      "priceAria": "Price filter",
+      "educator": "Educator",
+      "educatorAria": "Educator filter",
+      "ratingAria": "Minimum rating filter",
+      "all": "All",
+      "allEducators": "All Educators",
+      "priceFree": "Free",
+      "priceUnder50": "Under ₺50",
+      "price50to100": "₺50 – ₺100",
+      "priceOver100": "Over ₺100",
+      "active": "Active filters:",
+      "clear": "Clear"
+    },
+    "empty": {
+      "title": "No results found",
+      "description": "Try different filters or change your search term"
+    },
+    "countFound_one": "{{count}} test found",
+    "countFound_other": "{{count}} tests found"
+  },
+  "testDetail": {
+    "backToTests": "Back to tests",
+    "errorLoading": "Could not load test",
+    "errorLoadingDesc": "Server unreachable. Please refresh the page.",
+    "notFound": "Test not found",
+    "notFoundDesc": "This test doesn't exist or has been unpublished.",
+    "reload": "Reload",
+    "rate": {
+      "title": "Rate the Package",
+      "packageAverage": "Your package average: {{avg}}/5 ({{count}} tests).",
+      "updateAvailable": "You can update your current rating.",
+      "shareExperience": "You've completed this test. Share your experience!",
+      "commentPlaceholder": "Your comment (optional)",
+      "submitNew": "Submit Rating",
+      "submitUpdate": "Update Rating",
+      "successUpdated": "Your rating was updated!",
+      "successSaved": "Your test rating was saved!",
+      "errorGeneric": "Something went wrong!",
+      "titleUpdate": "Update Package Rating",
+      "cancel": "Cancel"
+    },
+    "about": {
+      "title": "About This Test",
+      "noDescription": "No description has been added for this test package yet."
+    },
+    "educator": {
+      "title": "Educator",
+      "fallbackName": "Educator",
+      "follow": "Follow",
+      "following": "Following",
+      "unfollowed": "Unfollowed",
+      "followed": "Followed"
+    },
+    "reviews": {
+      "title": "Reviews",
+      "unknownCandidate": "Unknown candidate",
+      "ratedTestCount_one": "(average of {{count}} test)",
+      "ratedTestCount_other": "(average of {{count}} tests)",
+      "prev": "Previous",
+      "next": "Next",
+      "pageOf": "Page {{current}} of {{total}}"
+    },
+    "features": {
+      "title": "Features",
+      "testCount": "Test Count",
+      "questionCount": "Question Count",
+      "difficulty": "Difficulty",
+      "rating": "Rating"
+    },
+    "purchase": {
+      "totalSales_one": "{{count}} person purchased",
+      "totalSales_other": "{{count}} people purchased",
+      "testsListTitle": "Tests",
+      "testMeta": "{{questions}} questions • {{minutes}} min",
+      "servicesPaused": "🔧 Purchase services are under maintenance",
+      "servicesPausedDesc": "Please try again later.",
+      "servicesPausedToast": "Our purchase services are under maintenance. Please try again later.",
+      "features": {
+        "unlimitedAccess": "Unlimited access",
+        "detailedSolutions": "Detailed solutions",
+        "performanceAnalysis": "Performance analysis",
+        "mobileFriendly": "Mobile friendly"
+      }
+    },
+    "packageRating": {
+      "title": "Package Rating",
+      "outOf": "/ 5",
+      "noReviews": "No reviews yet",
+      "reviewerCount_one": "{{count}} candidate's rating",
+      "reviewerCount_other": "{{count}} candidates' ratings",
+      "rateButton": "Rate",
+      "updateButton": "Update Rating"
+    }
+  },
+  "titles": {
+    "myObjections": "My Issue Reports",
+    "myObjectionsDesc": "Track your issue reports and the responses you receive",
+    "myResults": "My Performance Reports",
+    "myResultsDesc": "See results and statistics for the tests you've taken",
+    "myTopicReport": "Topic Performance",
+    "myTopicReportDesc": "Track your accuracy and time per topic",
+    "profileSettings": "Profile Settings",
+    "profileSettingsDesc": "Update your account information and preferences",
+    "takeTest": "Test",
+    "educatorDashboard": "Educator Dashboard",
+    "educatorDashboardDesc": "Track your test packages, sales, and statistics",
+    "myTestPackages": "My Test Packages",
+    "myTestPackagesDesc": "Manage your test packages",
+    "createTest": "Create New Test",
+    "createTestDesc": "Start a new test package",
+    "editTest": "Edit Test",
+    "mySales": "My Sales",
+    "mySalesDesc": "See your sales history and earnings",
+    "myDiscountCodes": "Discount Codes",
+    "myDiscountCodesDesc": "Create and manage discount codes",
+    "myAds": "My Ads",
+    "myAdsDesc": "Manage your ad campaigns",
+    "myLiveSessions": "My Live Tests",
+    "myLiveSessionsDesc": "Manage your live sessions",
+    "educatorRefunds": "Refund Requests",
+    "educatorRefundsDesc": "Review refund requests from candidates",
+    "questionReports": "Issue Reports",
+    "questionReportsDesc": "Review issue reports submitted by candidates",
+    "educatorSettings": "Profile Settings",
+    "educatorSettingsDesc": "Educator account settings and preferences",
+    "myModerationStatus": "Content Status",
+    "myModerationStatusDesc": "Moderation status and risk score for your questions",
+    "educators": "Educators",
+    "educatorsDesc": "Explore all educators",
+    "educatorProfile": "Educator Profile",
+    "examTypes": "Exam Types",
+    "paymentSuccess": "Payment Successful",
+    "paymentSuccessDesc": "Your purchase is complete",
+    "about": "About",
+    "contact": "Contact",
+    "privacy": "Privacy Policy",
+    "partnership": "Partnership",
+    "support": "Help and Support"
+  },
+  "liveHost": {
+    "status": {
+      "draft": "Not started",
+      "active": "Live",
+      "ended": "Ended"
+    },
+    "participants": {
+      "active": "active",
+      "total": "total",
+      "activeTitle": "Active Participants",
+      "totalJoined": "Total joined"
+    },
+    "controls": {
+      "start": "Start",
+      "end": "End",
+      "ending": "Ending…",
+      "previous": "Previous",
+      "next": "Next",
+      "showStats": "Show Stats",
+      "hideStats": "Hide Stats"
+    },
+    "question": {
+      "label": "Question {{n}}",
+      "mediaAlt": "question",
+      "peopleTooltip_one": "{{count}} person",
+      "peopleTooltip_other": "{{count}} people"
+    },
+    "round": {
+      "round1": "Round 1: {{pct}}%",
+      "round2Prefix": "Round 2:"
+    },
+    "ended": {
+      "round1Title": "Session completed",
+      "round2Title": "Post-Test Completed!",
+      "summary": "{{participants}} participants • {{questions}} questions",
+      "createRound2": "Run again (Post-Test)",
+      "creatingRound2": "Creating…",
+      "round2Exists": "Round 2 exists — Code:",
+      "goToRound2": "Go to session →",
+      "backToDashboard": "Back to Dashboard",
+      "backToLiveSessions": "Back to My Live Tests"
+    },
+    "join": {
+      "codeLabel": "Join Code",
+      "copyCode": "Copy code",
+      "copied": "Copied!",
+      "qrHint": "Join via QR code"
+    },
+    "endDialog": {
+      "title": "End session",
+      "description": "Are you sure you want to end this session? This cannot be undone; current participants can no longer submit answers.",
+      "cancel": "Cancel",
+      "confirm": "Yes, end"
+    },
+    "round2Dialog": {
+      "title": "Start Round 2",
+      "description": "A second round (post-test) will be created using the same questions. Only candidates from this round can join the new session.",
+      "cancel": "Cancel",
+      "confirm": "Create Round 2"
+    },
+    "comparison": {
+      "title": "Group Pre-Test / Post-Test Comparison",
+      "round1Avg": "Round 1 Avg.",
+      "round2Avg": "Round 2 Avg.",
+      "improvement": "improvement",
+      "peopleCount_one": "{{count}} person",
+      "peopleCount_other": "{{count}} people"
+    },
+    "toasts": {
+      "ended": "Session ended",
+      "round2Created": "Round 2 created! Code: {{code}}",
+      "round2NoNav": "Round 2 created but navigation failed",
+      "round2Failed": "Could not create Round 2",
+      "genericError": "Error"
+    },
+    "notFound": "Session not found"
+  },
+  "testForm": {
+    "steps": {
+      "package": "Package",
+      "tests": "Tests",
+      "preview": "Preview"
+    },
+    "nav": {
+      "backToPackages": "My Test Packages",
+      "back": "← Back",
+      "backToTests": "← Back (Tests)",
+      "next": "Next →",
+      "previewNext": "Preview →"
+    },
+    "package": {
+      "sectionTitle": "Package Info",
+      "titleLabel": "Package Title *",
+      "titlePlaceholder": "e.g. KPSS General Ability",
+      "descLabel": "Description",
+      "descPlaceholder": "Brief info about the package...",
+      "examTypeLabel": "Exam Type (Optional)",
+      "examTypePlaceholder": "Select",
+      "examTypeNone": "— None —",
+      "priceLabel": "Price (₺) *",
+      "pricePlaceholder": "e.g. 49",
+      "priceMin": "Minimum: {{min}} ₺",
+      "difficultyLabel": "Difficulty Level",
+      "difficulty": {
+        "easy": "🟢 Easy",
+        "medium": "🟡 Medium",
+        "hard": "🔴 Hard"
+      },
+      "cover": {
+        "label": "Package Cover Image",
+        "hint": "Upload a preview image to be shown on listing and detail pages. Candidates will see this image.",
+        "upload": "Upload Image",
+        "change": "Change Image",
+        "remove": "Remove",
+        "uploading": "Uploading…",
+        "uploaded": "Cover image uploaded",
+        "format": "PNG, JPG or WebP — max 5MB",
+        "previewTitleFallback": "Package title appears here",
+        "errors": {
+          "invalidFormat": "Please choose a PNG, JPG, or WebP image",
+          "tooBig": "Image size must be at most 5MB",
+          "uploadFailed": "Could not upload image. Please try again."
+        }
+      }
+    },
+    "testCard": {
+      "titleLabel": "Test Title *",
+      "titlePlaceholder": "e.g. YKS Mathematics",
+      "timedToggle": "Timed",
+      "durationLabel": "Duration (min)",
+      "deleteTest": "Delete Test",
+      "questionCountStat": "{{count}} questions",
+      "completedSuffix": "({{count}} completed)",
+      "addQuestion": "Add Question",
+      "indexLabel": "Test {{index}}",
+      "completedShort": "{{count}} completed",
+      "collapseAria": "Collapse this test"
+    },
+    "question": {
+      "editDialogTitle": "Edit Question {{n}}",
+      "label": "Question {{n}}",
+      "contentLabel": "Question Text",
+      "contentPlaceholder": "Enter question text...",
+      "duplicateCheck": "Checking...",
+      "duplicateTitle": "Similar question",
+      "duplicateSimilarity": "Similarity: {{pct}}%",
+      "duplicateToast": "A similar question was found.",
+      "imageLabel": "Image (Optional)",
+      "selectImage": "Select Image",
+      "clearImage": "Clear",
+      "topicLabel": "Topic (Optional)",
+      "topicPlaceholder": "Select topic",
+      "topicNone": "— None —",
+      "optionsLabel": "Options",
+      "optionPlaceholder": "Option {{letter}}",
+      "optionImage": "Image",
+      "selectedCount": "{{filled}}/5 options",
+      "correctMissing": "• No correct option selected",
+      "correctIs": "• Correct: {{letter}}",
+      "edit": "Edit",
+      "delete": "Delete",
+      "rejectedNotice": "This question was found to violate content policy."
+    },
+    "dialog": {
+      "cancel": "Cancel",
+      "saving": "Saving...",
+      "newQuestion": "New Question",
+      "complete": "Done",
+      "validateNoCorrect": "Mark the correct option",
+      "genericError": "Error"
+    },
+    "testsStep": {
+      "title": "Tests & Questions",
+      "subtitleEdit": "Edit existing questions or add new ones",
+      "subtitleCreate": "Create your first test and add questions",
+      "addTest": "Add Test",
+      "validateAtLeastOne": "At least one completed test and question is required"
+    },
+    "preview": {
+      "sectionTitle": "Package Summary",
+      "packageTitleLabel": "Package Title",
+      "descriptionLabel": "Description",
+      "testsCount_one": "{{count}} test",
+      "testsCount_other": "{{count}} tests",
+      "validQuestions_one": "{{count}} valid question",
+      "validQuestions_other": "{{count}} valid questions",
+      "free": "Free",
+      "testsListTitle": "Tests",
+      "untitled": "Untitled"
+    },
+    "validations": {
+      "titleRequired": "Package title is required",
+      "priceMin": "Price must be at least {{min}} ₺"
+    },
+    "editPage": {
+      "publishedBadge": "Published",
+      "draftBadge": "Draft",
+      "notFoundId": "Package ID not found",
+      "loadFailed": "Failed to load package",
+      "saveChanges": "Save Changes",
+      "saving": "Saving...",
+      "publishing": "Publishing...",
+      "saveAndPublish": "Save & Publish",
+      "unpublishing": "Working...",
+      "unpublish": "Unpublish",
+      "cannotDeleteAnswered": "Skipped answered question: cannot be deleted.",
+      "moderationPendingError": "Some questions in this test are pending moderation. Cannot publish until approved.",
+      "savedAndPublished": "Package updated and published!",
+      "unpublished": "Package unpublished.",
+      "savedChanges": "Changes saved.",
+      "saveFailed": "Save failed",
+      "autoSave": {
+        "saving": "Saving...",
+        "savedAt": "Auto-saved · {{time}}"
+      },
+      "draftDialog": {
+        "title": "Unfinished edit found",
+        "description": "You have an unfinished editing session for this package. Would you like to continue where you left off?",
+        "restore": "Continue",
+        "discard": "Discard and Reset",
+        "loaded": "Previous edit restored."
+      }
+    },
+    "createPage": {
+      "subtitle": "Create a new test package",
+      "submit": "Create Package",
+      "submitting": "Creating...",
+      "submitAndPublish": "Create & Publish",
+      "submitFailed": "Could not create package",
+      "created": "Package created!",
+      "createdAndPublished": "Package created and published!",
+      "draftRestored": "Draft restored",
+      "draftSaving": "Auto-saving…",
+      "draftSaved": "{{time}} • Auto-saved",
+      "discardDraft": "Discard Draft",
+      "discardConfirm": "Current draft will be discarded. Continue?",
+      "discarded": "Draft discarded",
+      "backToDashboard": "Back to Dashboard",
+      "headerSubtitle": "Prepare and publish your tests in 3 steps.",
+      "publishHint": "Once published, candidates can see and purchase the package.",
+      "draftSave": "Save Draft",
+      "publish": "Publish",
+      "publishing": "Publishing...",
+      "saving": "Saving...",
+      "publishedToast": "Package created and published!",
+      "draftedToast": "Package saved as draft.",
+      "saveFailed": "Save failed",
+      "moderationPending": "Some questions are pending moderation. Cannot publish until approved.",
+      "noTestsYet": "No tests added yet",
+      "untitled": "Untitled Test",
+      "imageAdded": "Image added",
+      "atLeastOneValid": "You must create at least one valid test",
+      "validations": {
+        "titleRequired": "Package title is required",
+        "priceMin": "Price must be at least {{min}} ₺",
+        "testTitleRequired": "Test title is required",
+        "atLeastOneValidQuestion": "At least one completed question is required"
+      },
+      "questionDialog": {
+        "contentRequired": "Question text or image is required",
+        "atLeast2Options": "At least 2 options must be filled",
+        "correctRequired": "Mark the correct option (A–E)",
+        "duplicateToast": "A similar question was found. You can continue if you wish.",
+        "duplicateWarning": "Warning: A similar question was found",
+        "duplicateLoading": "Checking for duplicate...",
+        "imageLabel": "Question Image (Optional)",
+        "saveError": "Error while saving"
+      },
+      "docx": {
+        "button": "Import DOCX",
+        "loading": "Loading...",
+        "dialogTitle": "Import Questions from DOCX",
+        "dialogDesc": "Select a Word file. Questions will be parsed automatically.",
+        "selectFile": "Select DOCX File",
+        "parseError": "Could not parse questions from DOCX. Please add manually.",
+        "mammothMissing": "DOCX import package not installed",
+        "importError": "DOCX import failed: {{msg}}",
+        "unknownError": "Unknown error",
+        "added_one": "{{count}} question added",
+        "added_other": "{{count}} questions added"
+      },
+      "draftDialog": {
+        "title": "Unsaved Draft",
+        "found": "An unsaved draft titled <strong>\"{{title}}\"</strong> was found.",
+        "continue": "Continue",
+        "discardRestart": "Discard, restart",
+        "loaded": "Draft loaded"
+      },
+      "guards": {
+        "loginRequired": "Log in to create a test",
+        "loginButton": "Log in",
+        "maintenanceTitle": "Maintenance Mode",
+        "maintenanceDesc": "Test creation is temporarily disabled.",
+        "pendingApprovalTitle": "Account Approval Pending",
+        "pendingApprovalDesc": "Your account must be approved by an admin before you can create tests.",
+        "goToSettings": "Go to Profile Settings"
+      },
+      "questionItem": {
+        "selectedCount": "{{filled}}/5 options filled",
+        "correctIs": "• Correct: {{letter}}",
+        "correctMissing": "• Correct option not selected"
+      },
+      "duration": "Duration (minutes)"
+    }
+  },
+  "myTestPackages": {
+    "searchPlaceholder": "Search tests...",
+    "filter": {
+      "statusPlaceholder": "Status",
+      "allStatuses": "All statuses",
+      "published": "Published",
+      "draft": "Draft",
+      "examTypePlaceholder": "Exam type",
+      "allExamTypes": "All exam types",
+      "exportExcel": "Export Excel",
+      "clear": "Clear"
+    },
+    "empty": {
+      "errorLoad": "Failed to load tests. Please refresh the page.",
+      "noTestsTitle": "You haven't created any tests yet",
+      "noTestsDesc": "Create your first test package and start selling",
+      "createFirst": "Create Your First Test",
+      "noResultsTitle": "No results found",
+      "noResultsDesc": "Try changing the filters",
+      "clearFilters": "Clear Filters"
+    },
+    "card": {
+      "stats": "{{tests}} tests · {{questions}} questions",
+      "salesCount_one": "{{count}} sale",
+      "salesCount_other": "{{count}} sales",
+      "noRating": "No ratings yet",
+      "viewsAria": "Views: {{count}}",
+      "viewsTooltip": "Total: {{total}} · Unique viewers: {{unique}} · Last 7 days: {{last7}}",
+      "viewsLast7": "+{{count}} / 7d",
+      "editTitle": "Edit",
+      "publishTitle": "Publish",
+      "unpublishTitle": "Unpublish"
+    },
+    "toasts": {
+      "statusUpdated": "Package status updated",
+      "actionFailed": "Action failed",
+      "excelDownloaded": "Excel file downloaded"
+    },
+    "excel": {
+      "headers": {
+        "title": "Title",
+        "examType": "Exam Type",
+        "status": "Status",
+        "testCount": "Test Count",
+        "questionCount": "Question Count",
+        "price": "Price (₺)",
+        "sales": "Sales",
+        "rating": "Rating",
+        "createdAt": "Created At"
+      },
+      "published": "Published",
+      "draft": "Draft",
+      "sheetName": "Test Packages",
+      "filePrefix": "my-test-packages"
+    }
+  },
+  "mySales": {
+    "stats": {
+      "totalSales": "Total Sales",
+      "totalRevenue": "Total Revenue",
+      "monthRevenue": "This Month",
+      "uniqueBuyers": "Unique Buyers"
+    },
+    "searchPlaceholder": "Search buyer or test...",
+    "filter": {
+      "statusPlaceholder": "Status",
+      "allStatuses": "All statuses",
+      "completed": "Completed",
+      "pending": "Pending",
+      "refunded": "Refunded",
+      "datePlaceholder": "Date",
+      "allDates": "All time",
+      "today": "Today",
+      "lastWeek": "Last 7 days",
+      "lastMonth": "Last 30 days",
+      "exportExcel": "Export Excel",
+      "clear": "Clear"
+    },
+    "tableTitle": "Sales History",
+    "empty": {
+      "noSales": "No sales yet",
+      "noResults": "No results found",
+      "clearFilters": "Clear Filters"
+    },
+    "table": {
+      "buyer": "Buyer",
+      "test": "Test",
+      "amount": "Amount",
+      "status": "Status",
+      "date": "Date",
+      "buyerFallback": "User"
+    },
+    "excel": {
+      "headers": {
+        "buyer": "Buyer",
+        "email": "Email",
+        "test": "Test",
+        "amount": "Amount",
+        "status": "Status",
+        "date": "Date"
+      },
+      "filePrefix": "my-sales"
+    },
+    "toasts": {
+      "excelDownloaded": "Excel file downloaded"
+    }
+  },
+  "myDiscountCodes": {
+    "newCode": "New Code",
+    "filter": {
+      "codeLabel": "Code",
+      "codePlaceholder": "Search code…",
+      "minPercent": "Min % discount",
+      "maxPercent": "Max % discount",
+      "dateFrom": "Start date",
+      "dateTo": "End date",
+      "clear": "Clear"
+    },
+    "empty": {
+      "noCodes": "You haven't created any discount codes yet",
+      "noResults": "No codes match the filter",
+      "clearFilters": "Clear filters"
+    },
+    "card": {
+      "discountUsage": "{{pct}}% off • {{used}}/{{max}} uses",
+      "infinite": "∞",
+      "createdBy": "Created by:",
+      "roles": {
+        "admin": "Admin",
+        "educator": "Educator"
+      },
+      "status": {
+        "passive": "Inactive",
+        "expired": "Expired",
+        "limitReached": "Limit Reached",
+        "active": "Active"
+      },
+      "toggleActivate": "Activate",
+      "toggleDeactivate": "Deactivate"
+    },
+    "dialog": {
+      "title": "New Discount Code",
+      "codeLabel": "Discount Code *",
+      "codePlaceholder": "e.g. NEW2024",
+      "percentLabel": "Discount Rate (%) *",
+      "percentMax": "Maximum {{max}}%",
+      "adminOverride": " (admin override)",
+      "maxUsesLabel": "Usage Limit",
+      "validForLabel": "Valid for Test (Optional)",
+      "allTests": "All tests",
+      "validUntilLabel": "Valid Until (Optional)",
+      "cancel": "Cancel",
+      "create": "Create"
+    },
+    "toasts": {
+      "created": "Discount code created",
+      "createFailed": "Could not create discount code",
+      "activated": "Discount code activated",
+      "deactivated": "Discount code deactivated",
+      "toggleFailed": "Action failed",
+      "fillRequired": "Please fill required fields",
+      "maxPercent": "Maximum discount is {{max}}%",
+      "codeCopied": "Code copied"
+    }
+  },
+  "myAds": {
+    "tabs": {
+      "stats": "Statistics",
+      "purchases": "My Ads",
+      "buy": "New Ad"
+    },
+    "stats": {
+      "totalImpressions": "Total Impressions",
+      "activeAds": "Active Ads",
+      "last7Days": "Last 7 Days",
+      "last30Days": "Last 30 Days Impressions",
+      "noData": "No impression data yet",
+      "performanceDetail": "Ad Performance Details",
+      "profileBoost": "Profile Boost",
+      "validUntil": "Valid until {{date}}",
+      "active": "Active",
+      "completed": "Completed",
+      "noDataPrompt": "Buy your first ad to start boosting your tests.",
+      "buyAd": "Buy Ad"
+    },
+    "purchases": {
+      "noneYet": "You haven't purchased any ads yet",
+      "buyFirst": "Buy Your First Ad",
+      "impressionsRemaining": "{{count}} impressions remaining"
+    },
+    "buy": {
+      "servicesPaused": "Ad purchases are temporarily paused.",
+      "servicesPausedDesc": "Please try again later.",
+      "howItWorks": "How does it work?",
+      "howItWorks1": "<strong>10%</strong> of test recommendations on the home page are ad-based.",
+      "howItWorks2": "Personalized recommendations aren't affected — ads provide extra visibility.",
+      "howItWorks3": "The ad ends automatically when impressions in your package are used up.",
+      "targetType": "Boost Type",
+      "targetTest": "Test Package",
+      "targetTestDesc": "Boost a specific test of yours",
+      "targetEducator": "My Profile",
+      "targetEducatorDesc": "Boost your educator profile",
+      "whichTest": "Which Test?",
+      "noPublishedTests": "You have no published tests. Please publish one first.",
+      "selectTest": "Select test",
+      "adPackage": "Ad Package",
+      "noPackages": "No packages available for sale right now.",
+      "packageInfo": "{{impressions}} impressions · valid for {{days}} days",
+      "processing": "Processing...",
+      "buyAd": "Buy Ad"
+    },
+    "toasts": {
+      "purchased": "Ad purchased! Impressions will start immediately.",
+      "purchaseFailed": "Purchase failed",
+      "selectPackage": "Please select a package",
+      "selectTest": "Please select the test you want to boost"
+    }
+  },
+  "myLiveSessions": {
+    "subtitle": "Manage your live test sessions.",
+    "newButton": "New Live Test",
+    "empty": {
+      "title": "You haven't created any live tests yet",
+      "desc": "Start a live session; participants join via QR code or code.",
+      "firstButton": "Create Your First Live Test"
+    },
+    "sections": {
+      "active": "Active ({{count}})",
+      "draft": "Draft ({{count}})",
+      "ended": "Completed ({{count}})"
+    },
+    "status": {
+      "draft": "Draft",
+      "active": "Active",
+      "ended": "Completed"
+    },
+    "round2": {
+      "completedBadge": "Round 2 completed",
+      "activeBadge": "Round 2 active",
+      "draftBadge": "Round 2 draft"
+    },
+    "card": {
+      "questions": "{{count}} questions",
+      "participants": "{{count}} participants",
+      "joinCode": "Code:",
+      "round2JoinCode": "Round 2 Code:",
+      "manage": "Manage",
+      "review": "Review",
+      "reviewRound1": "Review Round 1",
+      "reviewRound2": "Review Round 2",
+      "startRound2": "Start Round 2",
+      "goRound2": "Go to Round 2"
+    },
+    "confirms": {
+      "round2": "Create round 2 (post-test) with the same questions?\nOnly candidates from this round can join."
+    },
+    "toasts": {
+      "round2Created": "Round 2 created! Code: {{code}}",
+      "round2Failed": "Could not create round 2"
+    }
+  },
+  "educatorRefunds": {
+    "accessDenied": "Access Denied",
+    "deadlineWarning": "Some requests are about to expire. Unanswered requests within 7 days are escalated to admin.",
+    "tabs": {
+      "pending": "Pending",
+      "reviewed": "Reviewed"
+    },
+    "empty": {
+      "noPending": "No pending refund requests",
+      "noReviewed": "No reviewed requests yet"
+    },
+    "card": {
+      "testFallback": "Test",
+      "reasonFallback": "No reason given",
+      "deadline": "Deadline: {{when}}",
+      "review": "Review"
+    },
+    "status": {
+      "PENDING": "Pending",
+      "EDUCATOR_APPROVED": "Approved",
+      "EDUCATOR_REJECTED": "Rejected",
+      "APPEAL_PENDING": "Appeal",
+      "ESCALATED": "Escalated",
+      "APPROVED": "Refunded",
+      "REJECTED": "Resolved"
+    },
+    "reasons": {
+      "wrong_content": "Content didn't meet expectations",
+      "defective_questions": "Faulty questions",
+      "not_working": "Technical issue",
+      "quality_issue": "Quality problem",
+      "other": "Other"
+    },
+    "dialog": {
+      "title": "Review Refund Request",
+      "testLabel": "Test:",
+      "reasonLabel": "Reason:",
+      "descLabel": "Description:",
+      "deadlineLabel": "Review deadline:",
+      "rejectPlaceholder": "Rejection reason (optional, min 5 chars)...",
+      "back": "Back",
+      "reject": "Reject",
+      "approve": "Approve → Send to Admin"
+    },
+    "toasts": {
+      "approved": "Refund approved. Forwarded to admin review.",
+      "rejected": "Refund rejected.",
+      "actionFailed": "Action failed"
+    }
+  },
+  "questionReports": {
+    "tabs": {
+      "pending": "Pending",
+      "resolved": "Resolved"
+    },
+    "filterBar": {
+      "status": "Status",
+      "test": "Test",
+      "reporter": "Reporter",
+      "reason": "Issue type / reason",
+      "allStatuses": "All",
+      "allTests": "All Tests",
+      "selectTest": "Select test...",
+      "searchTest": "Search test...",
+      "testFilterAria": "Test filter",
+      "allReporters": "All Candidates",
+      "selectReporter": "Select candidate...",
+      "searchReporter": "Search candidate...",
+      "reporterFilterAria": "Reporter filter",
+      "noResult": "No results",
+      "reasonPlaceholder": "e.g. wrong answer, poor content...",
+      "reasonAria": "Search issue type or reason",
+      "count": "{{filtered}} / {{total}} reports",
+      "clear": "Clear Filters",
+      "unnamed": "(Untitled)",
+      "unknown": "(Unknown)"
+    },
+    "statusConfig": {
+      "OPEN": "Pending",
+      "ANSWERED": "Answered",
+      "ESCALATED": "Escalated to Admin"
+    },
+    "card": {
+      "reporter": "Reported by: {{name}}",
+      "daysLeft": "{{count}} days left",
+      "deadlineExpired": "Expired",
+      "adminNote": "Admin Note",
+      "yourAnswer": "Your answer:",
+      "respondedAt": "Answered: {{date}}",
+      "respond": "Respond"
+    },
+    "empty": {
+      "noPending": "No pending reports",
+      "noResolved": "No resolved reports",
+      "noResults": "No reports match selected filters"
+    },
+    "dialog": {
+      "title": "Respond to Report",
+      "testLabel": "Test",
+      "questionLabel": "Question (first 150 chars)",
+      "reportLabel": "Candidate's Report",
+      "responsePlaceholder": "Write your response (min 5 chars)...",
+      "cancel": "Cancel",
+      "submit": "Respond",
+      "submitting": "Sending..."
+    },
+    "toasts": {
+      "sent": "Response sent",
+      "sendFailed": "Could not send response",
+      "min5Chars": "Write at least 5 characters"
+    }
+  },
+  "educatorSettings": {
+    "tabs": {
+      "profile": "Profile",
+      "verification": "Verification",
+      "contact": "Contact",
+      "exams": "Exam Preferences",
+      "notifications": "Notifications",
+      "payment": "Payment"
+    },
+    "notices": {
+      "rejected": {
+        "title": "Your application was rejected",
+        "reason": "Rejection reason:",
+        "desc": "Please update your profile and resubmit your application.",
+        "resubmit": "Resubmit Application",
+        "resubmitting": "Sending...",
+        "resubmittedToast": "Your application has been resubmitted"
+      },
+      "pending": {
+        "title": "Account Approval Pending",
+        "desc": "Your educator application is being reviewed by an admin. To speed up approval, please complete all your information."
+      },
+      "approved": {
+        "title": "Your account is approved",
+        "desc": "You can now create tests and your profile is visible to candidates."
+      }
+    },
+    "profile": {
+      "title": "Profile Information",
+      "educationLabel": "Education",
+      "educationPlaceholder": "e.g. Istanbul University — Mathematics",
+      "educationHint": "Your university and department",
+      "bioLabel": "Bio",
+      "bioPlaceholder": "Introduce yourself, mention your areas of expertise...",
+      "bioHint": "Bio shown on your profile page"
+    },
+    "verification": {
+      "title": "Academic Verification",
+      "gscholarLabel": "Google Scholar Profile",
+      "gscholarHint": "Add your Google Scholar profile link to verify academic background",
+      "cvLabel": "Upload CV",
+      "cvUploaded": "CV uploaded",
+      "cvView": "View file",
+      "cvChange": "Change",
+      "cvUpload": "Upload CV",
+      "cvUploading": "Uploading...",
+      "cvFormat": "PDF (Max 5MB)",
+      "cvHint": "Upload your CV to showcase your professional background to candidates"
+    },
+    "contact": {
+      "title": "Contact Information",
+      "phoneLabel": "Phone",
+      "cityLabel": "City",
+      "websiteLabel": "Website/Blog",
+      "linkedinLabel": "LinkedIn"
+    },
+    "exams": {
+      "title": "My Areas of Expertise",
+      "desc": "Select which exams you specialize in. This information will be shown on your profile.",
+      "noExamTypes": "No exam types found"
+    },
+    "notifications": {
+      "title": "Notification Preferences",
+      "newTests": "New Test Notifications",
+      "newTestsDesc": "Get notified when new tests are published",
+      "promotions": "Promotions",
+      "promotionsDesc": "Get information about discounts and special offers",
+      "educatorUpdates": "Educator Updates",
+      "educatorUpdatesDesc": "Get updates from educators you follow",
+      "testReminders": "Test Reminders",
+      "testRemindersDesc": "Get reminders for tests you've started"
+    },
+    "payment": {
+      "title": "Payment Information",
+      "desc": "Enter the bank account where commission payments will be sent. This info is only visible to administrators.",
+      "ibanLabel": "IBAN",
+      "ibanPlaceholder": "TR00 0000 0000 0000 0000 0000 00",
+      "ibanError": "IBAN format: starts with TR, 26 characters (TR + 24 digits)",
+      "ibanHint": "Turkish IBAN format: starts with TR, total 26 characters",
+      "holderLabel": "Account Holder",
+      "holderPlaceholder": "Full Name",
+      "holderHint": "Name registered with the bank account",
+      "bankLabel": "Bank Name",
+      "bankPlaceholder": "e.g. Ziraat Bank",
+      "important": "Important:",
+      "importantDesc": "To receive commission payments on time, please fill in IBAN and account holder fields. Your data is stored encrypted."
+    },
+    "saveButton": "Save Changes",
+    "saving": "Saving...",
+    "toasts": {
+      "profileUpdated": "Profile information updated",
+      "updateFailed": "Update failed",
+      "invalidPdf": "Please upload a PDF file",
+      "fileTooBig": "File size cannot exceed 5MB",
+      "cvUploaded": "CV uploaded successfully",
+      "cvUploadFailed": "Could not upload CV",
+      "invalidImage": "Please upload JPG, PNG or WebP image",
+      "imageTooBig": "Image size cannot exceed 5MB",
+      "imageUploaded": "Profile picture updated",
+      "imageUploadFailed": "Could not upload image"
+    }
+  },
+  "myModerationStatus": {
+    "errorLoad": "Could not load moderation status. Please try again later.",
+    "banned": {
+      "title": "Your Account is Permanently Banned",
+      "desc": "Your account has been permanently closed due to platform policy violations. Contact support for questions: support@sinav-salonu.com"
+    },
+    "suspended": {
+      "title": "Your Account is Suspended",
+      "desc": "Your account is suspended until <strong>{{date}}</strong>.",
+      "countdown": "Time remaining: {{days}} days {{hours}} hours"
+    },
+    "risk": {
+      "title": "Risk Profile",
+      "scoreLabel": "Risk Score",
+      "progressLabel": "Risk Level",
+      "openViolations": "Open Violations",
+      "totalViolations": "Total Violations",
+      "highSeverity": "High Severity",
+      "lastViolation": "Last violation: {{when}}"
+    },
+    "activeAction": {
+      "title": "Active Action",
+      "actionType": "Action Type",
+      "reason": "Reason",
+      "expiresAt": "Expires"
+    },
+    "recent": {
+      "title": "Violations in Last 30 Days",
+      "noViolations": "No violations in last 30 days. Your content looks clean!"
+    },
+    "entityTypes": {
+      "question": "Question",
+      "test": "Test",
+      "content": "Content"
+    },
+    "severity": {
+      "label": "Severity: {{level}}/5"
+    }
+  },
+  "myTests": {
+    "title": "My Tests",
+    "subtitle": "View and take the tests you have purchased",
+    "filter": {
+      "title": "Filter",
+      "clear": "Clear Filters",
+      "examTypeLabel": "Exam Type",
+      "educatorLabel": "Educator",
+      "completionLabel": "Completion Status",
+      "all": "All",
+      "pending": "Pending",
+      "completed": "Completed",
+      "examTypeAria": "Exam type filter",
+      "educatorAria": "Educator filter",
+      "completionAria": "Completion status filter"
+    },
+    "empty": {
+      "title": "You haven't purchased any tests yet",
+      "desc": "Explore tests and start preparing for your exam",
+      "cta": "Explore Tests"
+    }
+  },
+  "about": {
+    "backToHome": "Back to Home",
+    "subtitle": "Sınav Salonu is Türkiye's most comprehensive online exam preparation platform.",
+    "missionTitle": "Our Mission",
+    "missionBody": "To be the most reliable guide on the road to success by offering quality, up-to-date and effective test content to candidates preparing for exams. Every candidate can study at their own pace, track their progress, and reach their goals.",
+    "visionTitle": "Our Vision",
+    "visionBody": "To be the first platform that comes to mind for exam preparation in Türkiye. By bringing together technology and education, we offer equal opportunity to every candidate and pioneer the digital transformation in education.",
+    "valuesTitle": "Our Values",
+    "value1Title": "Quality",
+    "value1Body": "Every test package is carefully prepared by expert educators in the field and continuously updated.",
+    "value2Title": "Transparency",
+    "value2Body": "We continuously improve through the feedback of our candidates and educators, and maintain open communication.",
+    "value3Title": "Accessibility",
+    "value3Body": "We offer affordable and easily accessible content so everyone can access quality education.",
+    "value4Title": "Innovation",
+    "value4Body": "We continuously improve the learning experience by leveraging the power of technology.",
+    "whyTitle": "Why Sınav Salonu?",
+    "why1Title": "Expert Educator Network",
+    "why1Body": "Expert educators in their fields and up-to-date test content.",
+    "why2Title": "Detailed Performance Analysis",
+    "why2Body": "Track your progress, discover your strengths and weaknesses.",
+    "why3Title": "Anytime, Anywhere",
+    "why3Body": "Study whenever and wherever you want with our mobile-friendly platform."
+  },
+  "contact": {
+    "backToHome": "Back to Home",
+    "subtitle": "Get in touch with us for your questions or suggestions.",
+    "formTitle": "Send a Message",
+    "nameLabel": "Full Name *",
+    "namePlaceholder": "Your name and surname",
+    "emailLabel": "Email *",
+    "emailPlaceholder": "example@mail.com",
+    "subjectLabel": "Subject",
+    "subjectPlaceholder": "Subject of your message",
+    "messageLabel": "Your Message *",
+    "messagePlaceholder": "Write your message here...",
+    "sendButton": "Send Message",
+    "sending": "Sending...",
+    "emailTitle": "Email",
+    "addressTitle": "Address",
+    "addressBody": "Sınav Salonu Eğitim Teknolojileri A.Ş.\nMaslak Mahallesi, Büyükdere Caddesi\nNo: 123, Sarıyer\nİstanbul, Türkiye",
+    "toasts": {
+      "missingFields": "Please fill in all required fields",
+      "sent": "Your message was sent successfully! We will get back to you shortly."
+    }
+  },
+  "partnership": {
+    "backToHome": "Back to Home",
+    "subtitle": "Become a partner with Sınav Salonu and make a difference in education technology.",
+    "type1Title": "Corporate Sales Partnership",
+    "type1Body": "We offer custom test packages and bulk-sales opportunities for your company or organization.",
+    "type2Title": "Educational Institution Cooperation",
+    "type2Body": "Custom integrations and content partnerships for prep schools, universities and educational institutions.",
+    "type3Title": "Technology Partnership",
+    "type3Body": "Partnership opportunities for companies that want to build API integrations and technology solutions.",
+    "formTitle": "Partnership Application",
+    "companyLabel": "Company Name *",
+    "companyPlaceholder": "Your company name",
+    "nameLabel": "Contact Person *",
+    "namePlaceholder": "Your name and surname",
+    "emailLabel": "Email *",
+    "emailPlaceholder": "example@company.com",
+    "phoneLabel": "Phone",
+    "phonePlaceholder": "+90 5XX XXX XX XX",
+    "messageLabel": "Partnership Details *",
+    "messagePlaceholder": "Tell us about the partnership type and details...",
+    "submitButton": "Submit Application",
+    "submitting": "Submitting...",
+    "advantagesTitle": "Advantages of Becoming a Partner",
+    "adv1Title": "Special Pricing",
+    "adv1Body": "Discounted prices exclusively for corporate customers",
+    "adv2Title": "Priority Support",
+    "adv2Body": "24/7 priority technical support service",
+    "adv3Title": "Custom Content",
+    "adv3Body": "Test content tailored to your needs",
+    "adv4Title": "Detailed Reporting",
+    "adv4Body": "Comprehensive analysis and reporting tools",
+    "toasts": {
+      "missingFields": "Please fill in all required fields",
+      "submitted": "Your application has been received! We will get in touch with you shortly."
+    }
+  },
+  "privacy": {
+    "backToHome": "Back to Home",
+    "lastUpdated": "Last updated: 17 February 2026",
+    "s1Title": "1. General Information",
+    "s1Body": "At Sınav Salonu, we respect the privacy of our users and place great importance on protecting your personal data. This Privacy Policy describes our practices regarding personal data collected, processed and stored on our platform.",
+    "s2Title": "2. Data Collected",
+    "s2Intro": "The following personal data may be collected while using the platform:",
+    "s2List": [
+      "Name, surname, email address and phone number",
+      "Account creation and login information",
+      "Test results and performance data",
+      "Payment information (via secure payment systems)",
+      "Platform usage statistics and preferences",
+      "Communication records and feedback"
+    ],
+    "s3Title": "3. Use of Data",
+    "s3Intro": "Collected personal data is used for the following purposes:",
+    "s3List": [
+      "Providing and operating the platform",
+      "Managing user accounts",
+      "Storing and reporting test results",
+      "Processing payments",
+      "Providing customer support",
+      "Platform improvements and developing new features",
+      "Fulfilling legal obligations"
+    ],
+    "s4Title": "4. Data Security",
+    "s4Body": "We use industry-standard security measures to ensure the security of your personal data. Your data is transmitted over encrypted connections and stored on secure servers. Technical and administrative measures are in place against unauthorized access, alteration or disclosure.",
+    "s5Title": "5. Data Sharing",
+    "s5Intro": "Your personal data is not shared, sold or rented to third parties. However, your data may be shared in the following cases:",
+    "s5List": [
+      "Legal obligations and court orders",
+      "Trusted payment providers for payment processing",
+      "Cloud service providers for platform infrastructure",
+      "Specific cases with your explicit consent"
+    ],
+    "s6Title": "6. User Rights",
+    "s6Intro": "Under the data protection legislation you have the following rights:",
+    "s6List": [
+      "To learn whether your personal data is being processed",
+      "To request information about your processed personal data",
+      "To request correction of your personal data",
+      "To request deletion or destruction of your personal data",
+      "To know the third parties to whom your personal data is transferred"
+    ],
+    "s7Title": "7. Cookies",
+    "s7Body": "Our platform uses cookies to improve user experience. Cookies are small text files stored on your computer by your browser. You can manage or block cookies through your browser settings.",
+    "s8Title": "8. Changes",
+    "s8Body": "This Privacy Policy may be updated from time to time. Significant changes will be communicated via email. Continued use of the platform means you accept the updated policy."
+  },
+  "support": {
+    "backToHome": "Back to Home",
+    "subtitle": "Frequently asked questions and information that can help you",
+    "cat1Title": "General",
+    "cat2Title": "Tests and Content",
+    "cat3Title": "Payment and Refunds",
+    "cat4Title": "Becoming an Educator",
+    "cat5Title": "Account and Settings",
+    "noAnswerTitle": "Don't see your question?",
+    "noAnswerDesc": "For other questions, get in touch with our support team",
+    "contactButton": "Contact Us",
+    "cat1Items": [
+      {
+        "q": "What is Sınav Salonu?",
+        "a": "Sınav Salonu is a comprehensive education platform that offers online test-solving to candidates preparing for various exams and hosts content created by expert educators in their fields."
+      },
+      {
+        "q": "How can I sign up?",
+        "a": "By clicking the 'Sign In' button on the home page you can register as a candidate or an educator. You can create an account with your email address and start solving tests right away."
+      },
+      {
+        "q": "Is the platform free?",
+        "a": "Signing up is free. You can explore tests and check out educators. Once you purchase test packages you can start solving them."
+      }
+    ],
+    "cat2Items": [
+      {
+        "q": "How can I purchase tests?",
+        "a": "Select the test you are interested in and click the 'Buy' button on the detail page. After completing payment, you can access the test instantly."
+      },
+      {
+        "q": "How long can I access the tests I bought?",
+        "a": "You have unlimited access to the test packages you have bought. You can solve them whenever and however many times you want."
+      },
+      {
+        "q": "How can I see my test results?",
+        "a": "From the 'My Results' page you can view all your test results, detailed analyses and performance charts."
+      },
+      {
+        "q": "How do I report an incorrect question?",
+        "a": "While solving a test, you can report questions you believe are incorrect using the 'Report Question' button on the question."
+      }
+    ],
+    "cat3Items": [
+      {
+        "q": "Which payment methods do you accept?",
+        "a": "You can pay with credit cards and debit cards. All your payments are processed through secure payment infrastructure."
+      },
+      {
+        "q": "What is your refund policy?",
+        "a": "If there is a problem with the test package you bought, you can apply from the 'Request Refund' page. Your incorrect-question reports are evaluated, and if found justified, your refund is processed."
+      }
+    ],
+    "cat4Items": [
+      {
+        "q": "How can I apply as an educator?",
+        "a": "Register as an educator, complete your profile information and areas of expertise. Upload the required documents for academic verification. After approval you can start creating tests."
+      },
+      {
+        "q": "How much can I earn as an educator?",
+        "a": "You earn income at the defined commission rate from test sales. Your earnings grow with your sales performance."
+      },
+      {
+        "q": "How does the test creation process work?",
+        "a": "From the 'Create Test' page, enter test info, add questions and publish. Once your tests are approved, they are offered to candidates."
+      }
+    ],
+    "cat5Items": [
+      {
+        "q": "How can I change my password?",
+        "a": "You can change your password from the Profile Settings page. Enter your current password and set a new one."
+      },
+      {
+        "q": "How can I delete my account?",
+        "a": "To delete your account, contact our support team. After your request is evaluated, your account will be deleted."
+      },
+      {
+        "q": "How can I manage my notification settings?",
+        "a": "From the Profile Settings page you can turn email notifications, test reminders and other notifications on or off."
+      }
+    ]
+  },
+  "myObjections": {
+    "stats": {
+      "total": "Total",
+      "pending": "Pending",
+      "answered": "Answered",
+      "escalated": "Escalated"
+    },
+    "status": {
+      "OPEN": "Pending",
+      "ANSWERED": "Answered",
+      "ESCALATED": "Escalated to Admin"
+    },
+    "filterBar": {
+      "statusLabel": "Status",
+      "allStatuses": "All Statuses",
+      "testLabel": "Test",
+      "allTests": "All Tests",
+      "selectTest": "Select test...",
+      "searchTest": "Search test...",
+      "noResult": "No result",
+      "testFilterAria": "Test filter",
+      "reasonLabel": "Error type / reason",
+      "reasonPlaceholder": "e.g. wrong answer, missing info...",
+      "reasonAria": "Search error type or reason",
+      "count": "{{filtered}} / {{total}} reports",
+      "clear": "Clear Filters",
+      "unnamed": "(Untitled)"
+    },
+    "empty": {
+      "noneYet": "You don't have any error reports yet",
+      "hint": "While solving a test, you can report errors you spot in the questions.",
+      "noResults": "No reports match the selected filters"
+    },
+    "card": {
+      "educator": "Educator:",
+      "educatorYes": "Educator replied",
+      "educatorNo": "Educator hasn't replied yet",
+      "adminYes": "Admin replied",
+      "adminNo": "Admin hasn't replied yet",
+      "educatorChip": "Educator",
+      "adminChip": "Admin",
+      "daysLeft": "{{count}} days",
+      "deadlineExpired": "expired",
+      "viewDetails": "View Details"
+    },
+    "dialog": {
+      "title": "Report Details",
+      "reportedAt": "Reported:",
+      "slaEnd": "SLA ends:",
+      "testLabel": "Test",
+      "educatorLabel": "Educator",
+      "questionLabel": "Question (first 150 chars)",
+      "reasonLabel": "Your report",
+      "educatorReply": "Educator's reply:",
+      "educatorNoReply": "Educator hasn't replied yet.",
+      "adminNote": "Admin note",
+      "adminNoNote": "Admin hasn't added a note yet.",
+      "close": "Close"
+    }
+  },
+  "myTopicReport": {
+    "errorLoad": "An error occurred while loading the report. Please refresh the page.",
+    "empty": {
+      "title": "No data yet",
+      "desc": "The topic performance from your completed tests will appear here. After you start solving tests, your report will be generated."
+    },
+    "stats": {
+      "topicCount": "Topic Count",
+      "totalAttempts": "Total Attempts",
+      "totalQuestions": "Total Questions",
+      "overallAvg": "Overall Average"
+    },
+    "filterAll": "All",
+    "noGroupForExamType": "No topics found for this exam type.",
+    "card": {
+      "overtimeBadge": "{{count}}x overtime",
+      "correct": "{{count}} Correct",
+      "wrong": "{{count}} Wrong",
+      "blank": "{{count}} Blank",
+      "summary": "{{attempts}} attempts · {{questions}} questions",
+      "overtimeWarning": "You went over time in {{count}} attempts on this topic.",
+      "overtimeWarningEmphasis": "Time management",
+      "overtimeWarningSuffix": "stands out as an area to improve.",
+      "showChart": "Show Timeline",
+      "hideChart": "Hide Chart",
+      "tooltipCorrect": "✓ {{count}} Correct",
+      "tooltipWrong": "✗ {{count}} Wrong",
+      "tooltipBlank": "— {{count}} Blank",
+      "tooltipTotal": "Total: {{count}} questions",
+      "tooltipOvertime": "⏱ +{{m}}m {{s}}s overtime",
+      "tooltipCorrectAlt": "Correct: {{count}}",
+      "tooltipWrongAlt": "Wrong: {{count}}",
+      "tooltipBlankAlt": "Blank: {{count}}"
+    }
+  },
+  "myResults": {
+    "errorLoad": "An error occurred while loading results. Please refresh the page.",
+    "filters": {
+      "packageAria": "Test package filter",
+      "allPackages": "All Packages",
+      "examTypeAria": "Exam type filter",
+      "allExamTypes": "All Exam Types",
+      "timeAria": "Time range filter",
+      "allTime": "All Time",
+      "lastWeek": "Last 1 Week",
+      "lastMonth": "Last 1 Month",
+      "last3Months": "Last 3 Months",
+      "clear": "Clear Filters"
+    },
+    "shareButton": "Share",
+    "sharePreparing": "Preparing…",
+    "shareTitle": "Your Sınav Salonu Report",
+    "stats": {
+      "totalTests": "Total Tests",
+      "avgScore": "Average Score",
+      "totalCorrect": "Total Correct",
+      "totalWrong": "Total Wrong"
+    },
+    "progress": "Progress",
+    "chartTypeAria": "Chart type selection",
+    "chartType": {
+      "performance": "Performance",
+      "questions": "Questions Solved",
+      "time": "Study Time"
+    },
+    "tooltip": {
+      "avg": "Average: {{value}}",
+      "testCount": "Test Count: {{count}}",
+      "questionCount": "Question Count: {{count}}",
+      "time": "Duration: {{label}}"
+    },
+    "history": "Test History",
+    "exportXlsx": "Export to Excel",
+    "sheetName": "MyResults",
+    "table": {
+      "test": "Test",
+      "score": "Score",
+      "dyb": "C / W / B",
+      "time": "Time",
+      "date": "Date",
+      "overtime": "Overtime",
+      "status": "Status",
+      "questions": "{{count}} questions"
+    },
+    "scoreBadge": {
+      "excellent": "Excellent",
+      "good": "Good",
+      "average": "Average",
+      "needsWork": "Needs Work"
+    },
+    "empty": {
+      "noResults": "No completed tests yet",
+      "noFilterMatch": "No results match the filter",
+      "testFallback": "Test"
+    },
+    "loadMore": "Show More ({{count}} remaining)",
+    "overtime": {
+      "title": "Area to Improve: Time Management",
+      "desc": "You submitted {{count}} tests below later than the allowed time. Late submission isn't possible under exam conditions — focusing on time management can significantly boost your performance.",
+      "delay": "Delay",
+      "score": "Score",
+      "tip": "💡 Tip: Aim to spend around {{seconds}} seconds per question. Mark hard questions to skip and return at the end."
+    },
+    "duration": {
+      "min": "{{m}} min",
+      "sec": "{{s}} sec",
+      "minSec": "{{m}}m {{s}}s"
+    },
+    "xlsxColumns": {
+      "test": "Test",
+      "score": "Score",
+      "correct": "Correct",
+      "wrong": "Wrong",
+      "blank": "Blank",
+      "totalQ": "Total Questions",
+      "durationMin": "Duration (min)",
+      "date": "Date",
+      "delaySec": "Delay (sec)",
+      "status": "Status"
+    }
+  },
+  "profileSettings": {
+    "userFallback": "User",
+    "avatarHint": "Click the image to set a profile photo",
+    "tabs": {
+      "contact": "Contact",
+      "notifications": "Notifications",
+      "exams": "Exam Preferences",
+      "financial": "Financial"
+    },
+    "contact": {
+      "phoneLabel": "Phone",
+      "phonePlaceholder": "05XX XXX XX XX",
+      "phoneInvalid": "Invalid phone number",
+      "websiteLabel": "Website/Blog",
+      "linkedinLabel": "LinkedIn",
+      "urlInvalid": "Enter a valid URL (https://...)"
+    },
+    "sensitiveOtp": {
+      "title": "Verify contact information change",
+      "intro": "We will send a 6-digit verification code to your email.",
+      "sending": "Sending code...",
+      "sentTo": "Verification code sent to {{email}}. Valid for 10 minutes.",
+      "codeLabel": "Verification code",
+      "codeHint": "Enter the 6-digit code we sent to your email.",
+      "codeInvalid": "Code must be 6 digits.",
+      "verify": "Verify and Save",
+      "verifying": "Verifying...",
+      "verified": "Your information has been updated.",
+      "verifyFailed": "Verification failed.",
+      "expired": "The code has expired. Request a new one.",
+      "mismatch": "Incorrect code. Please try again.",
+      "resend": "Resend code",
+      "resent": "New code sent.",
+      "requestFailed": "Could not send code. Please try again later."
+    },
+    "notifications": {
+      "newTests": "New Test Notifications",
+      "newTestsDesc": "Get notified when new tests are published",
+      "promotions": "Campaigns and Promotions",
+      "promotionsDesc": "Receive info about discounts and special offers",
+      "educatorUpdates": "Educator Updates",
+      "educatorUpdatesDesc": "Get updates from educators you follow",
+      "testReminders": "Test Reminders",
+      "testRemindersDesc": "Receive reminders for the tests you started"
+    },
+    "exams": {
+      "title": "Exams I'm Interested In",
+      "desc": "Select the exams you're interested in so that tests for these exams are prioritized on your home page",
+      "noExamTypes": "No exam types found"
+    },
+    "financial": {
+      "requestRefund": "Request Refund",
+      "searchPlaceholder": "Search test...",
+      "all": "All",
+      "purchases": "Purchases",
+      "refunds": "Refunds",
+      "purchased": "Purchased",
+      "statusLabels": {
+        "PENDING": "Educator Reviewing",
+        "EDUCATOR_APPROVED": "Educator Approved",
+        "EDUCATOR_REJECTED": "Educator Rejected",
+        "APPEAL_PENDING": "Appeal Under Review",
+        "ESCALATED": "Admin Reviewing",
+        "APPROVED": "Refund Approved",
+        "REJECTED": "Rejected",
+        "pending": "Pending",
+        "approved": "Approved",
+        "rejected": "Rejected"
+      },
+      "canAppealHint": "The educator rejected the refund. You can file an appeal.",
+      "appealButton": "File Appeal",
+      "noResults": "No results found",
+      "noTransactions": "You don't have any financial transactions"
+    },
+    "refundModal": {
+      "title": "Request Refund",
+      "noPurchases": "No purchases yet",
+      "noEligible": "No test eligible for refund",
+      "notFound": "Test not found",
+      "eligibleHint": "Refund requests can only be made for tests that haven't been opened.",
+      "cancel": "Cancel"
+    },
+    "appealDialog": {
+      "title": "Appeal Request",
+      "rejected": "The educator rejected this refund. Write your appeal reason to submit it for admin review.",
+      "placeholder": "Write your appeal reason (at least 5 characters)...",
+      "cancel": "Cancel",
+      "submit": "Submit Appeal"
+    },
+    "saveButton": "Save Changes",
+    "saving": "Saving...",
+    "toasts": {
+      "invalidImage": "Please upload a JPG, PNG or WebP image",
+      "imageTooBig": "Image size must be at most 5MB",
+      "imageUploaded": "Profile picture updated",
+      "imageUploadFailed": "Image could not be uploaded",
+      "profileUpdated": "Profile information updated",
+      "updateFailed": "Update failed",
+      "refundRequested": "Refund request submitted",
+      "refundFailed": "Refund request could not be submitted",
+      "appealSubmitted": "Your appeal has been submitted. It will be reviewed by the admin.",
+      "appealFailed": "Appeal could not be submitted"
+    }
+  },
+  "educatorOnboarding": {
+    "title": "Complete Your Educator Profile",
+    "subtitle": "We need a few more details to build trust with candidates.",
+    "requiredHint": "All fields are required",
+    "saving": "Saving…",
+    "submit": "Complete and Continue",
+    "success": "Your profile is complete.",
+    "cvUploaded": "CV uploaded successfully",
+    "cvSection": {
+      "title": "Curriculum Vitae (CV)",
+      "desc": "Upload a short CV showcasing your academic background and expertise (PDF, max 5MB).",
+      "upload": "Upload CV",
+      "uploading": "Uploading…",
+      "uploaded": "CV uploaded",
+      "viewFile": "View file",
+      "change": "Change",
+      "format": "PDF (Max 5MB)"
+    },
+    "expertiseSection": {
+      "title": "Areas of Expertise",
+      "desc": "Which exams do you specialize in preparing candidates for? Select at least one.",
+      "empty": "No exam types found.",
+      "selectedCount": "{{count}} exam(s) selected"
+    },
+    "errors": {
+      "invalidPdf": "Please upload a PDF file",
+      "fileTooBig": "File size must be at most 5MB",
+      "uploadFailed": "CV could not be uploaded",
+      "cvRequired": "CV upload is required",
+      "examsRequired": "Select at least one area of expertise",
+      "saveFailed": "Profile could not be saved"
+    }
+  }
+}

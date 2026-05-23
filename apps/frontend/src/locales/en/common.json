@@ -51,5 +51,121 @@
     "noResults": "No results found.",
     "noData": "No data yet.",
     "noNotifications": "No new notifications."
+  },
+  "language": {
+    "label": "Language",
+    "tr": "Turkish",
+    "en": "English",
+    "es": "Spanish",
+    "zh": "Chinese",
+    "de": "German"
+  },
+  "theme": {
+    "label": "Theme"
+  },
+  "roles": {
+    "candidate": "Candidate",
+    "educator": "Educator",
+    "admin": "Admin",
+    "worker": "Worker"
+  },
+  "sidebar": {
+    "ariaNav": "Main navigation",
+    "brandName": "Sınav Salonu",
+    "profileAlt": "Profile",
+    "pendingApproval": "⚠️ Account Approval Pending",
+    "candidate": {
+      "home": "Home",
+      "explore": "Explore Tests",
+      "myTests": "Purchased Tests",
+      "myResults": "Performance Reports",
+      "myTopicReport": "Topic Performance",
+      "myObjections": "My Issue Reports",
+      "profileSettings": "Profile Settings"
+    },
+    "educator": {
+      "dashboard": "Dashboard",
+      "myTestPackages": "My Test Packages",
+      "createTest": "Create New Test",
+      "mySales": "My Sales",
+      "myDiscountCodes": "Discount Codes",
+      "myAds": "My Ads",
+      "myLiveSessions": "My Live Tests",
+      "refunds": "Refund Requests",
+      "questionReports": "Issue Reports",
+      "settings": "Profile Settings",
+      "moderationStatus": "Content Status"
+    },
+    "admin": {
+      "dashboard": "Admin Panel",
+      "candidateReport": "Candidate Report",
+      "educatorReport": "Educator Report",
+      "examTypes": "Exam Types",
+      "topics": "Question Topics",
+      "users": "Users",
+      "tests": "All Tests",
+      "discountCodes": "Discount Codes",
+      "claims": "Claims",
+      "revenue": "Revenue",
+      "systemControls": "System Controls",
+      "liveTiers": "Live Test Packages",
+      "emailManagement": "Email Management",
+      "riskyContent": "Risky Content"
+    },
+    "collapseAria": "Collapse sidebar",
+    "expandAria": "Expand sidebar"
+  },
+  "pagination": {
+    "previous": "Previous",
+    "next": "Next",
+    "pageOf": "Page {{current}} / {{total}}"
+  },
+  "errorBoundary": {
+    "title": "Something went wrong",
+    "messageProd": "An error occurred. Please refresh the page.",
+    "messageUnknown": "Unknown error",
+    "reload": "Reload page"
+  },
+  "pageNotFound": {
+    "title": "Page Not Found",
+    "desc": "The page \"{{name}}\" could not be found in this application.",
+    "adminNoteTitle": "Admin Note",
+    "adminNoteBody": "This page route does not exist in the current build.",
+    "goHome": "Go Home"
+  },
+  "accessRestricted": {
+    "title": "Access Restricted",
+    "desc": "You are not registered to use this application. Please contact the app administrator to request access.",
+    "listIntro": "If you believe this is an error, you can:",
+    "listItem1": "Verify you are logged in with the correct account",
+    "listItem2": "Contact the app administrator for access",
+    "listItem3": "Try logging out and back in again"
+  },
+  "apiErrors": {
+    "UNAUTHORIZED": "Your session has expired. Please sign in again.",
+    "FORBIDDEN": "You don't have permission for this action.",
+    "NOT_FOUND": "The requested resource was not found.",
+    "BAD_REQUEST": "Invalid request.",
+    "TOO_MANY_REQUESTS": "Too many attempts. Try again in 60 seconds.",
+    "TOO_MANY_REQUESTS_WITH_TIME": "Too many attempts. Try again in {{seconds}} seconds.",
+    "CAPTCHA_REQUIRED": "Verification is required to continue.",
+    "CAPTCHA_INVALID": "Verification failed. Please try again.",
+    "INTERNAL_ERROR": "An error occurred. Please try again later.",
+    "ERR_NETWORK": "Unable to reach the server. Check your connection.",
+    "TIMEOUT": "The request timed out.",
+    "UNEXPECTED_RESPONSE": "Unexpected server response"
+  },
+  "offlineBanner": {
+    "reconnectedTitle": "Connection restored",
+    "syncing": "Syncing answers...",
+    "allSaved": "All answers saved ✓",
+    "disconnectedTitle": "Connection Lost",
+    "disconnectedDesc": "No internet connection. Please check your connection to continue the test.",
+    "pendingCount_one": "<strong>{{count}}</strong> answer pending — will be sent automatically when reconnected",
+    "pendingCount_other": "<strong>{{count}}</strong> answers pending — will be sent automatically when reconnected",
+    "noPending": "All your selected answers are safe ✓",
+    "remainingSeconds": "{{count}} seconds",
+    "countdownDesc": "If you can't reconnect in time, your progress will be saved and you'll be exited",
+    "exitNow": "Exit Now and Save"
   }
 }

@@ -5,6 +5,9 @@ import { RegisterEducatorUseCase } from '../../../application/use-cases/auth/Reg
 import { LoginUseCase } from '../../../application/use-cases/auth/LoginUseCase';
 import { ForgotPasswordUseCase } from '../../../application/use-cases/auth/ForgotPasswordUseCase';
 import { ResetPasswordUseCase } from '../../../application/use-cases/auth/ResetPasswordUseCase';
+import { GoogleAuthUseCase } from '../../../application/use-cases/auth/GoogleAuthUseCase';
+import { NotifyNewDeviceLoginUseCase } from '../../../application/use-cases/auth/NotifyNewDeviceLoginUseCase';
+import { VerifyDeviceUseCase } from '../../../application/use-cases/auth/VerifyDeviceUseCase';
 import { PrismaUserRepository } from '../../../infrastructure/repositories/PrismaUserRepository';
 import { PasswordService } from '../../../infrastructure/services/PasswordService';
 import { JwtService } from '../../../infrastructure/services/JwtService';
@@ -18,6 +21,7 @@ import { CaptchaService } from '../../services/captcha.service';
 import { LoginBruteforceGuard } from '../../guards/login-bruteforce.guard';
 import { AuditLogger } from '../../../infrastructure/audit/AuditLogger';
 import { SendEmailUseCase } from '../../../application/use-cases/email/SendEmailUseCase';
+// SendEmail kullanıcı tarafından üretilmiş yardımcı (NotifyNewDevice için gerekli)
 
 @Module({
   controllers: [AuthController],
@@ -34,14 +38,24 @@ import { SendEmailUseCase } from '../../../application/use-cases/email/SendEmail
     },
     AuditLogger,
     {
+      provide: NotifyNewDeviceLoginUseCase,
+      useFactory: (sendEmail: SendEmailUseCase) => new NotifyNewDeviceLoginUseCase(sendEmail),
+      inject: [SendEmailUseCase],
+    },
+    {
+      provide: VerifyDeviceUseCase,
+      useFactory: () => new VerifyDeviceUseCase(),
+    },
+    {
       provide: LoginUseCase,
       useFactory: (
         userRepo: PrismaUserRepository,
         passwordService: PasswordService,
         jwtService: JwtService,
         audit: AuditLogger,
-      ) => new LoginUseCase(userRepo, passwordService, jwtService, audit),
-      inject: [PrismaUserRepository, PasswordService, JwtService, AuditLogger],
+        notifyDevice: NotifyNewDeviceLoginUseCase,
+      ) => new LoginUseCase(userRepo, passwordService, jwtService, audit, notifyDevice),
+      inject: [PrismaUserRepository, PasswordService, JwtService, AuditLogger, NotifyNewDeviceLoginUseCase],
     },
     CaptchaService,
     LoginBruteforceGuard,
@@ -83,6 +97,13 @@ import { SendEmailUseCase } from '../../../application/use-cases/email/SendEmail
       ) =>
         new RegisterEducatorUseCase(userRepo, contractRepo, acceptanceRepo, auditRepo, passwordService, jwtService),
       inject: [PrismaUserRepository, CONTRACT_REPO, CONTRACT_ACCEPTANCE_REPO, PrismaAuditLogRepository, PasswordService, JwtService],
+    },
+    {
+      provide: GoogleAuthUseCase,
+      useFactory: (userRepo: PrismaUserRepository, pwd: PasswordService, jwt: JwtService) =>
+        // clientId artık runtime'da DB+env'den okunuyor; constructor param backwards-compat
+        new GoogleAuthUseCase(userRepo, pwd, jwt, process.env.GOOGLE_CLIENT_ID),
+      inject: [PrismaUserRepository, PasswordService, JwtService],
     },
   ],
 })

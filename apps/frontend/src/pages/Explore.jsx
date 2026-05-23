@@ -1,4 +1,5 @@
 import { useState, useDeferredValue } from "react";
+import { useTranslation } from "react-i18next";
 import { entities } from "@/api/dalClient";
 import { useAuth } from "@/lib/AuthContext";
 import { useQuery } from "@tanstack/react-query";
@@ -11,6 +12,7 @@ import { Search, SlidersHorizontal, X, Star } from "lucide-react";
 import { buildPageUrl, useAppNavigate } from "@/lib/navigation";
 
 export default function Explore() {
+  const { t } = useTranslation(["pages"]);
   const urlParams = new URLSearchParams(window.location.search);
   const initialQuery = urlParams.get("q") || "";
   const initialExamType = urlParams.get("exam_type") || "";
@@ -67,6 +69,27 @@ export default function Explore() {
   const purchasedIds = new Set(purchases.map(p => p.test_package_id));
   const completedIds = new Set(results.map(r => r.test_package_id));
   const inProgressIds = new Set(testProgress.map(p => p.test_package_id));
+  // Paket bazında agrega durum — paketin TÜM testlerine göre Başla/Devam Et/İncele kararı
+  const packageAggregate = {};
+  purchases.forEach((p) => {
+    const pkgId = p.package_id ?? p.packageId ?? p.test_package_id;
+    const pkgTests = p.package?.tests ?? [];
+    if (!pkgId || pkgTests.length === 0) return;
+    const attempts = Array.isArray(p.attempts) ? p.attempts : [];
+    const statusByTest = new Map();
+    for (const a of attempts) if (a?.testId) statusByTest.set(a.testId, a.status);
+    let completedCount = 0;
+    let startedCount = 0;
+    for (const t of pkgTests) {
+      const s = statusByTest.get(t.id);
+      if (s === "SUBMITTED" || s === "TIMEOUT") completedCount++;
+      if (s) startedCount++;
+    }
+    packageAggregate[pkgId] = {
+      allCompleted: completedCount === pkgTests.length,
+      noneStarted: startedCount === 0,
+    };
+  });
   const attemptByTestId = {};
   purchases.forEach((p) => {
     if (p.test_package_id && p.attempt) attemptByTestId[p.test_package_id] = p.attempt;
@@ -108,8 +131,8 @@ export default function Explore() {
   return (
     <div className="max-w-7xl mx-auto">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-slate-900">Testleri Keşfet</h1>
-        <p className="text-slate-500 mt-2">Binlerce test arasından sana uygun olanı bul</p>
+        <h1 className="text-3xl font-bold text-slate-900">{t("pages:explore.title")}</h1>
+        <p className="text-slate-500 mt-2">{t("pages:explore.subtitle")}</p>
       </div>
 
       {/* Search & Filters */}
@@ -118,7 +141,7 @@ export default function Explore() {
           <div className="flex-1 relative">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
             <Input
-              placeholder="Test, konu veya eğitici ara..."
+              placeholder={t("pages:explore.searchPlaceholder")}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-12 h-12 border-slate-200"
@@ -130,53 +153,55 @@ export default function Explore() {
             onClick={() => setShowFilters(!showFilters)}
           >
             <SlidersHorizontal className="w-4 h-4 mr-2" />
-            Filtreler
+            {t("pages:explore.filtersButton")}
           </Button>
           <div className={`flex flex-col lg:flex-row gap-4 ${showFilters ? "block" : "hidden lg:flex"}`}>
             <Select value={selectedExamType} onValueChange={setSelectedExamType}>
-              <SelectTrigger aria-label="Sınav türü filtresi" className="w-full lg:w-44 h-12">
-                <SelectValue placeholder="Sınav Türü" />
+              <SelectTrigger aria-label={t("pages:explore.filter.examTypeAria")} className="w-full lg:w-44 h-12">
+                <SelectValue placeholder={t("pages:explore.filter.examType")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value={null}>Tümü</SelectItem>
+                <SelectItem value={null}>{t("pages:explore.filter.all")}</SelectItem>
                 {examTypes.map((exam) => (
+                  /* exam.name user-generated — çevrilmez */
                   <SelectItem key={exam.id} value={exam.id}>{exam.name}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
 
             <Select value={selectedDifficulty} onValueChange={setSelectedDifficulty}>
-              <SelectTrigger aria-label="Zorluk filtresi" className="w-full lg:w-36 h-12">
-                <SelectValue placeholder="Zorluk" />
+              <SelectTrigger aria-label={t("pages:explore.filter.difficultyAria")} className="w-full lg:w-36 h-12">
+                <SelectValue placeholder={t("pages:explore.filter.difficulty")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value={null}>Tümü</SelectItem>
-                <SelectItem value="easy">Kolay</SelectItem>
-                <SelectItem value="medium">Orta</SelectItem>
-                <SelectItem value="hard">Zor</SelectItem>
+                <SelectItem value={null}>{t("pages:explore.filter.all")}</SelectItem>
+                <SelectItem value="easy">{t("pages:testCard.difficulty.easy")}</SelectItem>
+                <SelectItem value="medium">{t("pages:testCard.difficulty.medium")}</SelectItem>
+                <SelectItem value="hard">{t("pages:testCard.difficulty.hard")}</SelectItem>
               </SelectContent>
             </Select>
 
             <Select value={priceRange} onValueChange={setPriceRange}>
-              <SelectTrigger aria-label="Fiyat filtresi" className="w-full lg:w-36 h-12">
-                <SelectValue placeholder="Fiyat" />
+              <SelectTrigger aria-label={t("pages:explore.filter.priceAria")} className="w-full lg:w-36 h-12">
+                <SelectValue placeholder={t("pages:explore.filter.price")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value={null}>Tümü</SelectItem>
-                <SelectItem value="free">Ücretsiz</SelectItem>
-                <SelectItem value="under50">₺50 Altı</SelectItem>
-                <SelectItem value="50to100">₺50 - ₺100</SelectItem>
-                <SelectItem value="over100">₺100 Üstü</SelectItem>
+                <SelectItem value={null}>{t("pages:explore.filter.all")}</SelectItem>
+                <SelectItem value="free">{t("pages:explore.filter.priceFree")}</SelectItem>
+                <SelectItem value="under50">{t("pages:explore.filter.priceUnder50")}</SelectItem>
+                <SelectItem value="50to100">{t("pages:explore.filter.price50to100")}</SelectItem>
+                <SelectItem value="over100">{t("pages:explore.filter.priceOver100")}</SelectItem>
               </SelectContent>
             </Select>
 
             <Select value={selectedEducator} onValueChange={setSelectedEducator}>
-              <SelectTrigger aria-label="Eğitici filtresi" className="w-full lg:w-44 h-12">
-                <SelectValue placeholder="Eğitici" />
+              <SelectTrigger aria-label={t("pages:explore.filter.educatorAria")} className="w-full lg:w-44 h-12">
+                <SelectValue placeholder={t("pages:explore.filter.educator")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value={null}>Tüm Eğiticiler</SelectItem>
+                <SelectItem value={null}>{t("pages:explore.filter.allEducators")}</SelectItem>
                 {educators.map((edu) => (
+                  /* edu.name user-generated — çevrilmez */
                   <SelectItem key={edu.email} value={edu.email}>{edu.name}</SelectItem>
                 ))}
               </SelectContent>
@@ -191,7 +216,7 @@ export default function Explore() {
                 max={5}
                 step={1}
                 className="w-16"
-                aria-label="Minimum puan filtresi"
+                aria-label={t("pages:explore.filter.ratingAria")}
               />
             </div>
           </div>
@@ -199,10 +224,10 @@ export default function Explore() {
 
         {hasActiveFilters && (
           <div className="flex items-center gap-2 mt-4 pt-4 border-t border-slate-100">
-            <span className="text-sm text-slate-500">Aktif filtreler:</span>
+            <span className="text-sm text-slate-500">{t("pages:explore.filter.active")}</span>
             <Button variant="ghost" size="sm" onClick={clearFilters} className="text-rose-600 hover:text-rose-700">
               <X className="w-4 h-4 mr-1" />
-              Temizle
+              {t("pages:explore.filter.clear")}
             </Button>
           </div>
         )}
@@ -227,24 +252,31 @@ export default function Explore() {
           <div className="w-20 h-20 mx-auto bg-slate-100 rounded-full flex items-center justify-center mb-4">
             <Search className="w-10 h-10 text-slate-400" />
           </div>
-          <h3 className="text-xl font-semibold text-slate-900">Sonuç bulunamadı</h3>
-          <p className="text-slate-500 mt-2">Farklı filtreler deneyin veya arama teriminizi değiştirin</p>
+          <h3 className="text-xl font-semibold text-slate-900">{t("pages:explore.empty.title")}</h3>
+          <p className="text-slate-500 mt-2">{t("pages:explore.empty.description")}</p>
         </div>
       ) : (
         <>
-          <p className="text-sm text-slate-500 mb-6">{filteredTests.length} test bulundu</p>
+          <p className="text-sm text-slate-500 mb-6">{t("pages:explore.countFound", { count: filteredTests.length })}</p>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredTests.map((test) => (
-              <TestPackageCard
-                key={test.id}
-                test={test}
-                isPurchased={purchasedIds.has(test.id)}
-                isCompleted={completedIds.has(test.id)}
-                isInProgress={inProgressIds.has(test.id)}
-                attempt={attemptByTestId[test.id] ?? null}
-                onBuy={() => navigate(buildPageUrl("TestDetail", { id: test.id }))}
-              />
-            ))}
+            {filteredTests.map((test) => {
+              const agg = packageAggregate[test.id];
+              const isCompleted = agg ? agg.allCompleted : completedIds.has(test.id);
+              const isInProgress = agg
+                ? (!agg.allCompleted && !agg.noneStarted)
+                : inProgressIds.has(test.id);
+              return (
+                <TestPackageCard
+                  key={test.id}
+                  test={test}
+                  isPurchased={purchasedIds.has(test.id)}
+                  isCompleted={isCompleted}
+                  isInProgress={isInProgress}
+                  attempt={attemptByTestId[test.id] ?? null}
+                  onBuy={() => navigate(buildPageUrl("TestDetail", { id: test.id }))}
+                />
+              );
+            })}
           </div>
         </>
       )}

@@ -51,5 +51,121 @@
     "noResults": "Sonuç bulunamadı.",
     "noData": "Henüz veri yok.",
     "noNotifications": "Yeni bildirim yok."
+  },
+  "language": {
+    "label": "Dil",
+    "tr": "Türkçe",
+    "en": "İngilizce",
+    "es": "İspanyolca",
+    "zh": "Çince",
+    "de": "Almanca"
+  },
+  "theme": {
+    "label": "Tema"
+  },
+  "roles": {
+    "candidate": "Aday",
+    "educator": "Eğitici",
+    "admin": "Yönetici",
+    "worker": "Çalışan"
+  },
+  "sidebar": {
+    "ariaNav": "Ana navigasyon",
+    "brandName": "Sınav Salonu",
+    "profileAlt": "Profil",
+    "pendingApproval": "⚠️ Hesap Onayı Bekleniyor",
+    "candidate": {
+      "home": "Ana Sayfa",
+      "explore": "Testleri Keşfet",
+      "myTests": "Satın Alınan Testler",
+      "myResults": "Performans Raporları",
+      "myTopicReport": "Konu Performansım",
+      "myObjections": "Hata Bildirimlerim",
+      "profileSettings": "Profil Ayarları"
+    },
+    "educator": {
+      "dashboard": "Dashboard",
+      "myTestPackages": "Test Paketlerim",
+      "createTest": "Yeni Test Oluştur",
+      "mySales": "Satışlarım",
+      "myDiscountCodes": "İndirim Kodları",
+      "myAds": "Reklamlarım",
+      "myLiveSessions": "Canlı Testlerim",
+      "refunds": "İade Talepleri",
+      "questionReports": "Hata Bildirimleri",
+      "settings": "Profil Ayarları",
+      "moderationStatus": "İçerik Durumum"
+    },
+    "admin": {
+      "dashboard": "Yönetim Paneli",
+      "candidateReport": "Aday Raporu",
+      "educatorReport": "Eğitici Raporu",
+      "examTypes": "Sınav Türleri",
+      "topics": "Soru Konuları",
+      "users": "Kullanıcılar",
+      "tests": "Tüm Testler",
+      "discountCodes": "İndirim Kodları",
+      "claims": "Talepler",
+      "revenue": "Gelirler",
+      "systemControls": "Sistem Kontrolleri",
+      "liveTiers": "Canlı Test Paketleri",
+      "emailManagement": "Mail Yönetimi",
+      "riskyContent": "Riskli İçerik"
+    },
+    "collapseAria": "Yan menüyü kapat",
+    "expandAria": "Yan menüyü genişlet"
+  },
+  "pagination": {
+    "previous": "Önceki",
+    "next": "Sonraki",
+    "pageOf": "Sayfa {{current}} / {{total}}"
+  },
+  "errorBoundary": {
+    "title": "Bir şeyler ters gitti",
+    "messageProd": "Bir hata oluştu. Lütfen sayfayı yenileyin.",
+    "messageUnknown": "Bilinmeyen hata",
+    "reload": "Sayfayı yenile"
+  },
+  "pageNotFound": {
+    "title": "Sayfa Bulunamadı",
+    "desc": "\"{{name}}\" sayfası bu uygulamada bulunamadı.",
+    "adminNoteTitle": "Admin Notu",
+    "adminNoteBody": "Bu sayfa rotası mevcut derlemede tanımlı değil.",
+    "goHome": "Ana Sayfa"
+  },
+  "accessRestricted": {
+    "title": "Erişim Kısıtlı",
+    "desc": "Bu uygulamayı kullanmak için kayıtlı değilsiniz. Erişim talep etmek için uygulama yöneticisiyle iletişime geçin.",
+    "listIntro": "Bunun bir hata olduğunu düşünüyorsanız:",
+    "listItem1": "Doğru hesapla giriş yaptığınızı doğrulayın",
+    "listItem2": "Erişim için uygulama yöneticisiyle iletişime geçin",
+    "listItem3": "Çıkış yapıp tekrar giriş yapmayı deneyin"
+  },
+  "apiErrors": {
+    "UNAUTHORIZED": "Oturum süreniz doldu. Lütfen tekrar giriş yapın.",
+    "FORBIDDEN": "Bu işlem için yetkiniz yok.",
+    "NOT_FOUND": "İstenen kaynak bulunamadı.",
+    "BAD_REQUEST": "Geçersiz istek.",
+    "TOO_MANY_REQUESTS": "Çok fazla deneme yapıldı. 60 saniye sonra tekrar deneyin.",
+    "TOO_MANY_REQUESTS_WITH_TIME": "Çok fazla deneme yapıldı. {{seconds}} saniye sonra tekrar deneyin.",
+    "CAPTCHA_REQUIRED": "Devam etmek için doğrulama gerekli.",
+    "CAPTCHA_INVALID": "Doğrulama başarısız. Lütfen tekrar deneyin.",
+    "INTERNAL_ERROR": "Bir hata oluştu. Lütfen daha sonra tekrar deneyin.",
+    "ERR_NETWORK": "Sunucuya ulaşılamadı. Bağlantınızı kontrol edin.",
+    "TIMEOUT": "İstek zaman aşımına uğradı.",
+    "UNEXPECTED_RESPONSE": "Beklenmeyen sunucu yanıtı"
+  },
+  "offlineBanner": {
+    "reconnectedTitle": "Bağlantı yeniden kuruldu",
+    "syncing": "Cevaplar senkronize ediliyor...",
+    "allSaved": "Tüm cevaplar kaydedildi ✓",
+    "disconnectedTitle": "Bağlantı Kesildi",
+    "disconnectedDesc": "İnternet bağlantısı bulunamıyor. Teste devam etmek için bağlantınızı kontrol edin.",
+    "pendingCount_one": "<strong>{{count}}</strong> cevap kaydedilmeyi bekliyor — bağlantı gelince otomatik gönderilecek",
+    "pendingCount_other": "<strong>{{count}}</strong> cevap kaydedilmeyi bekliyor — bağlantı gelince otomatik gönderilecek",
+    "noPending": "Seçtiğiniz tüm cevaplar güvende ✓",
+    "remainingSeconds": "{{count}} saniye",
+    "countdownDesc": "Bu sürede bağlanamazsan ilerleme kaydedilecek ve çıkılacak",
+    "exitNow": "Şimdi Çık ve Kaydet"
   }
 }

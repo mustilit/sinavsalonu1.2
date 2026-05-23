@@ -3,8 +3,23 @@ import { IPurchaseRepository, PurchaseRecord, PurchaseWithAttemptRecord } from '
 
 export class PrismaPurchaseRepository implements IPurchaseRepository {
   async hasPurchase(testId: string, candidateId: string): Promise<boolean> {
-    const c = await prisma.purchase.count({ where: { testId, candidateId } });
-    return c > 0;
+    // 1) Doğrudan testId üzerinden eşleşme (eski sistem veya tekil test satın alma)
+    const direct = await prisma.purchase.count({ where: { testId, candidateId } });
+    if (direct > 0) return true;
+
+    // 2) Paket satın alma: ilgili test bir TestPackage'a aitse, candidate'in o paket
+    //    için Purchase'ı var mı? `Purchase.packageId === ExamTest.packageId`
+    const test = await prisma.examTest.findUnique({
+      where: { id: testId },
+      select: { packageId: true },
+    });
+    if (test?.packageId) {
+      const pkgCount = await (prisma.purchase as any).count({
+        where: { packageId: test.packageId, candidateId },
+      });
+      return pkgCount > 0;
+    }
+    return false;
   }
 
   async findById(purchaseId: string): Promise<PurchaseRecord | null> {

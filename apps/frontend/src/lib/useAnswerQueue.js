@@ -132,6 +132,52 @@ export function useAnswerQueue(attemptId) {
     return () => window.removeEventListener('online', handleOnline);
   }, [flush]);
 
+  // ─── Sayfa kapanıyor → sendBeacon ile son fırsat flush ───────────────────
+  //
+  // beforeunload/visibilitychange'te async fetch tarayıcı tarafından iptal
+  // edilebilir; navigator.sendBeacon küçük POST'ları garantili gönderir.
+  // Token URL parametresi olarak iletilir çünkü beacon custom header taşımaz —
+  // backend bunu fallback olarak kabul edebilir; etmezse en azından
+  // localStorage kuyruğu kalır, sonraki açılışta flush olur.
+
+  useEffect(() => {
+    if (!attemptId) return;
+
+    const beaconFlush = () => {
+      try {
+        const raw = localStorage.getItem(queueKey(attemptId));
+        if (!raw) return;
+        const q = JSON.parse(raw);
+        if (!Array.isArray(q) || q.length === 0) return;
+        const token = localStorage.getItem('jwt_token') || '';
+        if (!navigator.sendBeacon) return;
+        for (const item of q) {
+          const url = `/api/attempts/${attemptId}/answers?t=${encodeURIComponent(token)}`;
+          const body = new Blob(
+            [JSON.stringify({ questionId: item.questionId, optionId: item.optionId ?? undefined })],
+            { type: 'application/json' },
+          );
+          navigator.sendBeacon(url, body);
+        }
+      } catch { /* sessiz */ }
+    };
+
+    const onBeforeUnload = () => { beaconFlush(); };
+    const onVisibilityChange = () => {
+      if (document.visibilityState === 'hidden') beaconFlush();
+    };
+    const onPageHide = () => { beaconFlush(); };
+
+    window.addEventListener('beforeunload', onBeforeUnload);
+    window.addEventListener('pagehide', onPageHide);
+    document.addEventListener('visibilitychange', onVisibilityChange);
+    return () => {
+      window.removeEventListener('beforeunload', onBeforeUnload);
+      window.removeEventListener('pagehide', onPageHide);
+      document.removeEventListener('visibilitychange', onVisibilityChange);
+    };
+  }, [attemptId]);
+
   // ─── Mount: sayımı senkronize et, online ise hemen flush et ─────────────
 
   useEffect(() => {

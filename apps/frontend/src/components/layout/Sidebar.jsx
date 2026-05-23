@@ -1,8 +1,16 @@
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { createPageUrl } from "@/utils";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/AuthContext";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
+import { LanguageSwitcherCompact } from "@/components/layout/LanguageSwitcherCompact";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import {
   Home,
   Search,
@@ -24,9 +32,49 @@ import {
   Zap,
   Mail,
   Shield,
+  Target,
 } from "lucide-react";
 
-export default function Sidebar({ user, currentPage }) {
+/**
+ * Sidebar — yan menü.
+ *
+ * `collapsed=true` iken **rail mode**: lg+ ekranlarda dar bir kolon olarak
+ * kalır, sadece ikonlar görünür (etiketler `lg:hidden` ile gizlenir, hover'da
+ * `title` ile görünür). Mobilde ise (`lg` altında) her zaman tam genişlik —
+ * kullanıcı hamburger ile açtığında menüyü etiketleriyle görür.
+ */
+/**
+ * RailLabel — Rail mode'da (sidebar daralmış) ikon hover'ında sağdan açılan
+ * beyaz tooltip etiketi. `enabled=false` ise children'ı doğrudan render eder.
+ *
+ * Radix Tooltip Portal kullanır → aside'ın overflow clip'lemesini bypass eder.
+ * sideOffset=12 ile ikon ile etiket arasında 12px boşluk kalır (rail genişliği
+ * lg:w-20 = 80px, icon 40px → etiket sidebar dışında belirir).
+ *
+ * Light + dark mode'a uygun beyaz arka plan + ince border + shadow.
+ */
+function RailLabel({ label, enabled, children }) {
+  if (!enabled) return children;
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>{children}</TooltipTrigger>
+      <TooltipContent
+        side="right"
+        sideOffset={12}
+        className={cn(
+          "bg-white text-slate-900 border border-slate-200 shadow-md",
+          "dark:bg-gray-900 dark:text-gray-100 dark:border-gray-700",
+          "px-3 py-1.5 text-sm font-medium",
+        )}
+      >
+        {label}
+      </TooltipContent>
+    </Tooltip>
+  );
+}
+
+export default function Sidebar({ user, currentPage, collapsed = false }) {
+  const { t } = useTranslation();
   const { logout } = useAuth();
   const role = (user?.role || '').toString().toUpperCase();
   const isEducator = role === "EDUCATOR";
@@ -35,57 +83,51 @@ export default function Sidebar({ user, currentPage }) {
   const isWorker = role === "WORKER";
 
   const candidateLinks = [
-    { name: "Ana Sayfa", page: "Home", icon: Home },
-    { name: "Testleri Keşfet", page: "Explore", icon: Search },
-    { name: "Satın Alınan Testler", page: "MyTests", icon: BookOpen },
-    { name: "Performans Raporları", page: "MyResults", icon: BarChart3 },
-    // Konu bazlı performans raporu — zamana bağlı konu analizi
-    { name: "Konu Performansım", page: "MyTopicReport", icon: BookOpen },
-    // Adayın açtığı hata bildirimleri (salt-okunur izleme)
-    { name: "Hata Bildirimlerim", page: "MyObjections", icon: AlertTriangle },
-    { name: "Profil Ayarları", page: "ProfileSettings", icon: User },
+    { name: t("sidebar.candidate.home"), page: "Home", icon: Home },
+    { name: t("sidebar.candidate.explore"), page: "Explore", icon: Search },
+    { name: t("sidebar.candidate.myTests"), page: "MyTests", icon: BookOpen },
+    { name: t("sidebar.candidate.myResults"), page: "MyResults", icon: BarChart3 },
+    // Konu Performansım — BookOpen (MyTests) ile çakışıyordu; Target ikonu
+    // "konu hâkimiyeti / hedef tutturma" semantiğine de uyuyor
+    { name: t("sidebar.candidate.myTopicReport"), page: "MyTopicReport", icon: Target },
+    { name: t("sidebar.candidate.myObjections"), page: "MyObjections", icon: AlertTriangle },
+    { name: t("sidebar.candidate.profileSettings"), page: "ProfileSettings", icon: User },
   ];
 
   const educatorLinks = isApprovedEducator ? [
-    { name: "Dashboard", page: "EducatorDashboard", icon: Home },
-    { name: "Test Paketlerim", page: "MyTestPackages", icon: BookOpen },
-    { name: "Yeni Test Oluştur", page: "CreateTest", icon: Plus },
-    { name: "Satışlarım", page: "MySales", icon: ShoppingBag },
-    { name: "İndirim Kodları", page: "MyDiscountCodes", icon: Award },
-    // Reklam yönetimi: eğiticinin öne çıkarma satın alması ve gösterim takibi
-    { name: "Reklamlarım", page: "MyAds", icon: Megaphone },
-    { name: "Canlı Testlerim", page: "MyLiveSessions", icon: Zap },
-    { name: "İade Talepleri", page: "EducatorRefunds", icon: RefreshCw },
-    { name: "Hata Bildirimleri", page: "QuestionReports", icon: Settings },
-    { name: "Profil Ayarları", page: "EducatorSettings", icon: User },
-    { name: "İçerik Durumum", page: "MyModerationStatus", icon: Shield },
+    { name: t("sidebar.educator.dashboard"), page: "EducatorDashboard", icon: Home },
+    { name: t("sidebar.educator.myTestPackages"), page: "MyTestPackages", icon: BookOpen },
+    { name: t("sidebar.educator.createTest"), page: "CreateTest", icon: Plus },
+    { name: t("sidebar.educator.mySales"), page: "MySales", icon: ShoppingBag },
+    { name: t("sidebar.educator.myDiscountCodes"), page: "MyDiscountCodes", icon: Award },
+    { name: t("sidebar.educator.myAds"), page: "MyAds", icon: Megaphone },
+    { name: t("sidebar.educator.myLiveSessions"), page: "MyLiveSessions", icon: Zap },
+    { name: t("sidebar.educator.refunds"), page: "EducatorRefunds", icon: RefreshCw },
+    { name: t("sidebar.educator.questionReports"), page: "QuestionReports", icon: Settings },
+    { name: t("sidebar.educator.moderationStatus"), page: "MyModerationStatus", icon: Shield },
+    // Profil Ayarları her zaman en altta — sık erişilen iş eylemlerinden sonra
+    { name: t("sidebar.educator.settings"), page: "EducatorSettings", icon: User },
   ] : [
-    { name: "Profil Ayarları", page: "EducatorSettings", icon: User },
+    { name: t("sidebar.educator.settings"), page: "EducatorSettings", icon: User },
   ];
 
   const adminLinks = [
-    { name: "Yönetim Paneli", page: "AdminDashboard", icon: Settings },
-    { name: "Aday Raporu", page: "AdminCandidateReport", icon: Users },
-    { name: "Eğitici Raporu", page: "AdminEducatorReport", icon: GraduationCap },
-    { name: "Sınav Türleri", page: "ManageExamTypes", icon: Award },
-    { name: "Soru Konuları", page: "ManageTopics", icon: BookOpen },
-    { name: "Kullanıcılar", page: "ManageUsers", icon: Users },
-    { name: "Tüm Testler", page: "ManageTests", icon: BookOpen },
-    // İndirim Kodları — admin tüm eğitici/admin kodlarını yönetir
-    { name: "İndirim Kodları", page: "MyDiscountCodes", icon: Award },
-    // Talepler — İade Talepleri + Hata Bildirimleri tek sayfada sekmeli
-    { name: "Talepler", page: "AdminClaims", icon: ShoppingBag },
-    // Gelirler — Komisyon Raporu + Reklam Raporu tek sayfada sekmeli
-    { name: "Gelirler", page: "AdminRevenue", icon: Banknote },
-    { name: "Sistem Kontrolleri", page: "AdminSystemControls", icon: ShieldAlert },
-    { name: "Canlı Test Paketleri", page: "ManageLiveTiers", icon: Zap },
-    // ── Mail Yönetimi (6 alt modül tek sayfada sekmeli) ───────────────
-    { name: "Mail Yönetimi", page: "EmailManagement", icon: Mail },
-    // ── İçerik Moderasyonu (4 alt modül tek sayfada sekmeli) ──────────
-    { name: "Riskli İçerik", page: "RiskyContent", icon: ShieldAlert },
+    { name: t("sidebar.admin.dashboard"), page: "AdminDashboard", icon: Settings },
+    { name: t("sidebar.admin.candidateReport"), page: "AdminCandidateReport", icon: Users },
+    { name: t("sidebar.admin.educatorReport"), page: "AdminEducatorReport", icon: GraduationCap },
+    { name: t("sidebar.admin.examTypes"), page: "ManageExamTypes", icon: Award },
+    { name: t("sidebar.admin.topics"), page: "ManageTopics", icon: BookOpen },
+    { name: t("sidebar.admin.users"), page: "ManageUsers", icon: Users },
+    { name: t("sidebar.admin.tests"), page: "ManageTests", icon: BookOpen },
+    { name: t("sidebar.admin.discountCodes"), page: "MyDiscountCodes", icon: Award },
+    { name: t("sidebar.admin.claims"), page: "AdminClaims", icon: ShoppingBag },
+    { name: t("sidebar.admin.revenue"), page: "AdminRevenue", icon: Banknote },
+    { name: t("sidebar.admin.systemControls"), page: "AdminSystemControls", icon: ShieldAlert },
+    { name: t("sidebar.admin.liveTiers"), page: "ManageLiveTiers", icon: Zap },
+    { name: t("sidebar.admin.emailManagement"), page: "EmailManagement", icon: Mail },
+    { name: t("sidebar.admin.riskyContent"), page: "RiskyContent", icon: ShieldAlert },
   ];
 
-  // Worker: yalnızca kendisine atanan admin sayfaları
   const workerPages = Array.isArray(user?.workerPages) ? user.workerPages : [];
   const workerLinks = adminLinks.filter(link => link.page && workerPages.includes(link.page));
 
@@ -100,7 +142,7 @@ export default function Sidebar({ user, currentPage }) {
       ...(isApprovedEducator ? [] : [
         { divider: true },
         {
-          name: "⚠️ Hesap Onayı Bekleniyor",
+          name: t("sidebar.pendingApproval"),
           page: "EducatorSettings",
           icon: Settings,
           isPending: true
@@ -109,64 +151,126 @@ export default function Sidebar({ user, currentPage }) {
     ];
   }
 
+  const roleLabel = isAdmin
+    ? t("roles.admin")
+    : isWorker
+    ? t("roles.worker")
+    : isEducator
+    ? t("roles.educator")
+    : t("roles.candidate");
+
   const handleLogout = () => logout(true);
 
+  // Rail-mode yardımcısı: `collapsed` true ise lg+ ekranlarda `lg:hidden`
+  // (yani mobilde her zaman görünür). String'i template literal'a koyduğunda
+  // Tailwind regexini bozmaması için ayrı utility.
+  const labelHidden = collapsed ? "lg:hidden" : "";
+
   return (
-    <aside className="w-64 bg-white dark:bg-gray-900 border-r border-slate-200 dark:border-gray-800 min-h-screen flex flex-col">
-      <div className="p-6 border-b border-slate-100 dark:border-gray-800">
-        <Link to={createPageUrl("Home")} className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-gradient-to-br from-indigo-600 to-indigo-500 rounded-xl flex items-center justify-center">
-            <GraduationCap className="w-6 h-6 text-white" />
-          </div>
-          <span className="text-xl font-bold text-slate-900 dark:text-gray-50">Sınav Salonu</span>
-        </Link>
+    <TooltipProvider delayDuration={300} skipDelayDuration={500}>
+    <aside
+      className={cn(
+        "w-64 bg-white dark:bg-gray-900 border-r border-slate-200 dark:border-gray-800",
+        "h-screen lg:h-screen flex flex-col overflow-y-auto",
+        "transition-[width] duration-200",
+        collapsed && "lg:w-20",
+      )}
+    >
+      {/* Header: marka — collapse toggle artık Layout'taki dış kenar handle'ında */}
+      <div
+        className={cn(
+          "border-b border-slate-100 dark:border-gray-800",
+          collapsed
+            ? "p-3 lg:px-2 lg:py-4 flex items-center gap-2 lg:justify-center"
+            : "p-6 flex items-center gap-2",
+        )}
+      >
+        <RailLabel label={t("sidebar.brandName")} enabled={collapsed}>
+          <Link
+            to={createPageUrl("Home")}
+            className={cn(
+              "flex items-center min-w-0",
+              collapsed ? "gap-3 lg:gap-0 lg:justify-center" : "gap-3",
+            )}
+            aria-label={t("sidebar.brandName")}
+          >
+            <div className="w-10 h-10 bg-gradient-to-br from-indigo-600 to-indigo-500 rounded-xl flex items-center justify-center shrink-0">
+              <GraduationCap className="w-6 h-6 text-white" />
+            </div>
+            <span className={cn("text-xl font-bold text-slate-900 dark:text-gray-50 truncate", labelHidden)}>
+              {t("sidebar.brandName")}
+            </span>
+          </Link>
+        </RailLabel>
       </div>
 
-      <nav className="flex-1 p-4" aria-label="Ana navigasyon">
+      {/* Nav */}
+      <nav className={cn("flex-1", collapsed ? "p-3 lg:p-2" : "p-4")} aria-label={t("sidebar.ariaNav")}>
         <ul className="space-y-1">
           {links.map((link, idx) =>
             link.divider ? (
               <li key={idx} className="my-4 border-t border-slate-200 dark:border-gray-700" />
             ) : (
               <li key={link.page}>
-                <Link
-                  to={createPageUrl(link.page)}
-                  className={cn(
-                    "flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all",
-                    currentPage === link.page
-                      ? "bg-indigo-50 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300"
-                      : "text-slate-600 hover:bg-slate-50 hover:text-slate-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-100"
-                  )}
-                >
-                  <link.icon className="w-5 h-5 shrink-0" aria-hidden="true" />
-                  {link.name}
-                </Link>
+                <RailLabel label={link.name} enabled={collapsed}>
+                  <Link
+                    to={createPageUrl(link.page)}
+                    aria-label={collapsed ? link.name : undefined}
+                    className={cn(
+                      "flex items-center rounded-xl text-sm font-medium transition-all",
+                      "gap-3 px-4 py-3",
+                      collapsed && "lg:gap-0 lg:justify-center lg:px-3",
+                      currentPage === link.page
+                        ? "bg-indigo-50 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300"
+                        : "text-slate-600 hover:bg-slate-50 hover:text-slate-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-100"
+                    )}
+                  >
+                    <link.icon className="w-5 h-5 shrink-0" aria-hidden="true" />
+                    <span className={labelHidden}>{link.name}</span>
+                  </Link>
+                </RailLabel>
               </li>
             )
           )}
         </ul>
       </nav>
 
-      <div className="p-4 border-t border-slate-100 dark:border-gray-800 space-y-1">
-        {/* Tema değiştirici */}
-        <div className="flex items-center justify-between px-4 py-2">
-          <span className="text-xs font-medium text-slate-500 dark:text-gray-500">Tema</span>
+      {/* Footer: tema + dil + kullanıcı + çıkış */}
+      <div
+        className={cn(
+          "border-t border-slate-100 dark:border-gray-800 space-y-1",
+          collapsed ? "p-3 lg:p-2" : "p-4",
+        )}
+      >
+        {/* Tema + Dil */}
+        <div
+          className={cn(
+            "flex items-center gap-2 px-4 py-2",
+            collapsed && "lg:flex-col lg:items-center lg:px-0 lg:gap-2",
+          )}
+        >
           <ThemeToggle />
+          <LanguageSwitcherCompact />
         </div>
 
         {/* Kullanıcı bilgisi */}
-        <div className="flex items-center gap-3 px-4 py-3">
+        <div
+          className={cn(
+            "flex items-center gap-3 px-4 py-3",
+            collapsed && "lg:gap-0 lg:justify-center lg:px-0",
+          )}
+          title={collapsed ? (user?.full_name || user?.username) : undefined}
+        >
           {(user?.profile_image_url || user?.metadata?.profile_image_url) ? (
             <img
               src={user.profile_image_url || user.metadata.profile_image_url}
-              alt={user?.full_name || user?.username || "Profil"}
+              alt={user?.full_name || user?.username || t("sidebar.profileAlt")}
               className="w-10 h-10 rounded-full object-cover shrink-0 border border-slate-200 dark:border-gray-700"
             />
           ) : isAdmin ? (
-            // Admin için varsayılan avatar — Sınav Salonu logosu (custom foto yüklenmemişse)
             <div
               className="w-10 h-10 bg-gradient-to-br from-indigo-600 to-indigo-500 rounded-full flex items-center justify-center shrink-0"
-              title="Sınav Salonu"
+              title={t("sidebar.brandName")}
             >
               <GraduationCap className="w-6 h-6 text-white" aria-hidden="true" />
             </div>
@@ -177,22 +281,30 @@ export default function Sidebar({ user, currentPage }) {
               </span>
             </div>
           )}
-          <div className="flex-1 min-w-0">
+          <div className={cn("flex-1 min-w-0", labelHidden)}>
+            {/* user.full_name / user.username user-generated — çevrilmez */}
             <p className="text-sm font-medium text-slate-900 dark:text-gray-100 truncate">{user?.full_name || user?.username}</p>
-            <p className="text-xs text-slate-500 dark:text-gray-500 truncate">
-              {isAdmin ? "Yönetici" : isWorker ? "Çalışan" : isEducator ? "Eğitici" : "Aday"}
-            </p>
+            <p className="text-xs text-slate-500 dark:text-gray-500 truncate">{roleLabel}</p>
           </div>
         </div>
 
-        <button
-          onClick={handleLogout}
-          className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-600 dark:text-gray-400 hover:bg-rose-50 hover:text-rose-600 dark:hover:bg-rose-900/20 dark:hover:text-rose-400 transition-all"
-        >
-          <LogOut className="w-5 h-5" aria-hidden="true" />
-          Çıkış Yap
-        </button>
+        <RailLabel label={t("navigation.logout")} enabled={collapsed}>
+          <button
+            onClick={handleLogout}
+            aria-label={collapsed ? t("navigation.logout") : undefined}
+            className={cn(
+              "w-full flex items-center rounded-xl text-sm font-medium transition-all",
+              "gap-3 px-4 py-3",
+              "text-slate-600 dark:text-gray-400 hover:bg-rose-50 hover:text-rose-600 dark:hover:bg-rose-900/20 dark:hover:text-rose-400",
+              collapsed && "lg:gap-0 lg:justify-center lg:px-3",
+            )}
+          >
+            <LogOut className="w-5 h-5 shrink-0" aria-hidden="true" />
+            <span className={labelHidden}>{t("navigation.logout")}</span>
+          </button>
+        </RailLabel>
       </div>
     </aside>
+    </TooltipProvider>
   );
 }

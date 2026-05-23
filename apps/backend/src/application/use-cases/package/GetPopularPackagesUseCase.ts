@@ -84,7 +84,7 @@ export class GetPopularPackagesUseCase {
       LEFT JOIN users u ON u.id = t."educatorId"
       LEFT JOIN exam_types et ON et.id = t."examTypeId"
       LEFT JOIN purchases p ON p."testId" = t.id AND p."deletedAt" IS NULL AND p.status = 'ACTIVE'
-      LEFT JOIN reviews r ON r."testId" = t.id AND r."testRating" IS NOT NULL
+      LEFT JOIN reviews r ON r."packageId" = t."packageId" AND r."testRating" IS NOT NULL
       WHERE ${whereClause}
       GROUP BY t.id, u.username, et.name
       ORDER BY "saleCount" DESC, t."publishedAt" DESC

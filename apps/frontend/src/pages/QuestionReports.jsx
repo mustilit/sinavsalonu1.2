@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import api from "@/lib/api/apiClient";
 import { useAuth } from "@/lib/AuthContext";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -30,10 +31,11 @@ import { toast } from "sonner";
 import { format, differenceInDays } from "date-fns";
 import { tr } from "date-fns/locale";
 
+// status etiketleri artık i18n key — render anında t() ile çözülür.
 const statusConfig = {
-  OPEN:      { label: "Beklemede",           color: "bg-amber-100 text-amber-700" },
-  ANSWERED:  { label: "Yanıtlandı",          color: "bg-emerald-100 text-emerald-700" },
-  ESCALATED: { label: "Yöneticiye İletildi", color: "bg-violet-100 text-violet-700" },
+  OPEN:      { labelKey: "pages:questionReports.statusConfig.OPEN",      color: "bg-amber-100 text-amber-700" },
+  ANSWERED:  { labelKey: "pages:questionReports.statusConfig.ANSWERED",  color: "bg-emerald-100 text-emerald-700" },
+  ESCALATED: { labelKey: "pages:questionReports.statusConfig.ESCALATED", color: "bg-violet-100 text-violet-700" },
 };
 
 /**
@@ -51,17 +53,18 @@ function FilterBar({
   totalFiltered, totalAll,
   onClear,
 }) {
+  const { t } = useTranslation(["pages"]);
   const uniqueTests = useMemo(() => {
     const m = new Map();
-    for (const o of source) if (o.testId) m.set(o.testId, { id: o.testId, title: o.testTitle || "(Adsız)" });
+    for (const o of source) if (o.testId) m.set(o.testId, { id: o.testId, title: o.testTitle || t("pages:questionReports.filterBar.unnamed") });
     return [...m.values()].sort((a, b) => a.title.localeCompare(b.title, "tr"));
-  }, [source]);
+  }, [source, t]);
 
   const uniqueReporters = useMemo(() => {
     const m = new Map();
-    for (const o of source) if (o.reporterId) m.set(o.reporterId, { id: o.reporterId, name: o.reporterName || "(Bilinmiyor)" });
+    for (const o of source) if (o.reporterId) m.set(o.reporterId, { id: o.reporterId, name: o.reporterName || t("pages:questionReports.filterBar.unknown") });
     return [...m.values()].sort((a, b) => a.name.localeCompare(b.name, "tr"));
-  }, [source]);
+  }, [source, t]);
 
   const hasActive =
     testFilter !== "ALL" ||
@@ -77,64 +80,64 @@ function FilterBar({
         <div className={`grid grid-cols-1 sm:grid-cols-2 ${cols} gap-3`}>
           {showStatusFilter && (
             <div>
-              <label className="block text-xs font-medium text-slate-600 mb-1">Durum</label>
+              <label className="block text-xs font-medium text-slate-600 mb-1">{t("pages:questionReports.filterBar.status")}</label>
               <Select value={statusFilter} onValueChange={setStatusFilter}>
                 <SelectTrigger className="h-9"><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="ALL">Tümü</SelectItem>
-                  <SelectItem value="ANSWERED">Yanıtlandı</SelectItem>
-                  <SelectItem value="ESCALATED">Yöneticiye İletildi</SelectItem>
+                  <SelectItem value="ALL">{t("pages:questionReports.filterBar.allStatuses")}</SelectItem>
+                  <SelectItem value="ANSWERED">{t("pages:questionReports.statusConfig.ANSWERED")}</SelectItem>
+                  <SelectItem value="ESCALATED">{t("pages:questionReports.statusConfig.ESCALATED")}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
           )}
           <div>
-            <label className="block text-xs font-medium text-slate-600 mb-1">Test</label>
+            <label className="block text-xs font-medium text-slate-600 mb-1">{t("pages:questionReports.filterBar.test")}</label>
             <SearchableSelect
               value={testFilter}
               onChange={setTestFilter}
-              options={uniqueTests.map((t) => ({ value: t.id, label: t.title }))}
-              allLabel="Tüm Testler"
-              placeholder="Test seçin..."
-              searchPlaceholder="Test ara..."
-              emptyText="Sonuç yok"
-              ariaLabel="Test filtresi"
+              options={uniqueTests.map((tt) => ({ value: tt.id, label: tt.title }))}
+              allLabel={t("pages:questionReports.filterBar.allTests")}
+              placeholder={t("pages:questionReports.filterBar.selectTest")}
+              searchPlaceholder={t("pages:questionReports.filterBar.searchTest")}
+              emptyText={t("pages:questionReports.filterBar.noResult")}
+              ariaLabel={t("pages:questionReports.filterBar.testFilterAria")}
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-slate-600 mb-1">Bildiren Aday</label>
+            <label className="block text-xs font-medium text-slate-600 mb-1">{t("pages:questionReports.filterBar.reporter")}</label>
             <SearchableSelect
               value={reporterFilter}
               onChange={setReporterFilter}
               options={uniqueReporters.map((r) => ({ value: r.id, label: r.name }))}
-              allLabel="Tüm Adaylar"
-              placeholder="Aday seçin..."
-              searchPlaceholder="Aday ara..."
-              emptyText="Sonuç yok"
-              ariaLabel="Bildiren aday filtresi"
+              allLabel={t("pages:questionReports.filterBar.allReporters")}
+              placeholder={t("pages:questionReports.filterBar.selectReporter")}
+              searchPlaceholder={t("pages:questionReports.filterBar.searchReporter")}
+              emptyText={t("pages:questionReports.filterBar.noResult")}
+              ariaLabel={t("pages:questionReports.filterBar.reporterFilterAria")}
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-slate-600 mb-1">Hata türü / sebep</label>
+            <label className="block text-xs font-medium text-slate-600 mb-1">{t("pages:questionReports.filterBar.reason")}</label>
             <div className="relative">
               <Search className="absolute left-2.5 top-2.5 w-4 h-4 text-slate-400" aria-hidden="true" />
               <Input
                 type="text"
-                placeholder="örn. yanlış cevap, kötü içerik..."
+                placeholder={t("pages:questionReports.filterBar.reasonPlaceholder")}
                 value={reasonSearch}
                 onChange={(e) => setReasonSearch(e.target.value)}
                 className="h-9 pl-8"
-                aria-label="Hata türü veya sebep ara"
+                aria-label={t("pages:questionReports.filterBar.reasonAria")}
               />
             </div>
           </div>
         </div>
         <div className="flex items-center justify-between gap-3 mt-3">
-          <span className="text-sm text-slate-500">{totalFiltered} / {totalAll} bildirim</span>
+          <span className="text-sm text-slate-500">{t("pages:questionReports.filterBar.count", { filtered: totalFiltered, total: totalAll })}</span>
           {hasActive && (
             <Button variant="ghost" size="sm" onClick={onClear} className="h-8 text-xs">
               <X className="w-3.5 h-3.5 mr-1" aria-hidden="true" />
-              Filtreleri Temizle
+              {t("pages:questionReports.filterBar.clear")}
             </Button>
           )}
         </div>
@@ -158,6 +161,7 @@ function applyFilters(list, { testFilter, reporterFilter, reasonSearch, statusFi
 }
 
 export default function QuestionReports() {
+  const { t } = useTranslation(["pages"]);
   const { user } = useAuth();
   const [selectedReport, setSelectedReport] = useState(null);
   const [response, setResponse] = useState("");
@@ -191,19 +195,19 @@ export default function QuestionReports() {
     mutationFn: ({ id, answerText }) =>
       api.post(`/educators/me/objections/${id}/answer`, { answerText }),
     onSuccess: () => {
-      toast.success("Yanıt gönderildi");
+      toast.success(t("pages:questionReports.toasts.sent"));
       queryClient.invalidateQueries({ queryKey: ["educatorObjections"] });
       setSelectedReport(null);
       setResponse("");
     },
     onError: (err) => {
-      toast.error(err?.response?.data?.message ?? "Yanıt gönderilemedi");
+      toast.error(err?.response?.data?.message ?? t("pages:questionReports.toasts.sendFailed"));
     },
   });
 
   const handleAnswer = () => {
     if (!response.trim() || response.trim().length < 5) {
-      toast.error("En az 5 karakter yazın");
+      toast.error(t("pages:questionReports.toasts.min5Chars"));
       return;
     }
     answerMutation.mutate({ id: selectedReport.id, answerText: response.trim() });
@@ -248,14 +252,14 @@ export default function QuestionReports() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-slate-900">Hata Bildirimleri</h1>
-        <p className="text-slate-500 mt-2">Adaylardan gelen soru itirazlarını yönet</p>
+        <h1 className="text-3xl font-bold text-slate-900">{t("pages:titles.questionReports")}</h1>
+        <p className="text-slate-500 mt-2">{t("pages:titles.questionReportsDesc")}</p>
       </div>
 
       <Tabs defaultValue="pending" className="space-y-6" onValueChange={onTabChange}>
         <TabsList>
-          <TabsTrigger value="pending">Bekleyen ({pending.length})</TabsTrigger>
-          <TabsTrigger value="resolved">Sonuçlanan ({resolved.length})</TabsTrigger>
+          <TabsTrigger value="pending">{t("pages:questionReports.tabs.pending")} ({pending.length})</TabsTrigger>
+          <TabsTrigger value="resolved">{t("pages:questionReports.tabs.resolved")} ({resolved.length})</TabsTrigger>
         </TabsList>
 
         {/* ── Bekleyen ── */}
@@ -278,10 +282,10 @@ export default function QuestionReports() {
                 {pending.length === 0 ? (
                   <>
                     <CheckCircle className="w-12 h-12 text-emerald-300 mx-auto mb-3" />
-                    <p className="text-slate-500">Bekleyen bildirim yok</p>
+                    <p className="text-slate-500">{t("pages:questionReports.empty.noPending")}</p>
                   </>
                 ) : (
-                  <p className="text-slate-400">Seçili filtrelere uyan bildirim yok</p>
+                  <p className="text-slate-400">{t("pages:questionReports.empty.noResults")}</p>
                 )}
               </CardContent>
             </Card>
@@ -304,9 +308,10 @@ export default function QuestionReports() {
                             <div className="min-w-0">
                               <div className="flex items-center gap-2 mb-1 flex-wrap">
                                 <Badge className={statusConfig[report.status]?.color ?? "bg-slate-100 text-slate-700"}>
-                                  {statusConfig[report.status]?.label ?? report.status}
+                                  {statusConfig[report.status]?.labelKey ? t(statusConfig[report.status].labelKey) : report.status}
                                 </Badge>
                                 <span className="text-sm font-medium text-slate-800 truncate">
+                                  {/* report.testTitle user-generated */}
                                   {report.testTitle}
                                 </span>
                               </div>
@@ -320,16 +325,16 @@ export default function QuestionReports() {
                                 <div className="mt-2 p-3 bg-indigo-50 rounded border border-indigo-100">
                                   <p className="text-xs font-semibold text-indigo-700 mb-1 flex items-center gap-1">
                                     <ShieldCheck className="w-3.5 h-3.5" aria-hidden="true" />
-                                    Admin Notu{report.adminAnswererName ? ` (${report.adminAnswererName})` : ""}:
+                                    {t("pages:questionReports.card.adminNote")}{report.adminAnswererName ? ` (${report.adminAnswererName})` : ""}:
                                   </p>
                                   <p className="text-sm text-slate-700">{report.adminAnswerText}</p>
                                 </div>
                               )}
                               <div className="flex items-center gap-4 mt-2 text-xs text-slate-400 flex-wrap">
-                                <span>Bildiren: {report.reporterName}</span>
+                                <span>{t("pages:questionReports.card.reporter", { name: report.reporterName })}</span>
                                 <span className="flex items-center gap-1">
                                   <Clock className="w-3.5 h-3.5" />
-                                  {daysLeft > 0 ? `${daysLeft} gün kaldı` : "Süre doldu"}
+                                  {daysLeft > 0 ? t("pages:questionReports.card.daysLeft", { count: daysLeft }) : t("pages:questionReports.card.deadlineExpired")}
                                 </span>
                                 <span>{format(new Date(report.createdAt), "d MMM yyyy", { locale: tr })}</span>
                               </div>
@@ -341,7 +346,7 @@ export default function QuestionReports() {
                             className="shrink-0"
                           >
                             <MessageSquare className="w-4 h-4 mr-1.5" />
-                            Yanıtla
+                            {t("pages:questionReports.card.respond")}
                           </Button>
                         </div>
                       </CardContent>
@@ -376,7 +381,7 @@ export default function QuestionReports() {
             <Card>
               <CardContent className="text-center py-12">
                 <p className="text-slate-500">
-                  {resolved.length === 0 ? "Sonuçlanan bildirim yok" : "Seçili filtrelere uyan bildirim yok"}
+                  {resolved.length === 0 ? t("pages:questionReports.empty.noResolved") : t("pages:questionReports.empty.noResults")}
                 </p>
               </CardContent>
             </Card>
@@ -393,7 +398,7 @@ export default function QuestionReports() {
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-1 flex-wrap">
                             <Badge className={statusConfig[report.status]?.color ?? "bg-slate-100 text-slate-700"}>
-                              {statusConfig[report.status]?.label ?? report.status}
+                              {statusConfig[report.status]?.labelKey ? t(statusConfig[report.status].labelKey) : report.status}
                             </Badge>
                             <span className="text-sm font-medium text-slate-800">{report.testTitle}</span>
                           </div>
@@ -405,7 +410,7 @@ export default function QuestionReports() {
                           <p className="text-sm text-slate-700 mt-1">{report.reason}</p>
                           {report.answerText && (
                             <div className="mt-3 p-3 bg-emerald-50 rounded-lg border border-emerald-100">
-                              <p className="text-xs font-semibold text-emerald-700 mb-1">Yanıtınız:</p>
+                              <p className="text-xs font-semibold text-emerald-700 mb-1">{t("pages:questionReports.card.yourAnswer")}</p>
                               <p className="text-sm text-slate-700">{report.answerText}</p>
                             </div>
                           )}
@@ -413,16 +418,16 @@ export default function QuestionReports() {
                             <div className="mt-2 p-3 bg-indigo-50 rounded border border-indigo-100">
                               <p className="text-xs font-semibold text-indigo-700 mb-1 flex items-center gap-1">
                                 <ShieldCheck className="w-3.5 h-3.5" aria-hidden="true" />
-                                Admin Notu{report.adminAnswererName ? ` (${report.adminAnswererName})` : ""}:
+                                {t("pages:questionReports.card.adminNote")}{report.adminAnswererName ? ` (${report.adminAnswererName})` : ""}:
                               </p>
                               <p className="text-sm text-slate-700">{report.adminAnswerText}</p>
                             </div>
                           )}
                           <div className="flex items-center gap-4 mt-2 text-xs text-slate-400 flex-wrap">
-                            <span>Bildiren: {report.reporterName}</span>
+                            <span>{t("pages:questionReports.card.reporter", { name: report.reporterName })}</span>
                             {report.answeredAt && (
                               <span>
-                                Yanıtlandı: {format(new Date(report.answeredAt), "d MMM yyyy", { locale: tr })}
+                                {t("pages:questionReports.card.respondedAt", { date: format(new Date(report.answeredAt), "d MMM yyyy", { locale: tr }) })}
                               </span>
                             )}
                           </div>
@@ -448,40 +453,40 @@ export default function QuestionReports() {
       <Dialog open={!!selectedReport} onOpenChange={() => setSelectedReport(null)}>
         <DialogContent className="max-w-lg">
           <DialogHeader>
-            <DialogTitle>Bildirime Yanıt Ver</DialogTitle>
+            <DialogTitle>{t("pages:questionReports.dialog.title")}</DialogTitle>
           </DialogHeader>
           {selectedReport && (
             <div className="space-y-4 mt-2">
               <div className="p-4 bg-slate-50 rounded-lg space-y-2">
                 <div>
-                  <p className="text-xs text-slate-400 font-medium">Test</p>
+                  <p className="text-xs text-slate-400 font-medium">{t("pages:questionReports.dialog.testLabel")}</p>
                   <p className="text-sm font-semibold text-slate-800">{selectedReport.testTitle}</p>
                 </div>
                 {selectedReport.questionContent && (
                   <div>
-                    <p className="text-xs text-slate-400 font-medium">Soru (ilk 150 karakter)</p>
+                    <p className="text-xs text-slate-400 font-medium">{t("pages:questionReports.dialog.questionLabel")}</p>
                     <p className="text-sm text-slate-600 italic">"{selectedReport.questionContent}"</p>
                   </div>
                 )}
                 <div>
-                  <p className="text-xs text-slate-400 font-medium">Aday Bildirimi</p>
+                  <p className="text-xs text-slate-400 font-medium">{t("pages:questionReports.dialog.reportLabel")}</p>
                   <p className="text-sm text-slate-700">{selectedReport.reason}</p>
                 </div>
               </div>
               <Textarea
                 value={response}
                 onChange={(e) => setResponse(e.target.value)}
-                placeholder="Yanıtınızı yazın (en az 5 karakter)..."
+                placeholder={t("pages:questionReports.dialog.responsePlaceholder")}
                 rows={4}
               />
               <div className="flex gap-3 justify-end">
-                <Button variant="outline" onClick={() => setSelectedReport(null)}>İptal</Button>
+                <Button variant="outline" onClick={() => setSelectedReport(null)}>{t("pages:questionReports.dialog.cancel")}</Button>
                 <Button
                   onClick={handleAnswer}
                   disabled={answerMutation.isPending}
                   className="bg-indigo-600 hover:bg-indigo-700"
                 >
-                  {answerMutation.isPending ? "Gönderiliyor..." : "Yanıtla"}
+                  {answerMutation.isPending ? t("pages:questionReports.dialog.submitting") : t("pages:questionReports.dialog.submit")}
                 </Button>
               </div>
             </div>

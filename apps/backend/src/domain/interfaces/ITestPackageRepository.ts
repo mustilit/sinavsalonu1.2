@@ -34,6 +34,7 @@ export interface TestPackageRecord {
   educatorId: string | null;
   title: string;
   description: string | null;
+  coverImageUrl: string | null;
   priceCents: number;
   difficulty: string;
   isActive: boolean;
@@ -50,12 +51,14 @@ export interface CreateTestPackageInput {
   description?: string | null;
   priceCents: number;
   difficulty?: string;
+  coverImageUrl?: string | null;
 }
 
 export interface UpdateTestPackageInput {
   title?: string;
   description?: string | null;
   priceCents?: number;
+  coverImageUrl?: string | null;
 }
 
 export interface ITestPackageRepository {

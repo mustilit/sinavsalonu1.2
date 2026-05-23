@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { createPageUrl } from '@/utils';
@@ -6,10 +6,13 @@ import api from '@/lib/api/apiClient';
 import { entities } from '@/api/dalClient';
 import { useAuth } from '@/lib/AuthContext';
 import TestPackageCard from '@/components/ui/TestPackageCard';
+import PaginationBar from '@/components/ui/PaginationBar';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, Star, BookOpen, Users, GraduationCap, MessageSquare, User } from 'lucide-react';
 import { buildPageUrl, useAppNavigate } from '@/lib/navigation';
+
+const PAGE_SIZE = 10;
 
 function isEmailLike(v) {
   return typeof v === 'string' && v.includes('@');
@@ -116,6 +119,15 @@ export default function EducatorProfile() {
       .filter((t) => t.examTypeId && !seen.has(t.examTypeId) && seen.add(t.examTypeId))
       .map((t) => ({ id: t.examTypeId, name: examTypeMap[t.examTypeId] || t.examTypeId }));
   }, [tests, examTypeMap]);
+
+  // Paging — 10 test / sayfa
+  const [testsPage, setTestsPage] = useState(1);
+  const testsTotalPages = Math.max(1, Math.ceil(tests.length / PAGE_SIZE));
+  const testsCurrentPage = Math.min(testsPage, testsTotalPages);
+  const pagedTests = useMemo(
+    () => tests.slice((testsCurrentPage - 1) * PAGE_SIZE, testsCurrentPage * PAGE_SIZE),
+    [tests, testsCurrentPage],
+  );
 
   if (!idOrEmail) {
     return (
@@ -239,31 +251,38 @@ export default function EducatorProfile() {
           <p className="text-slate-500">Bu eğiticinin yayında testi yok.</p>
         </div>
       ) : (
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-          {tests.map((t) => (
-            <TestPackageCard
-              key={t.id}
-              test={{
-                id: t.id,
-                title: t.title,
-                educator_email: educator.id,
-                educator_name: educator.displayName,
-                exam_type_id: t.examTypeId,
-                question_count: t.questionCount,
-                price: t.priceCents != null ? t.priceCents / 100 : 0,
-                average_rating: t.ratingAvg,
-                rating_count: t.ratingCount,
-                is_published: true,
-                is_active: true,
-              }}
-              isPurchased={purchasedIds.has(t.id)}
-              isCompleted={completedIds.has(t.id)}
-              isInProgress={inProgressIds.has(t.id)}
-              attempt={attemptByTestId[t.id] ?? null}
-              onBuy={() => navigate(buildPageUrl('TestDetail', { id: t.id }))}
-            />
-          ))}
-        </div>
+        <>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            {pagedTests.map((t) => (
+              <TestPackageCard
+                key={t.id}
+                test={{
+                  id: t.id,
+                  title: t.title,
+                  educator_email: educator.id,
+                  educator_name: educator.displayName,
+                  exam_type_id: t.examTypeId,
+                  question_count: t.questionCount,
+                  price: t.priceCents != null ? t.priceCents / 100 : 0,
+                  average_rating: t.ratingAvg,
+                  rating_count: t.ratingCount,
+                  is_published: true,
+                  is_active: true,
+                }}
+                isPurchased={purchasedIds.has(t.id)}
+                isCompleted={completedIds.has(t.id)}
+                isInProgress={inProgressIds.has(t.id)}
+                attempt={attemptByTestId[t.id] ?? null}
+                onBuy={() => navigate(buildPageUrl('TestDetail', { id: t.id }))}
+              />
+            ))}
+          </div>
+          <PaginationBar
+            page={testsCurrentPage}
+            totalPages={testsTotalPages}
+            onPageChange={setTestsPage}
+          />
+        </>
       )}
 
       {/* Yorumlar */}

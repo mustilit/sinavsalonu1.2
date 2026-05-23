@@ -22,8 +22,43 @@ export const auth = {
     const { data } = await api.post('/auth/register', { email, username, password });
     return data;
   },
-  async registerEducator(email, username, password) {
-    const { data } = await api.post('/auth/register/educator', { email, username, password });
+  // Email doğrulama — kullanıcı /VerifyEmail?token=... linkine tıklayınca
+  async verifyEmail(token) {
+    const { data } = await api.post('/auth/verify-email', { token });
+    return data; // { ok: true, userId, email, role }
+  },
+  // Email doğrulama bağlantısını yeniden gönder
+  async resendEmailVerification(email) {
+    const { data } = await api.post('/auth/resend-verification', { email });
+    return data; // { message }
+  },
+  async registerEducator(email, username, password, opts = {}) {
+    // opts: { firstName, lastName } — eğitici kaydında zorunlu
+    const body = {
+      email,
+      username,
+      password,
+      firstName: opts.firstName ?? '',
+      lastName: opts.lastName ?? '',
+    };
+    const { data } = await api.post('/auth/register/educator', body);
+    return data;
+  },
+  // Eğiticinin onboarding tamamlanma durumu (firstName/lastName + cv + uzmanlık alanı)
+  async educatorOnboardingStatus() {
+    try {
+      const { data } = await api.get('/educators/me/onboarding-status');
+      return data; // { complete, hasName, hasCv, hasSpecialization, emailVerified }
+    } catch {
+      return { complete: false, hasName: false, hasCv: false, hasSpecialization: false, emailVerified: false };
+    }
+  },
+  async loginWithGoogle(idToken, role) {
+    const body = role ? { idToken, role } : { idToken };
+    const { data } = await api.post('/auth/google', body);
+    if (!data?.token || !data?.user) {
+      throw new Error('Beklenmeyen sunucu yanıtı');
+    }
     return data;
   },
   async me() {
@@ -42,6 +77,23 @@ export const auth = {
   async updateMe(body) {
     const { data } = await api.patch('/me/preferences', body);
     return data?.preferences ?? data ?? {};
+  },
+  /**
+   * Hassas profil alanları (telefon, website, LinkedIn) için 6 haneli OTP iste.
+   * Email kullanıcıya gönderilir. 10 dakika geçerli.
+   * @returns {Promise<{ sentTo: string, expiresAt: string }>}
+   */
+  async requestSensitiveProfileOtp() {
+    const { data } = await api.post('/me/preferences/sensitive/request');
+    return data;
+  },
+  /**
+   * OTP'yi doğrula ve hassas alanları uygula.
+   * @param {{ code: string, phone?: string, website?: string, linkedin?: string }} body
+   */
+  async verifySensitiveProfileChange(body) {
+    const { data } = await api.post('/me/preferences/sensitive/verify', body);
+    return data;
   },
   logout() {
     localStorage.removeItem('token');
@@ -68,6 +120,7 @@ const examTypeAdapter = (e) => ({
   id: e.id,
   name: e.name,
   slug: e.slug,
+  description: e.description ?? null,
   is_active: e.active !== false,
 });
 
@@ -474,6 +527,9 @@ export const entities = {
   },
 
   // TestResult = attempt when SUBMITTED (from /me/purchases)
+  // Bir paket satın alımı (Purchase) → paketteki HER test için ayrı bir TestAttempt olabilir.
+  // Backend p.attempts[] olarak paketteki tüm test'lerin attempt'larını döner.
+  // Aşağıda hem p.attempts dizisini (paket alımı) hem de p.attempt (eski tekil alım) destekliyoruz.
   TestResult: {
     filter: async (opts = {}) => {
       try {
@@ -483,15 +539,27 @@ export const entities = {
         const results = [];
         for (const p of list) {
           const pkgId = p.packageId ?? p.testId ?? p.test_id;
-          if (opts.test_package_id && p.testId !== opts.test_package_id && p.packageId !== opts.test_package_id) continue;
-          const attempt = p?.attempt ?? p?.attempts?.[0];
-          if (attempt && (attempt.status === 'SUBMITTED' || attempt.status === 'TIMEOUT')) {
+          // Hedef paket/test ile eşleşmeyen satırları atla
+          // (Purchase doğrudan p.testId/p.packageId üzerinden ya da paket içindeki testlerden biri üzerinden eşleşebilir)
+          if (opts.test_package_id) {
+            const matchesPurchase =
+              p.testId === opts.test_package_id ||
+              p.packageId === opts.test_package_id ||
+              (p.package?.tests ?? []).some((t) => t.id === opts.test_package_id);
+            if (!matchesPurchase) continue;
+          }
+          // Paketteki TÜM testlerin attempt'larını topla; eski tekil alımlarda fallback olarak p.attempt
+          const allAttempts = Array.isArray(p.attempts) && p.attempts.length > 0
+            ? p.attempts
+            : (p.attempt ? [p.attempt] : []);
+          const test = p?.test ?? p?.testPackage ?? {};
+          for (const attempt of allAttempts) {
+            if (!attempt || (attempt.status !== 'SUBMITTED' && attempt.status !== 'TIMEOUT')) continue;
             // Gerçek çözüm süresi: önce checkpoint'ten kaydedilen elapsedSeconds,
             // yoksa submittedAt-startedAt farkı (completedAt yerine submit kullan — daha güvenilir)
             const correctCount = attempt.correctCount ?? attempt.correct_count ?? 0;
             const wrongCount  = attempt.wrongCount  ?? attempt.wrong_count  ?? 0;
             const emptyCount  = attempt.emptyCount  ?? attempt.empty_count  ?? 0;
-            const test = p?.test ?? p?.testPackage ?? {};
             const totalQ = test?._count?.questions ?? (correctCount + wrongCount + emptyCount);
             const score = totalQ > 0 ? Math.round((correctCount / totalQ) * 100) : 0;
             const metaElapsed = attempt.metadata?.elapsedSeconds ?? null;
@@ -504,7 +572,8 @@ export const entities = {
               id: attempt.id,
               user_email: opts.user_email,
               test_package_id: pkgId,
-              test_id: p.testId ?? p.test_id,
+              // attempt.testId paketteki çözülen tekil testin id'si — paket id'si değil
+              test_id: attempt.testId ?? p.testId ?? p.test_id,
               test_package_title: test?.title ?? p?.testTitle ?? '',
               exam_type_id: test?.examTypeId ?? p?.examTypeId ?? null,
               exam_type_name: test?.examTypeName ?? p?.examTypeName ?? null,
@@ -573,36 +642,77 @@ export const entities = {
 
   // Review
   Review: {
-    filter: async (opts = {}, sort, limit) => {
-      const testId = opts.test_package_id ?? opts.test_id;
-      if (!testId) return [];
-      const { data } = await api.get(`/tests/${testId}/reviews`, { params: { limit: limit || 20 } });
-      const items = data?.items ?? [];
-      return items.map((r) => ({
-        id: r.id,
-        test_package_id: testId,
-        reviewer_email: r.candidateId,
-        rating: r.testRating,
-        review_type: 'test',
-        created_date: r.createdAt,
-      }));
-    },
-    myReview: async (examTestId) => {
-      if (!examTestId) return null;
+    // Paket review listesi — aday başına TEK satır (yeni model).
+    // Offset-based paging. İki kullanım:
+    //   packageReviews(id, 20)              → legacy: limit=20, offset=0
+    //   packageReviews(id, { limit, offset }) → yeni: prev/next paging
+    // Dönüş: { avg, count, items[] }
+    //   avg   = paketi puanlayan farklı adayların verdiği puanların ortalaması
+    //   count = paketi puanlayan farklı aday sayısı (offset'ten bağımsız toplam)
+    //   items = [{ candidateId, candidateName, rating, comment, createdAt }]
+    packageReviews: async (packageId, optsOrLimit = {}) => {
+      if (!packageId) return { avg: null, count: 0, items: [] };
+      const opts =
+        typeof optsOrLimit === 'number'
+          ? { limit: optsOrLimit, offset: 0 }
+          : { limit: optsOrLimit.limit ?? 10, offset: optsOrLimit.offset ?? 0 };
       try {
-        const { data } = await api.get(`/tests/${examTestId}/my-review`);
+        const { data } = await api.get(`/marketplace/packages/${packageId}/reviews`, { params: opts });
+        return data ?? { avg: null, count: 0, items: [] };
+      } catch {
+        return { avg: null, count: 0, items: [] };
+      }
+    },
+    // Adayın paket için kendi review'u (yeni model: tek kayıt).
+    // Dönüş: { rating, comment, createdAt, updatedAt } | null
+    myPackageReview: async (packageId) => {
+      if (!packageId) return null;
+      try {
+        const { data } = await api.get(`/marketplace/packages/${packageId}/my-review`);
         return data ?? null;
       } catch {
         return null;
       }
     },
-    create: async (body) => {
-      const testId = body.exam_test_id ?? body.test_package_id ?? body.test_id;
-      const payload = { comment: body.comment };
-      if (body.educator_rating != null) payload.educatorRating = body.educator_rating;
-      if (body.rating != null || body.testRating != null) payload.testRating = body.rating ?? body.testRating;
-      const { data } = await api.post(`/tests/${testId}/reviews`, payload);
+    // Adayın paket review'unu yarat veya güncelle (upsert).
+    // body: { rating: 1-5, comment?: string, educatorRating?: 1-5 }
+    upsertPackageReview: async (packageId, body) => {
+      if (!packageId) throw new Error('packageId required');
+      const payload = {};
+      if (body.rating != null || body.testRating != null) {
+        payload.testRating = body.rating ?? body.testRating;
+      }
+      if (body.educatorRating != null || body.educator_rating != null) {
+        payload.educatorRating = body.educatorRating ?? body.educator_rating;
+      }
+      if (body.comment !== undefined) payload.comment = body.comment;
+      const { data } = await api.post(`/marketplace/packages/${packageId}/reviews`, payload);
       return data;
+    },
+  },
+
+  // PackageView: görüntülenme izleme
+  //
+  // - track(packageId): TestDetail sayfası mount edildiğinde fire-and-forget.
+  //   Backend ipHash bazlı rate-limit ile spam filtreler. UX'i hiç bloklamaz.
+  // - educatorViewStats(ids?): eğitici kendi paketlerinin görüntülenme metriklerini alır.
+  PackageView: {
+    track: async (packageId, sessionId) => {
+      if (!packageId) return;
+      try {
+        await api.post(`/marketplace/packages/${packageId}/view`, sessionId ? { sessionId } : {});
+      } catch {
+        // log/track hatası UX'i bozmasın — sessizce yut
+      }
+    },
+    educatorViewStats: async (ids) => {
+      try {
+        const params = Array.isArray(ids) && ids.length > 0 ? { ids: ids.join(',') } : undefined;
+        const { data } = await api.get('/educators/me/packages/views', { params });
+        return Array.isArray(data) ? data : [];
+      } catch {
+        return [];
+      }
     },
   },
 

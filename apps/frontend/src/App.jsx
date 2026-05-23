@@ -91,9 +91,15 @@ const AuthenticatedApp = () => {
   );
 };
 
+// defaultTheme="light": İlk ziyarette her zaman açık tema. enableSystem={false}
+// olduğu için Chrome/OS koyu mod tercihine otomatik geçilmez. Kullanıcı
+// sidebar'daki ThemeToggle ile manuel olarak koyu temaya geçebilir; tercih
+// localStorage'da kalır. (Birçok bileşenin `dark:` varyantı eksik olduğu için
+// sistem mode aktifken görüntü tutarsız oluyordu — açık temayı default yapmak
+// görüntüyü preview ile birebir aynı tutuyor.)
 function App() {
   return (
-    <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+    <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false} disableTransitionOnChange>
       <ErrorBoundary>
         <AuthProvider>
           <QueryClientProvider client={queryClientInstance}>

@@ -10,6 +10,7 @@ import { GetAttemptStateUseCase } from '../../application/use-cases/attempt/GetA
 import { GetAttemptResultUseCase } from '../../application/use-cases/attempt/GetAttemptResultUseCase';
 import { SubmitAttemptUseCase } from '../../application/use-cases/attempt/SubmitAttemptUseCase';
 import { TimeoutAttemptUseCase } from '../../application/use-cases/attempt/TimeoutAttemptUseCase';
+import { LogAttemptAnomalyUseCase } from '../../application/use-cases/attempt/LogAttemptAnomalyUseCase';
 import { PrismaAttemptRepository } from '../../infrastructure/repositories/PrismaAttemptRepository';
 import { PrismaExamRepository } from '../../infrastructure/repositories/PrismaExamRepository';
 import { PrismaAttemptAnswerRepository } from '../../infrastructure/repositories/PrismaAttemptAnswerRepository';
@@ -34,6 +35,7 @@ export class AttemptsController {
   private readonly getResultUC: GetAttemptResultUseCase;
   private readonly submitAttemptUC: SubmitAttemptUseCase;
   private readonly timeoutUC: TimeoutAttemptUseCase;
+  private readonly anomalyUC: LogAttemptAnomalyUseCase;
   private readonly prisma: PrismaClient;
 
   constructor(@Inject(PrismaService) prismaService: PrismaService) {
@@ -45,6 +47,7 @@ export class AttemptsController {
     this.getUC = new GetTestAttemptUseCase(prisma);
     this.submitAnswerUC = new SubmitAnswerUseCase(prisma);
     this.submitAttemptUC = new SubmitAttemptUseCase(prisma);
+    this.anomalyUC = new LogAttemptAnomalyUseCase(prisma);
 
     const attemptRepo = new PrismaAttemptRepository();
     const examRepo = new PrismaExamRepository();
@@ -167,6 +170,22 @@ export class AttemptsController {
   async get(@Param('id') attemptId: string, @Req() req: any) {
     const userId = (req as any).user?.id;
     return this.getUC.execute(attemptId, userId);
+  }
+
+  /**
+   * Anti-leak / anti-cheat event logger.
+   * useTestProctoring hook'u tab switch, devtools heuristic, copy attempt,
+   * fullscreen exit gibi olayları buraya gönderir. Throttle backend tarafında.
+   */
+  @Post('attempts/:id/anomaly')
+  @Roles('CANDIDATE')
+  async anomaly(
+    @Param('id') attemptId: string,
+    @Body() body: { type: string; payload?: unknown },
+    @Req() req: any,
+  ) {
+    const userId = (req as any).user?.id;
+    return this.anomalyUC.execute(attemptId, userId, body?.type, body?.payload);
   }
 }
 

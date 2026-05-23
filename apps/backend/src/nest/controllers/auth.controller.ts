@@ -3,8 +3,12 @@ import { Throttle } from '@nestjs/throttler';
 import { RegisterUseCase } from '../../application/use-cases/auth/RegisterUseCase';
 import { RegisterEducatorUseCase } from '../../application/use-cases/auth/RegisterEducatorUseCase';
 import { LoginUseCase } from '../../application/use-cases/auth/LoginUseCase';
+import { GoogleAuthUseCase } from '../../application/use-cases/auth/GoogleAuthUseCase';
 import { ForgotPasswordUseCase } from '../../application/use-cases/auth/ForgotPasswordUseCase';
 import { ResetPasswordUseCase } from '../../application/use-cases/auth/ResetPasswordUseCase';
+import { VerifyDeviceUseCase } from '../../application/use-cases/auth/VerifyDeviceUseCase';
+import { SendEmailVerificationUseCase } from '../../application/use-cases/auth/SendEmailVerificationUseCase';
+import { VerifyEmailUseCase } from '../../application/use-cases/auth/VerifyEmailUseCase';
 import { Public } from '../decorators/public.decorator';
 import { RegisterEducatorDto } from './dto/register-educator.dto';
 import { IUserRepository } from '../../domain/interfaces/IUserRepository';
@@ -31,7 +35,37 @@ export class AuthController {
     @Inject(USER_REPO) private readonly userRepo: IUserRepository,
     @Inject(ForgotPasswordUseCase) private readonly forgotPasswordUC: ForgotPasswordUseCase,
     @Inject(ResetPasswordUseCase) private readonly resetPasswordUC: ResetPasswordUseCase,
+    @Inject(GoogleAuthUseCase) private readonly googleAuthUC: GoogleAuthUseCase,
+    @Inject(VerifyDeviceUseCase) private readonly verifyDeviceUC: VerifyDeviceUseCase,
   ) {}
+
+  /** Yeni cihazdan giriş mailindeki "Bu bendim" linki — cihazı trusted yapar */
+  @Public()
+  @Post('device/verify')
+  @HttpCode(200)
+  async verifyDevice(@Body() body: { token?: string }) {
+    return this.verifyDeviceUC.execute({ token: body?.token ?? '' });
+  }
+
+  /** Google OAuth ID token ile giriş/kayıt — public endpoint */
+  @Public()
+  @Post('google')
+  @HttpCode(200)
+  async google(@Body() body: { idToken?: string; role?: 'CANDIDATE' | 'EDUCATOR' }) {
+    if (!body?.idToken) {
+      throw new HttpException({ error: 'idToken zorunludur', code: 'INVALID_INPUT' }, HttpStatus.BAD_REQUEST);
+    }
+    try {
+      const result = await this.googleAuthUC.execute({ idToken: body.idToken, role: body.role });
+      return result;
+    } catch (err: any) {
+      const status = err?.statusCode ?? err?.status ?? 401;
+      throw new HttpException(
+        { error: err?.message ?? 'Google ile giriş başarısız', code: err?.code ?? 'GOOGLE_AUTH_FAILED' },
+        status,
+      );
+    }
+  }
 
   /** Oturum açmış kullanıcının profil bilgilerini döndürür — JWT token'dan ID alınır */
   @Get('me')
@@ -60,12 +94,28 @@ export class AuthController {
     return { user: userResponse };
   }
 
-  /** Yeni aday kaydı — e-posta ve kullanıcı adı benzersizliği use-case tarafından doğrulanır */
+  /** Yeni aday kaydı — kayıt sonrası email doğrulama linki gönderir (fire-and-forget) */
   @Post('register')
   @Public()
   async register(@Body() body: any) {
     try {
-      const user = await this.registerUseCase.execute(body);
+      // DI bazen dev ortamında undefined kalabiliyor (tsx watch + hot reload). Fail-safe:
+      let uc = this.registerUseCase;
+      if (!uc) {
+        const repo = new PrismaUserRepository();
+        const pwd = new PasswordService();
+        uc = new RegisterUseCase(repo, pwd);
+      }
+      const user = await uc.execute(body);
+
+      // Email doğrulama linkini fire-and-forget gönder — kayıt akışını bekletmez/bozmaz
+      try {
+        const sendVerify = new SendEmailVerificationUseCase();
+        await sendVerify.execute({ userId: user.id });
+      } catch {
+        // Email gönderim hatası kayıt akışını bozmaz — kullanıcı /auth/resend-verification ile yeniden isteyebilir
+      }
+
       return user;
     } catch (err: any) {
       if (err.message === 'DUPLICATE_EMAIL') {
@@ -74,24 +124,114 @@ export class AuthController {
       if (err.message === 'DUPLICATE_USERNAME') {
         throw new HttpException({ error: 'Bu kullanıcı adı zaten alınmış.' }, HttpStatus.CONFLICT);
       }
+      // Beklenmedik hatayı stack trace ile logla — dev sırasında "Kayıt sırasında hata oluştu" body'si yeterli değil
+      console.error('[register] unexpected error:', err?.message, err?.stack);
       throw new HttpException({ error: 'Kayıt sırasında hata oluştu' }, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
-  /** Eğitici kaydı — sözleşme varlığı kontrol edilir; 30 istek/5 dakika throttle uygulanır */
+  /** Email doğrulama — token ile kullanıcının emailVerified bayrağını true yapar */
+  @Post('verify-email')
+  @Public()
+  @HttpCode(200)
+  @Throttle({ default: { limit: 20, ttl: 60000 } })
+  async verifyEmail(@Body() body: { token?: string }) {
+    try {
+      const uc = new VerifyEmailUseCase();
+      const result = await uc.execute(String(body?.token ?? ''));
+      return { ok: true, ...result };
+    } catch (err: any) {
+      const status = err?.status ?? HttpStatus.BAD_REQUEST;
+      const code = err?.response?.code ?? err?.code ?? 'INVALID_TOKEN';
+      const message = err?.response?.message ?? err?.message ?? 'Doğrulama başarısız';
+      throw new HttpException({ error: message, code }, status);
+    }
+  }
+
+  /**
+   * Email doğrulama bağlantısını yeniden gönderir.
+   * E-posta adresi kayıtlı değilse veya zaten doğrulanmışsa yine 200 döner —
+   * kullanıcı numaralandırma saldırılarına karşı.
+   */
+  @Post('resend-verification')
+  @Public()
+  @HttpCode(200)
+  @Throttle({ default: { limit: 3, ttl: 300000 } })
+  async resendVerification(@Body() body: { email?: string }) {
+    const email = String(body?.email ?? '').trim().toLowerCase();
+    if (!email) {
+      throw new HttpException({ error: 'E-posta gerekli' }, HttpStatus.BAD_REQUEST);
+    }
+
+    const user: any = await (prisma as any).user.findUnique({
+      where: { email },
+      select: { id: true, emailVerified: true },
+    });
+
+    // Kullanıcı yoksa veya zaten doğrulanmışsa sessizce 200 dön — bilgi sızdırma
+    if (!user || user.emailVerified) {
+      return { message: 'Eğer kayıtlıysa doğrulama bağlantısı gönderildi.' };
+    }
+
+    try {
+      const sendVerify = new SendEmailVerificationUseCase();
+      await sendVerify.execute({ userId: user.id });
+    } catch {}
+
+    return { message: 'Doğrulama bağlantısı yeniden gönderildi.' };
+  }
+
+  /**
+   * Eğitici kaydı — sözleşme varlığı kontrol edilir; 30 istek/5 dakika throttle uygulanır.
+   * firstName + lastName zorunlu. Kayıt sonrası email doğrulama linki gönderir.
+   */
   @Post('register/educator')
   @Public()
   @Throttle({ default: { limit: 30, ttl: 300000 } })
-  async registerEducator(@Body() body: RegisterEducatorDto) {
+  async registerEducator(@Body() body: RegisterEducatorDto & { firstName?: string; lastName?: string }) {
     try {
-      return await this.registerEducatorUseCase.execute({
+      // DI bazen dev ortamında undefined kalabiliyor (tsx watch + hot reload). Fail-safe:
+      let uc = this.registerEducatorUseCase;
+      if (!uc) {
+        const { PrismaContractRepository } = require('../../infrastructure/repositories/PrismaContractRepository');
+        const { PrismaContractAcceptanceRepository } = require('../../infrastructure/repositories/PrismaContractAcceptanceRepository');
+        const { PrismaAuditLogRepository } = require('../../infrastructure/repositories/PrismaAuditLogRepository');
+        uc = new RegisterEducatorUseCase(
+          new PrismaUserRepository(),
+          new PrismaContractRepository(prisma),
+          new PrismaContractAcceptanceRepository(prisma),
+          new PrismaAuditLogRepository(),
+          new PasswordService(),
+          new JwtService(),
+        );
+      }
+      const result = await uc.execute({
         email: body.email,
         username: body.username,
         password: body.password,
+        firstName: body.firstName ?? '',
+        lastName: body.lastName ?? '',
       });
+
+      // Email doğrulama linkini fire-and-forget gönder
+      try {
+        const sendVerify = new SendEmailVerificationUseCase();
+        await sendVerify.execute({ userId: result.user.id });
+      } catch {
+        // Email gönderim hatası kayıt akışını bozmaz
+      }
+
+      return result;
     } catch (err: any) {
       if (err.code === 'CONTRACT_NOT_AVAILABLE') {
         throw new HttpException({ error: 'Eğitici sözleşmesi henüz tanımlanmamış.' }, HttpStatus.BAD_REQUEST);
+      }
+      // Yeni alan doğrulama hataları
+      if (err.code === 'FIRSTNAME_REQUIRED' || err.code === 'FIRSTNAME_INVALID') {
+        throw new HttpException({ error: err.message || 'Ad gereklidir', code: err.code }, HttpStatus.BAD_REQUEST);
+      }
+      if (err.code === 'LASTNAME_REQUIRED' || err.code === 'LASTNAME_INVALID') {
+        throw new HttpException({ error: err.message || 'Soyad gereklidir', code: err.code }, HttpStatus.BAD_REQUEST);
       }
       if (err.message === 'DUPLICATE_EMAIL') {
         throw new HttpException({ error: 'Bu e-posta adresi zaten kayıtlı.' }, HttpStatus.CONFLICT);
@@ -99,6 +239,7 @@ export class AuthController {
       if (err.message === 'DUPLICATE_USERNAME') {
         throw new HttpException({ error: 'Bu kullanıcı adı zaten alınmış.' }, HttpStatus.CONFLICT);
       }
+      console.error('[register/educator] unexpected error:', err?.message, err?.stack);
       throw new HttpException({ error: 'Kayıt sırasında hata oluştu' }, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
@@ -119,7 +260,18 @@ export class AuthController {
     }
     try {
       // DI bazen dev ortamında undefined kalabiliyor (tsx watch + hot reload). Fail-safe:
-      const uc = this.loginUseCase ?? new LoginUseCase(new PrismaUserRepository(), new PasswordService(), new JwtService());
+      // Fallback'te de notifyDevice + audit dahil olur; aksi halde yeni cihaz uyarı maili tetiklenmez.
+      let uc = this.loginUseCase;
+      if (!uc) {
+        const repo = new PrismaUserRepository();
+        const pwd = new PasswordService();
+        const jwt = new JwtService();
+        // Lazy require — circular import'tan kaçınmak için
+        const { SendEmailUseCase } = require('../../application/use-cases/email/SendEmailUseCase');
+        const { NotifyNewDeviceLoginUseCase } = require('../../application/use-cases/auth/NotifyNewDeviceLoginUseCase');
+        const notifyDevice = new NotifyNewDeviceLoginUseCase(new SendEmailUseCase());
+        uc = new LoginUseCase(repo, pwd, jwt, undefined, notifyDevice);
+      }
       // Audit context: ip + userAgent + (varsa) requestId — login akışında PII filtresi
       // use case içinde uygulanır.
       const ctx = auditContextFromRequest(req);

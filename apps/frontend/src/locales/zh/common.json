@@ -1,0 +1,171 @@
+{
+  "actions": {
+    "save": "保存",
+    "cancel": "取消",
+    "delete": "删除",
+    "edit": "编辑",
+    "submit": "提交",
+    "next": "下一步",
+    "back": "返回",
+    "close": "关闭",
+    "search": "搜索",
+    "filter": "筛选",
+    "sort": "排序",
+    "loading": "加载中…",
+    "retry": "重试"
+  },
+  "navigation": {
+    "home": "首页",
+    "explore": "探索",
+    "myTests": "我的测试",
+    "myResults": "我的结果",
+    "myPackages": "我的套餐",
+    "notifications": "通知",
+    "settings": "设置",
+    "profile": "个人资料",
+    "logout": "退出登录",
+    "login": "登录",
+    "register": "注册"
+  },
+  "common": {
+    "yes": "是",
+    "no": "否",
+    "or": "或",
+    "and": "和",
+    "all": "全部",
+    "none": "无",
+    "today": "今天",
+    "yesterday": "昨天",
+    "tomorrow": "明天"
+  },
+  "errors": {
+    "generic": "发生错误,请重试。",
+    "network": "网络问题,请检查您的网络连接。",
+    "unauthorized": "您没有执行此操作的权限。",
+    "notFound": "找不到您请求的页面。",
+    "validation": "请修正表单中的错误。",
+    "tooMany": "请求过多,请稍后再试。",
+    "serverError": "服务器错误,我们正在处理。"
+  },
+  "empty": {
+    "noResults": "没有找到结果。",
+    "noData": "暂无数据。",
+    "noNotifications": "没有新通知。"
+  },
+  "language": {
+    "label": "语言",
+    "tr": "土耳其语",
+    "en": "英语",
+    "es": "西班牙语",
+    "zh": "中文",
+    "de": "德语"
+  },
+  "theme": {
+    "label": "主题"
+  },
+  "roles": {
+    "candidate": "考生",
+    "educator": "讲师",
+    "admin": "管理员",
+    "worker": "员工"
+  },
+  "sidebar": {
+    "ariaNav": "主导航",
+    "brandName": "Sınav Salonu",
+    "profileAlt": "个人资料",
+    "pendingApproval": "⚠️ 等待账户审核",
+    "candidate": {
+      "home": "首页",
+      "explore": "探索测试",
+      "myTests": "已购买的测试",
+      "myResults": "成绩报告",
+      "myTopicReport": "主题表现",
+      "myObjections": "我的报告",
+      "profileSettings": "个人设置"
+    },
+    "educator": {
+      "dashboard": "仪表盘",
+      "myTestPackages": "我的测试套餐",
+      "createTest": "创建新测试",
+      "mySales": "我的销售",
+      "myDiscountCodes": "折扣码",
+      "myAds": "我的广告",
+      "myLiveSessions": "我的实时测试",
+      "refunds": "退款请求",
+      "questionReports": "错误报告",
+      "settings": "个人设置",
+      "moderationStatus": "内容状态"
+    },
+    "admin": {
+      "dashboard": "管理面板",
+      "candidateReport": "考生报告",
+      "educatorReport": "讲师报告",
+      "examTypes": "考试类型",
+      "topics": "题目主题",
+      "users": "用户",
+      "tests": "所有测试",
+      "discountCodes": "折扣码",
+      "claims": "申诉",
+      "revenue": "收入",
+      "systemControls": "系统控制",
+      "liveTiers": "实时测试套餐",
+      "emailManagement": "邮件管理",
+      "riskyContent": "风险内容"
+    },
+    "collapseAria": "收起侧边栏",
+    "expandAria": "展开侧边栏"
+  },
+  "pagination": {
+    "previous": "上一页",
+    "next": "下一页",
+    "pageOf": "第 {{current}} / {{total}} 页"
+  },
+  "errorBoundary": {
+    "title": "出现了一些问题",
+    "messageProd": "发生错误。请刷新页面。",
+    "messageUnknown": "未知错误",
+    "reload": "刷新页面"
+  },
+  "pageNotFound": {
+    "title": "未找到页面",
+    "desc": "在此应用程序中找不到页面 \"{{name}}\"。",
+    "adminNoteTitle": "管理员备注",
+    "adminNoteBody": "当前构建中不存在此页面路由。",
+    "goHome": "返回首页"
+  },
+  "accessRestricted": {
+    "title": "访问受限",
+    "desc": "你未注册使用此应用程序。请联系应用程序管理员申请访问权限。",
+    "listIntro": "如果你认为这是错误,你可以:",
+    "listItem1": "确认你使用正确的账户登录",
+    "listItem2": "联系应用程序管理员获取访问权限",
+    "listItem3": "尝试退出并重新登录"
+  },
+  "apiErrors": {
+    "UNAUTHORIZED": "你的会话已过期。请重新登录。",
+    "FORBIDDEN": "你无权执行此操作。",
+    "NOT_FOUND": "找不到请求的资源。",
+    "BAD_REQUEST": "请求无效。",
+    "TOO_MANY_REQUESTS": "尝试次数过多。请在 60 秒后重试。",
+    "TOO_MANY_REQUESTS_WITH_TIME": "尝试次数过多。请在 {{seconds}} 秒后重试。",
+    "CAPTCHA_REQUIRED": "需要验证才能继续。",
+    "CAPTCHA_INVALID": "验证失败。请重试。",
+    "INTERNAL_ERROR": "发生错误。请稍后重试。",
+    "ERR_NETWORK": "无法连接到服务器。请检查你的网络。",
+    "TIMEOUT": "请求超时。",
+    "UNEXPECTED_RESPONSE": "意外的服务器响应"
+  },
+  "offlineBanner": {
+    "reconnectedTitle": "连接已恢复",
+    "syncing": "正在同步答案...",
+    "allSaved": "所有答案已保存 ✓",
+    "disconnectedTitle": "连接已断开",
+    "disconnectedDesc": "无互联网连接。请检查你的连接以继续测试。",
+    "pendingCount_one": "<strong>{{count}}</strong> 个答案待保存 — 重新连接后将自动发送",
+    "pendingCount_other": "<strong>{{count}}</strong> 个答案待保存 — 重新连接后将自动发送",
+    "noPending": "你选择的所有答案都是安全的 ✓",
+    "remainingSeconds": "{{count}} 秒",
+    "countdownDesc": "如果在此时间内未能重新连接,你的进度将被保存并退出",
+    "exitNow": "立即退出并保存"
+  }
+}

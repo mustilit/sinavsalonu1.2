@@ -17,19 +17,37 @@ const WHITELIST = [
 ];
 
 /**
+ * Hassas iletişim alanları — yalnızca OTP doğrulamasından geçtikten sonra
+ * uygulanır. Doğrudan PATCH /me/preferences çağrısı bunları görmezden gelir.
+ * VerifySensitiveProfileChangeUseCase `allowSensitive: true` flag'i ile
+ * UpdateUserPreferencesUseCase'i çağırır.
+ */
+const SENSITIVE_FIELDS = new Set(['phone', 'website', 'linkedin']);
+
+/**
  * Kullanıcı tercihlerini günceller. Sadece WHITELIST'teki alanlar işlenir.
  * Mevcut preferences ile merge edilir (patch semantiği — tam üzerine yazmaz).
+ *
+ * @param options.allowSensitive default false. Sadece OTP-doğrulanmış akıştan
+ *   çağrılırken true verilir; aksi halde phone/website/linkedin sessiz strip edilir.
  */
 export class UpdateUserPreferencesUseCase {
   constructor(private readonly repo: IUserPreferenceRepository) {}
 
-  async execute(userId: string | undefined, input: Record<string, unknown>): Promise<Record<string, unknown>> {
+  async execute(
+    userId: string | undefined,
+    input: Record<string, unknown>,
+    options: { allowSensitive?: boolean } = {},
+  ): Promise<Record<string, unknown>> {
     if (!userId) throw new AppError('UNAUTHORIZED', 'Authentication required', 401);
+    const allowSensitive = options.allowSensitive === true;
 
-    // Whitelist dışındaki anahtarları filtrele
+    // Whitelist dışındaki anahtarları + (OTP'siz çağrıda) hassas alanları filtrele
     const filtered: Record<string, unknown> = {};
     for (const k of Object.keys(input)) {
-      if (WHITELIST.includes(k)) filtered[k] = input[k];
+      if (!WHITELIST.includes(k)) continue;
+      if (!allowSensitive && SENSITIVE_FIELDS.has(k)) continue;
+      filtered[k] = input[k];
     }
     // Güncellenecek geçerli alan yoksa mevcut preferences'ı döndür
     if (Object.keys(filtered).length === 0) {

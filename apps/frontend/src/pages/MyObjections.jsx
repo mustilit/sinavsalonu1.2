@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import api from "@/lib/api/apiClient";
 import { useAuth } from "@/lib/AuthContext";
 import { useQuery } from "@tanstack/react-query";
@@ -29,12 +30,13 @@ import { format, differenceInDays } from "date-fns";
 import { tr } from "date-fns/locale";
 
 const statusConfig = {
-  OPEN:      { label: "Beklemede",           color: "bg-amber-100 text-amber-700",   icon: Clock },
-  ANSWERED:  { label: "Yanıtlandı",          color: "bg-emerald-100 text-emerald-700", icon: CheckCircle },
-  ESCALATED: { label: "Yöneticiye İletildi", color: "bg-violet-100 text-violet-700",  icon: AlertTriangle },
+  OPEN:      { labelKey: "pages:myObjections.status.OPEN",      color: "bg-amber-100 text-amber-700",     icon: Clock },
+  ANSWERED:  { labelKey: "pages:myObjections.status.ANSWERED",  color: "bg-emerald-100 text-emerald-700", icon: CheckCircle },
+  ESCALATED: { labelKey: "pages:myObjections.status.ESCALATED", color: "bg-violet-100 text-violet-700",   icon: AlertTriangle },
 };
 
 export default function MyObjections() {
+  const { t } = useTranslation(["pages"]);
   const { user } = useAuth();
   const [statusFilter, setStatusFilter] = useState("ALL");
   const [testFilter, setTestFilter] = useState("ALL");
@@ -54,9 +56,10 @@ export default function MyObjections() {
 
   const uniqueTests = useMemo(() => {
     const m = new Map();
-    for (const o of all) if (o.testId) m.set(o.testId, { id: o.testId, title: o.testTitle || "(Adsız)" });
+    const fallback = t("pages:myObjections.filterBar.unnamed");
+    for (const o of all) if (o.testId) m.set(o.testId, { id: o.testId, title: o.testTitle || fallback });
     return [...m.values()].sort((a, b) => a.title.localeCompare(b.title, "tr"));
-  }, [all]);
+  }, [all, t]);
 
   const filtered = useMemo(() => {
     const q = reasonSearch.trim().toLowerCase();
@@ -94,21 +97,21 @@ export default function MyObjections() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-slate-900">Hata Bildirimlerim</h1>
+        <h1 className="text-3xl font-bold text-slate-900">{t("pages:titles.myObjections")}</h1>
         <p className="text-slate-500 mt-2">
-          Yaptığınız hata bildirimlerini ve yanıtları izleyebilirsiniz (yalnızca görüntüleme)
+          {t("pages:titles.myObjectionsDesc")}
         </p>
       </div>
 
       {/* Özet kartlar */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
         {[
-          { label: "Toplam",     value: all.length,         bg: "bg-slate-50",   color: "text-slate-800" },
-          { label: "Beklemede",  value: counts.OPEN,        bg: "bg-amber-50",   color: "text-amber-700" },
-          { label: "Yanıtlandı", value: counts.ANSWERED,    bg: "bg-emerald-50", color: "text-emerald-700" },
-          { label: "İletildi",   value: counts.ESCALATED,   bg: "bg-violet-50",  color: "text-violet-700" },
-        ].map(({ label, value, bg, color }) => (
-          <Card key={label} className={`${bg} border-0`}>
+          { key: "total",     label: t("pages:myObjections.stats.total"),     value: all.length,       bg: "bg-slate-50",   color: "text-slate-800" },
+          { key: "pending",   label: t("pages:myObjections.stats.pending"),   value: counts.OPEN,      bg: "bg-amber-50",   color: "text-amber-700" },
+          { key: "answered",  label: t("pages:myObjections.stats.answered"),  value: counts.ANSWERED,  bg: "bg-emerald-50", color: "text-emerald-700" },
+          { key: "escalated", label: t("pages:myObjections.stats.escalated"), value: counts.ESCALATED, bg: "bg-violet-50",  color: "text-violet-700" },
+        ].map(({ key, label, value, bg, color }) => (
+          <Card key={key} className={`${bg} border-0`}>
             <CardContent className="p-5">
               <p className="text-xs text-slate-500 mb-1">{label}</p>
               <p className={`text-3xl font-bold ${color}`}>{value}</p>
@@ -122,51 +125,51 @@ export default function MyObjections() {
         <CardContent className="p-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             <div>
-              <label className="block text-xs font-medium text-slate-600 mb-1">Durum</label>
+              <label className="block text-xs font-medium text-slate-600 mb-1">{t("pages:myObjections.filterBar.statusLabel")}</label>
               <Select value={statusFilter} onValueChange={(v) => { setStatusFilter(v); setPage(1); }}>
                 <SelectTrigger className="h-9"><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="ALL">Tüm Durumlar</SelectItem>
-                  <SelectItem value="OPEN">Beklemede</SelectItem>
-                  <SelectItem value="ANSWERED">Yanıtlandı</SelectItem>
-                  <SelectItem value="ESCALATED">İletildi</SelectItem>
+                  <SelectItem value="ALL">{t("pages:myObjections.filterBar.allStatuses")}</SelectItem>
+                  <SelectItem value="OPEN">{t("pages:myObjections.status.OPEN")}</SelectItem>
+                  <SelectItem value="ANSWERED">{t("pages:myObjections.status.ANSWERED")}</SelectItem>
+                  <SelectItem value="ESCALATED">{t("pages:myObjections.stats.escalated")}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             <div>
-              <label className="block text-xs font-medium text-slate-600 mb-1">Test</label>
+              <label className="block text-xs font-medium text-slate-600 mb-1">{t("pages:myObjections.filterBar.testLabel")}</label>
               <SearchableSelect
                 value={testFilter}
                 onChange={(v) => { setTestFilter(v); setPage(1); }}
-                options={uniqueTests.map((t) => ({ value: t.id, label: t.title }))}
-                allLabel="Tüm Testler"
-                placeholder="Test seçin..."
-                searchPlaceholder="Test ara..."
-                emptyText="Sonuç yok"
-                ariaLabel="Test filtresi"
+                options={uniqueTests.map((opt) => ({ value: opt.id, label: opt.title }))}
+                allLabel={t("pages:myObjections.filterBar.allTests")}
+                placeholder={t("pages:myObjections.filterBar.selectTest")}
+                searchPlaceholder={t("pages:myObjections.filterBar.searchTest")}
+                emptyText={t("pages:myObjections.filterBar.noResult")}
+                ariaLabel={t("pages:myObjections.filterBar.testFilterAria")}
               />
             </div>
             <div className="lg:col-span-2">
-              <label className="block text-xs font-medium text-slate-600 mb-1">Hata türü / sebep</label>
+              <label className="block text-xs font-medium text-slate-600 mb-1">{t("pages:myObjections.filterBar.reasonLabel")}</label>
               <div className="relative">
                 <Search className="absolute left-2.5 top-2.5 w-4 h-4 text-slate-400" aria-hidden="true" />
                 <Input
                   type="text"
-                  placeholder="örn. yanlış cevap, eksik bilgi..."
+                  placeholder={t("pages:myObjections.filterBar.reasonPlaceholder")}
                   value={reasonSearch}
                   onChange={(e) => { setReasonSearch(e.target.value); setPage(1); }}
                   className="h-9 pl-8"
-                  aria-label="Hata türü veya sebep ara"
+                  aria-label={t("pages:myObjections.filterBar.reasonAria")}
                 />
               </div>
             </div>
           </div>
           <div className="flex items-center justify-between gap-3 mt-3">
-            <span className="text-sm text-slate-500">{filtered.length} / {all.length} bildirim</span>
+            <span className="text-sm text-slate-500">{t("pages:myObjections.filterBar.count", { filtered: filtered.length, total: all.length })}</span>
             {hasActiveFilter && (
               <Button variant="ghost" size="sm" onClick={clearFilters} className="h-8 text-xs">
                 <X className="w-3.5 h-3.5 mr-1" aria-hidden="true" />
-                Filtreleri Temizle
+                {t("pages:myObjections.filterBar.clear")}
               </Button>
             )}
           </div>
@@ -184,13 +187,13 @@ export default function MyObjections() {
             {all.length === 0 ? (
               <>
                 <MessageSquare className="w-12 h-12 text-slate-300 mx-auto mb-3" aria-hidden="true" />
-                <p className="text-slate-500">Henüz hata bildiriminiz yok</p>
+                <p className="text-slate-500">{t("pages:myObjections.empty.noneYet")}</p>
                 <p className="text-xs text-slate-400 mt-1">
-                  Bir test çözerken sorularda gördüğünüz hataları bildirebilirsiniz.
+                  {t("pages:myObjections.empty.hint")}
                 </p>
               </>
             ) : (
-              <p className="text-slate-400">Seçili filtrelere uyan bildirim yok</p>
+              <p className="text-slate-400">{t("pages:myObjections.empty.noResults")}</p>
             )}
           </CardContent>
         </Card>
@@ -206,14 +209,15 @@ export default function MyObjections() {
                   <CardContent className="p-4">
                     <div className="flex items-center gap-3 flex-wrap">
                       <Badge className={statusConfig[obj.status]?.color ?? "bg-slate-100 text-slate-700"}>
-                        {statusConfig[obj.status]?.label ?? obj.status}
+                        {statusConfig[obj.status] ? t(statusConfig[obj.status].labelKey) : obj.status}
                       </Badge>
+                      {/* obj.testTitle user-generated — çevrilmez */}
                       <span className="text-sm font-semibold text-slate-800 truncate max-w-[260px]" title={obj.testTitle}>
                         {obj.testTitle}
                       </span>
                       {obj.educatorName && (
                         <span className="text-xs text-slate-500">
-                          <span className="text-slate-400">Eğitici:</span> {obj.educatorName}
+                          <span className="text-slate-400">{t("pages:myObjections.card.educator")}</span> {obj.educatorName}
                         </span>
                       )}
 
@@ -224,10 +228,10 @@ export default function MyObjections() {
                             ? "bg-emerald-50 text-emerald-700"
                             : "bg-slate-100 text-slate-400"
                         }`}
-                        title={obj.answerText ? "Eğitici yanıt verdi" : "Eğitici henüz yanıt vermedi"}
+                        title={obj.answerText ? t("pages:myObjections.card.educatorYes") : t("pages:myObjections.card.educatorNo")}
                       >
                         <MessageSquare className="w-3.5 h-3.5" aria-hidden="true" />
-                        Eğitici {obj.answerText ? "✓" : "—"}
+                        {t("pages:myObjections.card.educatorChip")} {obj.answerText ? "✓" : "—"}
                       </span>
                       <span
                         className={`inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded ${
@@ -235,10 +239,10 @@ export default function MyObjections() {
                             ? "bg-indigo-50 text-indigo-700"
                             : "bg-slate-100 text-slate-400"
                         }`}
-                        title={obj.adminAnswerText ? "Admin yanıt verdi" : "Admin henüz yanıt vermedi"}
+                        title={obj.adminAnswerText ? t("pages:myObjections.card.adminYes") : t("pages:myObjections.card.adminNo")}
                       >
                         <ShieldCheck className="w-3.5 h-3.5" aria-hidden="true" />
-                        Admin {obj.adminAnswerText ? "✓" : "—"}
+                        {t("pages:myObjections.card.adminChip")} {obj.adminAnswerText ? "✓" : "—"}
                       </span>
 
                       <span className="flex-1" />
@@ -247,7 +251,7 @@ export default function MyObjections() {
                       </span>
                       {obj.status === "OPEN" && daysLeft != null && (
                         <span className={`text-xs ${daysLeft <= 2 ? "text-rose-500" : "text-slate-400"}`}>
-                          {daysLeft > 0 ? `${daysLeft} gün` : "süresi geçti"}
+                          {daysLeft > 0 ? t("pages:myObjections.card.daysLeft", { count: daysLeft }) : t("pages:myObjections.card.deadlineExpired")}
                         </span>
                       )}
                       <Button
@@ -257,7 +261,7 @@ export default function MyObjections() {
                         className="shrink-0 h-8 text-xs"
                       >
                         <Eye className="w-3.5 h-3.5 mr-1" aria-hidden="true" />
-                        Detayı Görüntüle
+                        {t("pages:myObjections.card.viewDetails")}
                       </Button>
                     </div>
                   </CardContent>
@@ -281,22 +285,22 @@ export default function MyObjections() {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <AlertTriangle className="w-5 h-5 text-amber-500" aria-hidden="true" />
-              Bildirim Detayı
+              {t("pages:myObjections.dialog.title")}
             </DialogTitle>
           </DialogHeader>
           {selected && (
             <div className="space-y-4 mt-2">
               <div className="flex items-center gap-3 flex-wrap">
                 <Badge className={statusConfig[selected.status]?.color ?? "bg-slate-100 text-slate-700"}>
-                  {statusConfig[selected.status]?.label ?? selected.status}
+                  {statusConfig[selected.status] ? t(statusConfig[selected.status].labelKey) : selected.status}
                 </Badge>
                 <span className="text-xs text-slate-500">
-                  Bildirim:&nbsp;
+                  {t("pages:myObjections.dialog.reportedAt")}&nbsp;
                   {format(new Date(selected.createdAt), "d MMM yyyy HH:mm", { locale: tr })}
                 </span>
                 {selected.deadlineAt && (
                   <span className="text-xs text-slate-500">
-                    SLA bitiş:&nbsp;
+                    {t("pages:myObjections.dialog.slaEnd")}&nbsp;
                     {format(new Date(selected.deadlineAt), "d MMM yyyy", { locale: tr })}
                   </span>
                 )}
@@ -304,23 +308,27 @@ export default function MyObjections() {
 
               <div className="p-4 bg-slate-50 rounded-lg space-y-3">
                 <div>
-                  <p className="text-xs text-slate-400 font-medium">Test</p>
+                  <p className="text-xs text-slate-400 font-medium">{t("pages:myObjections.dialog.testLabel")}</p>
+                  {/* selected.testTitle user-generated — çevrilmez */}
                   <p className="text-sm font-semibold text-slate-800">{selected.testTitle}</p>
                 </div>
                 {selected.educatorName && (
                   <div>
-                    <p className="text-xs text-slate-400 font-medium">Eğitici</p>
+                    <p className="text-xs text-slate-400 font-medium">{t("pages:myObjections.dialog.educatorLabel")}</p>
+                    {/* educatorName user-generated — çevrilmez */}
                     <p className="text-sm text-slate-700">{selected.educatorName}</p>
                   </div>
                 )}
                 {selected.questionContent && (
                   <div>
-                    <p className="text-xs text-slate-400 font-medium">Soru (ilk 150 karakter)</p>
+                    <p className="text-xs text-slate-400 font-medium">{t("pages:myObjections.dialog.questionLabel")}</p>
+                    {/* questionContent user-generated — çevrilmez */}
                     <p className="text-sm text-slate-600 italic">"{selected.questionContent}"</p>
                   </div>
                 )}
                 <div>
-                  <p className="text-xs text-slate-400 font-medium">Bildiriminiz</p>
+                  <p className="text-xs text-slate-400 font-medium">{t("pages:myObjections.dialog.reasonLabel")}</p>
+                  {/* selected.reason user-generated — çevrilmez */}
                   <p className="text-sm text-slate-700">{selected.reason}</p>
                 </div>
               </div>
@@ -330,8 +338,9 @@ export default function MyObjections() {
                 <div className="p-3 bg-emerald-50 rounded border border-emerald-100">
                   <p className="text-xs text-emerald-700 font-semibold mb-1 flex items-center gap-1">
                     <MessageSquare className="w-3.5 h-3.5" aria-hidden="true" />
-                    Eğitici Yanıtı:
+                    {t("pages:myObjections.dialog.educatorReply")}
                   </p>
+                  {/* answerText user-generated — çevrilmez */}
                   <p className="text-sm text-slate-700">{selected.answerText}</p>
                   {selected.answeredAt && (
                     <p className="text-xs text-emerald-500 mt-1">
@@ -341,7 +350,7 @@ export default function MyObjections() {
                 </div>
               ) : (
                 <div className="p-3 bg-slate-50 rounded border border-slate-200">
-                  <p className="text-xs text-slate-500">Eğitici henüz yanıt vermedi.</p>
+                  <p className="text-xs text-slate-500">{t("pages:myObjections.dialog.educatorNoReply")}</p>
                 </div>
               )}
 
@@ -350,8 +359,9 @@ export default function MyObjections() {
                 <div className="p-3 bg-indigo-50 rounded border border-indigo-100">
                   <p className="text-xs text-indigo-700 font-semibold mb-1 flex items-center gap-1">
                     <ShieldCheck className="w-3.5 h-3.5" aria-hidden="true" />
-                    Admin Notu{selected.adminAnswererName ? ` (${selected.adminAnswererName})` : ""}:
+                    {t("pages:myObjections.dialog.adminNote")}{selected.adminAnswererName ? ` (${selected.adminAnswererName})` : ""}:
                   </p>
+                  {/* adminAnswerText user-generated — çevrilmez */}
                   <p className="text-sm text-slate-700">{selected.adminAnswerText}</p>
                   {selected.adminAnsweredAt && (
                     <p className="text-xs text-indigo-500 mt-1">
@@ -361,12 +371,12 @@ export default function MyObjections() {
                 </div>
               ) : (
                 <div className="p-3 bg-slate-50 rounded border border-slate-200">
-                  <p className="text-xs text-slate-500">Admin henüz not eklemedi.</p>
+                  <p className="text-xs text-slate-500">{t("pages:myObjections.dialog.adminNoNote")}</p>
                 </div>
               )}
 
               <div className="flex justify-end pt-2 border-t">
-                <Button variant="outline" onClick={() => setSelected(null)}>Kapat</Button>
+                <Button variant="outline" onClick={() => setSelected(null)}>{t("pages:myObjections.dialog.close")}</Button>
               </div>
             </div>
           )}

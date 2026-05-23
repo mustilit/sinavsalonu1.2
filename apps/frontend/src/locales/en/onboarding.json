@@ -1,0 +1,86 @@
+{
+  "ui": {
+    "skip": "Skip",
+    "skipAria": "Skip tour",
+    "back": "Back",
+    "next": "Next",
+    "letsStart": "Let's get started!",
+    "stepAria": "Step {{n}}"
+  },
+  "candidateWelcome": {
+    "s0": {
+      "title": "Welcome to Sınav Salonu! 🎉",
+      "description": "You've joined the platform that takes your exam prep to the next level. Let's walk through the features in this short tour."
+    },
+    "s1": {
+      "title": "Explore Exam Types",
+      "description": "Browse test packages prepared for dozens of exam types (YKS, KPSS, ALES, etc.) from the 'Explore Tests' section."
+    },
+    "s2": {
+      "title": "Browse Test Packages",
+      "description": "Purchase test packages prepared by educators. Each package may contain multiple tests and tracks your progress."
+    },
+    "s3": {
+      "title": "Follow Educators",
+      "description": "Check expert educators' profiles and browse their other packages."
+    }
+  },
+  "candidateTest": {
+    "s0": {
+      "title": "Welcome to the Test Screen",
+      "description": "The timer starts when the test begins (for timed tests). Read each question carefully and choose your answer."
+    },
+    "s1": {
+      "title": "Question Navigation",
+      "description": "Click the number boxes in the left panel to jump to any question. Green = answered, yellow = flagged."
+    },
+    "s2": {
+      "title": "Change Your Answer",
+      "description": "Click the chosen option again to deselect it. Click a different option to change your answer."
+    },
+    "s3": {
+      "title": "Flag Questions 🚩",
+      "description": "Flag questions you're unsure about. You can easily return to flagged questions before submitting."
+    },
+    "s4": {
+      "title": "Complete the Test",
+      "description": "When you've answered all questions, click 'Finish Test'. You'll see correct/incorrect distribution and time stats in your result."
+    }
+  },
+  "educatorWelcome": {
+    "s0": {
+      "title": "Welcome to the Educator Dashboard! 🏫",
+      "description": "You've joined the platform where you can create your own test packages, track your sales, and reach candidates."
+    },
+    "s1": {
+      "title": "Create Test Packages",
+      "description": "Add questions, configure duration and scoring with the 'Create New Test' button. Publish with one click when ready."
+    },
+    "s2": {
+      "title": "Track Your Sales",
+      "description": "See monthly revenue charts, which packages sold how much, and your earnings summary in the 'My Sales' page."
+    },
+    "s3": {
+      "title": "Complete Your Profile",
+      "description": "Add a biography, areas of expertise, and payment info (IBAN) on your profile. A complete profile attracts more candidates."
+    }
+  },
+  "educatorCreate": {
+    "s0": {
+      "title": "Enter Test Info",
+      "description": "Fill in title, description, exam type, topic and price. Set duration with the 'Timed' option if needed."
+    },
+    "s1": {
+      "title": "Add Questions",
+      "description": "Specify text, options and correct answer for each question. You can also add images. Questions can be reordered."
+    },
+    "s2": {
+      "title": "Add Solutions",
+      "description": "Add detailed solution explanations for each question. Candidates can view them after finishing the test."
+    },
+    "s3": {
+      "title": "Publish!",
+      "description": "All set? Toggle 'Publish' to make the package instantly visible to candidates. You can unpublish anytime."
+    }
+  }
+}

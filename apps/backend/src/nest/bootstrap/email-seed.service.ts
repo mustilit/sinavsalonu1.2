@@ -27,8 +27,10 @@ const TEMPLATES: SeedTemplate[] = [
   { key: 'campaign-announcement', subject: '{{title}}', htmlPath: 'campaign-announcement.hbs', defaultQueue: 'BULK', description: 'Kampanya duyurusu' },
   { key: 'product-update', subject: 'Yeni özellik — {{feature.title}}', htmlPath: 'product-update.hbs', defaultQueue: 'BULK', description: 'Ürün güncelleme duyurusu' },
   { key: 'account-security-alert', subject: 'Güvenlik uyarısı — Sınav Salonu', htmlPath: 'account-security-alert.hbs', defaultQueue: 'CRITICAL', description: 'Hesap güvenlik uyarısı' },
+  { key: 'new-device-login', subject: 'Yeni cihazdan giriş yapıldı — Sınav Salonu', htmlPath: 'new-device-login.hbs', textPath: 'new-device-login.txt', defaultQueue: 'CRITICAL', description: 'Yeni cihazdan giriş uyarısı — cihaz doğrulama veya şifre sıfırlama linki içerir' },
   { key: 'backup-failure-alert', subject: 'Yedekleme başarısız — Sınav Salonu', htmlPath: 'backup-failure-alert.hbs', defaultQueue: 'CRITICAL', description: 'DB yedekleme hatası uyarısı' },
   { key: 'test-template', subject: 'Test E-posta — Sınav Salonu', htmlPath: 'test-template.hbs', textPath: 'test-template.txt', defaultQueue: 'CRITICAL', description: 'Sağlayıcı doğrulama maili' },
+  { key: 'profile-change-otp', subject: 'Profil değişikliği için doğrulama kodu — Sınav Salonu', htmlPath: 'profile-change-otp.hbs', defaultQueue: 'CRITICAL', description: 'Telefon/Website/LinkedIn değişikliğinde 6 haneli OTP' },
 ];
 
 /**

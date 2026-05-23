@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useSearchParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { createPageUrl } from "@/utils";
 import { entities } from "@/api/dalClient";
 import { useAuth } from "@/lib/AuthContext";
@@ -8,12 +9,13 @@ import { PaymentModal } from "@/components/ui/PaymentModal";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import StarRating from "@/components/ui/StarRating";
-import { 
-  BookOpen, 
-  Star, 
-  User, 
-  CheckCircle, 
+import {
+  BookOpen,
+  Star,
+  User,
+  CheckCircle,
   Award,
   ShoppingCart,
   ArrowLeft,
@@ -26,13 +28,15 @@ import { toast } from "sonner";
 import { useAppNavigate, useLoginRedirect } from "@/lib/navigation";
 import { useServiceStatus } from "@/lib/useServiceStatus";
 
-const difficultyLabels = {
-  easy: { label: "Kolay", color: "bg-emerald-100 text-emerald-700" },
-  medium: { label: "Orta", color: "bg-amber-100 text-amber-700" },
-  hard: { label: "Zor", color: "bg-rose-100 text-rose-700" }
-};
-
+/**
+ * TestDetail
+ *
+ * NOT: test.title, test.description, test.educator_name, test.exam_type_name,
+ * review.comment, review.reviewer_name vb. user-generated alanlar
+ * çevrilmez — sadece sabit UI metinleri i18n'lenir.
+ */
 export default function TestDetail() {
+  const { t } = useTranslation(["pages"]);
   const [searchParams] = useSearchParams();
   const testId = searchParams.get("id");
   const queryClient = useQueryClient();
@@ -44,6 +48,11 @@ export default function TestDetail() {
   const [testRating, setTestRating] = useState(0);
   const [testComment, setTestComment] = useState("");
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  // Paket review modal'ı — yalnızca aday "Değerlendir" butonuna basınca açılır
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  // Reviews listesi paging — sayfa başına 10 yorum (1-bazlı)
+  const REVIEWS_PER_PAGE = 10;
+  const [reviewPage, setReviewPage] = useState(1);
 
   const { data: purchases = [] } = useQuery({
     queryKey: ["purchases", user?.id, testId],
@@ -51,9 +60,26 @@ export default function TestDetail() {
     enabled: !!user && !!testId,
   });
 
+  // Paket görüntülenmesini logla (fire-and-forget). Backend rate-limit ile
+  // korunur; anonim oturumu eşleştirmek için localStorage'da kalıcı UUID.
+  // Yalnızca testId varken ve sayfa ilk açıldığında 1 kez tetiklenir.
+  useEffect(() => {
+    if (!testId) return;
+    let sessionId = null;
+    try {
+      sessionId = localStorage.getItem("ss_view_session");
+      if (!sessionId) {
+        sessionId = (crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(36).slice(2)}`);
+        localStorage.setItem("ss_view_session", sessionId);
+      }
+    } catch {
+      // localStorage erişilmiyorsa sessionId null olarak gönderilir; backend yine viewerId ya da ipHash kullanır.
+    }
+    entities.PackageView.track(testId, sessionId);
+  }, [testId]);
+
   const isPurchased = purchases.length > 0;
 
-  // Paketin detay bilgisi — her zaman marketplace API'den çekilir (snapshot sorunlarını önler)
   const { data: test, isLoading, isError: isTestError } = useQuery({
     queryKey: ["test", testId],
     queryFn: async () => {
@@ -62,7 +88,7 @@ export default function TestDetail() {
     },
     enabled: !!testId,
     staleTime: 60 * 1000,
-    retry: 2, // 404 dışı geçici hatalarda (500, ağ) TanStack Query 2 kez daha dener
+    retry: 2,
   });
 
   const { data: questions = [] } = useQuery({
@@ -71,7 +97,6 @@ export default function TestDetail() {
     enabled: !!testId,
   });
 
-  // Paket içindeki ExamTest listesi — test._tests zaten marketplace yanıtından geliyor
   const { data: tests = [] } = useQuery({
     queryKey: ["tests_in_pkg", testId],
     queryFn: () => entities.Test.filter({ test_package_id: testId }, "order_index"),
@@ -92,35 +117,48 @@ export default function TestDetail() {
     enabled: !!user && !!testId,
   });
 
-  const hasCompletedTest = allTestResults.length > 0;
+  // hasCompletedTest artık kullanılmıyor (paket review butonu artık SUBMITTED şartına bağlı
+  // değil — aday paketi aldıysa istediği an puanlayabilir; backend yine de en az bir
+  // SUBMITTED attempt kontrolünü yapar ve değilse hata döner).
+  // void allTestResults — query referansını koru, ileride başka yerde kullanılabilir
+  void allTestResults;
 
-  // Gerçek exam test ID — review işlemleri için package ID değil bu kullanılmalı
-  const reviewTestId = tests[0]?.id ?? null;
-
-  const { data: existingTestReview } = useQuery({
-    queryKey: ["myTestReview", reviewTestId, user?.id],
-    queryFn: () => entities.Review.myReview(reviewTestId),
-    enabled: !!user?.id && !!reviewTestId,
+  // Aday paket için kendi review'u (yeni model: tek kayıt)
+  const { data: myPackageReview } = useQuery({
+    queryKey: ["myPackageReview", testId, user?.id],
+    queryFn: () => entities.Review.myPackageReview(testId),
+    enabled: !!user?.id && !!testId,
   });
 
-  // Mevcut review yüklenince formu pre-fill et
-  useEffect(() => {
-    if (existingTestReview?.testRating) {
-      setTestRating(existingTestReview.testRating);
-      setTestComment(existingTestReview.comment ?? "");
-    }
-  }, [existingTestReview]);
+  // Not: Form artık modal açılırken `openReviewModal()` ile pre-fill ediliyor.
+  // Bu sayfa yüklenir yüklenmez form state'inin değiştirilmesine gerek yok.
 
-  const { data: reviews = [] } = useQuery({
-    queryKey: ["reviews", reviewTestId],
-    queryFn: () => entities.Review.filter({ test_package_id: reviewTestId }, "-created_date", 10),
-    enabled: !!reviewTestId,
+  // Paket review listesi + ortalama — paginated (sayfa başına 10, prev/next).
+  // Backend `count` alanı toplam adayı (offset'ten bağımsız) döner.
+  // `keepPreviousData` ile sayfa geçişinde flicker olmaz.
+  const { data: packageReviewData = { avg: null, count: 0, items: [] }, isFetching: isFetchingReviews } = useQuery({
+    queryKey: ["packageReviews", testId, reviewPage, REVIEWS_PER_PAGE],
+    queryFn: () =>
+      entities.Review.packageReviews(testId, {
+        limit: REVIEWS_PER_PAGE,
+        offset: (reviewPage - 1) * REVIEWS_PER_PAGE,
+      }),
+    enabled: !!testId,
+    keepPreviousData: true,
   });
-
-  // Calculate average rating from reviews
-  const avgRating = reviews.length > 0 
-    ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1)
+  const reviews = packageReviewData.items.map((r) => ({
+    id: r.candidateId,
+    rating: r.rating,
+    comment: r.comment,
+    reviewer_name: r.candidateName,
+    candidate_name: r.candidateName,
+    created_date: r.createdAt,
+    reviewer_email: r.candidateId,
+  }));
+  const avgRating = packageReviewData.avg != null
+    ? Number(packageReviewData.avg).toFixed(1)
     : 0;
+  const totalReviewPages = Math.max(1, Math.ceil((packageReviewData.count ?? 0) / REVIEWS_PER_PAGE));
 
   const { data: follows = [] } = useQuery({
     queryKey: ["follows", user?.id, test?.educator_email],
@@ -129,8 +167,6 @@ export default function TestDetail() {
   });
 
   const isFollowing = follows.length > 0;
-
-
 
   const followMutation = useMutation({
     mutationFn: async () => {
@@ -148,7 +184,7 @@ export default function TestDetail() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["follows"] });
-      toast.success(isFollowing ? "Takipten çıkıldı" : "Takip edildi");
+      toast.success(isFollowing ? t("pages:testDetail.educator.unfollowed") : t("pages:testDetail.educator.followed"));
     }
   });
 
@@ -158,26 +194,41 @@ export default function TestDetail() {
       return;
     }
     if (!purchasesEnabled) {
-      toast.warning("Satın alma servislerimiz bakımdadır. Lütfen daha sonra tekrar deneyin.");
+      toast.warning(t("pages:testDetail.purchase.servicesPausedToast"));
       return;
     }
     setIsPaymentModalOpen(true);
   };
 
   const handleSubmitTestReview = async () => {
-    if (testRating === 0 || !reviewTestId) return;
+    if (testRating === 0 || !testId) return;
     try {
-      await entities.Review.create({
-        exam_test_id: reviewTestId,
+      await entities.Review.upsertPackageReview(testId, {
         rating: testRating,
         comment: testComment,
       });
-      queryClient.invalidateQueries({ queryKey: ["myTestReview", reviewTestId, user?.id] });
-      queryClient.invalidateQueries({ queryKey: ["reviews", reviewTestId] });
-      toast.success(existingTestReview ? "Puanınız güncellendi!" : "Test puanınız kaydedildi!");
+      queryClient.invalidateQueries({ queryKey: ["myPackageReview", testId, user?.id] });
+      queryClient.invalidateQueries({ queryKey: ["packageReviews", testId] });
+      toast.success(myPackageReview
+        ? t("pages:testDetail.rate.successUpdated")
+        : t("pages:testDetail.rate.successSaved"));
+      // Submit başarılı: modal'ı kapat
+      setIsReviewModalOpen(false);
     } catch {
-      toast.error("Bir hata oluştu!");
+      toast.error(t("pages:testDetail.rate.errorGeneric"));
     }
+  };
+
+  // Modal açılış handler'ı — mevcut review varsa form pre-fill edilir (useEffect bunu zaten yapıyor)
+  const openReviewModal = () => {
+    if (myPackageReview?.rating != null) {
+      setTestRating(myPackageReview.rating);
+      setTestComment(myPackageReview.comment ?? "");
+    } else {
+      setTestRating(0);
+      setTestComment("");
+    }
+    setIsReviewModalOpen(true);
   };
 
   if (isLoading) {
@@ -194,10 +245,10 @@ export default function TestDetail() {
     return (
       <div className="text-center py-20">
         <h2 className="text-2xl font-bold text-slate-900">
-          {isTestError ? "Test yüklenemedi" : "Test bulunamadı"}
+          {isTestError ? t("pages:testDetail.errorLoading") : t("pages:testDetail.notFound")}
         </h2>
         <p className="text-slate-500 mt-2 text-sm">
-          {isTestError ? "Sunucuya ulaşılamadı, lütfen sayfayı yenileyin." : "Bu test mevcut değil veya yayından kaldırılmış olabilir."}
+          {isTestError ? t("pages:testDetail.errorLoadingDesc") : t("pages:testDetail.notFoundDesc")}
         </p>
         <div className="flex gap-3 justify-center mt-4">
           {isTestError && (
@@ -205,27 +256,33 @@ export default function TestDetail() {
               onClick={() => window.location.reload()}
               className="text-indigo-600 underline text-sm"
             >
-              Yenile
+              {t("pages:testDetail.reload")}
             </button>
           )}
           <Link to={createPageUrl("Explore")} className="text-indigo-600 inline-block text-sm">
-            Testlere Dön
+            {t("pages:testDetail.backToTests")}
           </Link>
         </div>
       </div>
     );
   }
 
-  const difficulty = difficultyLabels[test.difficulty] || difficultyLabels.medium;
+  const difficultyKey = test.difficulty || "medium";
+  const difficultyColorClass = {
+    easy: "bg-emerald-100 text-emerald-700",
+    medium: "bg-amber-100 text-amber-700",
+    hard: "bg-rose-100 text-rose-700",
+  }[difficultyKey] || "bg-amber-100 text-amber-700";
+  const difficultyLabel = t(`pages:testCard.difficulty.${difficultyKey}`);
 
   return (
     <div className="max-w-4xl mx-auto">
-      <Link 
-        to={createPageUrl("Explore")} 
+      <Link
+        to={createPageUrl("Explore")}
         className="inline-flex items-center gap-2 text-slate-600 hover:text-slate-900 mb-6"
       >
         <ArrowLeft className="w-4 h-4" />
-        Testlere Dön
+        {t("pages:testDetail.backToTests")}
       </Link>
 
       {/* Hero */}
@@ -239,14 +296,16 @@ export default function TestDetail() {
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
         <div className="absolute top-6 left-6">
-          <Badge className="bg-white/90 text-slate-700">{test.exam_type_name || "Genel"}</Badge>
+          {/* test.exam_type_name user-generated — çevrilmez */}
+          <Badge className="bg-white/90 text-slate-700">{test.exam_type_name || t("pages:testCard.examTypeFallback")}</Badge>
         </div>
         <div className="absolute bottom-6 right-6">
-          <Badge className="bg-white/90 text-slate-700">
-            {difficulty.label}{test.has_solutions ? " - Çözümlü" : ""}
+          <Badge className={`bg-white/90 ${difficultyColorClass}`}>
+            {difficultyLabel}{test.has_solutions ? t("pages:testCard.solutionsSuffix") : ""}
           </Badge>
         </div>
         <div className="absolute bottom-6 left-6">
+          {/* test.title user-generated — çevrilmez */}
           <h1 className="text-3xl font-bold text-white">{test.title}</h1>
         </div>
       </div>
@@ -254,51 +313,71 @@ export default function TestDetail() {
       <div className="grid lg:grid-cols-3 gap-8">
         {/* Main Content */}
         <div className="lg:col-span-2 space-y-8">
-          {/* Test Rating */}
-          {user && isPurchased && hasCompletedTest && (
-            <div className="bg-white rounded-2xl border border-slate-200 p-6">
-              <h2 className="text-lg font-semibold text-slate-900 mb-1">Bu Testi Değerlendir</h2>
-              <p className="text-slate-500 text-sm mb-4">
-                {existingTestReview
-                  ? "Mevcut puanınızı güncelleyebilirsiniz."
-                  : "Bu testi tamamladınız. Deneyiminizi paylaşın!"}
-              </p>
-              <div className="flex items-center gap-4 mb-4">
-                <StarRating value={testRating} onChange={setTestRating} size="lg" />
-                {testRating > 0 && (
-                  <span className="text-lg font-medium text-slate-700">{testRating}/5</span>
-                )}
+          {/* Paket Genel Puanı — herkese görünür: avg + aday sayısı.
+              Aday paketi aldıysa "Değerlendir / Puanı Güncelle" butonu da görünür;
+              butona basınca modal açılır. */}
+          <div className="bg-white rounded-2xl border border-slate-200 p-6">
+            <div className="flex items-center justify-between gap-4 flex-wrap">
+              <div>
+                <h2 className="text-lg font-semibold text-slate-900 mb-1">
+                  {t("pages:testDetail.packageRating.title")}
+                </h2>
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-1">
+                    {[1, 2, 3, 4, 5].map((s) => (
+                      <Star
+                        key={s}
+                        className={`w-6 h-6 ${
+                          s <= Math.round(Number(avgRating))
+                            ? "fill-amber-400 text-amber-400"
+                            : "text-slate-200"
+                        }`}
+                      />
+                    ))}
+                  </div>
+                  <span className="text-2xl font-bold text-slate-900">
+                    {avgRating > 0 ? avgRating : "—"}
+                  </span>
+                  <span className="text-sm text-slate-500">
+                    {t("pages:testDetail.packageRating.outOf")}
+                  </span>
+                </div>
+                <p className="text-xs text-slate-500 mt-1">
+                  {packageReviewData.count > 0
+                    ? t("pages:testDetail.packageRating.reviewerCount", { count: packageReviewData.count })
+                    : t("pages:testDetail.packageRating.noReviews")}
+                </p>
               </div>
-              <Textarea
-                placeholder="Yorumunuz (opsiyonel)"
-                value={testComment}
-                onChange={(e) => setTestComment(e.target.value)}
-                className="mb-4"
-                rows={3}
-              />
-              <Button
-                onClick={handleSubmitTestReview}
-                disabled={testRating === 0 || !reviewTestId}
-                className="bg-indigo-600 hover:bg-indigo-700"
-              >
-                {existingTestReview ? "Puanı Güncelle" : "Puanı Gönder"}
-              </Button>
+
+              {/* Değerlendir butonu — sadece aday paketi aldıysa görünür */}
+              {user && isPurchased && (
+                <Button
+                  onClick={openReviewModal}
+                  className="bg-indigo-600 hover:bg-indigo-700"
+                >
+                  <Star className="w-4 h-4 mr-2" />
+                  {myPackageReview
+                    ? t("pages:testDetail.packageRating.updateButton")
+                    : t("pages:testDetail.packageRating.rateButton")}
+                </Button>
+              )}
             </div>
-          )}
+          </div>
 
           {/* Description */}
           <div className="bg-white rounded-2xl border border-slate-200 p-6">
-            <h2 className="text-lg font-semibold text-slate-900 mb-4">Test Hakkında</h2>
+            <h2 className="text-lg font-semibold text-slate-900 mb-4">{t("pages:testDetail.about.title")}</h2>
             <p className="text-slate-600 leading-relaxed">
-              {test.description || "Bu test paketi hakkında henüz bir açıklama eklenmemiş."}
+              {/* test.description user-generated — çevrilmez, sadece yokken fallback i18n */}
+              {test.description || t("pages:testDetail.about.noDescription")}
             </p>
           </div>
 
           {/* Educator */}
           <div className="bg-white rounded-2xl border border-slate-200 p-6">
-            <h2 className="text-lg font-semibold text-slate-900 mb-4">Eğitici</h2>
+            <h2 className="text-lg font-semibold text-slate-900 mb-4">{t("pages:testDetail.educator.title")}</h2>
             <div className="flex items-center justify-between">
-              <Link 
+              <Link
                 to={createPageUrl("EducatorProfile") + `?email=${encodeURIComponent(test.educator_email)}`}
                 className="flex items-center gap-4 hover:opacity-80 transition-opacity"
               >
@@ -307,58 +386,37 @@ export default function TestDetail() {
                 </div>
                 <div>
                   <p className="font-semibold text-slate-900 hover:text-indigo-600 transition-colors">
-                    {test.educator_name || "Eğitici"}
+                    {/* test.educator_name user-generated — çevrilmez */}
+                    {test.educator_name || t("pages:testDetail.educator.fallbackName")}
                   </p>
                 </div>
               </Link>
               {user && (
-                <Button 
+                <Button
                   variant="outline"
                   size="sm"
                   onClick={() => followMutation.mutate()}
                   disabled={followMutation.isPending}
                 >
                   {isFollowing ? (
-                    <><BellOff className="w-4 h-4 mr-1" /> Takipte</>
+                    <><BellOff className="w-4 h-4 mr-1" /> {t("pages:testDetail.educator.following")}</>
                   ) : (
-                    <><Bell className="w-4 h-4 mr-1" /> Takip Et</>
+                    <><Bell className="w-4 h-4 mr-1" /> {t("pages:testDetail.educator.follow")}</>
                   )}
                 </Button>
               )}
             </div>
           </div>
 
-          {/* Reviews */}
-          {reviews.length > 0 && (
-            <div className="bg-white rounded-2xl border border-slate-200 p-6">
-              <h2 className="text-lg font-semibold text-slate-900 mb-4">Değerlendirmeler</h2>
-              <div className="space-y-4">
-                {reviews.map((review) => (
-                  <div key={review.id} className="pb-4 border-b border-slate-100 last:border-0">
-                    <div className="flex items-center gap-2 mb-2">
-                      <div className="flex">
-                        {[1,2,3,4,5].map((s) => (
-                          <Star key={s} className={`w-4 h-4 ${s <= review.rating ? "fill-amber-400 text-amber-400" : "text-slate-200"}`} />
-                        ))}
-                      </div>
-                      <span className="text-sm text-slate-500">{review.reviewer_name}</span>
-                    </div>
-                    {review.comment && <p className="text-sm text-slate-600">{review.comment}</p>}
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
           {/* Features */}
           <div className="bg-white rounded-2xl border border-slate-200 p-6">
-            <h2 className="text-lg font-semibold text-slate-900 mb-4">Özellikler</h2>
+            <h2 className="text-lg font-semibold text-slate-900 mb-4">{t("pages:testDetail.features.title")}</h2>
             <div className="grid grid-cols-2 gap-4">
               {test.test_count > 0 && (
                 <div className="flex items-center gap-3 p-4 bg-slate-50 rounded-xl">
                   <BookOpen className="w-5 h-5 text-indigo-600" />
                   <div>
-                    <p className="text-sm text-slate-500">Test Sayısı</p>
+                    <p className="text-sm text-slate-500">{t("pages:testDetail.features.testCount")}</p>
                     <p className="font-semibold text-slate-900">{test.test_count}</p>
                   </div>
                 </div>
@@ -366,7 +424,7 @@ export default function TestDetail() {
               <div className="flex items-center gap-3 p-4 bg-slate-50 rounded-xl">
                 <BookOpen className="w-5 h-5 text-indigo-600" />
                 <div>
-                  <p className="text-sm text-slate-500">Soru Sayısı</p>
+                  <p className="text-sm text-slate-500">{t("pages:testDetail.features.questionCount")}</p>
                   <p className="font-semibold text-slate-900">{realQuestionCount}</p>
                 </div>
               </div>
@@ -374,14 +432,14 @@ export default function TestDetail() {
               <div className="flex items-center gap-3 p-4 bg-slate-50 rounded-xl">
                 <Award className="w-5 h-5 text-indigo-600" />
                 <div>
-                  <p className="text-sm text-slate-500">Zorluk</p>
-                  <p className="font-semibold text-slate-900">{difficulty.label}</p>
+                  <p className="text-sm text-slate-500">{t("pages:testDetail.features.difficulty")}</p>
+                  <p className="font-semibold text-slate-900">{difficultyLabel}</p>
                 </div>
               </div>
               <div className="flex items-center gap-3 p-4 bg-slate-50 rounded-xl">
                 <Star className="w-5 h-5 text-amber-500" />
                 <div>
-                  <p className="text-sm text-slate-500">Puan</p>
+                  <p className="text-sm text-slate-500">{t("pages:testDetail.features.rating")}</p>
                   <p className="font-semibold text-slate-900">
                     {avgRating > 0 ? avgRating : "-"}
                   </p>
@@ -397,11 +455,11 @@ export default function TestDetail() {
             {!isPurchased && (
               <div className="text-center mb-6">
                 <p className="text-4xl font-bold text-slate-900">
-                  {test.price === 0 ? "Ücretsiz" : `₺${test.price || 0}`}
+                  {test.price === 0 ? t("pages:testCard.free") : `₺${test.price || 0}`}
                 </p>
                 {test.total_sales > 0 && (
                   <p className="text-sm text-slate-500 mt-2">
-                    {test.total_sales} kişi satın aldı
+                    {t("pages:testDetail.purchase.totalSales", { count: test.total_sales })}
                   </p>
                 )}
               </div>
@@ -409,47 +467,49 @@ export default function TestDetail() {
 
             {isPurchased ? (
               <div className="space-y-3">
-                <h3 className="font-semibold text-slate-900 mb-3">Testler</h3>
+                <h3 className="font-semibold text-slate-900 mb-3">{t("pages:testDetail.purchase.testsListTitle")}</h3>
                 {tests.map((testItem) => {
-                  // Önce paket detayından gelen question_count'u kullan (her testin gerçek sayısı);
-                  // yoksa eski yedek — bu test'e ait toplam soru listesinden filtrele.
                   const testQuestionsCount =
                     testItem.question_count ??
                     questions.filter((q) => q.test_id === testItem.id).length;
                   const testResult = allTestResults.find(r => r.test_id === testItem.id);
                   const testProgress = allTestProgress.find(p => p.test_id === testItem.id);
-                  
+
                   const isCompleted = !!testResult;
                   const isInProgress = !!testProgress;
-                  
+
                   let buttonStyle = { backgroundColor: '#0000CD' };
                   if (isCompleted) buttonStyle = { backgroundColor: '#64748b' };
                   else if (isInProgress) buttonStyle = { backgroundColor: '#f59e0b' };
-                  
+
                   return (
-                    <Link 
+                    <Link
                       key={testItem.id}
                       to={createPageUrl("TakeTest") + `?id=${testItem.id}${isCompleted ? '&review=true' : ''}`}
                     >
-                      <Button 
+                      <Button
                         style={buttonStyle}
                         className="w-full justify-between h-auto py-3 hover:opacity-90 text-white"
                       >
                         <div className="text-left">
+                          {/* testItem.title user-generated — çevrilmez */}
                           <p className="font-medium">{testItem.title}</p>
                           <p className="text-xs opacity-90 mt-0.5">
-                           {testQuestionsCount} soru • {testItem.duration_minutes || 60} dk
+                           {t("pages:testDetail.purchase.testMeta", {
+                             questions: testQuestionsCount,
+                             minutes: testItem.duration_minutes || 60,
+                           })}
                           </p>
                         </div>
                         {isCompleted ? (
                           <div className="flex items-center gap-1">
                             <Eye className="w-4 h-4" />
-                            <span className="text-xs">Gözden Geçir</span>
+                            <span className="text-xs">{t("pages:testCard.review")}</span>
                           </div>
                         ) : isInProgress ? (
                           <div className="flex items-center gap-1">
                             <Play className="w-4 h-4" />
-                            <span className="text-xs">Devam Et</span>
+                            <span className="text-xs">{t("pages:testCard.continue")}</span>
                           </div>
                         ) : (
                           <Play className="w-4 h-4" />
@@ -462,8 +522,8 @@ export default function TestDetail() {
             ) : (
               !purchasesEnabled ? (
                 <div className="w-full rounded-xl border-2 border-amber-200 bg-amber-50 px-4 py-3 text-center">
-                  <p className="text-sm font-semibold text-amber-800">🔧 Satın alma servisleri bakımdadır</p>
-                  <p className="text-xs text-amber-600 mt-1">Lütfen daha sonra tekrar deneyin.</p>
+                  <p className="text-sm font-semibold text-amber-800">{t("pages:testDetail.purchase.servicesPaused")}</p>
+                  <p className="text-xs text-amber-600 mt-1">{t("pages:testDetail.purchase.servicesPausedDesc")}</p>
                 </div>
               ) : (
                 <Button
@@ -471,17 +531,17 @@ export default function TestDetail() {
                   onClick={handlePurchase}
                 >
                   <ShoppingCart className="w-5 h-5 mr-2" />
-                  Satın Al
+                  {t("pages:testCard.buy")}
                 </Button>
               )
             )}
 
             <div className="mt-6 space-y-3">
               {[
-                "Sınırsız erişim",
-                "Detaylı çözümler",
-                "Performans analizi",
-                "Mobil uyumlu"
+                t("pages:testDetail.purchase.features.unlimitedAccess"),
+                t("pages:testDetail.purchase.features.detailedSolutions"),
+                t("pages:testDetail.purchase.features.performanceAnalysis"),
+                t("pages:testDetail.purchase.features.mobileFriendly"),
               ].map((feature, idx) => (
                 <div key={idx} className="flex items-center gap-2 text-sm text-slate-600">
                   <CheckCircle className="w-4 h-4 text-emerald-500" />
@@ -492,11 +552,137 @@ export default function TestDetail() {
           </div>
         </div>
       </div>
+
+      {/* Reviews — sayfa en altında, tam genişlik, kendi içinde paging (sayfa başına 10) */}
+      {(reviews.length > 0 || packageReviewData.count > 0) && (
+        <div className="bg-white rounded-2xl border border-slate-200 p-6 mt-8">
+          <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
+            <h2 className="text-lg font-semibold text-slate-900">
+              {t("pages:testDetail.reviews.title")}
+              <span className="ml-2 text-sm font-normal text-slate-500">
+                ({packageReviewData.count})
+              </span>
+            </h2>
+            {totalReviewPages > 1 && (
+              <p className="text-sm text-slate-500">
+                {t("pages:testDetail.reviews.pageOf", { current: reviewPage, total: totalReviewPages })}
+              </p>
+            )}
+          </div>
+          <div className={`space-y-4 ${isFetchingReviews ? "opacity-60" : ""}`}>
+            {reviews.map((review) => (
+              <div key={review.id} className="pb-4 border-b border-slate-100 last:border-0">
+                <div className="flex items-center gap-2 mb-2 flex-wrap">
+                  <div className="flex">
+                    {[1, 2, 3, 4, 5].map((s) => (
+                      <Star
+                        key={s}
+                        className={`w-4 h-4 ${
+                          s <= Math.round(review.rating)
+                            ? "fill-amber-400 text-amber-400"
+                            : "text-slate-200"
+                        }`}
+                      />
+                    ))}
+                  </div>
+                  <span className="text-sm font-medium text-slate-700">
+                    {Number(review.rating).toFixed(1)}
+                  </span>
+                  {/* review.reviewer_name user-generated — çevrilmez */}
+                  <span className="text-sm text-slate-500">
+                    — {review.reviewer_name || t("pages:testDetail.reviews.unknownCandidate")}
+                  </span>
+                </div>
+                {/* review.comment user-generated — çevrilmez */}
+                {review.comment && (
+                  <p className="text-sm text-slate-600">{review.comment}</p>
+                )}
+              </div>
+            ))}
+          </div>
+
+          {/* Paging kontrolü — prev / pageinfo / next */}
+          {totalReviewPages > 1 && (
+            <div className="flex items-center justify-center gap-2 mt-6 pt-4 border-t border-slate-100">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setReviewPage((p) => Math.max(1, p - 1))}
+                disabled={reviewPage <= 1 || isFetchingReviews}
+              >
+                {t("pages:testDetail.reviews.prev")}
+              </Button>
+              <span className="text-sm text-slate-600 mx-3">
+                {t("pages:testDetail.reviews.pageOf", { current: reviewPage, total: totalReviewPages })}
+              </span>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setReviewPage((p) => Math.min(totalReviewPages, p + 1))}
+                disabled={reviewPage >= totalReviewPages || isFetchingReviews}
+              >
+                {t("pages:testDetail.reviews.next")}
+              </Button>
+            </div>
+          )}
+        </div>
+      )}
+
       <PaymentModal
         isOpen={isPaymentModalOpen}
         onClose={() => setIsPaymentModalOpen(false)}
         test={test}
       />
+
+      {/* Paket Puanlama Modal — sadece aday "Değerlendir" / "Puanı Güncelle" butonuna basınca açılır.
+          Submit başarılı olduğunda handleSubmitTestReview içinden kapatılır. */}
+      <Dialog open={isReviewModalOpen} onOpenChange={setIsReviewModalOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>
+              {myPackageReview
+                ? t("pages:testDetail.rate.titleUpdate")
+                : t("pages:testDetail.rate.title")}
+            </DialogTitle>
+            <DialogDescription>
+              {myPackageReview
+                ? t("pages:testDetail.rate.updateAvailable")
+                : t("pages:testDetail.rate.shareExperience")}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="flex items-center gap-4">
+              <StarRating value={testRating} onChange={setTestRating} size="lg" />
+              {testRating > 0 && (
+                <span className="text-lg font-medium text-slate-700">{testRating}/5</span>
+              )}
+            </div>
+            <Textarea
+              placeholder={t("pages:testDetail.rate.commentPlaceholder")}
+              value={testComment}
+              onChange={(e) => setTestComment(e.target.value)}
+              rows={4}
+            />
+            <div className="flex justify-end gap-2">
+              <Button
+                variant="outline"
+                onClick={() => setIsReviewModalOpen(false)}
+              >
+                {t("pages:testDetail.rate.cancel")}
+              </Button>
+              <Button
+                onClick={handleSubmitTestReview}
+                disabled={testRating === 0 || !testId}
+                className="bg-indigo-600 hover:bg-indigo-700"
+              >
+                {myPackageReview
+                  ? t("pages:testDetail.rate.submitUpdate")
+                  : t("pages:testDetail.rate.submitNew")}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

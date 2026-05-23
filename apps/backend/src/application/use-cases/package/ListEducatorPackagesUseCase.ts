@@ -9,9 +9,6 @@ export class ListEducatorPackagesUseCase {
     if (packages.length === 0) return packages;
 
     const packageIds = packages.map((p: any) => p.id);
-    const allTestIds: string[] = packages.flatMap((p: any) =>
-      (p.tests ?? []).map((t: any) => t.id),
-    );
 
     const [saleRows, ratingRows] = await Promise.all([
       (prisma.purchase as any).groupBy({
@@ -19,13 +16,13 @@ export class ListEducatorPackagesUseCase {
         where: { packageId: { in: packageIds }, status: 'ACTIVE' },
         _count: { _all: true },
       }),
-      allTestIds.length
-        ? prisma.review.groupBy({
-            by: ['testId'],
-            where: { testId: { in: allTestIds } },
+      packageIds.length
+        ? (prisma as any).review.groupBy({
+            by: ['packageId'],
+            where: { packageId: { in: packageIds } },
             _avg: { testRating: true },
             _count: { _all: true },
-          } as any)
+          })
         : [],
     ]);
 
@@ -34,27 +31,20 @@ export class ListEducatorPackagesUseCase {
       if (s.packageId) saleByPackageId.set(s.packageId, s._count._all ?? 0);
     }
 
-    const ratingByTestId = new Map<string, { avg: number; count: number }>();
+    const ratingByPackageId = new Map<string, { avg: number; count: number }>();
     for (const r of ratingRows as any[]) {
-      ratingByTestId.set(r.testId, { avg: r._avg.testRating ?? 0, count: r._count._all ?? 0 });
+      if (r.packageId) {
+        ratingByPackageId.set(r.packageId, { avg: r._avg.testRating ?? 0, count: r._count._all ?? 0 });
+      }
     }
 
     return packages.map((pkg: any) => {
-      const tests: any[] = pkg.tests ?? [];
-      let ratingSum = 0;
-      let ratingCnt = 0;
-      for (const t of tests) {
-        const r = ratingByTestId.get(t.id);
-        if (r && r.count) {
-          ratingSum += r.avg * r.count;
-          ratingCnt += r.count;
-        }
-      }
+      const r = ratingByPackageId.get(pkg.id);
       return {
         ...pkg,
         saleCount: saleByPackageId.get(pkg.id) ?? 0,
-        ratingAvg: ratingCnt > 0 ? ratingSum / ratingCnt : null,
-        ratingCount: ratingCnt,
+        ratingAvg: r && r.count > 0 ? r.avg : null,
+        ratingCount: r?.count ?? 0,
       };
     });
   }

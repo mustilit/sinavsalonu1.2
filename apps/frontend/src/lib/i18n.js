@@ -23,14 +23,46 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 
 import trCommon from '../locales/tr/common.json';
 import trAuth from '../locales/tr/auth.json';
+import trPages from '../locales/tr/pages.json';
+import trOnboarding from '../locales/tr/onboarding.json';
 import enCommon from '../locales/en/common.json';
 import enAuth from '../locales/en/auth.json';
-// marketplace namespace'leri henüz yok — gelince eklenecek
+import enPages from '../locales/en/pages.json';
+import enOnboarding from '../locales/en/onboarding.json';
+import esCommon from '../locales/es/common.json';
+import esAuth from '../locales/es/auth.json';
+import esPages from '../locales/es/pages.json';
+import esOnboarding from '../locales/es/onboarding.json';
+import zhCommon from '../locales/zh/common.json';
+import zhAuth from '../locales/zh/auth.json';
+import zhPages from '../locales/zh/pages.json';
+import zhOnboarding from '../locales/zh/onboarding.json';
+import deCommon from '../locales/de/common.json';
+import deAuth from '../locales/de/auth.json';
+import dePages from '../locales/de/pages.json';
+import deOnboarding from '../locales/de/onboarding.json';
 
 const resources = {
-  tr: { common: trCommon, auth: trAuth },
-  en: { common: enCommon, auth: enAuth },
+  tr: { common: trCommon, auth: trAuth, pages: trPages, onboarding: trOnboarding },
+  en: { common: enCommon, auth: enAuth, pages: enPages, onboarding: enOnboarding },
+  es: { common: esCommon, auth: esAuth, pages: esPages, onboarding: esOnboarding },
+  zh: { common: zhCommon, auth: zhAuth, pages: zhPages, onboarding: zhOnboarding },
+  de: { common: deCommon, auth: deAuth, pages: dePages, onboarding: deOnboarding },
 };
+
+/**
+ * Desteklenen diller — LanguageSwitcher bu listeyi okur.
+ * `label` her dilin kendi yerel adı (native name) — UI'da dil isimleri
+ * yerel okumayı kolaylaştırmak için her zaman kendi dilinde gösterilir
+ * (kullanıcı hangi dilde UI gördüğüne bakmaksızın "中文" görür).
+ */
+export const SUPPORTED_LANGUAGES = [
+  { code: 'tr', label: 'Türkçe',  flag: '🇹🇷' },
+  { code: 'en', label: 'English', flag: '🇬🇧' },
+  { code: 'es', label: 'Español', flag: '🇪🇸' },
+  { code: 'zh', label: '中文',    flag: '🇨🇳' },
+  { code: 'de', label: 'Deutsch', flag: '🇩🇪' },
+];
 
 i18n
   .use(LanguageDetector)
@@ -39,8 +71,8 @@ i18n
     resources,
     fallbackLng: 'tr',
     defaultNS: 'common',
-    ns: ['common', 'auth'],
-    supportedLngs: ['tr', 'en'],
+    ns: ['common', 'auth', 'pages', 'onboarding'],
+    supportedLngs: SUPPORTED_LANGUAGES.map((l) => l.code),
     detection: {
       order: ['localStorage', 'navigator', 'htmlTag'],
       lookupLocalStorage: 'i18nextLng',
@@ -58,6 +90,16 @@ i18n
       useSuspense: false,
     },
   });
+
+// İlk yüklemede ve sonradan dil değişiminde <html lang="..."> attribute'unu
+// güncel tut — screen reader telaffuzu ve SEO için.
+if (typeof document !== 'undefined') {
+  const applyHtmlLang = (lng) => {
+    document.documentElement.setAttribute('lang', lng || 'tr');
+  };
+  applyHtmlLang(i18n.resolvedLanguage);
+  i18n.on('languageChanged', applyHtmlLang);
+}
 
 export default i18n;
 

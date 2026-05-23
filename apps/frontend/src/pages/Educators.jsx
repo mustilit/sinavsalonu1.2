@@ -1,13 +1,18 @@
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { createPageUrl } from "@/utils";
 import { useQuery } from "@tanstack/react-query";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Search, BookOpen, Star, User, TrendingUp, GraduationCap } from "lucide-react";
 import api from "@/lib/api/apiClient";
+import PaginationBar from "@/components/ui/PaginationBar";
+
+const PAGE_SIZE = 10;
 
 export default function Educators() {
+  const { t } = useTranslation(["pages"]);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedExamTypeId, setSelectedExamTypeId] = useState(null);
 
@@ -50,11 +55,21 @@ export default function Educators() {
     !searchQuery || (edu.name?.toLowerCase() ?? "").includes(searchQuery.toLowerCase())
   );
 
+  // Paging — 10 satır / sayfa. Filtre veya arama değişince 1. sayfaya dön.
+  const [page, setPage] = useState(1);
+  useEffect(() => { setPage(1); }, [searchQuery, selectedExamTypeId]);
+  const totalPages = Math.max(1, Math.ceil(filteredEducators.length / PAGE_SIZE));
+  const currentPage = Math.min(page, totalPages);
+  const pagedEducators = useMemo(
+    () => filteredEducators.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE),
+    [filteredEducators, currentPage],
+  );
+
   return (
     <div className="max-w-7xl mx-auto">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-slate-900">Eğiticiler</h1>
-        <p className="text-slate-500 mt-2">Platformdaki tüm eğiticileri keşfet</p>
+        <h1 className="text-3xl font-bold text-slate-900">{t("pages:titles.educators")}</h1>
+        <p className="text-slate-500 mt-2">{t("pages:titles.educatorsDesc")}</p>
       </div>
 
       {/* Arama + Filtre */}
@@ -141,7 +156,7 @@ export default function Educators() {
         <>
           <p className="text-sm text-slate-500 mb-6">{filteredEducators.length} eğitici bulundu</p>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredEducators.map((educator) => (
+            {pagedEducators.map((educator) => (
               <Link
                 key={educator.id}
                 to={createPageUrl("EducatorProfile") + `?id=${encodeURIComponent(educator.id)}`}
@@ -184,6 +199,11 @@ export default function Educators() {
               </Link>
             ))}
           </div>
+          <PaginationBar
+            page={currentPage}
+            totalPages={totalPages}
+            onPageChange={setPage}
+          />
         </>
       )}
     </div>

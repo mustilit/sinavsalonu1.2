@@ -2,14 +2,17 @@ import { prisma } from '../../../infrastructure/database/prisma';
 
 export interface EducatorReviewItem {
   id: string;
-  testId: string;
-  testTitle: string;
+  packageId: string | null;
+  packageTitle: string;
   testRating: number;
   educatorRating: number | null;
   comment: string | null;
   createdAt: string;
 }
 
+/**
+ * Bir eğiticinin paketlerine gelen review'ları listeler (yeni model: paket bazlı).
+ */
 export class ListEducatorReviewsUseCase {
   async execute(educatorId: string, limit = 20): Promise<EducatorReviewItem[]> {
     const safeLimit = Math.min(50, Math.max(1, limit));
@@ -17,18 +20,18 @@ export class ListEducatorReviewsUseCase {
     const rows = await prisma.$queryRaw<
       Array<{
         id: string;
-        testId: string;
-        test_title: string | null;
+        packageId: string | null;
+        package_title: string | null;
         testRating: number;
         educatorRating: number | null;
         comment: string | null;
         createdAt: Date;
       }>
     >`
-      SELECT r.id, r."testId", t.title AS test_title,
+      SELECT r.id, r."packageId", p.title AS package_title,
              r."testRating", r."educatorRating", r.comment, r."createdAt"
       FROM reviews r
-      JOIN exam_tests t ON r."testId" = t.id
+      LEFT JOIN test_packages p ON r."packageId" = p.id
       WHERE r."educatorId" = ${educatorId}
       ORDER BY r."createdAt" DESC
       LIMIT ${safeLimit}
@@ -36,8 +39,8 @@ export class ListEducatorReviewsUseCase {
 
     return rows.map((r) => ({
       id: r.id,
-      testId: r.testId,
-      testTitle: r.test_title ?? '',
+      packageId: r.packageId,
+      packageTitle: r.package_title ?? '',
       testRating: r.testRating,
       educatorRating: r.educatorRating ?? null,
       comment: r.comment ?? null,

@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Param, Req, UseGuards, Get, Query } from '@nestjs/common';
+import { Controller, Post, Body, Param, Req, UseGuards, Get, Query, BadRequestException } from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
 import { ApiTags, ApiBearerAuth, ApiOkResponse } from '@nestjs/swagger';
 import { ApiErrorResponses } from '../swagger/decorators';
@@ -17,9 +17,14 @@ import { PrismaAuditLogRepository } from '../../infrastructure/repositories/Pris
 import { prisma } from '../../infrastructure/database/prisma';
 
 /**
- * Test değerlendirme işlemlerini yönetir: yorum/puan oluşturma veya güncelleme,
- * yorumları listeleme ve puan ortalamasını sorgulama.
- * Yorum oluşturma CANDIDATE rolüne kısıtlı; listeleme ve ortalama herkese açıktır.
+ * Test bazlı review endpoint'leri — yeni domain modeli (paket bazlı review) ile
+ * geri uyumluluk sağlar. Yeni client'lar /marketplace/packages/:id/reviews kullanmalı.
+ *
+ * Bu controller:
+ *  - GET /tests/:id/reviews → testId üzerinden paketi bulup paketin review'larını döner
+ *  - GET /tests/:id/rating → testId'nin paketinin ortalama puanı
+ *  - GET /tests/:id/my-review → adayın o paket için review'u
+ *  - POST /tests/:id/reviews → testId'nin paketine review yaratır/günceller (deprecated alias)
  */
 @Controller()
 @ApiTags('Reviews')
@@ -37,15 +42,22 @@ export class ReviewsController {
     this.aggUc = new GetTestRatingAggregateUseCase(reviewRepo);
   }
 
+  /**
+   * Deprecated: testId üzerinden review yaratma. Paket bağlamı bulunup
+   * yeni CreateOrUpdateReviewUseCase çağrılır (1 aday × 1 paket = 1 review).
+   */
   @Post('tests/:id/reviews')
   @Roles('CANDIDATE')
-  @Throttle({ default: { limit: 5, ttl: 60000 } })
+  @Throttle({ default: { limit: 30, ttl: 60000 } })
   @ApiBearerAuth('bearer')
   @ApiOkResponse({ type: ReviewUpsertResponseDto })
   @ApiErrorResponses()
   async create(@Param('id') id: string, @Body() body: { testRating?: number; educatorRating?: number; comment?: string }, @Req() req: any) {
     const candidateId = req.user?.id;
-    return this.createUc.execute(id, candidateId, body);
+    const test = await prisma.examTest.findUnique({ where: { id }, select: { packageId: true } });
+    const packageId = (test as any)?.packageId;
+    if (!packageId) throw new BadRequestException('PACKAGE_NOT_FOUND');
+    return this.createUc.execute(packageId, candidateId, body);
   }
 
   @Public()
@@ -55,7 +67,7 @@ export class ReviewsController {
   async list(@Param('id') id: string, @Query('limit') limit: string, @Query('cursor') cursor: string) {
     const l = Math.min(50, Math.max(1, Number(limit) || 20));
     const res = await this.listUc.execute(id, l, cursor);
-    // Gizlilik: kamuya açık yanıtta candidateId ve educatorId alanları kaldırılır
+    // Gizlilik: kamuya açık yanıtta candidateId/educatorId alanları kaldırılır
     const items = res.items.map((r) => ({ id: r.id, testRating: r.testRating, educatorRating: r.educatorRating, comment: r.comment, createdAt: r.createdAt }));
     return { items, meta: { nextCursor: res.nextCursor } };
   }
@@ -68,21 +80,26 @@ export class ReviewsController {
     return this.aggUc.execute(id);
   }
 
+  /**
+   * Deprecated: paket-bazlı review döner (testId'den packageId bulunarak).
+   */
   @Get('tests/:id/my-review')
   @ApiBearerAuth('bearer')
   @ApiErrorResponses()
   async myReview(@Param('id') id: string, @Req() req: any) {
     const candidateId = req.user?.id;
     if (!candidateId) return null;
-    const review = await prisma.review.findFirst({ where: { testId: id, candidateId } } as any);
+    const test = await prisma.examTest.findUnique({ where: { id }, select: { packageId: true } });
+    const packageId = (test as any)?.packageId;
+    if (!packageId) return null;
+    const review: any = await (prisma as any).review.findFirst({ where: { packageId, candidateId } });
     if (!review) return null;
     return {
       id: review.id,
-      testRating: (review as any).testRating,
-      educatorRating: (review as any).educatorRating,
-      comment: (review as any).comment,
-      createdAt: (review as any).createdAt,
+      testRating: review.testRating,
+      educatorRating: review.educatorRating,
+      comment: review.comment,
+      createdAt: review.createdAt,
     };
   }
 }
-

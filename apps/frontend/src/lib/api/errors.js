@@ -2,24 +2,20 @@
  * Backend error contract parser.
  * Backend format: { error: { code, message, details }, path, timestamp }
  * @see apps/backend/src/nest/filters/http-exception.filter.ts
+ *
+ * i18n: Hata mesajları common:apiErrors namespace'inden çözülür.
+ * React dışından kullanıldığı için doğrudan `i18n.t()` çağrılır
+ * (lib/i18n.js init edildikten sonra import güvenli).
  */
+import i18n from '@/lib/i18n';
 
 /** @typedef {{ code?: string; message?: string | string[]; details?: unknown }} ErrorBody */
 /** @typedef {{ error?: ErrorBody; path?: string; timestamp?: string }} BackendErrorResponse */
 
-/** UI'da gösterilecek güvenli mesaj map'i - prod'da stack trace basılmaz */
-export const SAFE_MESSAGE_MAP = {
-  UNAUTHORIZED: 'Oturum süreniz doldu. Lütfen tekrar giriş yapın.',
-  FORBIDDEN: 'Bu işlem için yetkiniz yok.',
-  NOT_FOUND: 'İstenen kaynak bulunamadı.',
-  BAD_REQUEST: 'Geçersiz istek.',
-  TOO_MANY_REQUESTS: 'Çok fazla deneme yapıldı. 60 saniye sonra tekrar deneyin.',
-  CAPTCHA_REQUIRED: 'Devam etmek için doğrulama gerekli.',
-  CAPTCHA_INVALID: 'Doğrulama başarısız. Lütfen tekrar deneyin.',
-  INTERNAL_ERROR: 'Bir hata oluştu. Lütfen daha sonra tekrar deneyin.',
-  ERR_NETWORK: 'Sunucuya ulaşılamadı. Bağlantınızı kontrol edin.',
-  TIMEOUT: 'İstek zaman aşımına uğradı.',
-};
+/** UI için güvenli mesaj çözer — t() ile çevrilmiş string döner. */
+function safeMessage(code, opts) {
+  return i18n.t(`common:apiErrors.${code}`, opts);
+}
 
 /**
  * Backend error response'u parse eder.
@@ -28,14 +24,14 @@ export const SAFE_MESSAGE_MAP = {
  */
 export function parseBackendError(data) {
   if (!data || typeof data !== 'object') {
-    return { code: 'UNKNOWN', message: 'Beklenmeyen sunucu yanıtı' };
+    return { code: 'UNKNOWN', message: safeMessage('UNEXPECTED_RESPONSE') };
   }
   const body = /** @type {BackendErrorResponse} */ (data);
   const err = body?.error;
   const code = err?.code ?? 'UNKNOWN';
   let message = err?.message;
   if (Array.isArray(message)) message = message[0];
-  if (typeof message !== 'string') message = String(message || (SAFE_MESSAGE_MAP.INTERNAL_ERROR ?? 'Bir hata oluştu.'));
+  if (typeof message !== 'string') message = String(message || safeMessage('INTERNAL_ERROR'));
   return { code, message, details: err?.details };
 }
 
@@ -51,21 +47,35 @@ export function toSafeMessage(err, opts = {}) {
   if (err?.response?.data) {
     const { code, message } = parseBackendError(err.response.data);
     const retryAfterSeconds = err?.response?.retryAfter;
-    const safe = SAFE_MESSAGE_MAP[code];
     if (code === 'TOO_MANY_REQUESTS' && typeof retryAfterSeconds === 'number' && retryAfterSeconds > 0) {
-      const txt = `Çok fazla deneme yapıldı. ${retryAfterSeconds} saniye sonra tekrar deneyin.`;
-      return txt;
+      return safeMessage('TOO_MANY_REQUESTS_WITH_TIME', { seconds: retryAfterSeconds });
     }
-    // Her zaman önce map'teki güvenli mesajları tercih et; backend message sadece fallback.
-    if (safe) return safe;
-    return message || SAFE_MESSAGE_MAP.INTERNAL_ERROR;
+    // Bilinen koda öncelik ver; backend message yalnızca fallback.
+    // i18next bilinmeyen key için key'i geri verir — bu yüzden code listesi ile kontrol ediyoruz.
+    const knownCodes = [
+      'UNAUTHORIZED', 'FORBIDDEN', 'NOT_FOUND', 'BAD_REQUEST',
+      'TOO_MANY_REQUESTS', 'CAPTCHA_REQUIRED', 'CAPTCHA_INVALID',
+      'INTERNAL_ERROR', 'ERR_NETWORK', 'TIMEOUT',
+    ];
+    if (knownCodes.includes(code)) return safeMessage(code);
+    return message || safeMessage('INTERNAL_ERROR');
   }
   if (err?.code === 'ERR_NETWORK' || err?.message?.includes?.('Network') || err?.message?.includes?.('EMPTY_RESPONSE')) {
-    return SAFE_MESSAGE_MAP.ERR_NETWORK;
+    return safeMessage('ERR_NETWORK');
   }
   if (err?.message?.includes?.('timeout') || err?.name === 'AbortError') {
-    return SAFE_MESSAGE_MAP.TIMEOUT;
+    return safeMessage('TIMEOUT');
   }
-  if (isProd) return SAFE_MESSAGE_MAP.INTERNAL_ERROR;
-  return err?.message || SAFE_MESSAGE_MAP.INTERNAL_ERROR;
+  if (isProd) return safeMessage('INTERNAL_ERROR');
+  return err?.message || safeMessage('INTERNAL_ERROR');
 }
+
+/**
+ * Geri uyumluluk için: kod → güvenli mesaj proxy.
+ * Eski `SAFE_MESSAGE_MAP[code]` kullanımları için (lazy okunur).
+ */
+export const SAFE_MESSAGE_MAP = new Proxy({}, {
+  get(_, code) {
+    return safeMessage(String(code));
+  },
+});

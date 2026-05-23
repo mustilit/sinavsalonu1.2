@@ -1,93 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuites name="jest tests" tests="39" failures="0" errors="0" time="9.144">
-  <testsuite name="sendWindow" errors="0" failures="0" skipped="0" timestamp="2026-05-19T19:18:34" time="5.016" tests="11">
-    <testcase classname="sendWindow disabled config → inWindow=true, delay=0" name="sendWindow disabled config → inWindow=true, delay=0" time="0.033">
+<testsuites name="jest tests" tests="3" failures="0" errors="0" time="1.925">
+  <testsuite name="undefined" errors="0" failures="0" skipped="0" timestamp="2026-05-22T14:59:29" time="1.377" tests="3">
+    <testcase classname=" cannot create review without purchase for any test in the package" name=" cannot create review without purchase for any test in the package" time="0.021">
     </testcase>
-    <testcase classname="sendWindow UTC pencere içi (10:00 UTC, 9-21) → inWindow" name="sendWindow UTC pencere içi (10:00 UTC, 9-21) → inWindow" time="0.103">
+    <testcase classname=" cannot create review without any submitted attempt in the package" name=" cannot create review without any submitted attempt in the package" time="0.001">
     </testcase>
-    <testcase classname="sendWindow UTC pencere dışı sabah erken (06:00 UTC, 9-21) → bugün 09:00 UTC" name="sendWindow UTC pencere dışı sabah erken (06:00 UTC, 9-21) → bugün 09:00 UTC" time="0.007">
-    </testcase>
-    <testcase classname="sendWindow UTC pencere dışı gece (23:00 UTC, 9-21) → yarın 09:00 UTC" name="sendWindow UTC pencere dışı gece (23:00 UTC, 9-21) → yarın 09:00 UTC" time="0.002">
-    </testcase>
-    <testcase classname="sendWindow Tam endHour saatinde → pencere dışı (end exclusive)" name="sendWindow Tam endHour saatinde → pencere dışı (end exclusive)" time="0.005">
-    </testcase>
-    <testcase classname="sendWindow Tam startHour saatinde → pencere içi (start inclusive)" name="sendWindow Tam startHour saatinde → pencere içi (start inclusive)" time="0.002">
-    </testcase>
-    <testcase classname="sendWindow Europe/Istanbul pencere — yaz UTC+3, 09:00 yerel = 06:00 UTC" name="sendWindow Europe/Istanbul pencere — yaz UTC+3, 09:00 yerel = 06:00 UTC" time="0.003">
-    </testcase>
-    <testcase classname="sendWindow Europe/Istanbul — 03:00 UTC = 06:00 Istanbul → dışı, bugün 09:00 Istanbul (06:00 UTC)" name="sendWindow Europe/Istanbul — 03:00 UTC = 06:00 Istanbul → dışı, bugün 09:00 Istanbul (06:00 UTC)" time="0.003">
-    </testcase>
-    <testcase classname="sendWindow Geçersiz pencere (start &gt; end) → invalid" name="sendWindow Geçersiz pencere (start &gt; end) → invalid" time="0">
-    </testcase>
-    <testcase classname="sendWindow Geçersiz pencere (start == end) → invalid" name="sendWindow Geçersiz pencere (start == end) → invalid" time="0.006">
-    </testcase>
-    <testcase classname="sendWindow Hatalı TZ → UTC fallback ile çalışır, hata fırlatmaz" name="sendWindow Hatalı TZ → UTC fallback ile çalışır, hata fırlatmaz" time="0.003">
-    </testcase>
-  </testsuite>
-  <testsuite name="BrevoApiProvider" errors="0" failures="0" skipped="0" timestamp="2026-05-19T19:18:34" time="4.944" tests="7">
-    <testcase classname="BrevoApiProvider 200 + messageId → success" name="BrevoApiProvider 200 + messageId → success" time="0.039">
-    </testcase>
-    <testcase classname="BrevoApiProvider 429 → rate_limited retryable" name="BrevoApiProvider 429 → rate_limited retryable" time="0.005">
-    </testcase>
-    <testcase classname="BrevoApiProvider 401 → auth_failure non-retryable" name="BrevoApiProvider 401 → auth_failure non-retryable" time="0.004">
-    </testcase>
-    <testcase classname="BrevoApiProvider 502 → 5xx retryable" name="BrevoApiProvider 502 → 5xx retryable" time="0.003">
-    </testcase>
-    <testcase classname="BrevoApiProvider 400 invalid recipient → non-retryable" name="BrevoApiProvider 400 invalid recipient → non-retryable" time="0.002">
-    </testcase>
-    <testcase classname="BrevoApiProvider Network failure → connection_failed retryable" name="BrevoApiProvider Network failure → connection_failed retryable" time="0.006">
-    </testcase>
-    <testcase classname="BrevoApiProvider apiKey eksikse constructor fırlatır" name="BrevoApiProvider apiKey eksikse constructor fırlatır" time="0.053">
-    </testcase>
-  </testsuite>
-  <testsuite name="EmailDispatcher.shouldSend" errors="0" failures="0" skipped="0" timestamp="2026-05-19T19:18:34" time="5.307" tests="8">
-    <testcase classname="EmailDispatcher.shouldSend global kapalı → BLOCKED_BY_ADMIN" name="EmailDispatcher.shouldSend global kapalı → BLOCKED_BY_ADMIN" time="0.025">
-    </testcase>
-    <testcase classname="EmailDispatcher.shouldSend CANDIDATE NOTIFY off → BLOCKED_BY_ADMIN" name="EmailDispatcher.shouldSend CANDIDATE NOTIFY off → BLOCKED_BY_ADMIN" time="0.008">
-    </testcase>
-    <testcase classname="EmailDispatcher.shouldSend CANDIDATE CRITICAL preference yoksayılır" name="EmailDispatcher.shouldSend CANDIDATE CRITICAL preference yoksayılır" time="0.005">
-    </testcase>
-    <testcase classname="EmailDispatcher.shouldSend SUPPRESSED → SUPPRESSED" name="EmailDispatcher.shouldSend SUPPRESSED → SUPPRESSED" time="0.002">
-    </testcase>
-    <testcase classname="EmailDispatcher.shouldSend Süresi geçmiş suppression → bypass" name="EmailDispatcher.shouldSend Süresi geçmiş suppression → bypass" time="0.002">
-    </testcase>
-    <testcase classname="EmailDispatcher.shouldSend NOTIFY + preference false → BLOCKED_BY_PREFS" name="EmailDispatcher.shouldSend NOTIFY + preference false → BLOCKED_BY_PREFS" time="0.001">
-    </testcase>
-    <testcase classname="EmailDispatcher.shouldSend Günlük cap aşımı → BLOCKED_BY_PREFS" name="EmailDispatcher.shouldSend Günlük cap aşımı → BLOCKED_BY_PREFS" time="0.004">
-    </testcase>
-    <testcase classname="EmailDispatcher.shouldSend Tüm kontroller geçti → ALLOWED" name="EmailDispatcher.shouldSend Tüm kontroller geçti → ALLOWED" time="0.002">
-    </testcase>
-  </testsuite>
-  <testsuite name="preferenceMap" errors="0" failures="0" skipped="0" timestamp="2026-05-19T19:18:39" time="0.605" tests="6">
-    <testcase classname="preferenceMap default keys match" name="preferenceMap default keys match" time="0.033">
-    </testcase>
-    <testcase classname="preferenceMap CRITICAL şablonlar preference filtresi atlar (null map)" name="preferenceMap CRITICAL şablonlar preference filtresi atlar (null map)" time="0.001">
-    </testcase>
-    <testcase classname="preferenceMap NOTIFY/BULK şablonlar uygun preference key e bağlanır" name="preferenceMap NOTIFY/BULK şablonlar uygun preference key e bağlanır" time="0.003">
-    </testcase>
-    <testcase classname="preferenceMap readEmailPreferences null/undefined → default" name="preferenceMap readEmailPreferences null/undefined → default" time="0.004">
-    </testcase>
-    <testcase classname="preferenceMap readEmailPreferences partial override" name="preferenceMap readEmailPreferences partial override" time="0.003">
-    </testcase>
-    <testcase classname="preferenceMap readEmailPreferences yanlış tip alanları yoksayar" name="preferenceMap readEmailPreferences yanlış tip alanları yoksayar" time="0.003">
-    </testcase>
-  </testsuite>
-  <testsuite name="email/encryption" errors="0" failures="0" skipped="0" timestamp="2026-05-19T19:18:39" time="0.771" tests="4">
-    <testcase classname="email/encryption round-trip encryptSecret/decryptSecret" name="email/encryption round-trip encryptSecret/decryptSecret" time="0.149">
-    </testcase>
-    <testcase classname="email/encryption encryptJson/decryptJson preserves structure" name="email/encryption encryptJson/decryptJson preserves structure" time="0.01">
-    </testcase>
-    <testcase classname="email/encryption decrypt fails with wrong key" name="email/encryption decrypt fails with wrong key" time="0.045">
-    </testcase>
-    <testcase classname="email/encryption maskSecret hides middle" name="email/encryption maskSecret hides middle" time="0.004">
-    </testcase>
-  </testsuite>
-  <testsuite name="unsubscribeToken" errors="0" failures="0" skipped="0" timestamp="2026-05-19T19:18:40" time="0.689" tests="3">
-    <testcase classname="unsubscribeToken üretilen token kendi imzasıyla doğrulanır" name="unsubscribeToken üretilen token kendi imzasıyla doğrulanır" time="0.077">
-    </testcase>
-    <testcase classname="unsubscribeToken imza bozulursa doğrulama fail" name="unsubscribeToken imza bozulursa doğrulama fail" time="0.006">
-    </testcase>
-    <testcase classname="unsubscribeToken formatsız input reddedilir" name="unsubscribeToken formatsız input reddedilir" time="0.003">
+    <testcase classname=" upsert package review works when candidate has purchase + submitted attempt" name=" upsert package review works when candidate has purchase + submitted attempt" time="0.002">
     </testcase>
   </testsuite>
 </testsuites>

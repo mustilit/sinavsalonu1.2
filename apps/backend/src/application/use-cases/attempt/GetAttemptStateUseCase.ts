@@ -25,13 +25,43 @@ export class GetAttemptStateUseCase {
     const answerMap: Record<string, string | null> = {};
     for (const a of answers) answerMap[a.questionId] = a.selectedOptionId ?? null;
 
-    // Snapshot varsa canlı soru listesi yerine onu kullan (eğitici güncellemelerinden bağımsız)
-    const questionSource: Array<{ id: string }> =
+    // Snapshot varsa canlı soru listesi yerine onu kullan (eğitici güncellemelerinden bağımsız).
+    // SubmitAttemptUseCase'in beklediği gibi her zaman snapshot tercih edilir; canlı fallback
+    // sadece çok eski testler için geçerli (testsSnapshot/migration öncesi).
+    const questionSource: Array<any> =
       (attempt as any).questionsSnapshot ?? test.questions ?? [];
+
+    // IN_PROGRESS sırasında doğru cevap bilgisi sızdırılmaz. Submit/Timeout
+    // sonrası kullanıcı review modunda olduğundan isCorrect açılır.
+    const revealCorrect = attempt.status !== 'IN_PROGRESS';
 
     const questions = questionSource.map((q: any, idx: number) => {
       const selected = answerMap[q.id] ?? null;
-      return { id: q.id, index: idx + 1, answered: selected !== null, selectedOptionId: selected };
+      const options = Array.isArray(q.options)
+        ? q.options.map((o: any) => ({
+            id: o.id,
+            content: o.content ?? '',
+            mediaUrl: o.mediaUrl ?? null,
+            ...(revealCorrect ? { isCorrect: !!o.isCorrect } : {}),
+          }))
+        : [];
+      return {
+        id: q.id,
+        index: idx + 1,
+        answered: selected !== null,
+        selectedOptionId: selected,
+        // Snapshot içerik — eğitici sonradan değiştirse de sabit kalır.
+        content: q.content ?? '',
+        mediaUrl: q.mediaUrl ?? null,
+        order: typeof q.order === 'number' ? q.order : idx,
+        options,
+        ...(revealCorrect
+          ? {
+              solutionText: q.solutionText ?? null,
+              solutionMediaUrl: q.solutionMediaUrl ?? null,
+            }
+          : {}),
+      };
     });
 
     const answeredCount = questions.filter((q) => q.answered).length;

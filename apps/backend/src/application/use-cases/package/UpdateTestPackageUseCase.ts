@@ -8,6 +8,7 @@ export class UpdateTestPackageUseCase {
     title?: string;
     description?: string | null;
     priceCents?: number;
+    coverImageUrl?: string | null;
   }) {
     const pkg = await this.repo.findById(packageId);
 
@@ -31,6 +32,7 @@ export class UpdateTestPackageUseCase {
       ...(input.title !== undefined && { title: input.title.trim() }),
       ...(input.description !== undefined && { description: input.description }),
       ...(input.priceCents !== undefined && { priceCents: input.priceCents }),
+      ...(input.coverImageUrl !== undefined && { coverImageUrl: input.coverImageUrl }),
     });
   }
 }

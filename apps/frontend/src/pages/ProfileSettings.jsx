@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { entities, auth } from "@/api/dalClient";
 import { useAuth } from "@/lib/AuthContext";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -7,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import SensitiveProfileOtpDialog from "@/components/settings/SensitiveProfileOtpDialog";
 import { toast } from "sonner";
 import { User, Save, Phone, Globe, Linkedin, Undo2, Clock, CheckCircle2, XCircle, ShoppingBag, Filter, GraduationCap, AlertCircle, MessageSquare, Camera } from "lucide-react";
 import RefundRequestModal from "@/components/refund/RefundRequestModal";
@@ -69,6 +71,7 @@ function resizeImageToBase64(file, maxPx = 256) {
 }
 
 export default function ProfileSettings() {
+  const { t } = useTranslation(["pages"]);
   const { user: authUser } = useAuth();
   const [initialFormData, setInitialFormData] = useState(null);
   const [formData, setFormData] = useState({ ...defaultFormData });
@@ -109,11 +112,11 @@ export default function ProfileSettings() {
     if (!file) return;
     const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
     if (!allowedTypes.includes(file.type)) {
-      toast.error("Lütfen JPG, PNG veya WebP formatında resim yükleyin");
+      toast.error(t("pages:profileSettings.toasts.invalidImage"));
       return;
     }
     if (file.size > 5 * 1024 * 1024) {
-      toast.error("Resim boyutu en fazla 5MB olabilir");
+      toast.error(t("pages:profileSettings.toasts.imageTooBig"));
       return;
     }
     setUploadingImage(true);
@@ -121,9 +124,9 @@ export default function ProfileSettings() {
       const dataUrl = await resizeImageToBase64(file, 256);
       await auth.updateMe({ profile_image_url: dataUrl });
       setFormData(prev => ({ ...prev, profile_image_url: dataUrl }));
-      toast.success("Profil resmi güncellendi");
+      toast.success(t("pages:profileSettings.toasts.imageUploaded"));
     } catch {
-      toast.error("Resim yüklenemedi");
+      toast.error(t("pages:profileSettings.toasts.imageUploadFailed"));
     } finally {
       setUploadingImage(false);
       e.target.value = '';
@@ -153,19 +156,58 @@ export default function ProfileSettings() {
     loadProfile();
   }, [authUser?.id]);
 
+  // Hassas alanlar (phone/website/linkedin) backend tarafından PATCH /me/preferences
+  // çağrısından sessizce filtrelenir; OTP doğrulamasından geçmelidir.
+  // Aşağıdaki mutation: non-sensitive alanlar normal PATCH ile gider; eğer
+  // hassas alanlardan değişiklik varsa OTP dialog'u açılır.
+  const [otpDialogOpen, setOtpDialogOpen] = useState(false);
+  const [pendingSensitiveFields, setPendingSensitiveFields] = useState(null);
+
+  const detectSensitiveChanges = () => {
+    if (!initialFormData) return null;
+    const changes = {};
+    for (const k of ["phone", "website", "linkedin"]) {
+      if ((formData[k] ?? "") !== (initialFormData[k] ?? "")) {
+        changes[k] = formData[k] ?? "";
+      }
+    }
+    return Object.keys(changes).length ? changes : null;
+  };
+
   const updateMutation = useMutation({
     mutationFn: async () => {
+      const sensitive = detectSensitiveChanges();
+      // Non-sensitive kısmı her halükarda gönder (allowSensitive=false → backend zaten strip eder)
       await auth.updateMe(formData);
+      if (sensitive) {
+        // Hassas değişiklik varsa OTP akışını başlat
+        setPendingSensitiveFields(sensitive);
+        setOtpDialogOpen(true);
+        return { needsOtp: true };
+      }
+      return { needsOtp: false };
     },
-    onSuccess: () => {
-      toast.success("Profil bilgileri güncellendi");
+    onSuccess: (result) => {
+      if (result?.needsOtp) {
+        // OTP dialog açıldı — başarı toast'unu OTP başarılı tamamlanınca göstereceğiz
+        return;
+      }
+      toast.success(t("pages:profileSettings.toasts.profileUpdated"));
       setInitialFormData(formData);
       queryClient.invalidateQueries({ queryKey: ["user"] });
     },
     onError: () => {
-      toast.error("Güncelleme başarısız oldu");
+      toast.error(t("pages:profileSettings.toasts.updateFailed"));
     }
   });
+
+  // OTP dialog başarılı olduğunda çağrılır — initial state'i taze formData'ya çek
+  const handleOtpSuccess = () => {
+    setInitialFormData(formData);
+    setPendingSensitiveFields(null);
+    queryClient.invalidateQueries({ queryKey: ["user"] });
+    toast.success(t("pages:profileSettings.toasts.profileUpdated"));
+  };
 
   const refundMutation = useMutation({
     mutationFn: (data) => entities.RefundRequest.create({
@@ -174,27 +216,27 @@ export default function ProfileSettings() {
       description: data.description,
     }),
     onSuccess: () => {
-      toast.success("İade talebi gönderildi");
+      toast.success(t("pages:profileSettings.toasts.refundRequested"));
       setRefundModalOpen(false);
       setSelectedPurchase(null);
       queryClient.invalidateQueries({ queryKey: ["refundRequests"] });
     },
     onError: (err) => {
-      toast.error(err?.response?.data?.message ?? "İade talebi gönderilemedi");
+      toast.error(err?.response?.data?.message ?? t("pages:profileSettings.toasts.refundFailed"));
     }
   });
 
   const appealMutation = useMutation({
     mutationFn: () => entities.RefundRequest.appeal(appealRefund.id, appealReason.trim()),
     onSuccess: () => {
-      toast.success("İtirazınız iletildi. Admin tarafından incelenecek.");
+      toast.success(t("pages:profileSettings.toasts.appealSubmitted"));
       setAppealOpen(false);
       setAppealRefund(null);
       setAppealReason("");
       queryClient.invalidateQueries({ queryKey: ["refundRequests"] });
     },
     onError: (err) => {
-      toast.error(err?.response?.data?.message ?? "İtiraz gönderilemedi");
+      toast.error(err?.response?.data?.message ?? t("pages:profileSettings.toasts.appealFailed"));
     }
   });
 
@@ -209,8 +251,8 @@ export default function ProfileSettings() {
   return (
     <div className="max-w-3xl mx-auto">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-slate-900">Profil Ayarları</h1>
-        <p className="text-slate-500 mt-2">İletişim bilgilerinizi ve tercihlerinizi düzenleyin</p>
+        <h1 className="text-3xl font-bold text-slate-900">{t("pages:titles.profileSettings")}</h1>
+        <p className="text-slate-500 mt-2">{t("pages:titles.profileSettingsDesc")}</p>
       </div>
 
       <div className="bg-white rounded-2xl border border-slate-200 p-6 lg:p-8">
@@ -239,18 +281,19 @@ export default function ProfileSettings() {
             <input id="profile-avatar-upload" type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
           </div>
           <div>
-            <p className="text-lg font-semibold text-slate-900">{user.full_name || user.username || user.email || "Kullanıcı"}</p>
+            {/* full_name/username user-generated — çevrilmez */}
+            <p className="text-lg font-semibold text-slate-900">{user.full_name || user.username || user.email || t("pages:profileSettings.userFallback")}</p>
             <p className="text-sm text-slate-500">{user.email}</p>
-            <p className="text-xs text-slate-400 mt-0.5">Resme tıklayarak profil fotoğrafı ekle</p>
+            <p className="text-xs text-slate-400 mt-0.5">{t("pages:profileSettings.avatarHint")}</p>
           </div>
         </div>
 
         <Tabs defaultValue="contact" className="w-full">
           <TabsList className="grid w-full grid-cols-4 mb-8">
-            <TabsTrigger value="contact">İletişim</TabsTrigger>
-            <TabsTrigger value="notifications">Bildirimler</TabsTrigger>
-            <TabsTrigger value="exams">Sınav Tercihleri</TabsTrigger>
-            <TabsTrigger value="financial">Mali İşlemler</TabsTrigger>
+            <TabsTrigger value="contact">{t("pages:profileSettings.tabs.contact")}</TabsTrigger>
+            <TabsTrigger value="notifications">{t("pages:profileSettings.tabs.notifications")}</TabsTrigger>
+            <TabsTrigger value="exams">{t("pages:profileSettings.tabs.exams")}</TabsTrigger>
+            <TabsTrigger value="financial">{t("pages:profileSettings.tabs.financial")}</TabsTrigger>
           </TabsList>
 
           {/* İletişim Tab */}
@@ -260,24 +303,24 @@ export default function ProfileSettings() {
                 <div className="md:col-span-2">
                   <Label htmlFor="phone" className="flex items-center gap-2">
                     <Phone className="w-4 h-4" />
-                    Telefon
+                    {t("pages:profileSettings.contact.phoneLabel")}
                   </Label>
                   <Input
                     id="phone"
-                    placeholder="05XX XXX XX XX"
+                    placeholder={t("pages:profileSettings.contact.phonePlaceholder")}
                     value={formatPhone(formData.phone)}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value.replace(/\D/g, "").slice(0, 11) })}
                     className={`mt-2 ${formData.phone && formData.phone.length < 11 && formData.phone.length > 0 ? "border-rose-500" : ""}`}
                   />
                   {formData.phone && formData.phone.length < 11 && formData.phone.length > 0 && (
-                    <p className="text-sm text-rose-600 mt-1">Geçersiz telefon numarası</p>
+                    <p className="text-sm text-rose-600 mt-1">{t("pages:profileSettings.contact.phoneInvalid")}</p>
                   )}
                 </div>
 
                 <div>
                   <Label htmlFor="website" className="flex items-center gap-2">
                     <Globe className="w-4 h-4" />
-                    Website/Blog
+                    {t("pages:profileSettings.contact.websiteLabel")}
                   </Label>
                   <Input
                     id="website"
@@ -288,14 +331,14 @@ export default function ProfileSettings() {
                     className={`mt-2 ${urlErrors.website ? "border-rose-500" : ""}`}
                   />
                   {urlErrors.website && (
-                    <p className="text-sm text-rose-600 mt-1">Geçerli bir URL girin (https://...)</p>
+                    <p className="text-sm text-rose-600 mt-1">{t("pages:profileSettings.contact.urlInvalid")}</p>
                   )}
                 </div>
 
                 <div>
                   <Label htmlFor="linkedin" className="flex items-center gap-2">
                     <Linkedin className="w-4 h-4" />
-                    LinkedIn
+                    {t("pages:profileSettings.contact.linkedinLabel")}
                   </Label>
                   <Input
                     id="linkedin"
@@ -306,7 +349,7 @@ export default function ProfileSettings() {
                     className={`mt-2 ${urlErrors.linkedin ? "border-rose-500" : ""}`}
                   />
                   {urlErrors.linkedin && (
-                    <p className="text-sm text-rose-600 mt-1">Geçerli bir URL girin (https://...)</p>
+                    <p className="text-sm text-rose-600 mt-1">{t("pages:profileSettings.contact.urlInvalid")}</p>
                   )}
                 </div>
               </div>
@@ -317,7 +360,7 @@ export default function ProfileSettings() {
                 disabled={updateMutation.isPending || !hasChanges || urlErrors.website || urlErrors.linkedin}
               >
                 <Save className="w-4 h-4 mr-2" />
-                {updateMutation.isPending ? "Kaydediliyor..." : "Değişiklikleri Kaydet"}
+                {updateMutation.isPending ? t("pages:profileSettings.saving") : t("pages:profileSettings.saveButton")}
               </Button>
             </form>
           </TabsContent>
@@ -328,8 +371,8 @@ export default function ProfileSettings() {
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="font-medium text-slate-900">Yeni Test Bildirimleri</p>
-                    <p className="text-sm text-slate-500">Yeni testler yayınlandığında bildirim al</p>
+                    <p className="font-medium text-slate-900">{t("pages:profileSettings.notifications.newTests")}</p>
+                    <p className="text-sm text-slate-500">{t("pages:profileSettings.notifications.newTestsDesc")}</p>
                   </div>
                   <Switch
                     checked={formData.notification_preferences.email_new_tests}
@@ -347,8 +390,8 @@ export default function ProfileSettings() {
 
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="font-medium text-slate-900">Kampanya ve Promosyonlar</p>
-                    <p className="text-sm text-slate-500">İndirimler ve özel fırsatlar hakkında bilgi al</p>
+                    <p className="font-medium text-slate-900">{t("pages:profileSettings.notifications.promotions")}</p>
+                    <p className="text-sm text-slate-500">{t("pages:profileSettings.notifications.promotionsDesc")}</p>
                   </div>
                   <Switch
                     checked={formData.notification_preferences.email_promotions}
@@ -366,8 +409,8 @@ export default function ProfileSettings() {
 
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="font-medium text-slate-900">Eğitici Güncellemeleri</p>
-                    <p className="text-sm text-slate-500">Takip ettiğim eğiticilerden güncellemeler al</p>
+                    <p className="font-medium text-slate-900">{t("pages:profileSettings.notifications.educatorUpdates")}</p>
+                    <p className="text-sm text-slate-500">{t("pages:profileSettings.notifications.educatorUpdatesDesc")}</p>
                   </div>
                   <Switch
                     checked={formData.notification_preferences.email_educator_updates}
@@ -385,8 +428,8 @@ export default function ProfileSettings() {
 
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="font-medium text-slate-900">Test Hatırlatmaları</p>
-                    <p className="text-sm text-slate-500">Başladığın testler için hatırlatma al</p>
+                    <p className="font-medium text-slate-900">{t("pages:profileSettings.notifications.testReminders")}</p>
+                    <p className="text-sm text-slate-500">{t("pages:profileSettings.notifications.testRemindersDesc")}</p>
                   </div>
                   <Switch
                     checked={formData.notification_preferences.email_test_reminders}
@@ -409,7 +452,7 @@ export default function ProfileSettings() {
                 disabled={updateMutation.isPending || !hasChanges}
               >
                 <Save className="w-4 h-4 mr-2" />
-                {updateMutation.isPending ? "Kaydediliyor..." : "Değişiklikleri Kaydet"}
+                {updateMutation.isPending ? t("pages:profileSettings.saving") : t("pages:profileSettings.saveButton")}
               </Button>
             </form>
           </TabsContent>
@@ -420,10 +463,10 @@ export default function ProfileSettings() {
               <div>
                 <h3 className="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
                   <GraduationCap className="w-5 h-5 text-indigo-600" />
-                  İlgilendiğim Sınavlar
+                  {t("pages:profileSettings.exams.title")}
                 </h3>
                 <p className="text-sm text-slate-500 mb-6">
-                  İlgilendiğiniz sınavları seçin, ana sayfanızda bu sınavlara ait testler önceliklendirilsin
+                  {t("pages:profileSettings.exams.desc")}
                 </p>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -459,7 +502,7 @@ export default function ProfileSettings() {
                 </div>
 
                 {examTypes.length === 0 && (
-                  <p className="text-center text-slate-500 py-8">Sınav türü bulunamadı</p>
+                  <p className="text-center text-slate-500 py-8">{t("pages:profileSettings.exams.noExamTypes")}</p>
                 )}
               </div>
 
@@ -469,7 +512,7 @@ export default function ProfileSettings() {
                 disabled={updateMutation.isPending || !hasChanges}
               >
                 <Save className="w-4 h-4 mr-2" />
-                {updateMutation.isPending ? "Kaydediliyor..." : "Değişiklikleri Kaydet"}
+                {updateMutation.isPending ? t("pages:profileSettings.saving") : t("pages:profileSettings.saveButton")}
               </Button>
             </form>
           </TabsContent>
@@ -484,7 +527,7 @@ export default function ProfileSettings() {
                   className="text-rose-600 border-rose-200 hover:bg-rose-50"
                 >
                   <Undo2 className="w-4 h-4 mr-2" />
-                  İade İste
+                  {t("pages:profileSettings.financial.requestRefund")}
                 </Button>
               )}
             </div>
@@ -494,7 +537,7 @@ export default function ProfileSettings() {
                 <div className="flex items-center gap-3">
                   <div className="flex-1 relative">
                     <Input
-                      placeholder="Test ara..."
+                      placeholder={t("pages:profileSettings.financial.searchPlaceholder")}
                       value={searchFilter}
                       onChange={(e) => setSearchFilter(e.target.value)}
                       className="pl-10"
@@ -508,7 +551,7 @@ export default function ProfileSettings() {
                       size="sm"
                       className={filterType === "all" ? "bg-indigo-600" : ""}
                     >
-                      Tümü
+                      {t("pages:profileSettings.financial.all")}
                     </Button>
                     <Button
                       variant={filterType === "purchases" ? "default" : "outline"}
@@ -516,7 +559,7 @@ export default function ProfileSettings() {
                       size="sm"
                       className={filterType === "purchases" ? "bg-indigo-600" : ""}
                     >
-                      Satın Almalar
+                      {t("pages:profileSettings.financial.purchases")}
                     </Button>
                     <Button
                       variant={filterType === "refunds" ? "default" : "outline"}
@@ -524,7 +567,7 @@ export default function ProfileSettings() {
                       size="sm"
                       className={filterType === "refunds" ? "bg-indigo-600" : ""}
                     >
-                      İadeler
+                      {t("pages:profileSettings.financial.refunds")}
                     </Button>
                   </div>
                 </div>
@@ -546,7 +589,7 @@ export default function ProfileSettings() {
                               <span>{new Date(purchase.created_date).toLocaleDateString('tr-TR')}</span>
                             </div>
                           </div>
-                          <span className="text-sm font-medium text-indigo-600">Satın Alındı</span>
+                          <span className="text-sm font-medium text-indigo-600">{t("pages:profileSettings.financial.purchased")}</span>
                         </div>
                       </div>
                     ))}
@@ -556,17 +599,17 @@ export default function ProfileSettings() {
                     .filter((r) => (r.test_package_title ?? "").toLowerCase().includes(searchFilter.toLowerCase()))
                     .map((request) => {
                       const statusConfig = {
-                        PENDING: { icon: Clock, color: "text-amber-600", bg: "bg-amber-50", label: "Eğitici İnceliyor" },
-                        EDUCATOR_APPROVED: { icon: CheckCircle2, color: "text-blue-600", bg: "bg-blue-50", label: "Eğitici Onayladı" },
-                        EDUCATOR_REJECTED: { icon: XCircle, color: "text-rose-600", bg: "bg-rose-50", label: "Eğitici Reddetti" },
-                        APPEAL_PENDING: { icon: AlertCircle, color: "text-purple-600", bg: "bg-purple-50", label: "İtiraz İnceleniyor" },
-                        ESCALATED: { icon: AlertCircle, color: "text-orange-600", bg: "bg-orange-50", label: "Admin İnceliyor" },
-                        APPROVED: { icon: CheckCircle2, color: "text-emerald-600", bg: "bg-emerald-50", label: "İade Onaylandı" },
-                        REJECTED: { icon: XCircle, color: "text-slate-600", bg: "bg-slate-50", label: "Reddedildi" },
+                        PENDING: { icon: Clock, color: "text-amber-600", bg: "bg-amber-50", labelKey: "pages:profileSettings.financial.statusLabels.PENDING" },
+                        EDUCATOR_APPROVED: { icon: CheckCircle2, color: "text-blue-600", bg: "bg-blue-50", labelKey: "pages:profileSettings.financial.statusLabels.EDUCATOR_APPROVED" },
+                        EDUCATOR_REJECTED: { icon: XCircle, color: "text-rose-600", bg: "bg-rose-50", labelKey: "pages:profileSettings.financial.statusLabels.EDUCATOR_REJECTED" },
+                        APPEAL_PENDING: { icon: AlertCircle, color: "text-purple-600", bg: "bg-purple-50", labelKey: "pages:profileSettings.financial.statusLabels.APPEAL_PENDING" },
+                        ESCALATED: { icon: AlertCircle, color: "text-orange-600", bg: "bg-orange-50", labelKey: "pages:profileSettings.financial.statusLabels.ESCALATED" },
+                        APPROVED: { icon: CheckCircle2, color: "text-emerald-600", bg: "bg-emerald-50", labelKey: "pages:profileSettings.financial.statusLabels.APPROVED" },
+                        REJECTED: { icon: XCircle, color: "text-slate-600", bg: "bg-slate-50", labelKey: "pages:profileSettings.financial.statusLabels.REJECTED" },
                         // lowercase fallback (old data)
-                        pending: { icon: Clock, color: "text-amber-600", bg: "bg-amber-50", label: "Beklemede" },
-                        approved: { icon: CheckCircle2, color: "text-emerald-600", bg: "bg-emerald-50", label: "Onaylandı" },
-                        rejected: { icon: XCircle, color: "text-rose-600", bg: "bg-rose-50", label: "Reddedildi" },
+                        pending: { icon: Clock, color: "text-amber-600", bg: "bg-amber-50", labelKey: "pages:profileSettings.financial.statusLabels.pending" },
+                        approved: { icon: CheckCircle2, color: "text-emerald-600", bg: "bg-emerald-50", labelKey: "pages:profileSettings.financial.statusLabels.approved" },
+                        rejected: { icon: XCircle, color: "text-rose-600", bg: "bg-rose-50", labelKey: "pages:profileSettings.financial.statusLabels.rejected" },
                       };
                       const config = statusConfig[request.status] ?? statusConfig.pending;
                       const Icon = config.icon;
@@ -587,12 +630,12 @@ export default function ProfileSettings() {
                               </div>
                               {canAppeal && (
                                 <p className="text-xs text-rose-600 mt-2">
-                                  Eğitici iadeyi reddetti. İtiraz talebinde bulunabilirsiniz.
+                                  {t("pages:profileSettings.financial.canAppealHint")}
                                 </p>
                               )}
                             </div>
                             <div className="flex flex-col items-end gap-2">
-                              <span className={`text-sm font-medium ${config.color}`}>{config.label}</span>
+                              <span className={`text-sm font-medium ${config.color}`}>{t(config.labelKey)}</span>
                               {canAppeal && (
                                 <Button
                                   size="sm"
@@ -601,7 +644,7 @@ export default function ProfileSettings() {
                                   onClick={() => { setAppealRefund(request); setAppealReason(""); setAppealOpen(true); }}
                                 >
                                   <MessageSquare className="w-3 h-3 mr-1" />
-                                  İtiraz Et
+                                  {t("pages:profileSettings.financial.appealButton")}
                                 </Button>
                               )}
                             </div>
@@ -614,14 +657,14 @@ export default function ProfileSettings() {
                   {((filterType === "all" && purchases.filter((p) => p.test_package_title.toLowerCase().includes(searchFilter.toLowerCase())).length === 0 && refundRequests.filter((r) => r.test_package_title.toLowerCase().includes(searchFilter.toLowerCase())).length === 0) ||
                     (filterType === "purchases" && purchases.filter((p) => p.test_package_title.toLowerCase().includes(searchFilter.toLowerCase())).length === 0) ||
                     (filterType === "refunds" && refundRequests.filter((r) => r.test_package_title.toLowerCase().includes(searchFilter.toLowerCase())).length === 0)) && (
-                    <p className="text-center text-slate-500 py-8">Sonuç bulunamadı</p>
+                    <p className="text-center text-slate-500 py-8">{t("pages:profileSettings.financial.noResults")}</p>
                   )}
                 </div>
               </div>
             )}
 
             {purchases.length === 0 && refundRequests.length === 0 && (
-              <p className="text-center text-slate-500 py-8">Mali işleminiz bulunmamaktadır</p>
+              <p className="text-center text-slate-500 py-8">{t("pages:profileSettings.financial.noTransactions")}</p>
             )}
           </TabsContent>
         </Tabs>
@@ -631,9 +674,9 @@ export default function ProfileSettings() {
       {refundModalOpen && !selectedPurchase && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white rounded-2xl p-6 max-w-md w-full mx-4">
-            <h2 className="text-xl font-bold text-slate-900 mb-4">İade İste</h2>
+            <h2 className="text-xl font-bold text-slate-900 mb-4">{t("pages:profileSettings.refundModal.title")}</h2>
             <Input
-              placeholder="Test ara..."
+              placeholder={t("pages:profileSettings.financial.searchPlaceholder")}
               value={searchPurchase}
               onChange={(e) => setSearchPurchase(e.target.value)}
               className="mb-4"
@@ -642,7 +685,7 @@ export default function ProfileSettings() {
               {(() => {
                 // Sadece HİÇ açılmamış testler için iade alınabilir:
                 // - purchase.attempts[] herhangi bir attempt içeriyorsa (IN_PROGRESS, PAUSED, SUBMITTED, TIMEOUT)
-                //   test "Devam Et" veya "Gözden Geçir" durumuna gelmiş demektir → listeden çıkar.
+                //   test "Devam Et" veya "İncele" durumuna gelmiş demektir → listeden çıkar.
                 const eligible = purchases.filter((p) => {
                   const hasAttempts = Array.isArray(p.attempts) && p.attempts.length > 0;
                   const hasMainAttempt = !!p.attempt;
@@ -656,14 +699,14 @@ export default function ProfileSettings() {
                     <div className="text-center py-6 px-3 space-y-2">
                       <p className="text-sm text-slate-500">
                         {purchases.length === 0
-                          ? "Henüz satın alma yok"
+                          ? t("pages:profileSettings.refundModal.noPurchases")
                           : eligible.length === 0
-                          ? "İade için uygun test yok"
-                          : "Test bulunamadı"}
+                          ? t("pages:profileSettings.refundModal.noEligible")
+                          : t("pages:profileSettings.refundModal.notFound")}
                       </p>
                       {purchases.length > 0 && eligible.length === 0 && (
                         <p className="text-xs text-slate-400">
-                          İade talebi yalnızca hiç açılmamış testler için yapılabilir.
+                          {t("pages:profileSettings.refundModal.eligibleHint")}
                         </p>
                       )}
                     </div>
@@ -691,7 +734,7 @@ export default function ProfileSettings() {
               setRefundModalOpen(false);
               setSearchPurchase("");
             }} className="w-full">
-              İptal
+              {t("pages:profileSettings.refundModal.cancel")}
             </Button>
           </div>
         </div>
@@ -712,23 +755,24 @@ export default function ProfileSettings() {
       <Dialog open={appealOpen} onOpenChange={(o) => { if (!o) { setAppealOpen(false); setAppealRefund(null); setAppealReason(""); } }}>
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle>İtiraz Talebi</DialogTitle>
+            <DialogTitle>{t("pages:profileSettings.appealDialog.title")}</DialogTitle>
           </DialogHeader>
           {appealRefund && (
             <div className="space-y-4 mt-2">
               <div className="p-3 bg-slate-50 rounded-lg text-sm">
+                {/* test_package_title user-generated — çevrilmez */}
                 <p className="font-medium text-slate-900">{appealRefund.test_package_title}</p>
-                <p className="text-slate-500 mt-1">Eğitici bu iade talebini reddetti. İtiraz gerekçenizi yazarak admin incelemesine sunabilirsiniz.</p>
+                <p className="text-slate-500 mt-1">{t("pages:profileSettings.appealDialog.rejected")}</p>
               </div>
               <Textarea
                 value={appealReason}
                 onChange={(e) => setAppealReason(e.target.value)}
-                placeholder="İtiraz gerekçenizi yazın (en az 5 karakter)..."
+                placeholder={t("pages:profileSettings.appealDialog.placeholder")}
                 rows={4}
               />
               <div className="flex gap-3 justify-end">
                 <Button variant="ghost" size="sm" onClick={() => setAppealOpen(false)}>
-                  İptal
+                  {t("pages:profileSettings.appealDialog.cancel")}
                 </Button>
                 <Button
                   className="bg-purple-600 hover:bg-purple-700"
@@ -737,13 +781,21 @@ export default function ProfileSettings() {
                   onClick={() => appealMutation.mutate()}
                 >
                   <MessageSquare className="w-4 h-4 mr-1.5" />
-                  İtirazı Gönder
+                  {t("pages:profileSettings.appealDialog.submit")}
                 </Button>
               </div>
             </div>
           )}
         </DialogContent>
       </Dialog>
+
+      {/* Hassas alan değişikliği OTP dialog'u */}
+      <SensitiveProfileOtpDialog
+        open={otpDialogOpen}
+        onOpenChange={setOtpDialogOpen}
+        pendingFields={pendingSensitiveFields || {}}
+        onSuccess={handleOtpSuccess}
+      />
     </div>
   );
 }

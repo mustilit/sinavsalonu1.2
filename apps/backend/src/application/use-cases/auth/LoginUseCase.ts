@@ -1,10 +1,13 @@
 import * as jwt from 'jsonwebtoken';
+import { randomUUID } from 'crypto';
 import { UserPublic } from '../../../domain/entities/User';
 import { IUserRepository } from '../../../domain/interfaces/IUserRepository';
 import { JwtService } from '../../../infrastructure/services/JwtService';
 import { PasswordService } from '../../../infrastructure/services/PasswordService';
 import { prisma } from '../../../infrastructure/database/prisma';
+import { RedisCache } from '../../../infrastructure/cache/RedisCache';
 import { AuditLogger, AuditContext } from '../../../infrastructure/audit/AuditLogger';
+import { NotifyNewDeviceLoginUseCase } from './NotifyNewDeviceLoginUseCase';
 // LoginDTO previously lived in presentation layer; accept plain input here
 
 const JWT_SECRET = process.env.JWT_SECRET || 'dal-secret-change-in-production';
@@ -45,6 +48,10 @@ export class LoginUseCase {
      * Geriye dönük uyumluluk için opsiyonel bırakıldı.
      */
     private readonly audit?: AuditLogger,
+    /**
+     * Yeni cihazdan giriş tespiti + uyarı maili. Opsiyonel — yoksa cihaz takibi devre dışı.
+     */
+    private readonly notifyDevice?: NotifyNewDeviceLoginUseCase,
   ) {}
 
   /**
@@ -111,14 +118,48 @@ export class LoginUseCase {
       }
     }
 
-    // 2FA kapalı → normal akış
+    // 2FA kapalı → normal akış. Tek aktif oturum kuralı için yeni sessionId
+    // üretilir ve User.activeSessionId'ye yazılır; eski cihazların token'ları
+    // bu noktada otomatik geçersizleşir (JwtAuthGuard sid karşılaştırması).
+    const sid = randomUUID();
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { activeSessionId: sid } as any,
+    });
+
+    // Cache'i hemen invalidate et — JwtAuthGuard 60s TTL bekleyip eski
+    // session ID ile kabul etmesin. Best-effort.
+    try {
+      const cache = new RedisCache();
+      await cache.del(`userBanStatus:${user.id}`);
+    } catch {
+      /* sessiz */
+    }
+
     const token = this.jwtService.sign({
       sub: user.id,
       email: user.email,
       role: user.role,
+      sid,
     });
 
     this.logLoginSuccess(ctx, user.id, email);
+
+    // Yeni cihaz tespiti — best-effort, login akışını kesmez (await edilir ama hata yutulur)
+    if (this.notifyDevice) {
+      try {
+        await this.notifyDevice.execute({
+          userId: user.id,
+          userEmail: user.email,
+          username: user.username,
+          userRole: user.role as 'CANDIDATE' | 'EDUCATOR' | 'ADMIN' | 'WORKER',
+          userAgent: ctx?.userAgent,
+          ip: ctx?.ip,
+        });
+      } catch {
+        // sessizce yut — login zaten başarılı
+      }
+    }
 
     return {
       user: {

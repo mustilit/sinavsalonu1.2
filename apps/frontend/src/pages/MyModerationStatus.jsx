@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
 import { meModeration } from '@/api/dalClient';
 import { CATEGORY_LABELS_TR, RISK_LEVEL_LABELS_TR, RISK_LEVEL_COLORS, ACTION_TYPE_LABELS_TR, MODERATION_STATUS_LABELS_TR } from '@/lib/moderationLabels';
@@ -15,6 +16,7 @@ import { tr } from 'date-fns/locale';
  * Risk profili, ihlal geçmişi, aktif aksiyon gösterir
  */
 function MyModerationStatus() {
+  const { t } = useTranslation(["pages"]);
   const [countdown, setCountdown] = useState(null);
 
   const { data, isLoading, isError } = useQuery({
@@ -60,7 +62,7 @@ function MyModerationStatus() {
             <div className="flex items-start gap-3">
               <AlertCircle className="w-5 h-5 text-rose-600 dark:text-rose-400 shrink-0 mt-0.5" />
               <p className="text-sm text-rose-800 dark:text-rose-200">
-                Moderasyon durumu yüklenemedi. Lütfen daha sonra tekrar deneyin.
+                {t("pages:myModerationStatus.errorLoad")}
               </p>
             </div>
           </CardContent>
@@ -80,7 +82,7 @@ function MyModerationStatus() {
 
   return (
     <div className="container mx-auto max-w-4xl py-8 px-4">
-      <h1 className="text-3xl font-bold text-slate-900 dark:text-gray-50 mb-8">İçerik Moderasyon Durumum</h1>
+      <h1 className="text-3xl font-bold text-slate-900 dark:text-gray-50 mb-8">{t("pages:titles.myModerationStatus")}</h1>
 
       {/* Kalıcı Ban Banner */}
       {isBanned && (
@@ -89,10 +91,9 @@ function MyModerationStatus() {
             <div className="flex items-start gap-3">
               <AlertTriangle className="w-6 h-6 text-rose-600 dark:text-rose-400 shrink-0" />
               <div>
-                <h3 className="font-semibold text-rose-900 dark:text-rose-100">Hesabınız Kalıcı Olarak Engellendi</h3>
+                <h3 className="font-semibold text-rose-900 dark:text-rose-100">{t("pages:myModerationStatus.banned.title")}</h3>
                 <p className="text-sm text-rose-800 dark:text-rose-200 mt-2">
-                  Hesabınız platform politikası ihlalı nedeniyle kalıcı olarak kapatılmıştır.
-                  Sorularınız için destek ekibine ulaşabilirsiniz: support@sinav-salonu.com
+                  {t("pages:myModerationStatus.banned.desc")}
                 </p>
               </div>
             </div>
@@ -107,17 +108,20 @@ function MyModerationStatus() {
             <div className="flex items-start gap-3">
               <Clock className="w-6 h-6 text-amber-600 dark:text-amber-400 shrink-0" />
               <div className="flex-1">
-                <h3 className="font-semibold text-amber-900 dark:text-amber-100">Hesabınız Askıya Alınmıştır</h3>
-                <p className="text-sm text-amber-800 dark:text-amber-200 mt-2">
-                  Hesabınız <strong>{new Date(suspendedUntil).toLocaleDateString('tr-TR')}</strong> tarihine kadar askıya alınmıştır.
-                </p>
+                <h3 className="font-semibold text-amber-900 dark:text-amber-100">{t("pages:myModerationStatus.suspended.title")}</h3>
+                <p
+                  className="text-sm text-amber-800 dark:text-amber-200 mt-2"
+                  dangerouslySetInnerHTML={{
+                    __html: t("pages:myModerationStatus.suspended.desc", { date: new Date(suspendedUntil).toLocaleDateString() }),
+                  }}
+                />
                 {countdown && (
                   <p
                     className="text-sm text-amber-700 dark:text-amber-300 mt-1 font-medium"
                     role="status"
                     aria-live="polite"
                   >
-                    Kalan süre: {countdown.days} gün {countdown.hours} saat
+                    {t("pages:myModerationStatus.suspended.countdown", { days: countdown.days, hours: countdown.hours })}
                   </p>
                 )}
               </div>
@@ -130,7 +134,7 @@ function MyModerationStatus() {
       {riskScore && (
         <Card className="mb-6">
           <CardHeader>
-            <CardTitle className="text-lg">Risk Profili</CardTitle>
+            <CardTitle className="text-lg">{t("pages:myModerationStatus.risk.title")}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="flex items-center justify-between">
@@ -139,7 +143,7 @@ function MyModerationStatus() {
                   {riskScore.computedScore.toFixed(0)}
                 </span>
                 <div>
-                  <p className="text-sm text-slate-600 dark:text-gray-400">Risk Puanı</p>
+                  <p className="text-sm text-slate-600 dark:text-gray-400">{t("pages:myModerationStatus.risk.scoreLabel")}</p>
                   <Badge className={getRiskColor(riskScore.riskLevel)}>
                     {RISK_LEVEL_LABELS_TR[riskScore.riskLevel] || riskScore.riskLevel}
                   </Badge>
@@ -151,7 +155,7 @@ function MyModerationStatus() {
             <div className="space-y-2">
               <div className="flex justify-between items-center">
                 <label htmlFor="risk-progress" className="text-sm font-medium text-slate-700 dark:text-gray-300">
-                  Risk Seviyesi
+                  {t("pages:myModerationStatus.risk.progressLabel")}
                 </label>
                 <span className="text-xs text-slate-500 dark:text-gray-400">{Math.round(riskScore.computedScore)}%</span>
               </div>
@@ -175,22 +179,22 @@ function MyModerationStatus() {
             {/* İstatistikler */}
             <div className="grid grid-cols-3 gap-4">
               <div className="bg-slate-50 dark:bg-gray-800/50 rounded-lg p-4">
-                <p className="text-xs font-medium text-slate-600 dark:text-gray-400 mb-1">Açık İhlal</p>
+                <p className="text-xs font-medium text-slate-600 dark:text-gray-400 mb-1">{t("pages:myModerationStatus.risk.openViolations")}</p>
                 <p className="text-2xl font-bold text-slate-900 dark:text-gray-50">{riskScore.openViolations || 0}</p>
               </div>
               <div className="bg-slate-50 dark:bg-gray-800/50 rounded-lg p-4">
-                <p className="text-xs font-medium text-slate-600 dark:text-gray-400 mb-1">Toplam İhlal</p>
+                <p className="text-xs font-medium text-slate-600 dark:text-gray-400 mb-1">{t("pages:myModerationStatus.risk.totalViolations")}</p>
                 <p className="text-2xl font-bold text-slate-900 dark:text-gray-50">{riskScore.violationCount || 0}</p>
               </div>
               <div className="bg-slate-50 dark:bg-gray-800/50 rounded-lg p-4">
-                <p className="text-xs font-medium text-slate-600 dark:text-gray-400 mb-1">Yüksek Şiddet</p>
+                <p className="text-xs font-medium text-slate-600 dark:text-gray-400 mb-1">{t("pages:myModerationStatus.risk.highSeverity")}</p>
                 <p className="text-2xl font-bold text-slate-900 dark:text-gray-50">{riskScore.highSeverityCount || 0}</p>
               </div>
             </div>
 
             {riskScore.lastViolationAt && (
               <p className="text-xs text-slate-600 dark:text-gray-400">
-                Son ihlal: {formatDistanceToNow(new Date(riskScore.lastViolationAt), { addSuffix: true, locale: tr })}
+                {t("pages:myModerationStatus.risk.lastViolation", { when: formatDistanceToNow(new Date(riskScore.lastViolationAt), { addSuffix: true, locale: tr }) })}
               </p>
             )}
           </CardContent>
@@ -203,27 +207,27 @@ function MyModerationStatus() {
           <CardHeader>
             <CardTitle className="text-lg flex items-center gap-2">
               <AlertTriangle className="w-5 h-5 text-orange-600 dark:text-orange-400" />
-              Aktif Aksiyon
+              {t("pages:myModerationStatus.activeAction.title")}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
             <div>
-              <p className="text-xs text-slate-600 dark:text-gray-400 mb-1">Aksiyon Türü</p>
+              <p className="text-xs text-slate-600 dark:text-gray-400 mb-1">{t("pages:myModerationStatus.activeAction.actionType")}</p>
               <Badge className="bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300">
                 {ACTION_TYPE_LABELS_TR[activeAction.actionType] || activeAction.actionType}
               </Badge>
             </div>
             {activeAction.reason && (
               <div>
-                <p className="text-xs text-slate-600 dark:text-gray-400 mb-1">Neden</p>
+                <p className="text-xs text-slate-600 dark:text-gray-400 mb-1">{t("pages:myModerationStatus.activeAction.reason")}</p>
                 <p className="text-sm text-slate-800 dark:text-gray-200">{activeAction.reason}</p>
               </div>
             )}
             {activeAction.expiresAt && (
               <div>
-                <p className="text-xs text-slate-600 dark:text-gray-400 mb-1">Bitiş Tarihi</p>
+                <p className="text-xs text-slate-600 dark:text-gray-400 mb-1">{t("pages:myModerationStatus.activeAction.expiresAt")}</p>
                 <p className="text-sm text-slate-800 dark:text-gray-200">
-                  {new Date(activeAction.expiresAt).toLocaleDateString('tr-TR')}
+                  {new Date(activeAction.expiresAt).toLocaleDateString()}
                 </p>
               </div>
             )}
@@ -234,7 +238,7 @@ function MyModerationStatus() {
       {/* Son 30 Gün İhlalleri */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">Son 30 Gün İhlalleri</CardTitle>
+          <CardTitle className="text-lg">{t("pages:myModerationStatus.recent.title")}</CardTitle>
         </CardHeader>
         <CardContent>
           {recentViolations.length === 0 ? (
@@ -242,7 +246,7 @@ function MyModerationStatus() {
               <div className="flex items-start gap-3">
                 <CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
                 <p className="text-sm text-emerald-800 dark:text-emerald-200">
-                  Son 30 günde ihlal yok. İçerikleriniz temiz görünüyor!
+                  {t("pages:myModerationStatus.recent.noViolations")}
                 </p>
               </div>
             </div>
@@ -260,7 +264,7 @@ function MyModerationStatus() {
                           {formatDistanceToNow(new Date(violation.createdAt), { addSuffix: true, locale: tr })}
                         </span>
                         <Badge variant="outline" className="text-xs">
-                          {violation.entityType === 'QUESTION' ? 'Soru' : violation.entityType === 'TEST' ? 'Test' : 'İçerik'}
+                          {violation.entityType === 'QUESTION' ? t("pages:myModerationStatus.entityTypes.question") : violation.entityType === 'TEST' ? t("pages:myModerationStatus.entityTypes.test") : t("pages:myModerationStatus.entityTypes.content")}
                         </Badge>
                       </div>
                       <div className="flex items-center gap-2 flex-wrap">
@@ -295,9 +299,10 @@ function MyModerationStatus() {
  * Şiddet derecesi için yıldız göstergesi
  */
 function SeverityStars({ severity }) {
+  const { t } = useTranslation(["pages"]);
   const level = Math.min(Math.max(severity || 1, 1), 5);
   return (
-    <span className="text-xs text-amber-600 dark:text-amber-400" aria-label={`Şiddet: ${level}/5`}>
+    <span className="text-xs text-amber-600 dark:text-amber-400" aria-label={t("pages:myModerationStatus.severity.label", { level })}>
       {'★'.repeat(level)}{'☆'.repeat(5 - level)}
     </span>
   );

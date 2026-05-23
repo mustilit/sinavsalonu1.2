@@ -127,39 +127,37 @@ const IllustrationMyTests = () => (
   </div>
 );
 
+// NOT: title ve description i18n key'leridir; OnboardingTour.jsx t() ile çözer.
+// Bu sayede tüm tur içerikleri 5 dilde (tr/en/es/zh/de) görüntülenir.
 export const CANDIDATE_WELCOME_STEPS = [
   {
-    title: "Sınav Salonu'na Hoş Geldin! 🎉",
-    description:
-      "Sınav hazırlığını bir adım öteye taşıyacak platforma katıldın. Bu kısa turda seni bekleyen özellikleri tanıyalım.",
+    title: "onboarding:candidateWelcome.s0.title",
+    description: "onboarding:candidateWelcome.s0.description",
     illustration: (
       <div className="text-center space-y-3">
         <div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-violet-500 rounded-2xl flex items-center justify-center mx-auto shadow-lg">
           <span className="text-3xl">🎓</span>
         </div>
         <div className="space-y-1">
+          {/* Marka adı — her dilde aynı */}
           <div className="text-sm font-bold text-slate-800">Sınav Salonu</div>
-          <div className="text-xs text-slate-500">Hazırlık testleri platformu</div>
         </div>
       </div>
     ),
   },
   {
-    title: "Sınav Türlerini Keşfet",
-    description:
-      "YKS, KPSS, ALES gibi onlarca sınav türü için hazırlanmış test paketlerini 'Testleri Keşfet' bölümünden inceleyebilirsin.",
+    title: "onboarding:candidateWelcome.s1.title",
+    description: "onboarding:candidateWelcome.s1.description",
     illustration: <IllustrationExplore />,
   },
   {
-    title: "Test Paketlerini İncele",
-    description:
-      "Eğiticiler tarafından hazırlanmış test paketlerini satın al. Her paket birden fazla test içerebilir ve ilerlemenizi takip eder.",
+    title: "onboarding:candidateWelcome.s2.title",
+    description: "onboarding:candidateWelcome.s2.description",
     illustration: <IllustrationPackages />,
   },
   {
-    title: "Eğiticileri Takip Et",
-    description:
-      "Alanında uzman eğiticilerin profillerini inceleyerek onların diğer paketlerine de göz atabilirsin.",
+    title: "onboarding:candidateWelcome.s3.title",
+    description: "onboarding:candidateWelcome.s3.description",
     illustration: <IllustrationEducators />,
   },
 ];
@@ -268,36 +266,11 @@ const IllustrationSubmit = () => (
 );
 
 export const CANDIDATE_TEST_STEPS = [
-  {
-    title: "Test Ekranına Hoş Geldin",
-    description:
-      "Test başladığında süre sayacı çalışmaya başlar (süreli testlerde). Soruları dikkatlice oku ve cevabını seç.",
-    illustration: <IllustrationTestScreen />,
-  },
-  {
-    title: "Soru Navigasyonu",
-    description:
-      "Sol paneldeki numara kutucuklarına tıklayarak istediğin soruya atlayabilirsin. Yeşil = cevaplandı, sarı = işaretlendi.",
-    illustration: <IllustrationNavigation />,
-  },
-  {
-    title: "Cevabını Değiştir",
-    description:
-      "Seçtiğin şıkka tekrar tıklarsan seçimini iptal edebilirsin. Farklı şıkka tıklayarak cevabını değiştirebilirsin.",
-    illustration: <IllustrationTestScreen />,
-  },
-  {
-    title: "Soruları İşaretle 🚩",
-    description:
-      "Emin olmadığın soruları bayrak ikonuyla işaretleyebilirsin. Test bitmeden işaretli sorulara kolayca geri dönebilirsin.",
-    illustration: <IllustrationFlagQuestion />,
-  },
-  {
-    title: "Testi Tamamla",
-    description:
-      "Tüm soruları bitirince 'Testi Bitir' butonuna bas. Sonuçlarında doğru/yanlış dağılımını ve süre istatistiklerini göreceksin.",
-    illustration: <IllustrationSubmit />,
-  },
+  { title: "onboarding:candidateTest.s0.title", description: "onboarding:candidateTest.s0.description", illustration: <IllustrationTestScreen /> },
+  { title: "onboarding:candidateTest.s1.title", description: "onboarding:candidateTest.s1.description", illustration: <IllustrationNavigation /> },
+  { title: "onboarding:candidateTest.s2.title", description: "onboarding:candidateTest.s2.description", illustration: <IllustrationTestScreen /> },
+  { title: "onboarding:candidateTest.s3.title", description: "onboarding:candidateTest.s3.description", illustration: <IllustrationFlagQuestion /> },
+  { title: "onboarding:candidateTest.s4.title", description: "onboarding:candidateTest.s4.description", illustration: <IllustrationSubmit /> },
 ];
 
 /* ═══════════════════════════════════════════════
@@ -383,30 +356,10 @@ const IllustrationProfile = () => (
 );
 
 export const EDUCATOR_WELCOME_STEPS = [
-  {
-    title: "Eğitici Paneline Hoş Geldin! 🏫",
-    description:
-      "Kendi test paketlerini oluşturabileceğin, satışlarını takip edebileceğin ve adaylarla buluşabileceğin platforma katıldın.",
-    illustration: <IllustrationEduDashboard />,
-  },
-  {
-    title: "Test Paketlerini Oluştur",
-    description:
-      "'Yeni Test Oluştur' butonuyla sorular ekleyebilir, süre ve puan ayarları yapabilirsin. Hazır olunca tek tıkla yayınla.",
-    illustration: <IllustrationCreateTestBtn />,
-  },
-  {
-    title: "Satışlarını Takip Et",
-    description:
-      "'Satışlarım' sayfasından aylık gelir grafiği, hangi paketin ne kadar sattığı ve kazanç özetini görebilirsin.",
-    illustration: <IllustrationSalesChart />,
-  },
-  {
-    title: "Profilini Tamamla",
-    description:
-      "Profil sayfana biyografi, uzmanlık alanları ve ödeme bilgileri (IBAN) ekle. Eksiksiz profil daha fazla aday çeker.",
-    illustration: <IllustrationProfile />,
-  },
+  { title: "onboarding:educatorWelcome.s0.title", description: "onboarding:educatorWelcome.s0.description", illustration: <IllustrationEduDashboard /> },
+  { title: "onboarding:educatorWelcome.s1.title", description: "onboarding:educatorWelcome.s1.description", illustration: <IllustrationCreateTestBtn /> },
+  { title: "onboarding:educatorWelcome.s2.title", description: "onboarding:educatorWelcome.s2.description", illustration: <IllustrationSalesChart /> },
+  { title: "onboarding:educatorWelcome.s3.title", description: "onboarding:educatorWelcome.s3.description", illustration: <IllustrationProfile /> },
 ];
 
 /* ═══════════════════════════════════════════════
@@ -508,28 +461,8 @@ const IllustrationPublish = () => (
 );
 
 export const EDUCATOR_CREATE_STEPS = [
-  {
-    title: "Test Bilgilerini Gir",
-    description:
-      "Başlık, açıklama, sınav türü, konu ve fiyat bilgilerini gir. 'Süreli' seçeneğiyle sınav süresini de belirleyebilirsin.",
-    illustration: <IllustrationTestMeta />,
-  },
-  {
-    title: "Soruları Ekle",
-    description:
-      "Her soru için metin, şıklar ve doğru cevabı belirt. Görsel de ekleyebilirsin. Sorular istediğin sırayla sürüklenebilir.",
-    illustration: <IllustrationAddQuestions />,
-  },
-  {
-    title: "Çözümler Ekle",
-    description:
-      "Her soru için detaylı çözüm açıklaması ekleyebilirsin. Adaylar testi bitirdikten sonra çözümleri görebilir.",
-    illustration: <IllustrationSolutions />,
-  },
-  {
-    title: "Yayınla!",
-    description:
-      "Tüm hazırlıklar tamam mı? 'Yayınla' toggle'ını açınca paket anında adaylara görünür hale gelir. İstediğin zaman yayından kaldırabilirsin.",
-    illustration: <IllustrationPublish />,
-  },
+  { title: "onboarding:educatorCreate.s0.title", description: "onboarding:educatorCreate.s0.description", illustration: <IllustrationTestMeta /> },
+  { title: "onboarding:educatorCreate.s1.title", description: "onboarding:educatorCreate.s1.description", illustration: <IllustrationAddQuestions /> },
+  { title: "onboarding:educatorCreate.s2.title", description: "onboarding:educatorCreate.s2.description", illustration: <IllustrationSolutions /> },
+  { title: "onboarding:educatorCreate.s3.title", description: "onboarding:educatorCreate.s3.description", illustration: <IllustrationPublish /> },
 ];

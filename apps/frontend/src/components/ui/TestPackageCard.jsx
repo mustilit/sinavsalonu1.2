@@ -1,18 +1,27 @@
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { createPageUrl } from "@/utils";
 import { Clock, BookOpen, FileText, Star, User, Eye, Play } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 
-const difficultyLabels = {
-  easy: { label: "Kolay", color: "bg-emerald-100 text-emerald-700" },
-  medium: { label: "Orta", color: "bg-amber-100 text-amber-700" },
-  hard: { label: "Zor", color: "bg-rose-100 text-rose-700" }
-};
-
+/**
+ * TestPackageCard
+ *
+ * NOT: test.title, test.educator_name, test.exam_type_name user-generated —
+ * çevrilmez, ham olarak gösterilir. Sabit etiketler (Kolay/Orta/Zor, "Soru",
+ * "dk", "Satın Al" vb.) i18n'den çekilir.
+ */
 export default function TestPackageCard({ test, onBuy, isPurchased, isCompleted, isInProgress = false, showEducator = true, attempt = null }) {
-  const difficulty = difficultyLabels[test.difficulty] || difficultyLabels.medium;
+  const { t } = useTranslation(["pages"]);
+
+  const difficultyColorClass = {
+    easy: "bg-emerald-100 text-emerald-700",
+    medium: "bg-amber-100 text-amber-700",
+    hard: "bg-rose-100 text-rose-700",
+  }[test.difficulty] || "bg-amber-100 text-amber-700";
+
+  const difficultyLabel = t(`pages:testCard.difficulty.${test.difficulty || "medium"}`);
 
   return (
     <div className="group bg-white rounded-2xl border border-slate-100 overflow-hidden hover:shadow-xl hover:shadow-slate-200/50 transition-all duration-300">
@@ -27,12 +36,12 @@ export default function TestPackageCard({ test, onBuy, isPurchased, isCompleted,
         }
         <div className="absolute top-3 left-3">
           <Badge className="bg-white/90 text-slate-700 backdrop-blur-sm">
-            {test.exam_type_name || "Genel"}
+            {test.exam_type_name || t("pages:testCard.examTypeFallback")}
           </Badge>
         </div>
         <div className="absolute bottom-3 right-3">
-          <Badge className="bg-white/90 text-slate-700 backdrop-blur-sm">
-            {difficulty.label}{test.has_solutions ? " - Çözümlü" : ""}
+          <Badge className={`bg-white/90 backdrop-blur-sm ${difficultyColorClass}`}>
+            {difficultyLabel}{test.has_solutions ? t("pages:testCard.solutionsSuffix") : ""}
           </Badge>
         </div>
         </div>
@@ -44,33 +53,43 @@ export default function TestPackageCard({ test, onBuy, isPurchased, isCompleted,
             {test.title}
           </h3>
         </Link>
-        
-        {showEducator && test.educator_name &&
-        <Link
-          to={createPageUrl("EducatorProfile") + `?email=${encodeURIComponent(test.educator_email)}`}
-          className="flex items-center gap-2 mt-2 text-sm text-slate-500 transition-colors w-fit" style={{color: 'inherit'}} onMouseEnter={(e) => e.currentTarget.style.color = '#0000CD'} onMouseLeave={(e) => e.currentTarget.style.color = 'inherit'}
-          onClick={(e) => e.stopPropagation()}>
 
-            <User className="w-4 h-4" />
-            <span>{test.educator_name}</span>
-          </Link>
-        }
+        {showEducator && test.educator_name && (
+          test.educator_email
+            ? (
+              <Link
+                to={createPageUrl("EducatorProfile") + `?email=${encodeURIComponent(test.educator_email)}`}
+                className="flex items-center gap-2 mt-2 text-sm text-slate-500 transition-colors w-fit" style={{color: 'inherit'}} onMouseEnter={(e) => e.currentTarget.style.color = '#0000CD'} onMouseLeave={(e) => e.currentTarget.style.color = 'inherit'}
+                onClick={(e) => e.stopPropagation()}>
+                <User className="w-4 h-4" />
+                {/* test.educator_name user-generated — çevrilmez */}
+                <span>{test.educator_name}</span>
+              </Link>
+            )
+            : (
+              <span className="flex items-center gap-2 mt-2 text-sm text-slate-500 w-fit">
+                <User className="w-4 h-4" />
+                {/* test.educator_name user-generated — çevrilmez */}
+                <span>{test.educator_name}</span>
+              </span>
+            )
+        )}
 
         <div className="flex items-center gap-4 mt-4 text-sm text-slate-500 flex-wrap">
           {test.test_count > 0 &&
           <div className="flex items-center gap-1">
               <BookOpen className="w-4 h-4" />
-              <span>{test.test_count} Test</span>
+              <span>{t("pages:testCard.testsLabel", { count: test.test_count })}</span>
             </div>
           }
           <div className="flex items-center gap-1">
             <FileText className="w-4 h-4" />
-            <span>{test.question_count || 0} Soru</span>
+            <span>{t("pages:testCard.questionsLabel", { count: test.question_count || 0 })}</span>
           </div>
           {test.duration_minutes &&
           <div className="flex items-center gap-1">
               <Clock className="w-4 h-4" />
-              <span>{test.duration_minutes} dk</span>
+              <span>{t("pages:testCard.minutes", { count: test.duration_minutes })}</span>
             </div>
           }
           {test.average_rating > 0 &&
@@ -90,7 +109,9 @@ export default function TestPackageCard({ test, onBuy, isPurchased, isCompleted,
             if (!sec) return null;
             const m = Math.floor(sec / 60);
             const s = sec % 60;
-            const label = m >= 60 ? `${Math.floor(m / 60)}s ${m % 60}dk` : `${m}dk ${s}s`;
+            const label = m >= 60
+              ? t("pages:testCard.durationFull", { h: Math.floor(m / 60), m: m % 60 })
+              : t("pages:testCard.durationShort", { m, s });
             return (
               <div className="flex items-center gap-1 text-indigo-600">
                 <Clock className="w-4 h-4" />
@@ -109,7 +130,7 @@ export default function TestPackageCard({ test, onBuy, isPurchased, isCompleted,
               </div> :
 
             <div className="text-2xl font-bold text-slate-900">
-                {test.price === 0 ? "Ücretsiz" : `₺${test.price}`}
+                {test.price === 0 ? t("pages:testCard.free") : `₺${test.price}`}
               </div>
             }
           </div>
@@ -117,11 +138,11 @@ export default function TestPackageCard({ test, onBuy, isPurchased, isCompleted,
           <Link to={createPageUrl("TestDetail") + `?id=${test.id}${isCompleted ? '&review=true' : ''}`}>
               <Button size="sm" style={{backgroundColor: isCompleted ? '#64748b' : isInProgress ? '#f59e0b' : '#047857'}} className="hover:opacity-90 flex items-center gap-1">
                 {isCompleted ? (
-                  <><Eye className="w-4 h-4" /> Gözden Geçir</>
+                  <><Eye className="w-4 h-4" /> {t("pages:testCard.review")}</>
                 ) : isInProgress ? (
-                  <><Play className="w-4 h-4" /> Devam Et</>
+                  <><Play className="w-4 h-4" /> {t("pages:testCard.continue")}</>
                 ) : (
-                  <><Play className="w-4 h-4" /> Teste Başla</>
+                  <><Play className="w-4 h-4" /> {t("pages:testCard.start")}</>
                 )}
               </Button>
             </Link> :
@@ -131,7 +152,7 @@ export default function TestPackageCard({ test, onBuy, isPurchased, isCompleted,
             style={{backgroundColor: '#0000CD'}}
             className="hover:opacity-90">
 
-              Satın Al
+              {t("pages:testCard.buy")}
             </Button>
           }
         </div>

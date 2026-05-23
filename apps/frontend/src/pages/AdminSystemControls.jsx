@@ -25,6 +25,9 @@ import {
   Settings,
   CreditCard,
   Smartphone,
+  Globe,
+  Eye,
+  EyeOff,
   ShoppingBag,
   Building2,
 } from "lucide-react";
@@ -274,6 +277,8 @@ export default function AdminSystemControls() {
   const [savingKey, setSavingKey] = useState(null);
   const [minPriceInput, setMinPriceInput] = useState("");
   const [maxDiscountInput, setMaxDiscountInput] = useState("");
+  const [googleClientIdInput, setGoogleClientIdInput] = useState("");
+  const [showGoogleClientId, setShowGoogleClientId] = useState(false);
   const [newRate, setNewRate] = useState("");
   const [newEffectiveFrom, setNewEffectiveFrom] = useState("");
   const [newNote, setNewNote] = useState("");
@@ -359,6 +364,23 @@ export default function AdminSystemControls() {
     setSavingKey("maxDiscountPercent");
     updateMutation.mutate({ maxDiscountPercent: pct });
     setMaxDiscountInput("");
+  };
+
+  const handleGoogleClientIdSave = (clear = false) => {
+    const val = clear ? null : googleClientIdInput.trim();
+    if (!clear) {
+      if (!val) {
+        toast.error("Client ID giriniz veya 'Temizle' kullanın");
+        return;
+      }
+      if (!/\.apps\.googleusercontent\.com$/i.test(val)) {
+        toast.error("Geçerli bir Google Client ID değil (…apps.googleusercontent.com ile bitmeli)");
+        return;
+      }
+    }
+    setSavingKey("googleClientId");
+    updateMutation.mutate({ googleClientId: val });
+    setGoogleClientIdInput("");
   };
 
   const { data: rateHistory = [], isLoading: ratesLoading } = useQuery({
@@ -452,6 +474,7 @@ export default function AdminSystemControls() {
     { id: "system", label: "Sistem Kontrolleri", icon: ShieldAlert },
     { id: "finance", label: "Mali Kontrol", icon: Banknote },
     { id: "tests", label: "Test Kontrolleri", icon: BookOpen },
+    { id: "integrations", label: "Entegrasyonlar", icon: Globe },
   ];
 
   return (
@@ -723,6 +746,83 @@ export default function AdminSystemControls() {
                 Kaydet
               </button>
             </div>
+          </div>
+        </>
+      )}
+
+      {/* ── Entegrasyonlar sekmesi ─────────────────────────────────── */}
+      {activeTab === "integrations" && (
+        <>
+          <div className="p-5 bg-white border border-slate-200 rounded-xl space-y-4">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-lg bg-sky-50 flex items-center justify-center flex-shrink-0">
+                <Globe className="w-5 h-5 text-sky-600" />
+              </div>
+              <div className="flex-1">
+                <p className="font-semibold text-slate-900">Google ile Giriş — OAuth Client ID</p>
+                <p className="text-sm text-slate-500 mt-0.5">
+                  Google Cloud Console → APIs & Services → Credentials'tan oluşturduğunuz OAuth 2.0
+                  <strong className="text-slate-700 mx-1">Client ID</strong>'sini girin.
+                  Authorized JavaScript origins listesine kendi alan adınızı + <code className="text-xs bg-slate-100 px-1 rounded">http://localhost:5174</code> eklemeyi unutmayın.
+                </p>
+                <p className="text-sm mt-2">
+                  Mevcut değer:{" "}
+                  {settings?.googleClientId ? (
+                    <span className="font-mono text-xs text-slate-700">
+                      {showGoogleClientId
+                        ? settings.googleClientId
+                        : settings.googleClientId.replace(/^(.{12}).+(.{16})$/, "$1…$2")}
+                    </span>
+                  ) : (
+                    <span className="text-rose-600 font-medium">Tanımlanmamış (Google ile giriş kapalı)</span>
+                  )}
+                  {settings?.googleClientId && (
+                    <button
+                      type="button"
+                      onClick={() => setShowGoogleClientId((v) => !v)}
+                      className="ml-2 text-xs text-sky-600 hover:underline inline-flex items-center gap-1"
+                    >
+                      {showGoogleClientId ? <EyeOff className="w-3 h-3" /> : <Eye className="w-3 h-3" />}
+                      {showGoogleClientId ? "Gizle" : "Tamamını göster"}
+                    </button>
+                  )}
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <input
+                type="text"
+                placeholder="örn. 123456789-abc.apps.googleusercontent.com"
+                value={googleClientIdInput}
+                onChange={(e) => setGoogleClientIdInput(e.target.value)}
+                className="flex-1 px-3 py-2 border border-slate-300 rounded-lg text-sm font-mono focus:outline-none focus:ring-2 focus:ring-sky-500"
+              />
+              <button
+                onClick={() => handleGoogleClientIdSave(false)}
+                disabled={!googleClientIdInput || savingKey === "googleClientId"}
+                className="px-4 py-2 bg-sky-600 hover:bg-sky-700 disabled:opacity-50 text-white text-sm font-medium rounded-lg transition-colors flex items-center gap-2"
+              >
+                {savingKey === "googleClientId"
+                  ? <><Loader2 className="w-4 h-4 animate-spin" />Kaydediliyor...</>
+                  : "Kaydet"}
+              </button>
+              {settings?.googleClientId && (
+                <button
+                  onClick={() => {
+                    if (confirm("Google Client ID'yi temizlemek istiyor musunuz? Google ile giriş devre dışı kalır."))
+                      handleGoogleClientIdSave(true);
+                  }}
+                  disabled={savingKey === "googleClientId"}
+                  className="px-3 py-2 border border-rose-200 text-rose-600 hover:bg-rose-50 text-sm font-medium rounded-lg transition-colors"
+                >
+                  Temizle
+                </button>
+              )}
+            </div>
+            <p className="text-xs text-slate-500">
+              Client ID gizli bir bilgi değildir — tarayıcıya gönderilir. Asıl gizli olan
+              Client Secret'tır ve burada saklanmaz.
+            </p>
           </div>
         </>
       )}

@@ -8,6 +8,7 @@
  *   - Yeni Reklam Satın Al: TEST veya EDUCATOR türü seçimi
  */
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "@/lib/api/apiClient";
 import { useAuth } from "@/lib/AuthContext";
@@ -34,6 +35,7 @@ import {
 } from "lucide-react";
 
 export default function MyAds() {
+  const { t } = useTranslation(["pages"]);
   const { user } = useAuth();
   // Admin kill-switch: adPurchasesEnabled false ise satın alma formu devre dışı kalır
   const { adPurchasesEnabled } = useServiceStatus();
@@ -95,8 +97,7 @@ export default function MyAds() {
       return res.data;
     },
     onSuccess: () => {
-      toast.success("Reklam satın alındı! Gösterimlere hemen başlanacak.");
-      // Hem stats hem purchases listesini yenile
+      toast.success(t("pages:myAds.toasts.purchased"));
       queryClient.invalidateQueries({ queryKey: ["adStats"] });
       queryClient.invalidateQueries({ queryKey: ["adPurchases"] });
       setSelectedPackageId("");
@@ -104,15 +105,14 @@ export default function MyAds() {
       setActiveTab("stats");
     },
     onError: (err) => {
-      const msg = err?.response?.data?.message || err?.message || "Satın alma başarısız";
+      const msg = err?.response?.data?.message || err?.message || t("pages:myAds.toasts.purchaseFailed");
       toast.error(msg);
     },
   });
 
-  // Satın alma formu doğrulaması
   const handlePurchase = () => {
-    if (!selectedPackageId) { toast.error("Lütfen bir paket seçin"); return; }
-    if (targetType === "TEST" && !selectedTestId) { toast.error("Lütfen öne çıkarmak istediğiniz testi seçin"); return; }
+    if (!selectedPackageId) { toast.error(t("pages:myAds.toasts.selectPackage")); return; }
+    if (targetType === "TEST" && !selectedTestId) { toast.error(t("pages:myAds.toasts.selectTest")); return; }
     purchaseMutation.mutate();
   };
 
@@ -129,18 +129,18 @@ export default function MyAds() {
   const last7Days = dailyData.slice(-7).reduce((s, d) => s + d.impressions, 0);
 
   const tabs = [
-    { key: "stats",     label: "İstatistikler", icon: BarChart2 },
-    { key: "purchases", label: "Reklamlarım",   icon: Package   },
-    { key: "buy",       label: "Yeni Reklam",   icon: ShoppingCart },
+    { key: "stats",     label: t("pages:myAds.tabs.stats"),     icon: BarChart2 },
+    { key: "purchases", label: t("pages:myAds.tabs.purchases"), icon: Package   },
+    { key: "buy",       label: t("pages:myAds.tabs.buy"),       icon: ShoppingCart },
   ];
 
   return (
     <div>
       {/* Sayfa başlığı */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-slate-900">Reklamlarım</h1>
+        <h1 className="text-3xl font-bold text-slate-900">{t("pages:titles.myAds")}</h1>
         <p className="text-slate-500 mt-2">
-          Testlerinizi ve profilinizi ana sayfada öne çıkartın. Her ana sayfanın %10'u reklam bazlı içerikten oluşur.
+          {t("pages:titles.myAdsDesc")}
         </p>
       </div>
 
@@ -174,7 +174,7 @@ export default function MyAds() {
                     <Eye className="w-6 h-6 text-indigo-600" />
                   </div>
                   <div>
-                    <p className="text-sm text-slate-500">Toplam Gösterim</p>
+                    <p className="text-sm text-slate-500">{t("pages:myAds.stats.totalImpressions")}</p>
                     {/* Tüm zamanların toplam teslim edilen gösterimleri */}
                     <p className="text-2xl font-bold text-slate-900">{totalDelivered.toLocaleString("tr-TR")}</p>
                   </div>
@@ -188,7 +188,7 @@ export default function MyAds() {
                     <Zap className="w-6 h-6 text-emerald-600" />
                   </div>
                   <div>
-                    <p className="text-sm text-slate-500">Aktif Reklam</p>
+                    <p className="text-sm text-slate-500">{t("pages:myAds.stats.activeAds")}</p>
                     <p className="text-2xl font-bold text-slate-900">{activePurchases}</p>
                   </div>
                 </div>
@@ -201,7 +201,7 @@ export default function MyAds() {
                     <TrendingUp className="w-6 h-6 text-amber-600" />
                   </div>
                   <div>
-                    <p className="text-sm text-slate-500">Son 7 Gün</p>
+                    <p className="text-sm text-slate-500">{t("pages:myAds.stats.last7Days")}</p>
                     <p className="text-2xl font-bold text-slate-900">{last7Days.toLocaleString("tr-TR")}</p>
                   </div>
                 </div>
@@ -212,13 +212,13 @@ export default function MyAds() {
           {/* Son 30 günlük gösterim grafiği (CSS bar chart) */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-base font-semibold">Son 30 Günlük Gösterimler</CardTitle>
+              <CardTitle className="text-base font-semibold">{t("pages:myAds.stats.last30Days")}</CardTitle>
             </CardHeader>
             <CardContent>
               {loadingStats ? (
                 <div className="h-32 animate-pulse bg-slate-100 rounded" />
               ) : dailyData.length === 0 ? (
-                <p className="text-slate-400 text-sm text-center py-8">Henüz gösterim verisi yok</p>
+                <p className="text-slate-400 text-sm text-center py-8">{t("pages:myAds.stats.noData")}</p>
               ) : (
                 <div className="flex items-end gap-0.5 h-32">
                   {dailyData.map((d, i) => {
@@ -247,7 +247,7 @@ export default function MyAds() {
           {stats?.purchases?.length > 0 && (
             <Card>
               <CardHeader>
-                <CardTitle className="text-base font-semibold">Reklam Başarım Detayı</CardTitle>
+                <CardTitle className="text-base font-semibold">{t("pages:myAds.stats.performanceDetail")}</CardTitle>
               </CardHeader>
               <CardContent className="divide-y divide-slate-100">
                 {stats.purchases.map((p) => (
@@ -262,10 +262,11 @@ export default function MyAds() {
                       </div>
                       <div>
                         <p className="font-medium text-slate-900 text-sm">
-                          {p.test ? p.test.title : "Profil Öne Çıkarma"}
+                          {/* p.test.title user-generated */}
+                          {p.test ? p.test.title : t("pages:myAds.stats.profileBoost")}
                         </p>
                         <p className="text-xs text-slate-500">
-                          {p.packageName} · {format(new Date(p.validUntil), "d MMM yyyy", { locale: tr })} tarihine kadar
+                          {p.packageName} · {t("pages:myAds.stats.validUntil", { date: format(new Date(p.validUntil), "d MMM yyyy", { locale: tr }) })}
                         </p>
                       </div>
                     </div>
@@ -282,7 +283,7 @@ export default function MyAds() {
                       </div>
                       {/* Aktif/pasif badge */}
                       <Badge className={`mt-1 text-xs ${p.isActive ? "bg-emerald-100 text-emerald-700" : "bg-slate-100 text-slate-500"}`}>
-                        {p.isActive ? "Aktif" : "Tamamlandı"}
+                        {p.isActive ? t("pages:myAds.stats.active") : t("pages:myAds.stats.completed")}
                       </Badge>
                     </div>
                   </div>
@@ -295,12 +296,12 @@ export default function MyAds() {
           {!loadingStats && (!stats?.purchases || stats.purchases.length === 0) && (
             <div className="text-center py-16 bg-white rounded-2xl border border-slate-200">
               <Eye className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-              <h3 className="text-lg font-semibold text-slate-700 mb-2">Henüz gösterim verisi yok</h3>
+              <h3 className="text-lg font-semibold text-slate-700 mb-2">{t("pages:myAds.stats.noData")}</h3>
               <p className="text-slate-500 text-sm mb-6">
-                İlk reklamınızı satın alarak testlerinizi öne çıkarmaya başlayın.
+                {t("pages:myAds.stats.noDataPrompt")}
               </p>
               <Button onClick={() => setActiveTab("buy")} className="bg-indigo-600 hover:bg-indigo-700">
-                Reklam Satın Al
+                {t("pages:myAds.stats.buyAd")}
               </Button>
             </div>
           )}
@@ -318,9 +319,9 @@ export default function MyAds() {
             ) : purchases.length === 0 ? (
               <div className="text-center py-16">
                 <Package className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-                <p className="text-slate-500">Henüz reklam satın almadınız</p>
+                <p className="text-slate-500">{t("pages:myAds.purchases.noneYet")}</p>
                 <Button onClick={() => setActiveTab("buy")} className="mt-4 bg-indigo-600 hover:bg-indigo-700">
-                  İlk Reklamı Al
+                  {t("pages:myAds.purchases.buyFirst")}
                 </Button>
               </div>
             ) : (
@@ -342,11 +343,11 @@ export default function MyAds() {
                         </div>
                         <div>
                           <p className="font-medium text-slate-900 text-sm">
-                            {p.test ? p.test.title : "Profil Öne Çıkarma"}
+                            {p.test ? p.test.title : t("pages:myAds.stats.profileBoost")}
                           </p>
                           <div className="flex items-center gap-2 text-xs text-slate-500 mt-0.5">
                             <Clock className="w-3 h-3" />
-                            {format(new Date(p.validUntil), "d MMM yyyy", { locale: tr })} tarihine kadar
+                            {t("pages:myAds.stats.validUntil", { date: format(new Date(p.validUntil), "d MMM yyyy", { locale: tr }) })}
                           </div>
                         </div>
                       </div>
@@ -354,7 +355,7 @@ export default function MyAds() {
                         <div className="text-right">
                           {/* Kalan gösterim sayısı */}
                           <p className="text-sm font-medium text-slate-700">
-                            {p.impressionsRemaining?.toLocaleString("tr-TR")} gösterim kaldı
+                            {t("pages:myAds.purchases.impressionsRemaining", { count: p.impressionsRemaining ?? 0 })}
                           </p>
                           {/* Tüketim ilerleme çubuğu */}
                           <div className="w-24 h-1.5 bg-slate-100 rounded-full mt-1">
@@ -365,7 +366,7 @@ export default function MyAds() {
                           </div>
                         </div>
                         <Badge className={`${isActive ? "bg-emerald-100 text-emerald-700" : "bg-slate-100 text-slate-500"}`}>
-                          {isActive ? <><CheckCircle className="w-3 h-3 mr-1 inline" />Aktif</> : "Tamamlandı"}
+                          {isActive ? <><CheckCircle className="w-3 h-3 mr-1 inline" />{t("pages:myAds.stats.active")}</> : t("pages:myAds.stats.completed")}
                         </Badge>
                       </div>
                     </div>
@@ -385,8 +386,8 @@ export default function MyAds() {
             <div className="flex items-start gap-3 p-4 bg-rose-50 border border-rose-200 rounded-xl text-sm text-rose-800">
               <AlertTriangle className="w-5 h-5 text-rose-500 flex-shrink-0 mt-0.5" />
               <div>
-                <p className="font-semibold">Reklam satın alma geçici olarak durdurulmuştur.</p>
-                <p className="text-rose-600 mt-0.5">Lütfen daha sonra tekrar deneyin.</p>
+                <p className="font-semibold">{t("pages:myAds.buy.servicesPaused")}</p>
+                <p className="text-rose-600 mt-0.5">{t("pages:myAds.buy.servicesPausedDesc")}</p>
               </div>
             </div>
           )}
@@ -398,22 +399,22 @@ export default function MyAds() {
           <div className="bg-indigo-50 border border-indigo-200 rounded-xl p-4 flex gap-3">
             <Info className="w-5 h-5 text-indigo-600 flex-shrink-0 mt-0.5" />
             <div className="text-sm text-indigo-800">
-              <p className="font-medium mb-1">Nasıl çalışır?</p>
+              <p className="font-medium mb-1">{t("pages:myAds.buy.howItWorks")}</p>
               <ul className="space-y-1 text-indigo-700">
-                <li>• Ana sayfadaki test önerilerinin <strong>%10'u</strong> reklam bazlıdır.</li>
-                <li>• Kişiselleştirilmiş öneriler etkilenmez — reklamlar ek görünürlük sağlar.</li>
-                <li>• Satın aldığınız paket içindeki gösterimler tükenince reklam otomatik biter.</li>
+                <li>• <span dangerouslySetInnerHTML={{ __html: t("pages:myAds.buy.howItWorks1") }} /></li>
+                <li>• {t("pages:myAds.buy.howItWorks2")}</li>
+                <li>• {t("pages:myAds.buy.howItWorks3")}</li>
               </ul>
             </div>
           </div>
 
           {/* Hedef türü seçimi */}
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-slate-700">Öne Çıkarma Türü</label>
+            <label className="block text-sm font-medium text-slate-700">{t("pages:myAds.buy.targetType")}</label>
             <div className="grid grid-cols-2 gap-3">
               {[
-                { val: "TEST",     label: "Test Paketi",   desc: "Belirli bir testinizi öne çıkarın", Icon: Package },
-                { val: "EDUCATOR", label: "Profilim",      desc: "Eğitici profilinizi öne çıkarın",   Icon: User    },
+                { val: "TEST",     label: t("pages:myAds.buy.targetTest"),     desc: t("pages:myAds.buy.targetTestDesc"),     Icon: Package },
+                { val: "EDUCATOR", label: t("pages:myAds.buy.targetEducator"), desc: t("pages:myAds.buy.targetEducatorDesc"), Icon: User    },
               ].map(({ val, label, desc, Icon }) => (
                 <button
                   key={val}
@@ -436,19 +437,20 @@ export default function MyAds() {
           {/* TEST türünde test seçimi */}
           {targetType === "TEST" && (
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-slate-700">Hangi Test?</label>
+              <label className="block text-sm font-medium text-slate-700">{t("pages:myAds.buy.whichTest")}</label>
               {publishedTests.length === 0 ? (
                 <p className="text-sm text-amber-600 bg-amber-50 p-3 rounded-lg">
-                  Yayında testiniz bulunmuyor. Önce bir test yayınlayın.
+                  {t("pages:myAds.buy.noPublishedTests")}
                 </p>
               ) : (
                 <Select value={selectedTestId} onValueChange={setSelectedTestId}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Test seçin" />
+                    <SelectValue placeholder={t("pages:myAds.buy.selectTest")} />
                   </SelectTrigger>
                   <SelectContent>
-                    {publishedTests.map((t) => (
-                      <SelectItem key={t.id} value={t.id}>{t.title}</SelectItem>
+                    {/* tt.title user-generated */}
+                    {publishedTests.map((tt) => (
+                      <SelectItem key={tt.id} value={tt.id}>{tt.title}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -458,9 +460,9 @@ export default function MyAds() {
 
           {/* Paket seçimi */}
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-slate-700">Reklam Paketi</label>
+            <label className="block text-sm font-medium text-slate-700">{t("pages:myAds.buy.adPackage")}</label>
             {packages.length === 0 ? (
-              <p className="text-sm text-slate-500">Şu an satışta paket bulunmuyor.</p>
+              <p className="text-sm text-slate-500">{t("pages:myAds.buy.noPackages")}</p>
             ) : (
               <div className="space-y-2">
                 {packages.map((pkg) => (
@@ -478,7 +480,7 @@ export default function MyAds() {
                       <div>
                         <p className="font-semibold text-slate-900">{pkg.name}</p>
                         <p className="text-sm text-slate-500 mt-0.5">
-                          {pkg.impressions?.toLocaleString("tr-TR")} gösterim · {pkg.durationDays} gün geçerli
+                          {t("pages:myAds.buy.packageInfo", { impressions: pkg.impressions ?? 0, days: pkg.durationDays })}
                         </p>
                       </div>
                       <p className="text-lg font-bold text-indigo-600">
@@ -501,7 +503,7 @@ export default function MyAds() {
             }
             className="w-full bg-indigo-600 hover:bg-indigo-700"
           >
-            {purchaseMutation.isPending ? "İşleniyor..." : "Reklamı Satın Al"}
+            {purchaseMutation.isPending ? t("pages:myAds.buy.processing") : t("pages:myAds.buy.buyAd")}
           </Button>
           </>)}
         </div>

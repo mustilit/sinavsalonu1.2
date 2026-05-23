@@ -15,6 +15,7 @@
  *   onManualExit     : () => void - "Şimdi Çık" butonu callback'i
  */
 import { useEffect, useState } from 'react';
+import { useTranslation, Trans } from 'react-i18next';
 import { WifiOff, Wifi, Clock, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -25,6 +26,7 @@ export default function OfflineBanner({
   isFlushing   = false,
   onManualExit,
 }) {
+  const { t } = useTranslation(['common']);
   // Bağlantı yeni geldikten sonra kısa süre "Yeniden bağlandı" göster
   const [showReconnected, setShowReconnected] = useState(false);
   const [wasOffline, setWasOffline] = useState(false);
@@ -36,8 +38,8 @@ export default function OfflineBanner({
     } else if (wasOffline) {
       // Bağlantı yeni kuruldu — 3 saniye bildirim göster
       setShowReconnected(true);
-      const t = setTimeout(() => setShowReconnected(false), 3000);
-      return () => clearTimeout(t);
+      const timer = setTimeout(() => setShowReconnected(false), 3000);
+      return () => clearTimeout(timer);
     }
   }, [isOffline, wasOffline]);
 
@@ -48,12 +50,12 @@ export default function OfflineBanner({
         <div className="flex items-center gap-3 bg-emerald-600 text-white px-5 py-3 rounded-2xl shadow-xl">
           <Wifi className="w-5 h-5 flex-shrink-0" />
           <div>
-            <p className="font-semibold text-sm">Bağlantı yeniden kuruldu</p>
+            <p className="font-semibold text-sm">{t('common:offlineBanner.reconnectedTitle')}</p>
             {isFlushing && (
-              <p className="text-xs text-emerald-200 mt-0.5">Cevaplar senkronize ediliyor...</p>
+              <p className="text-xs text-emerald-200 mt-0.5">{t('common:offlineBanner.syncing')}</p>
             )}
             {!isFlushing && pendingCount === 0 && (
-              <p className="text-xs text-emerald-200 mt-0.5">Tüm cevaplar kaydedildi ✓</p>
+              <p className="text-xs text-emerald-200 mt-0.5">{t('common:offlineBanner.allSaved')}</p>
             )}
           </div>
         </div>
@@ -76,9 +78,9 @@ export default function OfflineBanner({
           <WifiOff className="w-8 h-8 text-rose-600" />
         </div>
 
-        <h2 className="text-xl font-bold text-slate-900 mb-2">Bağlantı Kesildi</h2>
+        <h2 className="text-xl font-bold text-slate-900 mb-2">{t('common:offlineBanner.disconnectedTitle')}</h2>
         <p className="text-slate-500 text-sm mb-6">
-          İnternet bağlantısı bulunamıyor. Teste devam etmek için bağlantınızı kontrol edin.
+          {t('common:offlineBanner.disconnectedDesc')}
         </p>
 
         {/* Cevap durumu */}
@@ -86,14 +88,19 @@ export default function OfflineBanner({
           <div className="flex items-center justify-center gap-2 bg-amber-50 border border-amber-200 rounded-xl px-4 py-2.5 mb-5 text-sm">
             <AlertTriangle className="w-4 h-4 text-amber-500 flex-shrink-0" />
             <span className="text-amber-800">
-              <strong>{pendingCount}</strong> cevap kaydedilmeyi bekliyor —
-              bağlantı gelince otomatik gönderilecek
+              {/* <strong> elementi i18n string'ine native — Trans ile parse edilir */}
+              <Trans
+                i18nKey="common:offlineBanner.pendingCount"
+                count={pendingCount}
+                components={{ strong: <strong /> }}
+                values={{ count: pendingCount }}
+              />
             </span>
           </div>
         )}
         {pendingCount === 0 && (
           <div className="text-sm text-slate-400 mb-5">
-            Seçtiğiniz tüm cevaplar güvende ✓
+            {t('common:offlineBanner.noPending')}
           </div>
         )}
 
@@ -112,10 +119,10 @@ export default function OfflineBanner({
           />
           <div className="text-left">
             <p className={`font-semibold text-lg ${isUrgent ? 'text-rose-700' : 'text-slate-700'}`}>
-              {remainingSeconds} saniye
+              {t('common:offlineBanner.remainingSeconds', { count: remainingSeconds })}
             </p>
             <p className="text-xs text-slate-400">
-              Bu sürede bağlanamazsan ilerleme kaydedilecek ve çıkılacak
+              {t('common:offlineBanner.countdownDesc')}
             </p>
           </div>
         </div>
@@ -126,7 +133,7 @@ export default function OfflineBanner({
           className="w-full text-slate-600 border-slate-300 hover:bg-slate-50"
           onClick={onManualExit}
         >
-          Şimdi Çık ve Kaydet
+          {t('common:offlineBanner.exitNow')}
         </Button>
       </div>
     </div>

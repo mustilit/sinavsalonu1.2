@@ -20,6 +20,18 @@ import './index.css'
 import './lib/i18n';              // side-effect: i18next init
 import { initAnalytics } from './lib/analytics';
 
+// Tema migration: eski sürümlerde defaultTheme="system" idi; bazı bileşenlerin
+// dark: varyantları eksik olduğundan tutarsız görünüm oluyordu. Yeni ayar
+// "light" default + sistem temasını otomatik takip etmeme yönündedir. Eski
+// kullanıcıların localStorage'unda 'system' değeri varsa onu temizleyerek
+// yeni default'a (light) düşmesini sağlıyoruz. Kullanıcı toggle ile koyu
+// temaya geçtiyse ('dark' kayıtlıysa) tercihi korunur.
+try {
+  if (typeof window !== 'undefined' && localStorage.getItem('theme') === 'system') {
+    localStorage.removeItem('theme');
+  }
+} catch { /* sessiz */ }
+
 initAnalytics();
 
 ReactDOM.createRoot(document.getElementById('root')).render(

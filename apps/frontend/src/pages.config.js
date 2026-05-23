@@ -74,6 +74,9 @@ const Explore = lazy(() => import('./pages/Explore'));
 const ForgotPassword = lazy(() => import('./pages/ForgotPassword'));
 const Home = lazy(() => import('./pages/Home'));
 const ResetPassword = lazy(() => import('./pages/ResetPassword'));
+const VerifyEmail = lazy(() => import('./pages/VerifyEmail'));
+const EducatorOnboarding = lazy(() => import('./pages/EducatorOnboarding'));
+const DeviceVerify = lazy(() => import('./pages/DeviceVerify'));
 const Login = lazy(() => import('./pages/Login'));
 const Register = lazy(() => import('./pages/Register'));
 const ManageExamTypes = lazy(() => import('./pages/ManageExamTypes'));
@@ -152,6 +155,9 @@ export const PAGES = {
     "Login": Login,
     "Register": Register,
     "ResetPassword": ResetPassword,
+    "VerifyEmail": VerifyEmail,
+    "EducatorOnboarding": EducatorOnboarding,
+    "DeviceVerify": DeviceVerify,
     "ManageExamTypes": ManageExamTypes,
     "ManageRefunds": ManageRefunds,
     "ManageTests": ManageTests,

@@ -20,6 +20,7 @@ import { GetEducatorAdStatsUseCase } from '../../application/use-cases/ad/GetEdu
 import { ListEducatorTestsUseCase } from '../../application/use-cases/test/ListEducatorTestsUseCase';
 import { ListEducatorPurchasesUseCase } from '../../application/use-cases/purchase/ListEducatorPurchasesUseCase';
 import { ToggleDiscountCodeUseCase } from '../../application/use-cases/discount/ToggleDiscountCodeUseCase';
+import { GetEducatorPackageViewStatsUseCase } from '../../application/use-cases/package/GetEducatorPackageViewStatsUseCase';
 import { PrismaUserRepository } from '../../infrastructure/repositories/PrismaUserRepository';
 import { PrismaExamRepository } from '../../infrastructure/repositories/PrismaExamRepository';
 import { PrismaTestStatsRepository } from '../../infrastructure/repositories/PrismaTestStatsRepository';
@@ -65,6 +66,39 @@ export class EducatorsController {
     const actorId = (req as any).user?.id;
     const uc = new UpdateEducatorProfileUseCase(this.userRepo, this.auditRepo);
     return uc.execute(actorId, { metadata: dto.metadata as Record<string, unknown> });
+  }
+
+  /**
+   * Eğiticinin onboarding tamamlanma durumunu döner.
+   * CV ve uzmanlık alanları doldurulmuş mu? Frontend bu cevapla kullanıcıyı
+   * `EducatorOnboarding` sayfasına yönlendirip yönlendirmeyeceğine karar verir.
+   */
+  @Get('me/onboarding-status')
+  @Roles('EDUCATOR')
+  @ApiBearerAuth('bearer')
+  @ApiErrorResponses()
+  async getOnboardingStatus(@Req() req: any) {
+    const userId = (req as any).user?.id;
+    const { prisma } = require('../../infrastructure/database/prisma');
+    const user: any = await (prisma as any).user.findUnique({
+      where: { id: userId },
+      select: { firstName: true, lastName: true, metadata: true, emailVerified: true },
+    });
+    if (!user) {
+      return { complete: false, hasName: false, hasCv: false, hasSpecialization: false, emailVerified: false };
+    }
+    const meta = (user.metadata && typeof user.metadata === 'object') ? user.metadata : {};
+    const hasName = Boolean(user.firstName && user.lastName);
+    const hasCv = Boolean(meta.cv_url && typeof meta.cv_url === 'string' && meta.cv_url.trim().length > 0);
+    const specs = Array.isArray(meta.specialized_exam_types) ? meta.specialized_exam_types : [];
+    const hasSpecialization = specs.length > 0;
+    return {
+      complete: hasName && hasCv && hasSpecialization,
+      hasName,
+      hasCv,
+      hasSpecialization,
+      emailVerified: Boolean(user.emailVerified),
+    };
   }
 
   @Post('me/discount-codes')
@@ -177,6 +211,26 @@ export class EducatorsController {
   async listMySales(@Req() req: any) {
     const educatorId = (req as any).user?.id;
     return this.listPurchasesUC.execute(educatorId);
+  }
+
+  /**
+   * Eğiticinin kendi paketleri için görüntülenme istatistikleri.
+   * Query: ids=pkg1,pkg2 → yalnız bu paketlerin istatistikleri (opsiyonel filtre).
+   * Yetki: yalnızca eğiticinin sahip olduğu paketler döner — başkasının paketini
+   * sorgulasa da boş döner (use case where clause educatorId ile).
+   */
+  @Get('me/packages/views')
+  @Roles('EDUCATOR', 'ADMIN')
+  @ApiBearerAuth('bearer')
+  @ApiOkResponse({ description: 'View stats per package for educator dashboard' })
+  @ApiErrorResponses()
+  async myPackageViews(@Req() req: any, @Query('ids') ids?: string) {
+    const educatorId = (req as any).user?.id;
+    const uc = new GetEducatorPackageViewStatsUseCase();
+    const idList = ids
+      ? ids.split(',').map((s) => s.trim()).filter(Boolean)
+      : undefined;
+    return uc.execute(educatorId, idList);
   }
 
   @Public()

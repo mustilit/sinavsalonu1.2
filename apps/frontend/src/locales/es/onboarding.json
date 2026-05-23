@@ -1,0 +1,86 @@
+{
+  "ui": {
+    "skip": "Saltar",
+    "skipAria": "Saltar el tour",
+    "back": "Atrás",
+    "next": "Siguiente",
+    "letsStart": "¡Comencemos!",
+    "stepAria": "Paso {{n}}"
+  },
+  "candidateWelcome": {
+    "s0": {
+      "title": "¡Bienvenido a Sınav Salonu! 🎉",
+      "description": "Te uniste a la plataforma que lleva tu preparación al siguiente nivel. Veamos las funciones en este breve tour."
+    },
+    "s1": {
+      "title": "Explora los tipos de examen",
+      "description": "Examina paquetes preparados para docenas de tipos de examen (YKS, KPSS, ALES, etc.) desde 'Explorar exámenes'."
+    },
+    "s2": {
+      "title": "Examina los paquetes",
+      "description": "Compra paquetes creados por educadores. Cada paquete puede contener varios exámenes y rastrea tu progreso."
+    },
+    "s3": {
+      "title": "Sigue a educadores",
+      "description": "Consulta los perfiles de educadores expertos y descubre sus otros paquetes."
+    }
+  },
+  "candidateTest": {
+    "s0": {
+      "title": "Bienvenido a la pantalla del examen",
+      "description": "El temporizador inicia cuando comienza el examen (en exámenes cronometrados). Lee con atención y elige tu respuesta."
+    },
+    "s1": {
+      "title": "Navegación de preguntas",
+      "description": "Haz clic en los números del panel izquierdo para saltar a cualquier pregunta. Verde = contestada, amarillo = marcada."
+    },
+    "s2": {
+      "title": "Cambia tu respuesta",
+      "description": "Haz clic de nuevo en la opción elegida para deseleccionarla. Haz clic en otra opción para cambiarla."
+    },
+    "s3": {
+      "title": "Marca preguntas 🚩",
+      "description": "Marca las preguntas dudosas. Podrás volver a ellas fácilmente antes de enviar."
+    },
+    "s4": {
+      "title": "Completar el examen",
+      "description": "Cuando termines, pulsa 'Finalizar examen'. Verás la distribución correcto/incorrecto y las estadísticas de tiempo."
+    }
+  },
+  "educatorWelcome": {
+    "s0": {
+      "title": "¡Bienvenido al panel del educador! 🏫",
+      "description": "Te uniste a la plataforma donde puedes crear paquetes propios, seguir tus ventas y llegar a candidatos."
+    },
+    "s1": {
+      "title": "Crea paquetes de exámenes",
+      "description": "Añade preguntas, configura duración y puntuación con 'Crear examen nuevo'. Publica con un clic cuando estés listo."
+    },
+    "s2": {
+      "title": "Sigue tus ventas",
+      "description": "Consulta gráficos mensuales de ingresos, qué paquetes vendieron más y tu resumen de ganancias en 'Mis ventas'."
+    },
+    "s3": {
+      "title": "Completa tu perfil",
+      "description": "Añade biografía, áreas de especialización e información de pago (IBAN). Un perfil completo atrae más candidatos."
+    }
+  },
+  "educatorCreate": {
+    "s0": {
+      "title": "Introduce los datos del examen",
+      "description": "Rellena título, descripción, tipo de examen, tema y precio. Con 'Cronometrado' puedes fijar duración."
+    },
+    "s1": {
+      "title": "Añade preguntas",
+      "description": "Indica texto, opciones y respuesta correcta para cada pregunta. Puedes añadir imágenes. Las preguntas se pueden reordenar."
+    },
+    "s2": {
+      "title": "Añade soluciones",
+      "description": "Agrega explicaciones detalladas para cada pregunta. Los candidatos pueden verlas tras terminar el examen."
+    },
+    "s3": {
+      "title": "¡Publica!",
+      "description": "¿Todo listo? Al activar 'Publicar' el paquete será visible para los candidatos. Puedes despublicar en cualquier momento."
+    }
+  }
+}

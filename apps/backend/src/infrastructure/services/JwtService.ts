@@ -10,6 +10,13 @@ export interface JwtPayload {
   sub: string;
   email: string;
   role: UserRole;
+  /**
+   * Session ID — her başarılı login için crypto.randomUUID() ile üretilir.
+   * JwtAuthGuard payload.sid ile User.activeSessionId'yi karşılaştırır;
+   * uyumsuzsa "başka cihazda giriş yapıldı" hatası fırlatır.
+   * Eski (sid'siz) tokenlar legacy session olarak kabul edilir.
+   */
+  sid?: string;
   iat?: number;
   exp?: number;
 }

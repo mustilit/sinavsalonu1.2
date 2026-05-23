@@ -1,5 +1,6 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { createPageUrl } from "@/utils";
 import { useAuth } from "@/lib/AuthContext";
 import { useQuery } from "@tanstack/react-query";
@@ -11,13 +12,8 @@ import { Input } from "@/components/ui/input";
 import { buildPageUrl, useAppNavigate } from "@/lib/navigation";
 import api from "@/lib/api/apiClient";
 import { entities } from "@/api/dalClient";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+// Test paket kartı — Explore sayfasıyla görsel tutarlılık için aynı bileşen
+import TestPackageCard from "@/components/ui/TestPackageCard";
 import {
   GraduationCap,
   Search,
@@ -31,7 +27,6 @@ import {
   User,
   UserCircle,
   Briefcase,
-  Clock,
   Sparkles,
   Megaphone,
   Play,
@@ -40,111 +35,32 @@ import {
 
 // ── helpers ────────────────────────────────────────────────────────────────
 
-function priceTL(cents) {
-  if (cents === null || cents === undefined) return "Ücretsiz";
-  if (cents === 0) return "Ücretsiz";
-  return `₺${(cents / 100).toLocaleString("tr-TR", { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`;
-}
-
-function starStr(avg) {
-  if (!avg) return null;
-  return Number(avg).toFixed(1);
-}
-
-// ── inline package card (uses backend PopularPackageItem format) ───────────
-
 /**
- * Tek bir test paketi kartı.
- * tags dizisinde 'AD_BOOSTED' varsa "Öne Çıkan" rozeti gösterilir.
+ * /marketplace/packages endpoint cevabını TestPackageCard'ın beklediği şekle
+ * dönüştürür. Veri kaynağı aynı; yalnızca alan isimleri eşlenir.
+ *
+ * NOT: Marketplace response'u educator e-postası içermez — link yerine düz
+ * metin gösterilir (TestPackageCard educator_email yoksa Link yerine span
+ * render eder).
  */
-function PackageCard({ pkg }) {
-  // Reklam destekli öne çıkarma kontrolü
-  const isBoosted = Array.isArray(pkg.tags) && pkg.tags.includes('AD_BOOSTED');
-
-  return (
-    <Link
-      to={createPageUrl("TestDetail") + `?id=${pkg.id}`}
-      className="group bg-white rounded-2xl border border-slate-100 hover:shadow-lg hover:shadow-slate-200/60 transition-all duration-300 flex flex-col overflow-hidden"
-    >
-      {/* Renkli üst şerit — reklam destekliyse turuncu, aksi hâlde mavi */}
-      <div
-        className="h-2 w-full"
-        style={{ backgroundColor: isBoosted ? "#f97316" : "#0000CD", opacity: 0.85 }}
-      />
-      <div className="p-5 flex flex-col flex-1 gap-3">
-        {/* badge row */}
-        <div className="flex items-center gap-2 flex-wrap">
-          {/* Reklam öne çıkarma rozeti */}
-          {isBoosted && (
-            <span className="inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full bg-orange-50 text-orange-600 border border-orange-200">
-              <Megaphone className="w-3 h-3" /> Öne Çıkan
-            </span>
-          )}
-          {pkg.examTypeName && (
-            <span
-              className="text-xs font-medium px-2 py-0.5 rounded-full"
-              style={{ backgroundColor: "rgba(0,0,205,0.08)", color: "#0000CD" }}
-            >
-              {pkg.examTypeName}
-            </span>
-          )}
-          {pkg.isTimed && (
-            <span className="text-xs text-slate-500 flex items-center gap-1">
-              <Clock className="w-3 h-3" /> Süreli
-            </span>
-          )}
-        </div>
-
-        {/* title */}
-        <h3
-          className="font-semibold text-slate-900 line-clamp-2 text-base leading-snug group-hover:text-indigo-700 transition-colors"
-        >
-          {pkg.title}
-        </h3>
-
-        {/* educator */}
-        {pkg.educatorUsername && (
-          <p className="text-sm text-slate-500 flex items-center gap-1.5">
-            <User className="w-3.5 h-3.5 flex-shrink-0" />
-            {pkg.educatorUsername}
-          </p>
-        )}
-
-        {/* stats row */}
-        <div className="flex items-center gap-4 text-xs text-slate-500 mt-auto pt-1">
-          <span className="flex items-center gap-1">
-            <BookOpen className="w-3.5 h-3.5" />
-            {pkg.questionCount} soru
-          </span>
-          {starStr(pkg.ratingAvg) && (
-            <span className="flex items-center gap-1">
-              <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-              {starStr(pkg.ratingAvg)}
-            </span>
-          )}
-          {pkg.saleCount > 0 && (
-            <span className="flex items-center gap-1">
-              <TrendingUp className="w-3.5 h-3.5" />
-              {pkg.saleCount} satış
-            </span>
-          )}
-        </div>
-
-        {/* price + cta */}
-        <div className="flex items-center justify-between pt-3 border-t border-slate-100 mt-1">
-          <span className="text-lg font-bold text-slate-900">
-            {priceTL(pkg.priceCents)}
-          </span>
-          <span
-            className="text-xs font-semibold px-3 py-1.5 rounded-lg text-white"
-            style={{ backgroundColor: "#0000CD" }}
-          >
-            İncele
-          </span>
-        </div>
-      </div>
-    </Link>
-  );
+function pkgToTestCard(pkg) {
+  const priceTL = typeof pkg.priceCents === 'number' ? pkg.priceCents / 100 : 0;
+  return {
+    id: pkg.id,
+    title: pkg.title,
+    cover_image: pkg.coverImageUrl ?? null,
+    exam_type_name: pkg.examTypeName ?? null,
+    difficulty: pkg.difficulty ?? 'medium',
+    has_solutions: false,
+    educator_name: pkg.educatorUsername ?? null,
+    educator_email: null, // marketplace endpoint email vermez → link yerine metin
+    test_count: pkg.testCount ?? 0,
+    question_count: pkg.questionCount ?? 0,
+    duration_minutes: null, // marketplace özet endpoint'i süreyi paket geneli için döndürmez
+    average_rating: pkg.ratingAvg ?? 0,
+    price: priceTL,
+    campaign_price: null,
+  };
 }
 
 // ── inline educator card ────────────────────────────────────────────────────
@@ -152,9 +68,10 @@ function PackageCard({ pkg }) {
 /**
  * Tek bir eğitici kartı.
  * tags dizisinde 'AD_BOOSTED' varsa "Öne Çıkan" rozeti gösterilir.
+ * NOT: educator.username user-generated — çevrilmez.
  */
 function EducatorCard({ educator }) {
-  // Reklam destekli öne çıkarma kontrolü
+  const { t } = useTranslation(["pages"]);
   const isBoosted = Array.isArray(educator.tags) && educator.tags.includes('AD_BOOSTED');
 
   return (
@@ -173,22 +90,21 @@ function EducatorCard({ educator }) {
           <p className="font-semibold text-slate-900 truncate group-hover:text-indigo-700 transition-colors">
             {educator.username}
           </p>
-          {/* Reklam öne çıkarma rozeti */}
           {isBoosted && (
             <span className="inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full bg-orange-50 text-orange-600 border border-orange-200 flex-shrink-0">
-              <Megaphone className="w-3 h-3" /> Öne Çıkan
+              <Megaphone className="w-3 h-3" /> {t("pages:card.boosted")}
             </span>
           )}
         </div>
         <div className="flex items-center flex-wrap gap-3 mt-1.5 text-sm text-slate-500">
           <span className="flex items-center gap-1">
             <BookOpen className="w-3.5 h-3.5" />
-            {educator.testCount} test
+            {t("pages:card.testsCount", { count: educator.testCount ?? 0 })}
           </span>
           {educator.saleCount > 0 && (
             <span className="flex items-center gap-1">
               <TrendingUp className="w-3.5 h-3.5" />
-              {educator.saleCount} satış
+              {t("pages:card.salesCount", { count: educator.saleCount })}
             </span>
           )}
           {educator.ratingAvg != null && Number(educator.ratingAvg) > 0 && (
@@ -206,7 +122,9 @@ function EducatorCard({ educator }) {
 
 // ── section header component ────────────────────────────────────────────────
 
-function SectionHeader({ title, isPersonalized, linkTo, linkLabel = "Tümünü Gör" }) {
+function SectionHeader({ title, isPersonalized, linkTo, linkLabel }) {
+  const { t } = useTranslation(["pages"]);
+  const resolvedLinkLabel = linkLabel ?? t("pages:card.seeAll");
   return (
     <div className="flex items-center justify-between mb-7">
       <div className="flex items-center gap-3">
@@ -217,7 +135,7 @@ function SectionHeader({ title, isPersonalized, linkTo, linkLabel = "Tümünü G
             style={{ backgroundColor: "rgba(0,0,205,0.08)", color: "#0000CD" }}
           >
             <Sparkles className="w-3 h-3" />
-            Size Özel
+            {t("pages:card.personalized")}
           </span>
         )}
       </div>
@@ -227,19 +145,146 @@ function SectionHeader({ title, isPersonalized, linkTo, linkLabel = "Tümünü G
           className="flex items-center gap-1.5 text-sm font-medium hover:opacity-75 transition-opacity"
           style={{ color: "#0000CD" }}
         >
-          {linkLabel} <ArrowRight className="w-4 h-4" />
+          {resolvedLinkLabel} <ArrowRight className="w-4 h-4" />
         </Link>
       )}
     </div>
   );
 }
 
+/**
+ * ExamTypesCarousel — Anasayfa Sınav Türleri bandının otomatik kayar versiyonu.
+ *
+ * Davranış:
+ *   - Her 4 saniyede 5 sınav türü kart genişliği kadar sola kayar
+ *   - Mouse hover (veya klavye focus) → durur
+ *   - Sona ulaşınca başa sarar (instant — smooth geri-animasyon yapardı)
+ *
+ * Kart genişliği DOM ölçümünden alınır (ilk child'ın `offsetWidth`'i). Bu
+ * sayede responsive breakpoint'leri (mobil 2, tablet 3, desktop 6 görünür)
+ * otomatik takip eder.
+ *
+ * Erişilebilirlik: dış sarmalayıcı `role="region"` ile etiketlendi. Klavye
+ * kullanıcısı sekme ile bağlantılar arasında dolaşabilir. Reduced-motion
+ * kullanıcısı için animasyon kapalı.
+ */
+const CAROUSEL_INTERVAL_MS = 4000; // 4 saniye
+const CAROUSEL_STEP_ITEMS = 5;     // tek tıkta 5 sınav türü ileri
+
+function ExamTypesCarousel({ examTypes, examTypeIds, isPersonalized, t }) {
+  const scrollRef = useRef(null);
+  const [paused, setPaused] = useState(false);
+
+  // prefers-reduced-motion → animasyon devre dışı
+  const prefersReducedMotion = useMemo(() => {
+    if (typeof window === 'undefined' || !window.matchMedia) return false;
+    return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  }, []);
+
+  useEffect(() => {
+    if (paused || prefersReducedMotion) return;
+    if (!scrollRef.current) return;
+    const tick = () => {
+      const el = scrollRef.current;
+      if (!el) return;
+      const maxScroll = el.scrollWidth - el.clientWidth;
+      if (maxScroll <= 0) return; // kaydıracak içerik yok
+      // İlk kartın genişliğinden bir öğe boyutunu bul
+      const firstCard = el.firstElementChild;
+      const itemWidth = firstCard ? firstCard.offsetWidth : 0;
+      if (itemWidth <= 0) return;
+      const step = itemWidth * CAROUSEL_STEP_ITEMS;
+      const next = el.scrollLeft + step;
+      if (next >= maxScroll - 1) {
+        // Sona ulaştık — instant başa dön
+        el.scrollTo({ left: 0, behavior: 'auto' });
+      } else {
+        el.scrollTo({ left: next, behavior: 'smooth' });
+      }
+    };
+    const id = setInterval(tick, CAROUSEL_INTERVAL_MS);
+    return () => clearInterval(id);
+  }, [paused, prefersReducedMotion]);
+
+  return (
+    <section>
+      <SectionHeader
+        title={t("pages:home.sections.examTypes")}
+        isPersonalized={false}
+        linkTo={createPageUrl("ExamTypes")}
+      />
+      <div
+        className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden"
+        onMouseEnter={() => setPaused(true)}
+        onMouseLeave={() => setPaused(false)}
+        onFocusCapture={() => setPaused(true)}
+        onBlurCapture={() => setPaused(false)}
+        role="region"
+        aria-label={t("pages:home.sections.examTypes")}
+      >
+        <div
+          ref={scrollRef}
+          className="flex overflow-x-auto scrollbar-none"
+          style={{
+            scrollbarWidth: 'none',
+            msOverflowStyle: 'none',
+          }}
+        >
+          {/* webkit scrollbar gizleme — inline style ile yapılamaz, ::-webkit-scrollbar
+              pseudo'su global CSS gerektirir; pragmatik çözüm: çok ince scrollbar zaten
+              gizli kalır flex container içinde */}
+          {examTypes.map((exam) => {
+            const isPreferred = isPersonalized && examTypeIds.includes(exam.id);
+            return (
+              <Link
+                key={exam.id}
+                to={createPageUrl("Explore") + `?exam_type=${exam.id}`}
+                className={`group flex-shrink-0 basis-1/2 sm:basis-1/3 lg:basis-1/6 p-6 text-center transition-all border-r last:border-r-0 border-slate-100 ${
+                  isPreferred
+                    ? "bg-indigo-50/60 hover:bg-indigo-50"
+                    : "hover:bg-slate-50"
+                }`}
+              >
+                <div
+                  className="w-12 h-12 mx-auto rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform"
+                  style={{
+                    backgroundColor: isPreferred
+                      ? "rgba(0,0,205,0.15)"
+                      : "rgba(0,0,205,0.07)",
+                  }}
+                >
+                  <Award className="w-6 h-6" style={{ color: "#0000CD" }} />
+                </div>
+                {/* exam.name user-generated — çevrilmez */}
+                <p className="mt-3 font-semibold text-slate-800 text-sm truncate">
+                  {exam.name}
+                </p>
+                {exam.description && (
+                  /* exam.description user-generated — çevrilmez */
+                  <p className="mt-1 text-xs text-slate-400 line-clamp-2 leading-snug">
+                    {exam.description}
+                  </p>
+                )}
+                {isPreferred && (
+                  <p className="mt-1 text-xs font-medium" style={{ color: "#0000CD" }}>
+                    {t("pages:home.interestedExamType")}
+                  </p>
+                )}
+              </Link>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 // ── main component ──────────────────────────────────────────────────────────
 
 export default function Home() {
+  const { t } = useTranslation(["pages", "common"]);
   const { user } = useAuth();
   const [searchQuery, setSearchQuery] = useState("");
-  const [showLoginDialog, setShowLoginDialog] = useState(false);
   const navigate = useAppNavigate();
 
   // ── Onboarding ────────────────────────────────────────────────────────────
@@ -248,7 +293,6 @@ export default function Home() {
   const showWelcomeTour = useShouldShowTour(TOUR_KEYS.CANDIDATE_WELCOME) && isCandidate;
   const completeTour = useCompleteTour();
 
-  // Compute personalisation exam-type IDs from user profile
   const examTypeIds = useMemo(() => {
     const ids = user?.interested_exam_types;
     if (Array.isArray(ids) && ids.length > 0) return ids;
@@ -257,8 +301,6 @@ export default function Home() {
 
   const isPersonalized = examTypeIds.length > 0;
   const examTypeIdsParam = isPersonalized ? examTypeIds.join(",") : undefined;
-
-  // ── data queries ──────────────────────────────────────────────────────────
 
   const { data: examTypes = [] } = useQuery({
     queryKey: ["home-exam-types"],
@@ -272,10 +314,8 @@ export default function Home() {
   const { data: packages = [], isLoading: pkgsLoading } = useQuery({
     queryKey: ["home-popular-packages", examTypeIdsParam],
     queryFn: async () => {
-      // /marketplace/packages kullan — TestPackage ID döner (tek kaynak)
       const params = new URLSearchParams({ limit: "6" });
       if (examTypeIdsParam) {
-        // examTypeIdsParam virgülle ayrılmış olabilir, ilk değeri al
         const firstType = examTypeIdsParam.split(",")[0]?.trim();
         if (firstType) params.set("examTypeId", firstType);
       }
@@ -285,12 +325,12 @@ export default function Home() {
     staleTime: 3 * 60 * 1000,
   });
 
-  // Aday için satın alınmış paketler — "Devam Et" bandını besler
   const { data: ownedPackages = [] } = useQuery({
     queryKey: ["home-owned-packages", user?.id],
     queryFn: async () => {
       const purchases = await entities.Purchase.filter({});
       const grouped = new Map();
+      const fallbackTitle = t("pages:home.fallbackPackageTitle");
       for (const p of Array.isArray(purchases) ? purchases : []) {
         if (p.payment_status && !["PAID", "COMPLETED", "ACTIVE"].includes(String(p.payment_status).toUpperCase())) continue;
         const id = p.package_id ?? p.test_package_id;
@@ -300,7 +340,7 @@ export default function Home() {
         if (!prev) {
           grouped.set(id, {
             id,
-            title: p.package?.title ?? p.test_package_title ?? "Test paketi",
+            title: p.package?.title ?? p.test_package_title ?? fallbackTitle,
             educatorUsername: p.package?.educatorUsername ?? p.test?.educator?.username ?? null,
             total: 1,
             done: submitted ? 1 : 0,
@@ -312,7 +352,6 @@ export default function Home() {
       }
       return Array.from(grouped.values())
         .map((p) => ({ ...p, isCompleted: p.total > 0 && p.done >= p.total }))
-        // Devam edilecekler (tamamlanmamış) önce, tamamlananlar sonra
         .sort((a, b) => Number(a.isCompleted) - Number(b.isCompleted));
     },
     enabled: isCandidate && !!user,
@@ -330,7 +369,6 @@ export default function Home() {
     staleTime: 3 * 60 * 1000,
   });
 
-  // Sort exam types by match with user's interested types
   const sortedExamTypes = useMemo(() => {
     if (!isPersonalized) return examTypes;
     const set = new Set(examTypeIds);
@@ -347,14 +385,8 @@ export default function Home() {
     navigate(buildPageUrl("Explore", { q: searchQuery.trim() }));
   };
 
-  const handleLogin = (userType) => {
-    sessionStorage.setItem("preferred_user_type", userType);
-    navigate(buildPageUrl("Login", { from: createPageUrl("Explore") }));
-  };
-
   return (
     <div className="min-h-screen bg-slate-50">
-      {/* ── Onboarding Tour ──────────────────────────────────────────────── */}
       {showWelcomeTour && (
         <OnboardingTour
           steps={CANDIDATE_WELCOME_STEPS}
@@ -363,45 +395,7 @@ export default function Home() {
         />
       )}
 
-      {/* ── Topbar ──────────────────────────────────────────────────────── */}
-      <header className="bg-white/80 backdrop-blur-sm border-b border-slate-100 sticky top-0 z-30">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center gap-3">
-              <div
-                className="w-10 h-10 rounded-xl flex items-center justify-center"
-                style={{ backgroundColor: "#0000CD" }}
-              >
-                <GraduationCap className="w-6 h-6 text-white" />
-              </div>
-              <span className="text-xl font-bold text-slate-900">Sınav Salonu</span>
-            </div>
-            <nav className="flex items-center gap-3">
-              <Link
-                to={createPageUrl("Explore")}
-                className="text-slate-600 hover:text-slate-900 transition-colors text-sm"
-              >
-                Testleri Keşfet
-              </Link>
-              <Link
-                to={createPageUrl("Educators")}
-                className="text-slate-600 hover:text-slate-900 transition-colors text-sm"
-              >
-                Eğiticiler
-              </Link>
-              {!user && (
-                <Button
-                  onClick={() => setShowLoginDialog(true)}
-                  style={{ backgroundColor: "#0000CD" }}
-                  className="hover:opacity-90"
-                >
-                  Giriş Yap
-                </Button>
-              )}
-            </nav>
-          </div>
-        </div>
-      </header>
+      {/* Topbar artık Layout tarafından PublicHeader olarak render ediliyor (tüm public sayfalarda paylaşılır) */}
 
       {/* ── Hero ────────────────────────────────────────────────────────── */}
       <section className="relative overflow-hidden">
@@ -410,18 +404,18 @@ export default function Home() {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
           <div className="max-w-3xl">
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight">
-              Sınavlara
-              <span className="block text-indigo-200">Güvenle Hazırlan</span>
+              {t("pages:home.hero.titleLine1")}
+              <span className="block text-indigo-200">{t("pages:home.hero.titleLine2")}</span>
             </h1>
             <p className="mt-6 text-lg text-indigo-100 max-w-xl">
-              Alanında uzman eğiticilerden binlerce test çöz, performansını takip et ve hedefine ulaş.
+              {t("pages:home.hero.subtitle")}
             </p>
 
             <form onSubmit={handleSearch} className="mt-10 flex gap-3">
               <div className="flex-1 relative">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
                 <Input
-                  placeholder="Test, konu veya eğitici ara..."
+                  placeholder={t("pages:home.hero.searchPlaceholder")}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="pl-12 h-14 bg-white/95 backdrop-blur border-0 rounded-xl text-lg"
@@ -433,18 +427,18 @@ export default function Home() {
                 className="h-14 px-8 bg-white hover:bg-slate-100 rounded-xl"
                 style={{ color: "#0000CD" }}
               >
-                Ara
+                {t("pages:home.hero.searchButton")}
               </Button>
             </form>
 
             <div className="mt-10 flex flex-wrap gap-6 text-white/90">
               {[
-                { icon: CheckCircle, label: "Özgün Testler" },
-                { icon: CheckCircle, label: "Tecrübeli Eğiticiler" },
-                { icon: CheckCircle, label: "Performans Takibi" },
-              ].map(({ icon: Icon, label }) => (
-                <div key={label} className="flex items-center gap-2">
-                  <Icon className="w-5 h-5 text-emerald-400" />
+                { key: "uniqueTests", label: t("pages:home.hero.features.uniqueTests") },
+                { key: "experiencedEducators", label: t("pages:home.hero.features.experiencedEducators") },
+                { key: "performanceTracking", label: t("pages:home.hero.features.performanceTracking") },
+              ].map(({ key, label }) => (
+                <div key={key} className="flex items-center gap-2">
+                  <CheckCircle className="w-5 h-5 text-emerald-400" />
                   <span>{label}</span>
                 </div>
               ))}
@@ -455,11 +449,11 @@ export default function Home() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16 py-16">
 
-        {/* ── 0. Devam Et (aday, satın aldığı paketler) ──────────────────── */}
+        {/* ── 0. Devam Et ───────────────────────────────────────────────── */}
         {isCandidate && ownedPackages.length > 0 && (
           <section>
             <SectionHeader
-              title="Devam Et"
+              title={t("pages:home.sections.continue")}
               isPersonalized={false}
               linkTo={createPageUrl("MyTests")}
             />
@@ -475,7 +469,7 @@ export default function Home() {
                     style={{
                       backgroundColor: pkg.isCompleted ? "rgba(16,185,129,0.10)" : "rgba(0,0,205,0.08)",
                     }}
-                    aria-label={pkg.isCompleted ? "Tamamlandı" : "Devam et"}
+                    aria-label={pkg.isCompleted ? t("pages:home.completedAria") : t("pages:home.continueAria")}
                   >
                     {pkg.isCompleted ? (
                       <Eye className="w-5 h-5 text-emerald-600" />
@@ -501,58 +495,20 @@ export default function Home() {
           </section>
         )}
 
-        {/* ── 1. Sınav Türleri band ──────────────────────────────────────── */}
+        {/* ── 1. Sınav Türleri band — otomatik kaydırma ──────────────────── */}
         {examTypes.length > 0 && (
-          <section>
-            <SectionHeader
-              title="Sınav Türleri"
-              isPersonalized={false}
-              linkTo={createPageUrl("ExamTypes")}
-            />
-            <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6">
-                {sortedExamTypes.slice(0, 6).map((exam, idx) => {
-                  const isPreferred = isPersonalized && examTypeIds.includes(exam.id);
-                  return (
-                    <Link
-                      key={exam.id}
-                      to={createPageUrl("Explore") + `?exam_type=${exam.id}`}
-                      className={`group p-6 text-center transition-all border-r last:border-r-0 border-b lg:border-b-0 border-slate-100 ${
-                        isPreferred
-                          ? "bg-indigo-50/60 hover:bg-indigo-50"
-                          : "hover:bg-slate-50"
-                      }`}
-                    >
-                      <div
-                        className="w-12 h-12 mx-auto rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform"
-                        style={{
-                          backgroundColor: isPreferred
-                            ? "rgba(0,0,205,0.15)"
-                            : "rgba(0,0,205,0.07)",
-                        }}
-                      >
-                        <Award className="w-6 h-6" style={{ color: "#0000CD" }} />
-                      </div>
-                      <p className="mt-3 font-semibold text-slate-800 text-sm">
-                        {exam.name}
-                      </p>
-                      {isPreferred && (
-                        <p className="mt-1 text-xs font-medium" style={{ color: "#0000CD" }}>
-                          İlgi alanınız
-                        </p>
-                      )}
-                    </Link>
-                  );
-                })}
-              </div>
-            </div>
-          </section>
+          <ExamTypesCarousel
+            examTypes={sortedExamTypes}
+            examTypeIds={examTypeIds}
+            isPersonalized={isPersonalized}
+            t={t}
+          />
         )}
 
         {/* ── 2. Test Paketleri ─────────────────────────────────────────── */}
         <section>
           <SectionHeader
-            title="Test Paketleri"
+            title={t("pages:home.sections.testPackages")}
             isPersonalized={isPersonalized}
             linkTo={
               isPersonalized && examTypeIds[0]
@@ -573,12 +529,16 @@ export default function Home() {
           ) : packages.length === 0 ? (
             <div className="text-center py-16 text-slate-400">
               <BookOpen className="w-12 h-12 mx-auto mb-3 opacity-30" />
-              <p>Henüz yayınlanmış test paketi yok</p>
+              <p>{t("pages:home.empty.noPackages")}</p>
             </div>
           ) : (
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {packages.map((pkg) => (
-                <PackageCard key={pkg.id} pkg={pkg} />
+                <TestPackageCard
+                  key={pkg.id}
+                  test={pkgToTestCard(pkg)}
+                  onBuy={() => navigate(buildPageUrl("TestDetail", { id: pkg.id }))}
+                />
               ))}
             </div>
           )}
@@ -588,7 +548,7 @@ export default function Home() {
         {/* ── 3. Eğiticiler ─────────────────────────────────────────────── */}
         <section>
           <SectionHeader
-            title="Eğiticiler"
+            title={t("pages:home.sections.educators")}
             isPersonalized={isPersonalized}
             linkTo={createPageUrl("Educators")}
           />
@@ -605,7 +565,7 @@ export default function Home() {
           ) : educators.length === 0 ? (
             <div className="text-center py-16 text-slate-400">
               <Users className="w-12 h-12 mx-auto mb-3 opacity-30" />
-              <p>Eğitici bulunamadı</p>
+              <p>{t("pages:home.empty.noEducators")}</p>
             </div>
           ) : (
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -622,12 +582,12 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 divide-x divide-white/20">
             {[
-              { icon: Users, value: "Canlı", label: "Testler" },
-              { icon: BookOpen, value: "Özgün", label: "Test İçeriği" },
-              { icon: GraduationCap, value: "Tecrübeli", label: "Eğiticiler" },
-              { icon: TrendingUp, value: "Performans", label: "Takibi" },
-            ].map(({ icon: Icon, value, label }) => (
-              <div key={label} className="text-center p-8">
+              { key: "tests", icon: Users, value: t("pages:home.stats.testsValue"), label: t("pages:home.stats.testsLabel") },
+              { key: "content", icon: BookOpen, value: t("pages:home.stats.contentValue"), label: t("pages:home.stats.contentLabel") },
+              { key: "educators", icon: GraduationCap, value: t("pages:home.stats.educatorsValue"), label: t("pages:home.stats.educatorsLabel") },
+              { key: "performance", icon: TrendingUp, value: t("pages:home.stats.performanceValue"), label: t("pages:home.stats.performanceLabel") },
+            ].map(({ key, icon: Icon, value, label }) => (
+              <div key={key} className="text-center p-8">
                 <div className="w-14 h-14 mx-auto bg-white/20 rounded-2xl flex items-center justify-center mb-4">
                   <Icon className="w-7 h-7 text-white" strokeWidth={1.5} />
                 </div>
@@ -646,14 +606,14 @@ export default function Home() {
             {[
               {
                 type: "candidate",
-                title: "Aday Olarak Katıl",
-                desc: "Alanında uzman eğiticilerden binlerce test çöz, performansını takip et ve hedefine ulaş.",
+                title: t("pages:home.cta.candidateTitle"),
+                desc: t("pages:home.cta.candidateDesc"),
                 icon: UserCircle,
               },
               {
                 type: "educator",
-                title: "Eğitici Olarak Katıl",
-                desc: "Uzman olduğun konuda test paketleri oluştur, binlerce adaya ulaş ve gelir elde et.",
+                title: t("pages:home.cta.educatorTitle"),
+                desc: t("pages:home.cta.educatorDesc"),
                 icon: Briefcase,
               },
             ].map(({ type, title, desc, icon: Icon }) => (
@@ -675,7 +635,7 @@ export default function Home() {
                     navigate(createPageUrl("Register") + `?role=${type}`);
                   }}
                 >
-                  Hemen Başla
+                  {t("pages:home.cta.startNow")}
                 </Button>
               </div>
             ))}
@@ -683,108 +643,7 @@ export default function Home() {
         </section>
       )}
 
-      {/* ── Footer ──────────────────────────────────────────────────────── */}
-      <footer className="text-slate-400 py-12" style={{ backgroundColor: "#0000CD" }}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-3 gap-8 mb-8">
-            <div>
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-white/10">
-                  <GraduationCap className="w-6 h-6 text-white" />
-                </div>
-                <span className="text-lg font-bold text-white">Sınav Salonu</span>
-              </div>
-              <p className="text-white/70 text-sm">
-                Sınavlara hazırlık için en güvenilir platform.
-                <br />
-                Alanında uzman eğiticilerden test çöz,
-                <br />
-                performansını takip et.
-              </p>
-            </div>
-            <div>
-              <h3 className="text-white font-semibold mb-4">Kurumsal</h3>
-              <div className="grid grid-cols-2 gap-3">
-                {[
-                  { label: "Hakkımızda", page: "About" },
-                  { label: "İletişim", page: "Contact" },
-                  { label: "Gizlilik Politikası", page: "Privacy" },
-                  { label: "İş Ortaklığı", page: "Partnership" },
-                ].map(({ label, page }) => (
-                  <Link
-                    key={page}
-                    to={createPageUrl(page)}
-                    className="text-white/70 hover:text-white text-sm transition-colors"
-                  >
-                    {label}
-                  </Link>
-                ))}
-              </div>
-            </div>
-            <div>
-              <h3 className="text-white font-semibold mb-4">Destek</h3>
-              <Link
-                to={createPageUrl("Support")}
-                className="text-white/70 hover:text-white text-sm transition-colors block"
-              >
-                Yardım ve Destek
-              </Link>
-            </div>
-          </div>
-          <div className="pt-8 border-t border-white/10">
-            <p className="text-sm text-white/80 text-center">
-              © {new Date().getFullYear()} Sınav Salonu. Tüm hakları saklıdır.
-            </p>
-          </div>
-        </div>
-      </footer>
-
-      {/* ── Login type dialog ────────────────────────────────────────────── */}
-      <Dialog open={showLoginDialog} onOpenChange={setShowLoginDialog}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle className="text-2xl text-center">
-              Sınav Salonu'na Hoş Geldiniz
-            </DialogTitle>
-            <DialogDescription className="text-center">
-              Devam etmek için hesap türünüzü seçin
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-3 pt-4">
-            {[
-              {
-                type: "candidate",
-                label: "Aday Olarak Giriş",
-                sub: "Test çöz ve performansını takip et",
-                icon: UserCircle,
-              },
-              {
-                type: "educator",
-                label: "Eğitici Olarak Giriş",
-                sub: "Test paketi oluştur ve gelir elde et",
-                icon: Briefcase,
-              },
-            ].map(({ type, label, sub, icon: Icon }) => (
-              <button
-                key={type}
-                onClick={() => handleLogin(type)}
-                className="w-full p-5 rounded-xl border-2 border-slate-200 hover:border-indigo-300 hover:bg-indigo-50/40 transition-all text-left flex items-center gap-4"
-              >
-                <div
-                  className="w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0"
-                  style={{ backgroundColor: "rgba(0,0,205,0.1)" }}
-                >
-                  <Icon className="w-5 h-5" style={{ color: "#0000CD" }} />
-                </div>
-                <div>
-                  <p className="font-semibold text-slate-900">{label}</p>
-                  <p className="text-sm text-slate-500">{sub}</p>
-                </div>
-              </button>
-            ))}
-          </div>
-        </DialogContent>
-      </Dialog>
+      {/* Footer artık Layout tarafından PublicFooter olarak render ediliyor (tüm public sayfalarda paylaşılır) */}
     </div>
   );
 }

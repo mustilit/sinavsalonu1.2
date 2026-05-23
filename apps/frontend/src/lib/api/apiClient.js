@@ -10,15 +10,30 @@ import { clearAuthStorage } from './http';
 let _last401RedirectAt = 0;
 const REDIRECT_COOLDOWN_MS = 2000;
 
-function handle401() {
+/**
+ * 401 handler. Hata body'sinde { error: 'SESSION_REPLACED' } varsa kullanıcı
+ * başka bir cihazda giriş yapmış demektir; ana login redirect'i öncesinde
+ * UI'ya CustomEvent yayarız ki global toast/dialog gösterebilelim.
+ */
+function handle401(payload) {
   clearAuthStorage();
   if (typeof window === 'undefined') return;
+  const errCode = payload?.error || payload?.code;
+  if (errCode === 'SESSION_REPLACED') {
+    try {
+      window.dispatchEvent(new CustomEvent('session-replaced'));
+    } catch { /* ignore */ }
+  }
   const now = Date.now();
   if (now - _last401RedirectAt < REDIRECT_COOLDOWN_MS) return;
   _last401RedirectAt = now;
   const path = window.location.pathname || '';
   if (/^\/Login$/i.test(path)) return; // Zaten Login'deyse redirect yapma
-  window.location.replace('/Login' + (path && path !== '/' ? `?from=${encodeURIComponent(path)}` : ''));
+  const params = new URLSearchParams();
+  if (path && path !== '/') params.set('from', path);
+  if (errCode === 'SESSION_REPLACED') params.set('reason', 'session_replaced');
+  const qs = params.toString();
+  window.location.replace('/Login' + (qs ? `?${qs}` : ''));
 }
 
 /**
@@ -45,7 +60,7 @@ function toAxiosError(e) {
   const err = e instanceof Error ? e : new Error(String(e));
   if (!err.response && e?.response) err.response = e.response;
   if (!err.code && e?.code) err.code = e.code;
-  if (err.response?.status === 401) handle401();
+  if (err.response?.status === 401) handle401(err.response?.data);
   if (err.response?.status === 402) handle402(err.response?.data);
   return err;
 }

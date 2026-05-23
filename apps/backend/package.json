@@ -59,6 +59,7 @@
     "cron": "^4.0.0",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
+    "google-auth-library": "^10.6.2",
     "handlebars": "^4.7.9",
     "helmet": "^6.0.0",
     "ioredis": "^5.3.2",
