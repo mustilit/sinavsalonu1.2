@@ -1,6 +1,7 @@
 import { Body, Controller, Get, HttpCode, HttpException, HttpStatus, Post, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Public } from '../decorators/public.decorator';
+import { AllowNoOrigin } from '../decorators/allow-no-origin.decorator';
 import { getDefaultTenantId } from '../../common/tenant';
 import { HandleEmailWebhookUseCase } from '../../application/use-cases/email/HandleEmailWebhookUseCase';
 import { UnsubscribeViaTokenUseCase } from '../../application/use-cases/email/UnsubscribeViaTokenUseCase';
@@ -11,8 +12,11 @@ import type { EmailPreferences } from '../../application/services/email/preferen
  * - POST /webhooks/email/brevo : Brevo bounce/delivered/spam webhook'ları
  * - GET  /unsubscribe          : Mail footer one-click unsubscribe
  */
+// Brevo webhook'u Cloudflare/Brevo IP'lerinden gelir, Origin yoktur.
+// Güvenlik query `?secret=` ve mail footer'da gizli unsubscribe token ile sağlanır.
 @Controller()
 @ApiTags('email-webhook')
+@AllowNoOrigin()
 export class EmailWebhookController {
   constructor(
     private readonly webhookUC: HandleEmailWebhookUseCase,

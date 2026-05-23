@@ -8,6 +8,7 @@ import { createPageUrl } from '@/utils';
 import { useAppNavigate } from '@/lib/navigation';
 import { toSafeMessage } from '@/lib/api/errors';
 import GoogleSignInButton from '@/components/auth/GoogleSignInButton';
+import TurnstileWidget from '@/components/auth/TurnstileWidget';
 import { GraduationCap } from 'lucide-react';
 
 export default function Login() {
@@ -18,6 +19,7 @@ export default function Login() {
   const [email, setEmail] = useState(emailFromQuery);
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
+  const [turnstileToken, setTurnstileToken] = useState(null);
   const [loading, setLoading] = useState(false);
   // Başka cihazda giriş yapıldığında JwtAuthGuard SESSION_REPLACED döner;
   // apiClient kullanıcıyı buraya ?reason=session_replaced ile yönlendirir.
@@ -43,7 +45,7 @@ export default function Login() {
     setError(null);
     setLoading(true);
     try {
-      await login(email, password);
+      await login(email, password, { turnstileToken });
       // Öncelik sırası: ?next= (whitelist) > ?from= (open redirect korumalı) > Home
       const target = safeNextPage
         ? createPageUrl(safeNextPage)
@@ -118,6 +120,8 @@ export default function Login() {
             </Link>
           </div>
           {error && <p className="text-sm text-red-600">{error}</p>}
+          {/* Bot doğrulaması — normal kullanıcıya görünmez; şüpheli aktivitede challenge */}
+          <TurnstileWidget onSuccess={setTurnstileToken} action="login" />
           <Button type="submit" disabled={loading} className="w-full bg-indigo-600 hover:bg-indigo-700">
             {loading ? t('auth:login.submitting') : t('auth:login.submit')}
           </Button>

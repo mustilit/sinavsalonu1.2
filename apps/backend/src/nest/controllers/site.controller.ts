@@ -105,4 +105,30 @@ export class SiteController {
     const uc = new GetPaymentSettingsUseCase();
     return uc.execute();
   }
+
+  /**
+   * Kamuya açık entegrasyon yapılandırması — frontend'in tarayıcıda göstermesi
+   * için güvenli olan public anahtarları döndürür. Secret key'ler asla
+   * gönderilmez.
+   *
+   * Anahtar boşsa null döner → frontend ilgili entegrasyonu render etmez
+   * (örn. Turnstile widget'ı hiç yüklenmez).
+   */
+  @Get('integrations/public')
+  @Public()
+  @ApiOkResponse({ description: 'Public integration keys (Turnstile site key, Google OAuth client ID)' })
+  async getPublicIntegrations() {
+    try {
+      const rows = await this.prisma.$queryRaw<Array<{ turnstileSiteKey: string | null; googleClientId: string | null }>>`
+        SELECT "turnstileSiteKey", "googleClientId" FROM admin_settings WHERE id = 1
+      `;
+      const r = rows?.[0] ?? {};
+      return {
+        turnstileSiteKey: r.turnstileSiteKey || null,
+        googleClientId: r.googleClientId || null,
+      };
+    } catch {
+      return { turnstileSiteKey: null, googleClientId: null };
+    }
+  }
 }

@@ -118,6 +118,14 @@ export async function apiRequest(path, opts = {}) {
     if (token) headers.Authorization = `Bearer ${token}`;
   }
 
+  // Katman B: Frontend kimliği — backend OriginProtectionGuard bunu zorunlu
+  // tutuyor (mutating endpoint'lerde). Bypass'i trivial ama otomatik
+  // scraper/Postman default isteklerini durdurur ve log'da iz bırakır.
+  if (!headers['X-Client-App']) {
+    const version = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_APP_VERSION) || 'v3';
+    headers['X-Client-App'] = `sinavsalonu-web/${version}`;
+  }
+
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), timeout);
   const signal = externalSignal || controller.signal;

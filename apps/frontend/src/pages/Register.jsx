@@ -7,6 +7,7 @@ import { createPageUrl } from '@/utils';
 import { useAppNavigate } from '@/lib/navigation';
 import { Link } from 'react-router-dom';
 import GoogleSignInButton from '@/components/auth/GoogleSignInButton';
+import TurnstileWidget from '@/components/auth/TurnstileWidget';
 import { GraduationCap } from 'lucide-react';
 
 export default function Register() {
@@ -23,6 +24,7 @@ export default function Register() {
   const [lastName, setLastName] = useState('');
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState(null);
   const navigate = useAppNavigate();
 
   const submit = async (e) => {
@@ -31,11 +33,11 @@ export default function Register() {
     setLoading(true);
     try {
       if (isEducator) {
-        await auth.registerEducator(email, username, password, { firstName, lastName });
+        await auth.registerEducator(email, username, password, { firstName, lastName, turnstileToken });
         // Eğitici: doğrulama → login → EducatorOnboarding (CV + uzmanlık alanı zorunlu)
         navigate(createPageUrl('VerifyEmail') + `?email=${encodeURIComponent(email)}&role=educator`, { replace: true });
       } else {
-        await auth.register(email, username, password);
+        await auth.register(email, username, password, { turnstileToken });
         // Aday: e-posta doğrulama sayfasına yönlendir; doğrulama sonrası SelectExamTypes'a yönlendirilir
         navigate(createPageUrl('VerifyEmail') + `?email=${encodeURIComponent(email)}`, { replace: true });
       }
@@ -139,6 +141,8 @@ export default function Register() {
             />
           </div>
           {error && <p className="text-sm text-red-600">{error}</p>}
+          {/* Bot doğrulaması — normal kullanıcıya görünmez; şüpheli aktivitede challenge */}
+          <TurnstileWidget onSuccess={setTurnstileToken} action="register" />
           <Button type="submit" disabled={loading} className="w-full bg-indigo-600 hover:bg-indigo-700">
             {loading ? t('auth:register.submitting') : t('auth:register.submit')}
           </Button>

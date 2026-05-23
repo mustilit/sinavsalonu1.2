@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags, ApiConsumes, ApiBody } from '@nestjs/swagger';
+import { Roles } from '../decorators/roles.decorator';
 import { diskStorage } from 'multer';
 import type { Request } from 'express';
 import { extname, join } from 'path';
@@ -23,6 +24,7 @@ if (!existsSync(UPLOAD_DIR)) {
 @Controller('upload')
 export class UploadController {
   @Post('image')
+  @Roles('CANDIDATE', 'EDUCATOR', 'ADMIN', 'WORKER')
   @ApiConsumes('multipart/form-data')
   @ApiBody({ schema: { type: 'object', properties: { file: { type: 'string', format: 'binary' } } } })
   @UseInterceptors(

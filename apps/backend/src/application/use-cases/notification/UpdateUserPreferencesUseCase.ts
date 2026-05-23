@@ -1,5 +1,48 @@
 import { AppError } from '../../errors/AppError';
 import type { IUserPreferenceRepository } from '../../../domain/interfaces/IUserPreferenceRepository';
+import { encryptStoredSecret, decryptStoredSecret } from '../../services/security/SecretsVault';
+
+/**
+ * UserPreference JSON içinde rest'te (DB'de) şifrelenmesi gereken hassas
+ * iletişim/finans alanları. Owner GET'inde decrypt edilir; başkasının
+ * gördüğü endpoint'ler (örn. public educator profile) bu alanları zaten
+ * döndürmez.
+ */
+const PII_FIELDS = new Set(['phone', 'iban', 'bankName', 'accountHolder']);
+
+/**
+ * Bir preferences nesnesindeki hassas alanları şifreleyerek yeni nesne döner.
+ * String olmayan ya da zaten şifreli alanlar olduğu gibi bırakılır.
+ */
+export function encryptPreferencesPII(prefs: Record<string, unknown> | null | undefined): Record<string, unknown> {
+  if (!prefs) return {};
+  const out: Record<string, unknown> = { ...prefs };
+  for (const f of PII_FIELDS) {
+    const v = out[f];
+    if (typeof v === 'string' && v.trim()) {
+      out[f] = encryptStoredSecret(v);
+    } else if (v === null || v === '') {
+      out[f] = null;
+    }
+  }
+  return out;
+}
+
+/**
+ * DB'den okunan preferences'ı UI için decrypt eder. Owner GET'inde çağrılır.
+ */
+export function decryptPreferencesPII(prefs: Record<string, unknown> | null | undefined): Record<string, unknown> {
+  if (!prefs) return {};
+  const out: Record<string, unknown> = { ...prefs };
+  for (const f of PII_FIELDS) {
+    const v = out[f];
+    if (typeof v === 'string' && v) {
+      const decrypted = decryptStoredSecret(v);
+      out[f] = decrypted ?? '';
+    }
+  }
+  return out;
+}
 
 /**
  * Güvenli güncelleme için izin verilen preferences alanları.
@@ -58,7 +101,11 @@ export class UpdateUserPreferencesUseCase {
     const existing = await this.repo.findByUserId(userId);
     // Mevcut değerleri koru; yeni değerleri üstüne ekle (deep merge değil, shallow merge)
     const merged = { ...(existing?.preferences ?? {}), ...filtered };
-    const updated = await this.repo.upsert(userId, merged);
-    return updated.preferences;
+    // PII alanları (phone/iban/bankName/accountHolder) AES-GCM ile şifrelenir
+    // — DB sızıntısında plain okunamaz. Owner GET endpoint'leri decrypt eder.
+    const encryptedMerged = encryptPreferencesPII(merged);
+    const updated = await this.repo.upsert(userId, encryptedMerged);
+    // Owner'a geri dönerken decrypt et — kullanıcı kendi telefonunu/ibanını formda görebilsin
+    return decryptPreferencesPII(updated.preferences);
   }
 }

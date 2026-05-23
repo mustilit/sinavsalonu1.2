@@ -617,19 +617,23 @@ export default function Home() {
                 icon: Briefcase,
               },
             ].map(({ type, title, desc, icon: Icon }) => (
+              // Grid'in iki kartı eşit yükseklikte gerilir (grid default: align-items: stretch).
+              // Kart içi flex-col + button'da mt-auto → desc'in satır sayısı ne olursa olsun
+              // butonlar kartların altında aynı hizaya oturur.
               <div
                 key={type}
-                className="rounded-3xl p-10 text-center"
+                className="rounded-3xl p-10 text-center flex flex-col h-full"
                 style={{ backgroundColor: "#0000CD" }}
               >
                 <div className="w-16 h-16 mx-auto bg-white/15 rounded-2xl flex items-center justify-center mb-5">
                   <Icon className="w-8 h-8 text-white" />
                 </div>
                 <h2 className="text-2xl font-bold text-white mb-3">{title}</h2>
-                <p className="text-white/80 mb-7 text-sm">{desc}</p>
+                {/* min-h: minimum kullanılan alanı sabitle (her iki kart aynı baseline) */}
+                <p className="text-white/80 text-sm mb-7">{desc}</p>
                 <Button
                   size="lg"
-                  className="bg-white hover:bg-slate-100"
+                  className="bg-white hover:bg-slate-100 mt-auto self-center"
                   style={{ color: "#0000CD" }}
                   onClick={() => {
                     navigate(createPageUrl("Register") + `?role=${type}`);

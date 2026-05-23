@@ -112,7 +112,16 @@ async function bootstrap() {
   const reflector = app.get(Reflector);
   const jwtService = new JwtService();
   const redisCache = new RedisCache();
-  app.useGlobalGuards(new JwtAuthGuard(jwtService, reflector, redisCache), new RolesGuard(reflector));
+  // Sıra: önce Origin/X-Client-App + CAPTCHA (frontend kimliği) → sonra JWT/Roles
+  // Böylece auth'dan önce kapı korumayı geçmek gerekir; başarısız bypass'ta JWT bile sorulmaz
+  const { OriginProtectionGuard } = await import('./guards/origin-protection.guard');
+  const { CaptchaGuard } = await import('./guards/captcha.guard');
+  app.useGlobalGuards(
+    new OriginProtectionGuard(reflector),
+    new CaptchaGuard(reflector),
+    new JwtAuthGuard(jwtService, reflector, redisCache),
+    new RolesGuard(reflector),
+  );
   // Uploads klasörünü statik olarak sun
   // CORP: cross-origin — frontend farklı port'tan img src ile erişebilsin
   const uploadsDir = join(process.cwd(), 'uploads');
@@ -153,7 +162,7 @@ async function bootstrap() {
     },
     credentials: true,
     methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Authorization', 'Content-Type', 'Accept'],
+    allowedHeaders: ['Authorization', 'Content-Type', 'Accept', 'X-Client-App', 'X-Turnstile-Token'],
   });
 
   const port = env.PORT ? Number(env.PORT) : 3000;

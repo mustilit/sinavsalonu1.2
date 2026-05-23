@@ -135,11 +135,11 @@ export const AuthProvider = ({ children }) => {
     window.location.href = '/Login' + from;
   }, []);
 
-  const login = useCallback(async (email, password) => {
+  const login = useCallback(async (email, password, opts = {}) => {
     authLog('login start');
     // Kullanıcı değişimi: stale query cache'lerini temizle (rol değişimi senaryosu)
     queryClientInstance.clear();
-    const data = await base44.auth.login(email, password);
+    const data = await base44.auth.login(email, password, opts);
     const u = data?.user ?? data?.data?.user;
     const token = data?.token ?? data?.data?.token;
     if (!u || !token) {

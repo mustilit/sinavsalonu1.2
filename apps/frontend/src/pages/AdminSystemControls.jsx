@@ -30,6 +30,7 @@ import {
   EyeOff,
   ShoppingBag,
   Building2,
+  ShieldCheck,
 } from "lucide-react";
 
 const CONTROLS = [
@@ -279,6 +280,9 @@ export default function AdminSystemControls() {
   const [maxDiscountInput, setMaxDiscountInput] = useState("");
   const [googleClientIdInput, setGoogleClientIdInput] = useState("");
   const [showGoogleClientId, setShowGoogleClientId] = useState(false);
+  const [turnstileSiteKeyInput, setTurnstileSiteKeyInput] = useState("");
+  const [turnstileSecretKeyInput, setTurnstileSecretKeyInput] = useState("");
+  const [showTurnstileSecret, setShowTurnstileSecret] = useState(false);
   const [newRate, setNewRate] = useState("");
   const [newEffectiveFrom, setNewEffectiveFrom] = useState("");
   const [newNote, setNewNote] = useState("");
@@ -381,6 +385,31 @@ export default function AdminSystemControls() {
     setSavingKey("googleClientId");
     updateMutation.mutate({ googleClientId: val });
     setGoogleClientIdInput("");
+  };
+
+  // Cloudflare Turnstile — site key + secret key. Boş geçirilebilir (CAPTCHA devre dışı kalır).
+  const handleTurnstileSave = (clear = false) => {
+    const site = clear ? null : turnstileSiteKeyInput.trim() || null;
+    const secret = clear ? null : turnstileSecretKeyInput.trim() || null;
+    if (!clear) {
+      // En az birini doldurmuş olmalı (yoksa Kaydet'in anlamı yok)
+      if (!site && !secret) {
+        toast.error("En az bir anahtar (site veya secret) giriniz veya 'Temizle' kullanın");
+        return;
+      }
+    }
+    setSavingKey("turnstile");
+    const payload = {};
+    if (clear) {
+      payload.turnstileSiteKey = null;
+      payload.turnstileSecretKey = null;
+    } else {
+      if (turnstileSiteKeyInput !== "") payload.turnstileSiteKey = site;
+      if (turnstileSecretKeyInput !== "") payload.turnstileSecretKey = secret;
+    }
+    updateMutation.mutate(payload);
+    setTurnstileSiteKeyInput("");
+    setTurnstileSecretKeyInput("");
   };
 
   const { data: rateHistory = [], isLoading: ratesLoading } = useQuery({
@@ -822,6 +851,110 @@ export default function AdminSystemControls() {
             <p className="text-xs text-slate-500">
               Client ID gizli bir bilgi değildir — tarayıcıya gönderilir. Asıl gizli olan
               Client Secret'tır ve burada saklanmaz.
+            </p>
+          </div>
+
+          {/* ── Cloudflare Turnstile (CAPTCHA) ─────────────────────────── */}
+          <div className="p-5 bg-white border border-slate-200 rounded-xl space-y-4">
+            <div className="flex items-start gap-3">
+              <div className="w-9 h-9 rounded-lg bg-amber-50 flex items-center justify-center flex-shrink-0">
+                <ShieldCheck className="w-5 h-5 text-amber-600" />
+              </div>
+              <div className="flex-1">
+                <h3 className="font-semibold text-slate-900">Cloudflare Turnstile (CAPTCHA)</h3>
+                <p className="text-sm text-slate-600 mt-1">
+                  Login + kayıt formlarında bot doğrulaması. Anahtarlar boşken sistem normal
+                  çalışır (CAPTCHA atlanır). Cloudflare hesabınızdan
+                  <a href="https://dash.cloudflare.com/?to=/:account/turnstile" target="_blank" rel="noreferrer" className="text-sky-600 hover:underline mx-1">Turnstile dashboard</a>
+                  → "Add Site" ile site key + secret key alın.
+                </p>
+                <p className="text-sm mt-2">
+                  Site key: {" "}
+                  {settings?.turnstileSiteKey ? (
+                    <span className="font-mono text-xs text-slate-700">
+                      {settings.turnstileSiteKey.replace(/^(.{8}).+(.{6})$/, "$1…$2")}
+                    </span>
+                  ) : (
+                    <span className="text-slate-500 font-medium">Tanımlanmamış</span>
+                  )}
+                </p>
+                <p className="text-sm">
+                  Secret key: {" "}
+                  {settings?.turnstileSecretKey ? (
+                    <>
+                      <span className="font-mono text-xs text-slate-700">
+                        {showTurnstileSecret
+                          ? settings.turnstileSecretKey
+                          : settings.turnstileSecretKey.replace(/^(.{4}).+(.{4})$/, "$1•••$2")}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => setShowTurnstileSecret((v) => !v)}
+                        className="ml-2 text-xs text-sky-600 hover:underline inline-flex items-center gap-1"
+                      >
+                        {showTurnstileSecret ? <EyeOff className="w-3 h-3" /> : <Eye className="w-3 h-3" />}
+                        {showTurnstileSecret ? "Gizle" : "Göster"}
+                      </button>
+                    </>
+                  ) : (
+                    <span className="text-slate-500 font-medium">Tanımlanmamış</span>
+                  )}
+                </p>
+                {!settings?.turnstileSiteKey && !settings?.turnstileSecretKey && (
+                  <p className="text-xs text-amber-700 mt-2 bg-amber-50 border border-amber-200 px-2 py-1 rounded">
+                    CAPTCHA şu an devre dışı. Login + kayıt normal akışta çalışır.
+                  </p>
+                )}
+              </div>
+            </div>
+            <div className="space-y-2">
+              <div>
+                <label className="block text-xs font-medium text-slate-700 mb-1">Site Key (public — tarayıcıya gönderilir)</label>
+                <input
+                  type="text"
+                  placeholder="0x4AAAAAAA..."
+                  value={turnstileSiteKeyInput}
+                  onChange={(e) => setTurnstileSiteKeyInput(e.target.value)}
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm font-mono focus:outline-none focus:ring-2 focus:ring-sky-500"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-slate-700 mb-1">Secret Key (backend-only)</label>
+                <input
+                  type="password"
+                  placeholder="0x4AAAAAAA..."
+                  value={turnstileSecretKeyInput}
+                  onChange={(e) => setTurnstileSecretKeyInput(e.target.value)}
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm font-mono focus:outline-none focus:ring-2 focus:ring-sky-500"
+                />
+              </div>
+              <div className="flex items-center gap-3 pt-1">
+                <button
+                  onClick={() => handleTurnstileSave(false)}
+                  disabled={(!turnstileSiteKeyInput && !turnstileSecretKeyInput) || savingKey === "turnstile"}
+                  className="px-4 py-2 bg-sky-600 hover:bg-sky-700 disabled:opacity-50 text-white text-sm font-medium rounded-lg transition-colors flex items-center gap-2"
+                >
+                  {savingKey === "turnstile"
+                    ? <><Loader2 className="w-4 h-4 animate-spin" />Kaydediliyor...</>
+                    : "Kaydet"}
+                </button>
+                {(settings?.turnstileSiteKey || settings?.turnstileSecretKey) && (
+                  <button
+                    onClick={() => {
+                      if (confirm("Turnstile anahtarlarını temizlemek istiyor musunuz? CAPTCHA devre dışı kalır."))
+                        handleTurnstileSave(true);
+                    }}
+                    disabled={savingKey === "turnstile"}
+                    className="px-3 py-2 border border-rose-200 text-rose-600 hover:bg-rose-50 text-sm font-medium rounded-lg transition-colors"
+                  >
+                    Temizle
+                  </button>
+                )}
+              </div>
+            </div>
+            <p className="text-xs text-slate-500">
+              Secret key tarayıcıya gönderilmez. Boş bırakılırsa CAPTCHA doğrulaması atlanır
+              ve sistem normal akışta devam eder (kayıt + login bloklanmaz).
             </p>
           </div>
         </>

@@ -1,6 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Put, Req } from '@nestjs/common';
 import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { ApiErrorResponses } from '../swagger/decorators';
+import { Roles } from '../decorators/roles.decorator';
 import { prisma } from '../../infrastructure/database/prisma';
 import { UpsertDraftUseCase } from '../../application/use-cases/draft/UpsertDraftUseCase';
 import { GetDraftUseCase } from '../../application/use-cases/draft/GetDraftUseCase';
@@ -33,6 +34,7 @@ export class DraftsController {
 
   /** Belirli key için draft'ı oku. Yoksa null döner. */
   @Get(':key')
+  @Roles('CANDIDATE', 'EDUCATOR', 'ADMIN', 'WORKER')
   @ApiOkResponse({ description: 'Draft içeriği veya null' })
   @ApiErrorResponses()
   async get(@Req() req: any, @Param('key') key: string) {
@@ -42,6 +44,7 @@ export class DraftsController {
 
   /** Draft'ı yaz veya güncelle. */
   @Put(':key')
+  @Roles('CANDIDATE', 'EDUCATOR', 'ADMIN', 'WORKER')
   @ApiOkResponse({ description: 'Draft kaydedildi' })
   @ApiErrorResponses()
   async upsert(@Req() req: any, @Param('key') key: string, @Body() dto: UpsertDraftDto) {
@@ -51,6 +54,7 @@ export class DraftsController {
 
   /** Draft'ı sil. Yoksa sessiz geçer. */
   @Delete(':key')
+  @Roles('CANDIDATE', 'EDUCATOR', 'ADMIN', 'WORKER')
   @ApiOkResponse({ description: 'Draft silindi' })
   @ApiErrorResponses()
   async delete(@Req() req: any, @Param('key') key: string) {

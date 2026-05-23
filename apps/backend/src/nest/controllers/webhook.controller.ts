@@ -27,6 +27,7 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Public } from '../decorators/public.decorator';
+import { AllowNoOrigin } from '../decorators/allow-no-origin.decorator';
 import { HandleStripeWebhookUseCase } from '../../application/use-cases/billing/HandleStripeWebhookUseCase';
 import { HandleIyzicoWebhookUseCase } from '../../application/use-cases/billing/HandleIyzicoWebhookUseCase';
 import {
@@ -34,8 +35,11 @@ import {
   verifyIyzicoSignature,
 } from '../security/verifyWebhookSignature';
 
+// Stripe/Iyzico kendi sunucularından çağırıyor — Origin/X-Client-App gönderemez.
+// Güvenlik imza doğrulamasıyla sağlanır (verifyWebhookSignature).
 @ApiTags('webhooks')
 @Controller('webhooks')
+@AllowNoOrigin()
 export class WebhookController {
   private readonly logger = new Logger(WebhookController.name);
 

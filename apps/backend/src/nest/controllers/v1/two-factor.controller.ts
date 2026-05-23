@@ -33,6 +33,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { Public } from '../../decorators/public.decorator';
+import { Roles } from '../../decorators/roles.decorator';
 import { auditContextFromRequest } from '../../../infrastructure/audit/AuditLogger';
 import { SetupTwoFactorUseCase } from '../../../application/use-cases/auth/SetupTwoFactorUseCase';
 import { VerifyTwoFactorLoginUseCase } from '../../../application/use-cases/auth/VerifyTwoFactorLoginUseCase';
@@ -55,6 +56,7 @@ export class TwoFactorController {
 
   /** Kurulum başlat — QR PNG + recovery code'lar + kısa-ömürlü pendingSecretToken döner. */
   @Post('setup')
+  @Roles('CANDIDATE', 'EDUCATOR', 'ADMIN', 'WORKER')
   @ApiOkResponse({ description: '2FA setup payload (QR + recovery + pending token).' })
   @ApiUnauthorizedResponse({ description: 'Kimlik doğrulama gerekli.' })
   async setup(@Req() req: any) {
@@ -66,6 +68,7 @@ export class TwoFactorController {
 
   /** Kurulum kodunu doğrula — başarılıysa 2FA DB'de aktive edilir (204). */
   @Post('verify-setup')
+  @Roles('CANDIDATE', 'EDUCATOR', 'ADMIN', 'WORKER')
   @HttpCode(204)
   @ApiBody({ type: VerifySetupTwoFactorDto })
   @ApiNoContentResponse({ description: '2FA aktive edildi.' })
@@ -92,6 +95,7 @@ export class TwoFactorController {
 
   /** 2FA'yı devre dışı bırak — şifre tekrar doğrulanır (204). */
   @Post('disable')
+  @Roles('CANDIDATE', 'EDUCATOR', 'ADMIN', 'WORKER')
   @HttpCode(204)
   @ApiBody({ type: DisableTwoFactorDto })
   @ApiNoContentResponse({ description: '2FA devre dışı bırakıldı.' })

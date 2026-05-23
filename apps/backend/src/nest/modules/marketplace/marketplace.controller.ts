@@ -98,6 +98,7 @@ export class MarketplaceController {
    * Yeni model: 1 aday × 1 paket = 1 review. Hiç puan vermediyse `null` döner.
    */
   @Get('packages/:id/my-review')
+  @Roles('CANDIDATE')
   @ApiBearerAuth('bearer')
   @ApiErrorResponses()
   async getMyPackageReview(@Param('id') id: string, @Req() req: any) {

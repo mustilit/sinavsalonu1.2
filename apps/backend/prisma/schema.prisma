@@ -940,6 +940,12 @@ model AdminSettings {
   // Google OAuth 2.0 Client ID — admin panelinden yönetilir. Boşken Google ile giriş devre dışı.
   // Not: Client ID gizli değildir (tarayıcıya açıkça gönderilir); env'deki GOOGLE_CLIENT_ID fallback olarak kullanılır.
   googleClientId                   String?
+  // Cloudflare Turnstile (CAPTCHA) — admin panelinden yönetilir.
+  // Boşken bot doğrulaması devre dışı (login/register'da widget render edilmez, backend CAPTCHA'yı atlar).
+  // Site key tarayıcıya gönderilir (gizli değil); secret key sadece backend tarafında kullanılır.
+  // Env'deki TURNSTILE_SECRET_KEY fallback olarak kullanılır (DB değeri öncelikli).
+  turnstileSiteKey                 String?
+  turnstileSecretKey               String?
   minQuestionsPerTest              Int       @default(1) // Test başına minimum soru sayısı
   maxQuestionsPerTest              Int       @default(100) // Test başına maksimum soru sayısı
   maxTestsPerPackage               Int       @default(10) // Paket başına maksimum test sayısı

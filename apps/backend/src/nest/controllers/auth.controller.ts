@@ -10,6 +10,7 @@ import { VerifyDeviceUseCase } from '../../application/use-cases/auth/VerifyDevi
 import { SendEmailVerificationUseCase } from '../../application/use-cases/auth/SendEmailVerificationUseCase';
 import { VerifyEmailUseCase } from '../../application/use-cases/auth/VerifyEmailUseCase';
 import { Public } from '../decorators/public.decorator';
+import { RequireCaptcha } from '../decorators/require-captcha.decorator';
 import { RegisterEducatorDto } from './dto/register-educator.dto';
 import { IUserRepository } from '../../domain/interfaces/IUserRepository';
 import { USER_REPO } from '../../application/constants';
@@ -97,6 +98,7 @@ export class AuthController {
   /** Yeni aday kaydı — kayıt sonrası email doğrulama linki gönderir (fire-and-forget) */
   @Post('register')
   @Public()
+  @RequireCaptcha()
   async register(@Body() body: any) {
     try {
       // DI bazen dev ortamında undefined kalabiliyor (tsx watch + hot reload). Fail-safe:
@@ -187,6 +189,7 @@ export class AuthController {
    */
   @Post('register/educator')
   @Public()
+  @RequireCaptcha()
   @Throttle({ default: { limit: 30, ttl: 300000 } })
   async registerEducator(@Body() body: RegisterEducatorDto & { firstName?: string; lastName?: string }) {
     try {
@@ -248,6 +251,7 @@ export class AuthController {
   @Post('login')
   @HttpCode(200)
   @Public()
+  @RequireCaptcha()
   @UseGuards(LoginBruteforceGuard)
   async login(@Body() body: any, @Req() req: any) {
     const email = body?.email != null ? String(body.email).trim().toLowerCase() : '';

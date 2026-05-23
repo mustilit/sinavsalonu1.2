@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import type { AdminSettings } from '../../../domain/types';
+import { maskStoredSecret } from '../../services/security/SecretsVault';
 
 /** FR-Y-06: Admin ayarlarını okuma */
 @Injectable()
@@ -22,6 +23,8 @@ export class GetAdminSettingsUseCase {
         minPackagePriceCents: 100,
         maxDiscountPercent: 50,
         googleClientId: null,
+        turnstileSiteKey: null,
+        turnstileSecretKey: null,
         minQuestionsPerTest: 1,
         maxQuestionsPerTest: 100,
         maxTestsPerPackage: 10,
@@ -33,15 +36,21 @@ export class GetAdminSettingsUseCase {
     let minPackagePriceCents = 100;
     let maxDiscountPercent = 50;
     let googleClientId: string | null = null;
+    let turnstileSiteKey: string | null = null;
+    let turnstileSecretKey: string | null = null;
     if (prisma.$queryRaw) {
-      const result = await prisma.$queryRaw`SELECT "minPackagePriceCents", "maxDiscountPercent", "googleClientId" FROM admin_settings WHERE id = 1` as any[];
+      const result = await prisma.$queryRaw`SELECT "minPackagePriceCents", "maxDiscountPercent", "googleClientId", "turnstileSiteKey", "turnstileSecretKey" FROM admin_settings WHERE id = 1` as any[];
       minPackagePriceCents = result[0]?.minPackagePriceCents ?? 100;
       maxDiscountPercent = result[0]?.maxDiscountPercent ?? 50;
       googleClientId = result[0]?.googleClientId ?? null;
+      turnstileSiteKey = result[0]?.turnstileSiteKey ?? null;
+      turnstileSecretKey = result[0]?.turnstileSecretKey ?? null;
     } else {
       minPackagePriceCents = (row as any).minPackagePriceCents ?? 100;
       maxDiscountPercent = (row as any).maxDiscountPercent ?? 50;
       googleClientId = (row as any).googleClientId ?? null;
+      turnstileSiteKey = (row as any).turnstileSiteKey ?? null;
+      turnstileSecretKey = (row as any).turnstileSecretKey ?? null;
     }
 
     return {
@@ -56,6 +65,12 @@ export class GetAdminSettingsUseCase {
       minPackagePriceCents,
       maxDiscountPercent,
       googleClientId,
+      turnstileSiteKey,
+      // turnstileSecretKey gizlidir — UI'a yalnızca maskelenmiş gösterilir
+      // ("0x4A•••ABCD"). Backend kendi içinde TurnstileVerifier üzerinden
+      // gerçek değeri decrypt edip kullanır; admin endpoint'i asla plain
+      // döndürmez (DB sızıntısı + log sızıntısı yüzeyini daraltır).
+      turnstileSecretKey: maskStoredSecret(turnstileSecretKey).masked || null,
       minQuestionsPerTest: (row as any).minQuestionsPerTest ?? 1,
       maxQuestionsPerTest: (row as any).maxQuestionsPerTest ?? 100,
       maxTestsPerPackage: (row as any).maxTestsPerPackage ?? 10,

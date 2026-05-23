@@ -1,6 +1,7 @@
 import { Controller, Post, Body, HttpCode } from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
 import { Public } from '../decorators/public.decorator';
+import { AllowNoOrigin } from '../decorators/allow-no-origin.decorator';
 import { PrismaAuditLogRepository } from '../../infrastructure/repositories/PrismaAuditLogRepository';
 
 /**
@@ -8,7 +9,9 @@ import { PrismaAuditLogRepository } from '../../infrastructure/repositories/Pris
  * Tarayıcılar CSP ihlalini bu adrese POST eder; ihlal audit log'a kaydedilir.
  * Endpoint URL'i CSP_REPORT_ENDPOINT ortam değişkeniyle özelleştirilebilir.
  */
+// Tarayıcı tarafından otomatik gönderildiği için OriginProtection muafiyeti gerekli.
 @Controller()
+@AllowNoOrigin()
 export class CspReportController {
   /** CSP ihlal raporunu parse eder ve audit log'a WASM/script/style kaynağını kaydeder */
   @Post(process.env.CSP_REPORT_ENDPOINT || '/csp-report')

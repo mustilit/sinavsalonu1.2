@@ -46,6 +46,7 @@ import { MePurchasesController } from './controllers/me.purchases.controller';
 import { MePreferencesController } from './controllers/me.preferences.controller';
 import { AdminUsersController } from './controllers/admin.users.controller';
 import { SeedService } from './bootstrap/seed.service';
+import { SecretsMigrationService } from './bootstrap/secrets-migration.service';
 import { PrismaExamTypeRepository } from '../infrastructure/repositories/PrismaExamTypeRepository';
 import { PrismaAuditLogRepository } from '../infrastructure/repositories/PrismaAuditLogRepository';
 import { PrismaTopicRepository } from '../infrastructure/repositories/PrismaTopicRepository';
@@ -307,6 +308,7 @@ const throttleDisabled = process.env.THROTTLE_DISABLED === '1';
   providers: [
     SeedService,
     EmailSeedService,
+    SecretsMigrationService,
     // Email Trafiği use case'leri — useFactory ile (singleton prisma kullanır;
     // PrismaClient inject edilemediği için class shortcut çalışmıyor).
     { provide: SendEmailUseCase, useFactory: () => new SendEmailUseCase() },
@@ -327,6 +329,8 @@ const throttleDisabled = process.env.THROTTLE_DISABLED === '1';
     { provide: ResetProviderDailyCountUseCase, useFactory: () => new ResetProviderDailyCountUseCase() },
     { provide: ExpireSuppressionsUseCase, useFactory: () => new ExpireSuppressionsUseCase() },
     ...(throttleDisabled ? [] : [{ provide: APP_GUARD, useClass: CustomThrottlerGuard }]),
+    // OriginProtectionGuard + CaptchaGuard main.ts'te useGlobalGuards ile manuel
+    // instantiate ediliyor (JwtAuthGuard ile aynı pattern — sıra önemli).
     { provide: EXAM_TYPE_REPO, useClass: PrismaExamTypeRepository },
     { provide: TOPIC_REPO, useClass: PrismaTopicRepository },
     { provide: USER_REPO, useClass: PrismaUserRepository },

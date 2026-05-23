@@ -65,6 +65,16 @@ export class UpdateAdminSettingsDto {
   @IsString()
   googleClientId?: string | null;
 
+  @ApiPropertyOptional({ example: '0x4AAAAAAA...', description: 'Cloudflare Turnstile site key (public). Boşsa CAPTCHA devre dışı.' })
+  @IsOptional()
+  @IsString()
+  turnstileSiteKey?: string | null;
+
+  @ApiPropertyOptional({ example: '0x4AAAAAAA...', description: 'Cloudflare Turnstile secret key (backend-only). Boşsa CAPTCHA atlanır.' })
+  @IsOptional()
+  @IsString()
+  turnstileSecretKey?: string | null;
+
   @ApiPropertyOptional({ example: 1, description: 'Test başına minimum soru sayısı' })
   @IsOptional()
   @IsInt()

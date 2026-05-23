@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import type { AdminSettings } from '../../../domain/types';
 import { AuditLogger, AuditContext } from '../../../infrastructure/audit/AuditLogger';
 import { logger } from '../../../infrastructure/logger/logger';
+import { TurnstileVerifier } from '../../services/security/TurnstileVerifier';
+import { encryptStoredSecret } from '../../services/security/SecretsVault';
 
 type AdminSettingsPrisma = {
   adminSettings: {
@@ -24,6 +26,8 @@ export interface UpdateAdminSettingsInput {
   minPackagePriceCents?: number;
   maxDiscountPercent?: number;
   googleClientId?: string | null;
+  turnstileSiteKey?: string | null;
+  turnstileSecretKey?: string | null;
   minQuestionsPerTest?: number;
   maxQuestionsPerTest?: number;
   maxTestsPerPackage?: number;
@@ -97,6 +101,22 @@ export class UpdateAdminSettingsUseCase {
           UPDATE admin_settings SET "googleClientId" = ${val} WHERE id = 1
         `;
       }
+      if (input.turnstileSiteKey !== undefined) {
+        // Boş string → NULL (CAPTCHA devre dışı kalır)
+        const val = input.turnstileSiteKey && input.turnstileSiteKey.trim() ? input.turnstileSiteKey.trim() : null;
+        await prisma.$executeRaw`
+          UPDATE admin_settings SET "turnstileSiteKey" = ${val} WHERE id = 1
+        `;
+      }
+      if (input.turnstileSecretKey !== undefined) {
+        // Gizli alan — AES-GCM ile şifrelenerek saklanır. SecretsVault prefix
+        // ile (enc:v1:...) işaretler; decrypt sadece backend tarafında olur.
+        const val = encryptStoredSecret(input.turnstileSecretKey);
+        await prisma.$executeRaw`
+          UPDATE admin_settings SET "turnstileSecretKey" = ${val} WHERE id = 1
+        `;
+        TurnstileVerifier.invalidateCache();
+      }
       if (input.minQuestionsPerTest !== undefined) {
         await prisma.$executeRaw`
           UPDATE admin_settings SET "minQuestionsPerTest" = ${input.minQuestionsPerTest} WHERE id = 1
@@ -123,6 +143,8 @@ export class UpdateAdminSettingsUseCase {
     let minPackagePriceCents = 100;
     let maxDiscountPercent = 50;
     let googleClientId: string | null = null;
+    let turnstileSiteKey: string | null = null;
+    let turnstileSecretKey: string | null = null;
     let minQuestionsPerTest = 1;
     let maxQuestionsPerTest = 100;
     let maxTestsPerPackage = 10;
@@ -130,13 +152,15 @@ export class UpdateAdminSettingsUseCase {
 
     if (prisma.$queryRaw) {
       const result = await prisma.$queryRaw`
-        SELECT "minPackagePriceCents", "maxDiscountPercent", "googleClientId", "minQuestionsPerTest", "maxQuestionsPerTest", "maxTestsPerPackage", "maxLiveQuestions"
+        SELECT "minPackagePriceCents", "maxDiscountPercent", "googleClientId", "turnstileSiteKey", "turnstileSecretKey", "minQuestionsPerTest", "maxQuestionsPerTest", "maxTestsPerPackage", "maxLiveQuestions"
         FROM admin_settings WHERE id = 1
       ` as any[];
       const r = result[0];
       minPackagePriceCents = r?.minPackagePriceCents ?? 100;
       maxDiscountPercent = r?.maxDiscountPercent ?? 50;
       googleClientId = r?.googleClientId ?? null;
+      turnstileSiteKey = r?.turnstileSiteKey ?? null;
+      turnstileSecretKey = r?.turnstileSecretKey ?? null;
       minQuestionsPerTest = r?.minQuestionsPerTest ?? 1;
       maxQuestionsPerTest = r?.maxQuestionsPerTest ?? 100;
       maxTestsPerPackage = r?.maxTestsPerPackage ?? 10;
@@ -145,6 +169,8 @@ export class UpdateAdminSettingsUseCase {
       minPackagePriceCents = (row as any).minPackagePriceCents ?? 100;
       maxDiscountPercent = (row as any).maxDiscountPercent ?? 50;
       googleClientId = (row as any).googleClientId ?? null;
+      turnstileSiteKey = (row as any).turnstileSiteKey ?? null;
+      turnstileSecretKey = (row as any).turnstileSecretKey ?? null;
       minQuestionsPerTest = (row as any).minQuestionsPerTest ?? 1;
       maxQuestionsPerTest = (row as any).maxQuestionsPerTest ?? 100;
       maxTestsPerPackage = (row as any).maxTestsPerPackage ?? 10;
@@ -163,6 +189,8 @@ export class UpdateAdminSettingsUseCase {
       minPackagePriceCents,
       maxDiscountPercent,
       googleClientId,
+      turnstileSiteKey,
+      turnstileSecretKey,
       minQuestionsPerTest,
       maxQuestionsPerTest,
       maxTestsPerPackage,
@@ -185,19 +213,23 @@ export class UpdateAdminSettingsUseCase {
       let mpp = 100;
       let mdp = 50;
       let gci: string | null = null;
+      let tsk: string | null = null;
+      let tssk: string | null = null;
       let minQ = 1;
       let maxQ = 100;
       let maxTpp = 10;
       let maxLq = 50;
       if (prisma.$queryRaw) {
         const r = await prisma.$queryRaw`
-          SELECT "minPackagePriceCents", "maxDiscountPercent", "googleClientId", "minQuestionsPerTest", "maxQuestionsPerTest",
+          SELECT "minPackagePriceCents", "maxDiscountPercent", "googleClientId", "turnstileSiteKey", "turnstileSecretKey", "minQuestionsPerTest", "maxQuestionsPerTest",
                  "maxTestsPerPackage", "maxLiveQuestions"
           FROM admin_settings WHERE id = 1
         ` as any[];
         mpp = r[0]?.minPackagePriceCents ?? 100;
         mdp = r[0]?.maxDiscountPercent ?? 50;
         gci = r[0]?.googleClientId ?? null;
+        tsk = r[0]?.turnstileSiteKey ?? null;
+        tssk = r[0]?.turnstileSecretKey ?? null;
         minQ = r[0]?.minQuestionsPerTest ?? 1;
         maxQ = r[0]?.maxQuestionsPerTest ?? 100;
         maxTpp = r[0]?.maxTestsPerPackage ?? 10;
@@ -215,6 +247,8 @@ export class UpdateAdminSettingsUseCase {
         minPackagePriceCents: mpp,
         maxDiscountPercent: mdp,
         googleClientId: gci,
+        turnstileSiteKey: tsk,
+        turnstileSecretKey: tssk,
         minQuestionsPerTest: minQ,
         maxQuestionsPerTest: maxQ,
         maxTestsPerPackage: maxTpp,

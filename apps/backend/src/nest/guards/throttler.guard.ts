@@ -1,9 +1,23 @@
 import { Injectable, ExecutionContext } from '@nestjs/common';
-import { ThrottlerGuard } from '@nestjs/throttler';
+import { ThrottlerGuard, ThrottlerLimitDetail } from '@nestjs/throttler';
+
+/**
+ * Custom rate limiter — tenant/user/IP bazlı key + frontend kimliği bazlı
+ * profil ayrıştırma.
+ *
+ * Katman C: X-Client-App header'ı eksik olan isteklere DAHA SIKI limit uygulanır
+ * (varsayılan limit'in %20'si). Bu, GET endpoint'lerinde (OriginProtectionGuard
+ * mutating-only olduğu için kontrol etmez) scraper/scriptkid'leri yavaşlatır.
+ *
+ * Mevcut frontend her zaman X-Client-App gönderir → normal limit uygulanır.
+ * Header'sız bir scraper sıkı limite takılır.
+ */
+const CLIENT_APP_PREFIX = 'sinavsalonu-web';
+const UNTRUSTED_RATIO = 0.2; // header'sız isteklere normal limit'in %20'si
 
 @Injectable()
 export class CustomThrottlerGuard extends ThrottlerGuard {
-  protected override generateKey(context: ExecutionContext, tracker: string): string {
+  protected override generateKey(context: ExecutionContext, _tracker: string): string {
     const req = context.switchToHttp().getRequest();
     const tenant = req.tenant as { id?: string } | undefined;
     if (tenant?.id) {
@@ -14,11 +28,43 @@ export class CustomThrottlerGuard extends ThrottlerGuard {
     if (userId) return `user:${userId}`;
     // support X-Forwarded-For header for proxied clients
     const xff = req.headers?.['x-forwarded-for'];
+    let ip: string;
     if (xff) {
-      const ip = Array.isArray(xff) ? xff[0] : String(xff).split(',')[0].trim();
-      return `ip:${ip}`;
+      ip = Array.isArray(xff) ? xff[0] : String(xff).split(',')[0].trim();
+    } else {
+      ip = req.ip;
     }
-    return `ip:${req.ip}`;
+    // Frontend header'sız istekler ayrı bucket'a düşer → daha sıkı limit
+    const clientApp = (req.headers?.['x-client-app'] as string) ?? '';
+    const trusted = clientApp.startsWith(CLIENT_APP_PREFIX);
+    return trusted ? `ip:${ip}` : `ip:untrusted:${ip}`;
+  }
+
+  /**
+   * X-Client-App header'ı eksikse limit'i %20'ye düşürür (örn. 100/dk → 20/dk).
+   * Trusted frontend istekleri etkilenmez.
+   */
+  protected override async handleRequest(requestProps: {
+    context: ExecutionContext;
+    limit: number;
+    ttl: number;
+    throttler: any;
+    blockDuration: number;
+    getTracker: (req: Record<string, any>) => Promise<string>;
+    generateKey: (context: ExecutionContext, trackerString: string, throttlerName: string) => string;
+  }): Promise<boolean> {
+    const req = requestProps.context.switchToHttp().getRequest();
+    const clientApp = (req.headers?.['x-client-app'] as string) ?? '';
+    const trusted = clientApp.startsWith(CLIENT_APP_PREFIX);
+    const adjustedLimit = trusted
+      ? requestProps.limit
+      : Math.max(1, Math.floor(requestProps.limit * UNTRUSTED_RATIO));
+    return super.handleRequest({ ...requestProps, limit: adjustedLimit });
+  }
+
+  /** ThrottlerLimitDetail tip uyumu (NestJS >= 5) */
+  protected throwThrottlingException(_context: ExecutionContext, _throttlerLimitDetail: ThrottlerLimitDetail): Promise<void> {
+    return super.throwThrottlingException(_context, _throttlerLimitDetail);
   }
 }
 

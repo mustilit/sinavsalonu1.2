@@ -28,6 +28,7 @@ import {
   ApiQuery,
 } from '@nestjs/swagger';
 import { IdempotencyInterceptor } from '../../interceptors/idempotency.interceptor';
+import { Roles } from '../../decorators/roles.decorator';
 import { StartCheckoutUseCase } from '../../../application/use-cases/billing/StartCheckoutUseCase';
 import { CreatePortalLinkUseCase } from '../../../application/use-cases/billing/CreatePortalLinkUseCase';
 import { GetMySubscriptionUseCase } from '../../../application/use-cases/billing/GetMySubscriptionUseCase';
@@ -44,6 +45,7 @@ export class BillingController {
   ) {}
 
   @Post('checkout')
+  @Roles('EDUCATOR', 'ADMIN')
   @HttpCode(200)
   @UseInterceptors(IdempotencyInterceptor)
   @ApiBody({ type: StartCheckoutDto })
@@ -73,6 +75,7 @@ export class BillingController {
   }
 
   @Post('portal')
+  @Roles('EDUCATOR', 'ADMIN')
   @HttpCode(200)
   @ApiBody({ type: CreatePortalLinkDto })
   @ApiOkResponse({ description: '{ url } — Stripe Billing Portal linki.' })
@@ -93,6 +96,7 @@ export class BillingController {
   }
 
   @Get('subscription')
+  @Roles('EDUCATOR', 'ADMIN')
   @ApiQuery({ name: 'kind', enum: ['EDUCATOR', 'TENANT'], required: false })
   @ApiOkResponse({ description: 'Aktif abonelik özeti veya FREE varsayılan.' })
   @ApiUnauthorizedResponse({ description: 'Kimlik doğrulama gerekli.' })

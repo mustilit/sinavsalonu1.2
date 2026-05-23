@@ -7,10 +7,11 @@ import api from '@/lib/api/apiClient';
 
 // --- Auth ---
 export const auth = {
-  async login(email, password) {
+  async login(email, password, opts = {}) {
     const body = {
       email: typeof email === 'string' ? email.trim().toLowerCase() : email,
       password: typeof password === 'string' ? password : String(password),
+      ...(opts.turnstileToken ? { turnstileToken: opts.turnstileToken } : {}),
     };
     const { data } = await api.post('/auth/login', body);
     if (!data || (!data.user && !data.token)) {
@@ -18,8 +19,14 @@ export const auth = {
     }
     return data;
   },
-  async register(email, username, password) {
-    const { data } = await api.post('/auth/register', { email, username, password });
+  async register(email, username, password, opts = {}) {
+    const body = {
+      email,
+      username,
+      password,
+      ...(opts.turnstileToken ? { turnstileToken: opts.turnstileToken } : {}),
+    };
+    const { data } = await api.post('/auth/register', body);
     return data;
   },
   // Email doğrulama — kullanıcı /VerifyEmail?token=... linkine tıklayınca
@@ -33,13 +40,14 @@ export const auth = {
     return data; // { message }
   },
   async registerEducator(email, username, password, opts = {}) {
-    // opts: { firstName, lastName } — eğitici kaydında zorunlu
+    // opts: { firstName, lastName, turnstileToken } — eğitici kaydında zorunlu
     const body = {
       email,
       username,
       password,
       firstName: opts.firstName ?? '',
       lastName: opts.lastName ?? '',
+      ...(opts.turnstileToken ? { turnstileToken: opts.turnstileToken } : {}),
     };
     const { data } = await api.post('/auth/register/educator', body);
     return data;

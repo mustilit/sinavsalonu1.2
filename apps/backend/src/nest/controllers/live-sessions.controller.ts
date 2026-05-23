@@ -65,6 +65,7 @@ export class LiveSessionsController {
   // Tier endpoints (Admin)
 
   @Get('tiers')
+  @Roles('CANDIDATE', 'EDUCATOR', 'ADMIN', 'WORKER')
   @ApiOkResponse({ description: 'Tier listesi' })
   @ApiErrorResponses()
   async listTiers() {
@@ -209,6 +210,7 @@ export class LiveSessionsController {
   // Participant endpoints
 
   @Get(':id/state')
+  @Roles('CANDIDATE', 'EDUCATOR', 'ADMIN', 'WORKER')
   @ApiOkResponse({ description: 'Oturum durumu (polling)' })
   @ApiErrorResponses()
   async state(@Param('id') id: string, @Req() req: any) {
@@ -216,6 +218,7 @@ export class LiveSessionsController {
   }
 
   @Post('join/:code')
+  @Roles('CANDIDATE')
   @ApiOkResponse({ description: 'Oturuma katil' })
   @ApiErrorResponses()
   async join(@Param('code') code: string, @Req() req: any) {
@@ -223,6 +226,7 @@ export class LiveSessionsController {
   }
 
   @Post(':id/ping')
+  @Roles('CANDIDATE')
   @ApiOkResponse({ description: 'Katilimci heartbeat' })
   @ApiErrorResponses()
   async ping(@Param('id') id: string, @Req() req: any) {
@@ -230,6 +234,7 @@ export class LiveSessionsController {
   }
 
   @Post(':id/answer')
+  @Roles('CANDIDATE')
   @ApiOkResponse({ description: 'Cevap gonder' })
   @ApiErrorResponses()
   async answer(

@@ -84,6 +84,7 @@ export class ReviewsController {
    * Deprecated: paket-bazlı review döner (testId'den packageId bulunarak).
    */
   @Get('tests/:id/my-review')
+  @Roles('CANDIDATE')
   @ApiBearerAuth('bearer')
   @ApiErrorResponses()
   async myReview(@Param('id') id: string, @Req() req: any) {

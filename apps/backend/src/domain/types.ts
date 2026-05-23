@@ -102,6 +102,10 @@ export type AdminSettings = {
   maxDiscountPercent: number;
   /** Google OAuth 2.0 Client ID — admin panelinden yönetilir; boşsa Google ile giriş kapalı. */
   googleClientId: string | null;
+  /** Cloudflare Turnstile site key (public). Boşsa CAPTCHA devre dışı. */
+  turnstileSiteKey: string | null;
+  /** Cloudflare Turnstile secret key (backend-only). Boşsa CAPTCHA atlanır. */
+  turnstileSecretKey: string | null;
   /** Test başına minimum soru sayısı. Yayımlamada kontrol edilir. */
   minQuestionsPerTest: number;
   /** Test başına maksimum soru sayısı. Soru eklerken kontrol edilir. */
