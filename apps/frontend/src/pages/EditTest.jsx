@@ -13,6 +13,7 @@ import { Label } from "@/components/ui/label";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
+import { TopicCombobox } from "@/components/ui/TopicCombobox";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
@@ -177,14 +178,15 @@ function QuestionEditDialog({ question, questionIndex, topicList, onSave, onSave
           </div>
           <div className="space-y-2">
             <Label>{t("pages:testForm.question.topicLabel")}</Label>
-            <Select value={local.topicId || "none"} onValueChange={v => setLocal(p => ({ ...p, topicId: v === "none" ? null : v }))}>
-              <SelectTrigger><SelectValue placeholder={t("pages:testForm.question.topicPlaceholder")} /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="none">{t("pages:testForm.question.topicNone")}</SelectItem>
-                {/* topic ismi user-generated — çevrilmez */}
-                {topicList.map(tp => <SelectItem key={tp.id} value={tp.id}>{tp.parentName ? `${tp.parentName} / ${tp.name}` : tp.name}</SelectItem>)}
-              </SelectContent>
-            </Select>
+            <TopicCombobox
+              value={local.topicId ?? null}
+              onChange={(id) => setLocal(p => ({ ...p, topicId: id }))}
+              topics={topicList}
+              placeholder={t("pages:testForm.question.topicPlaceholder")}
+              emptyLabel={t("pages:testForm.question.topicNone")}
+              searchPlaceholder={t("pages:testForm.question.topicSearchPlaceholder", "Konu ara...")}
+              emptyText={t("pages:testForm.question.topicEmpty", "Konu bulunamadı")}
+            />
           </div>
           <div className="space-y-3">
             <Label>{t("pages:testForm.question.optionsLabel")}</Label>

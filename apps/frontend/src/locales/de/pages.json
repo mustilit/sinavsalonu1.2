@@ -400,6 +400,8 @@
       "topicLabel": "Thema (Optional)",
       "topicPlaceholder": "Thema auswählen",
       "topicNone": "— Keine —",
+      "topicSearchPlaceholder": "Thema suchen (z. B. Zahlen)...",
+      "topicEmpty": "Kein Thema gefunden",
       "optionsLabel": "Optionen",
       "optionPlaceholder": "Option {{letter}}",
       "optionImage": "Bild",

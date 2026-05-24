@@ -1,141 +1,115 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuites name="jest tests" tests="435" failures="0" errors="0" time="30.025">
-  <testsuite name="PurchaseUseCase — paket satın alma (ana akış)" errors="0" failures="0" skipped="24" timestamp="2026-05-24T13:28:54" time="6.172" tests="24">
-    <testcase classname="PurchaseUseCase — paket satın alma (ana akış) başarılı paket satın alma purchase kaydında packageId doğru set edilir" name="PurchaseUseCase — paket satın alma (ana akış) başarılı paket satın alma purchase kaydında packageId doğru set edilir" time="0">
-      <skipped/>
+<testsuites name="jest tests" tests="411" failures="0" errors="0" time="68.055">
+  <testsuite name="InternalOnlyGuard" errors="0" failures="0" skipped="0" timestamp="2026-05-24T14:41:16" time="15.178" tests="12">
+    <testcase classname="InternalOnlyGuard non-internal endpoint (decorator yok) herhangi bir IP&apos;den geçer" name="InternalOnlyGuard non-internal endpoint (decorator yok) herhangi bir IP&apos;den geçer" time="0.053">
     </testcase>
-    <testcase classname="PurchaseUseCase — paket satın alma (ana akış) başarılı paket satın alma purchase.testId paket içindeki ilk ExamTest ID si (NOT NULL workaround)" name="PurchaseUseCase — paket satın alma (ana akış) başarılı paket satın alma purchase.testId paket içindeki ilk ExamTest ID si (NOT NULL workaround)" time="0">
-      <skipped/>
-    </testcase>
-    <testcase classname="PurchaseUseCase — paket satın alma (ana akış) başarılı paket satın alma paket fiyatı purchase.amountCents e yansır" name="PurchaseUseCase — paket satın alma (ana akış) başarılı paket satın alma paket fiyatı purchase.amountCents e yansır" time="0">
-      <skipped/>
-    </testcase>
-    <testcase classname="PurchaseUseCase — paket satın alma (ana akış) başarılı paket satın alma paymentProvider (iyzico / google_pay / amazon_pay) kaydedilir" name="PurchaseUseCase — paket satın alma (ana akış) başarılı paket satın alma paymentProvider (iyzico / google_pay / amazon_pay) kaydedilir" time="0">
-      <skipped/>
-    </testcase>
-    <testcase classname="PurchaseUseCase — paket satın alma (ana akış) başarılı paket satın alma attempt + auditLog da oluşturulur" name="PurchaseUseCase — paket satın alma (ana akış) başarılı paket satın alma attempt + auditLog da oluşturulur" time="0">
-      <skipped/>
-    </testcase>
-    <testcase classname="PurchaseUseCase — paket satın alma (ana akış) başarılı paket satın alma currency TRY varsayılan olarak kaydedilir" name="PurchaseUseCase — paket satın alma (ana akış) başarılı paket satın alma currency TRY varsayılan olarak kaydedilir" time="0">
-      <skipped/>
-    </testcase>
-    <testcase classname="PurchaseUseCase — paket satın alma (ana akış) fiyat hesaplama ExamTest priceCents null olsa bile paketin fiyatını kullanır" name="PurchaseUseCase — paket satın alma (ana akış) fiyat hesaplama ExamTest priceCents null olsa bile paketin fiyatını kullanır" time="0">
-      <skipped/>
-    </testcase>
-    <testcase classname="PurchaseUseCase — paket satın alma (ana akış) fiyat hesaplama geçerli kampanya fiyatı paket fiyatının önüne geçer" name="PurchaseUseCase — paket satın alma (ana akış) fiyat hesaplama geçerli kampanya fiyatı paket fiyatının önüne geçer" time="0">
-      <skipped/>
-    </testcase>
-    <testcase classname="PurchaseUseCase — paket satın alma (ana akış) fiyat hesaplama süresi geçmiş kampanya kullanılmaz" name="PurchaseUseCase — paket satın alma (ana akış) fiyat hesaplama süresi geçmiş kampanya kullanılmaz" time="0">
-      <skipped/>
-    </testcase>
-    <testcase classname="PurchaseUseCase — paket satın alma (ana akış) indirim kodu %50 indirim uygulanır, purchase.discountCodeId set edilir" name="PurchaseUseCase — paket satın alma (ana akış) indirim kodu %50 indirim uygulanır, purchase.discountCodeId set edilir" time="0">
-      <skipped/>
-    </testcase>
-    <testcase classname="PurchaseUseCase — paket satın alma (ana akış) indirim kodu %50 üzeri indirim reddedilir (güvenlik kuralı)" name="PurchaseUseCase — paket satın alma (ana akış) indirim kodu %50 üzeri indirim reddedilir (güvenlik kuralı)" time="0">
-      <skipped/>
-    </testcase>
-    <testcase classname="PurchaseUseCase — paket satın alma (ana akış) indirim kodu süresi dolmuş indirim kodu reddedilir" name="PurchaseUseCase — paket satın alma (ana akış) indirim kodu süresi dolmuş indirim kodu reddedilir" time="0">
-      <skipped/>
-    </testcase>
-    <testcase classname="PurchaseUseCase — paket satın alma (ana akış) indirim kodu maxUses dolunca reddedilir" name="PurchaseUseCase — paket satın alma (ana akış) indirim kodu maxUses dolunca reddedilir" time="0">
-      <skipped/>
-    </testcase>
-    <testcase classname="PurchaseUseCase — paket satın alma (ana akış) indirim kodu race condition: updateMany 0 kayıt → DISCOUNT_MAXED_OUT" name="PurchaseUseCase — paket satın alma (ana akış) indirim kodu race condition: updateMany 0 kayıt → DISCOUNT_MAXED_OUT" time="0">
-      <skipped/>
-    </testcase>
-    <testcase classname="PurchaseUseCase — paket satın alma (ana akış) hata senaryoları FR-Y-05: purchasesEnabled=false → PURCHASES_DISABLED" name="PurchaseUseCase — paket satın alma (ana akış) hata senaryoları FR-Y-05: purchasesEnabled=false → PURCHASES_DISABLED" time="0">
-      <skipped/>
-    </testcase>
-    <testcase classname="PurchaseUseCase — paket satın alma (ana akış) hata senaryoları packageId veya candidateId boşsa INVALID_INPUT" name="PurchaseUseCase — paket satın alma (ana akış) hata senaryoları packageId veya candidateId boşsa INVALID_INPUT" time="0">
-      <skipped/>
-    </testcase>
-    <testcase classname="PurchaseUseCase — paket satın alma (ana akış) hata senaryoları paket yayınlanmamışsa TEST_NOT_PUBLISHED" name="PurchaseUseCase — paket satın alma (ana akış) hata senaryoları paket yayınlanmamışsa TEST_NOT_PUBLISHED" time="0">
-      <skipped/>
-    </testcase>
-    <testcase classname="PurchaseUseCase — paket satın alma (ana akış) hata senaryoları paket içi boşsa PACKAGE_EMPTY" name="PurchaseUseCase — paket satın alma (ana akış) hata senaryoları paket içi boşsa PACKAGE_EMPTY" time="0">
-      <skipped/>
-    </testcase>
-    <testcase classname="PurchaseUseCase — paket satın alma (ana akış) hata senaryoları paket bulunamazsa TEST_NOT_FOUND" name="PurchaseUseCase — paket satın alma (ana akış) hata senaryoları paket bulunamazsa TEST_NOT_FOUND" time="0">
-      <skipped/>
-    </testcase>
-    <testcase classname="PurchaseUseCase — paket satın alma (ana akış) hata senaryoları aday SUSPENDED durumdaysa CANDIDATE_NOT_ACTIVE" name="PurchaseUseCase — paket satın alma (ana akış) hata senaryoları aday SUSPENDED durumdaysa CANDIDATE_NOT_ACTIVE" time="0">
-      <skipped/>
-    </testcase>
-    <testcase classname="PurchaseUseCase — paket satın alma (ana akış) hata senaryoları aynı paketi ikinci kez alırsa ALREADY_PURCHASED (P2002 → 409)" name="PurchaseUseCase — paket satın alma (ana akış) hata senaryoları aynı paketi ikinci kez alırsa ALREADY_PURCHASED (P2002 → 409)" time="0">
-      <skipped/>
-    </testcase>
-    <testcase classname="PurchaseUseCase — paket satın alma (ana akış) hata senaryoları paket içindeki ExamTest DRAFT olsa bile yayınlı paketten satın alınabilir" name="PurchaseUseCase — paket satın alma (ana akış) hata senaryoları paket içindeki ExamTest DRAFT olsa bile yayınlı paketten satın alınabilir" time="0">
-      <skipped/>
-    </testcase>
-    <testcase classname="PurchaseUseCase — standalone ExamTest satın alma (legacy) PUBLISHED ExamTest satın alınabilir, packageId set edilmez" name="PurchaseUseCase — standalone ExamTest satın alma (legacy) PUBLISHED ExamTest satın alınabilir, packageId set edilmez" time="0">
-      <skipped/>
-    </testcase>
-    <testcase classname="PurchaseUseCase — standalone ExamTest satın alma (legacy) DRAFT ExamTest standalone satın alınamaz" name="PurchaseUseCase — standalone ExamTest satın alma (legacy) DRAFT ExamTest standalone satın alınamaz" time="0">
-      <skipped/>
-    </testcase>
-  </testsuite>
-  <testsuite name="WorkerPermissionsGuard" errors="0" failures="0" skipped="0" timestamp="2026-05-24T13:28:54" time="8.06" tests="9">
-    <testcase classname="WorkerPermissionsGuard @Public endpoint → her durumda izin verir" name="WorkerPermissionsGuard @Public endpoint → her durumda izin verir" time="0.043">
-    </testcase>
-    <testcase classname="WorkerPermissionsGuard @WorkerPermissions decorator yoksa → izin verir (Roles guard yeterli)" name="WorkerPermissionsGuard @WorkerPermissions decorator yoksa → izin verir (Roles guard yeterli)" time="0.002">
-    </testcase>
-    <testcase classname="WorkerPermissionsGuard ADMIN her sayfaya geçer (DB sorgusu yok)" name="WorkerPermissionsGuard ADMIN her sayfaya geçer (DB sorgusu yok)" time="0.004">
-    </testcase>
-    <testcase classname="WorkerPermissionsGuard WORKER + sayfa izninde → geçer" name="WorkerPermissionsGuard WORKER + sayfa izninde → geçer" time="0.004">
-    </testcase>
-    <testcase classname="WorkerPermissionsGuard WORKER + sayfa izinsiz → 403" name="WorkerPermissionsGuard WORKER + sayfa izinsiz → 403" time="0.079">
-    </testcase>
-    <testcase classname="WorkerPermissionsGuard CANDIDATE + worker-protected sayfa → 403 (defensive)" name="WorkerPermissionsGuard CANDIDATE + worker-protected sayfa → 403 (defensive)" time="0.011">
-    </testcase>
-    <testcase classname="WorkerPermissionsGuard user yoksa → 403" name="WorkerPermissionsGuard user yoksa → 403" time="0.005">
-    </testcase>
-    <testcase classname="WorkerPermissionsGuard cache hit → DB&apos;ye gitmez" name="WorkerPermissionsGuard cache hit → DB&apos;ye gitmez" time="0.002">
-    </testcase>
-    <testcase classname="WorkerPermissionsGuard birden fazla page hepsi gerekli (AND semantik)" name="WorkerPermissionsGuard birden fazla page hepsi gerekli (AND semantik)" time="0.003">
-    </testcase>
-  </testsuite>
-  <testsuite name="InternalOnlyGuard" errors="0" failures="0" skipped="0" timestamp="2026-05-24T13:29:00" time="3.163" tests="12">
-    <testcase classname="InternalOnlyGuard non-internal endpoint (decorator yok) herhangi bir IP&apos;den geçer" name="InternalOnlyGuard non-internal endpoint (decorator yok) herhangi bir IP&apos;den geçer" time="0.058">
-    </testcase>
-    <testcase classname="InternalOnlyGuard internal endpoint + allowlist boş loopback IPv4 geçer" name="InternalOnlyGuard internal endpoint + allowlist boş loopback IPv4 geçer" time="0.006">
+    <testcase classname="InternalOnlyGuard internal endpoint + allowlist boş loopback IPv4 geçer" name="InternalOnlyGuard internal endpoint + allowlist boş loopback IPv4 geçer" time="0.003">
     </testcase>
     <testcase classname="InternalOnlyGuard internal endpoint + allowlist boş loopback IPv6 geçer" name="InternalOnlyGuard internal endpoint + allowlist boş loopback IPv6 geçer" time="0.002">
     </testcase>
     <testcase classname="InternalOnlyGuard internal endpoint + allowlist boş IPv4-mapped IPv6 loopback geçer" name="InternalOnlyGuard internal endpoint + allowlist boş IPv4-mapped IPv6 loopback geçer" time="0.002">
     </testcase>
-    <testcase classname="InternalOnlyGuard internal endpoint + allowlist boş public IP reddedilir" name="InternalOnlyGuard internal endpoint + allowlist boş public IP reddedilir" time="0.109">
+    <testcase classname="InternalOnlyGuard internal endpoint + allowlist boş public IP reddedilir" name="InternalOnlyGuard internal endpoint + allowlist boş public IP reddedilir" time="0.116">
     </testcase>
-    <testcase classname="InternalOnlyGuard internal + IP allowlist listede olan exact IP geçer" name="InternalOnlyGuard internal + IP allowlist listede olan exact IP geçer" time="0.004">
+    <testcase classname="InternalOnlyGuard internal + IP allowlist listede olan exact IP geçer" name="InternalOnlyGuard internal + IP allowlist listede olan exact IP geçer" time="0.002">
     </testcase>
-    <testcase classname="InternalOnlyGuard internal + IP allowlist listede olmayan IP reddedilir" name="InternalOnlyGuard internal + IP allowlist listede olmayan IP reddedilir" time="0.005">
+    <testcase classname="InternalOnlyGuard internal + IP allowlist listede olmayan IP reddedilir" name="InternalOnlyGuard internal + IP allowlist listede olmayan IP reddedilir" time="0.008">
     </testcase>
-    <testcase classname="InternalOnlyGuard internal + CIDR allowlist CIDR aralığındaki IP geçer" name="InternalOnlyGuard internal + CIDR allowlist CIDR aralığındaki IP geçer" time="0.008">
+    <testcase classname="InternalOnlyGuard internal + CIDR allowlist CIDR aralığındaki IP geçer" name="InternalOnlyGuard internal + CIDR allowlist CIDR aralığındaki IP geçer" time="0.005">
     </testcase>
-    <testcase classname="InternalOnlyGuard internal + CIDR allowlist CIDR aralığı dışındaki IP reddedilir" name="InternalOnlyGuard internal + CIDR allowlist CIDR aralığı dışındaki IP reddedilir" time="0.008">
+    <testcase classname="InternalOnlyGuard internal + CIDR allowlist CIDR aralığı dışındaki IP reddedilir" name="InternalOnlyGuard internal + CIDR allowlist CIDR aralığı dışındaki IP reddedilir" time="0.013">
     </testcase>
-    <testcase classname="InternalOnlyGuard internal + CIDR allowlist /32 tek host CIDR&apos;i exact match&apos;le çalışır" name="InternalOnlyGuard internal + CIDR allowlist /32 tek host CIDR&apos;i exact match&apos;le çalışır" time="0.009">
+    <testcase classname="InternalOnlyGuard internal + CIDR allowlist /32 tek host CIDR&apos;i exact match&apos;le çalışır" name="InternalOnlyGuard internal + CIDR allowlist /32 tek host CIDR&apos;i exact match&apos;le çalışır" time="0.003">
     </testcase>
-    <testcase classname="InternalOnlyGuard internal + CIDR allowlist mixed IP + CIDR listesi" name="InternalOnlyGuard internal + CIDR allowlist mixed IP + CIDR listesi" time="0.005">
+    <testcase classname="InternalOnlyGuard internal + CIDR allowlist mixed IP + CIDR listesi" name="InternalOnlyGuard internal + CIDR allowlist mixed IP + CIDR listesi" time="0.077">
     </testcase>
-    <testcase classname="InternalOnlyGuard IPv4-mapped IPv6 prefix kaldırma ::ffff:10.0.0.5 → 10.0.0.5 olarak matched" name="InternalOnlyGuard IPv4-mapped IPv6 prefix kaldırma ::ffff:10.0.0.5 → 10.0.0.5 olarak matched" time="0.01">
+    <testcase classname="InternalOnlyGuard IPv4-mapped IPv6 prefix kaldırma ::ffff:10.0.0.5 → 10.0.0.5 olarak matched" name="InternalOnlyGuard IPv4-mapped IPv6 prefix kaldırma ::ffff:10.0.0.5 → 10.0.0.5 olarak matched" time="0.002">
     </testcase>
   </testsuite>
-  <testsuite name="BackupSchedulerService.isValidCronExpression" errors="0" failures="0" skipped="0" timestamp="2026-05-24T13:28:54" time="9.651" tests="19">
-    <testcase classname="BackupSchedulerService.isValidCronExpression geçerli cron ifadeleri her gün 03:00 — 0 3 * * *" name="BackupSchedulerService.isValidCronExpression geçerli cron ifadeleri her gün 03:00 — 0 3 * * *" time="0.06">
+  <testsuite name="WorkerPermissionsGuard" errors="0" failures="0" skipped="0" timestamp="2026-05-24T14:41:16" time="17.32" tests="9">
+    <testcase classname="WorkerPermissionsGuard @Public endpoint → her durumda izin verir" name="WorkerPermissionsGuard @Public endpoint → her durumda izin verir" time="0.062">
     </testcase>
-    <testcase classname="BackupSchedulerService.isValidCronExpression geçerli cron ifadeleri her dakika — * * * * *" name="BackupSchedulerService.isValidCronExpression geçerli cron ifadeleri her dakika — * * * * *" time="0.003">
+    <testcase classname="WorkerPermissionsGuard @WorkerPermissions decorator yoksa → izin verir (Roles guard yeterli)" name="WorkerPermissionsGuard @WorkerPermissions decorator yoksa → izin verir (Roles guard yeterli)" time="0.002">
     </testcase>
-    <testcase classname="BackupSchedulerService.isValidCronExpression geçerli cron ifadeleri saat başı — 0 * * * *" name="BackupSchedulerService.isValidCronExpression geçerli cron ifadeleri saat başı — 0 * * * *" time="0.003">
+    <testcase classname="WorkerPermissionsGuard ADMIN her sayfaya geçer (DB sorgusu yok)" name="WorkerPermissionsGuard ADMIN her sayfaya geçer (DB sorgusu yok)" time="0.004">
     </testcase>
-    <testcase classname="BackupSchedulerService.isValidCronExpression geçerli cron ifadeleri hafta içi 09:00 — 0 9 * * 1-5" name="BackupSchedulerService.isValidCronExpression geçerli cron ifadeleri hafta içi 09:00 — 0 9 * * 1-5" time="0.002">
+    <testcase classname="WorkerPermissionsGuard WORKER + sayfa izninde → geçer" name="WorkerPermissionsGuard WORKER + sayfa izninde → geçer" time="0.003">
     </testcase>
-    <testcase classname="BackupSchedulerService.isValidCronExpression geçerli cron ifadeleri her 5 dakika — */5 * * * *" name="BackupSchedulerService.isValidCronExpression geçerli cron ifadeleri her 5 dakika — */5 * * * *" time="0.004">
+    <testcase classname="WorkerPermissionsGuard WORKER + sayfa izinsiz → 403" name="WorkerPermissionsGuard WORKER + sayfa izinsiz → 403" time="0.224">
+    </testcase>
+    <testcase classname="WorkerPermissionsGuard CANDIDATE + worker-protected sayfa → 403 (defensive)" name="WorkerPermissionsGuard CANDIDATE + worker-protected sayfa → 403 (defensive)" time="0.025">
+    </testcase>
+    <testcase classname="WorkerPermissionsGuard user yoksa → 403" name="WorkerPermissionsGuard user yoksa → 403" time="0.011">
+    </testcase>
+    <testcase classname="WorkerPermissionsGuard cache hit → DB&apos;ye gitmez" name="WorkerPermissionsGuard cache hit → DB&apos;ye gitmez" time="0.002">
+    </testcase>
+    <testcase classname="WorkerPermissionsGuard birden fazla page hepsi gerekli (AND semantik)" name="WorkerPermissionsGuard birden fazla page hepsi gerekli (AND semantik)" time="0.011">
+    </testcase>
+  </testsuite>
+  <testsuite name="MetricsInterceptor — prom-client köprüsü" errors="0" failures="0" skipped="0" timestamp="2026-05-24T14:41:31" time="4.344" tests="4">
+    <testcase classname="MetricsInterceptor — prom-client köprüsü başarılı istekte httpRequestsTotal ve duration histogram artar" name="MetricsInterceptor — prom-client köprüsü başarılı istekte httpRequestsTotal ve duration histogram artar" time="0.018">
+    </testcase>
+    <testcase classname="MetricsInterceptor — prom-client köprüsü exception path: httpExceptionsTotal + counter artar, status_code error.status" name="MetricsInterceptor — prom-client köprüsü exception path: httpExceptionsTotal + counter artar, status_code error.status" time="0.004">
+    </testcase>
+    <testcase classname="MetricsInterceptor — prom-client köprüsü birden fazla istek toplam counter&apos;ı doğru biriktirir" name="MetricsInterceptor — prom-client köprüsü birden fazla istek toplam counter&apos;ı doğru biriktirir" time="0.007">
+    </testcase>
+    <testcase classname="MetricsInterceptor — prom-client köprüsü metricsRegistry.metrics() Prometheus text formatında çıktı verir" name="MetricsInterceptor — prom-client köprüsü metricsRegistry.metrics() Prometheus text formatında çıktı verir" time="0.035">
+    </testcase>
+  </testsuite>
+  <testsuite name="LoginUseCase" errors="0" failures="0" skipped="0" timestamp="2026-05-24T14:41:33" time="4.072" tests="18">
+    <testcase classname="LoginUseCase geçerli e-posta ve şifre ile token ve user döner" name="LoginUseCase geçerli e-posta ve şifre ile token ve user döner" time="0.073">
+    </testcase>
+    <testcase classname="LoginUseCase JWT sign sub, email, role içerir" name="LoginUseCase JWT sign sub, email, role içerir" time="0.482">
+    </testcase>
+    <testcase classname="LoginUseCase dönen user nesnesinde passwordHash bulunmaz" name="LoginUseCase dönen user nesnesinde passwordHash bulunmaz" time="0.014">
+    </testcase>
+    <testcase classname="LoginUseCase dönen user nesnesinde id, email, username, role, status, createdAt bulunur" name="LoginUseCase dönen user nesnesinde id, email, username, role, status, createdAt bulunur" time="0.006">
+    </testcase>
+    <testcase classname="LoginUseCase e-posta büyük/küçük harf ve çevreleyen boşluklar temizlenir" name="LoginUseCase e-posta büyük/küçük harf ve çevreleyen boşluklar temizlenir" time="0.019">
+    </testcase>
+    <testcase classname="LoginUseCase kullanıcı bulunamazsa INVALID_CREDENTIALS fırlatır" name="LoginUseCase kullanıcı bulunamazsa INVALID_CREDENTIALS fırlatır" time="0.168">
+    </testcase>
+    <testcase classname="LoginUseCase şifre yanlışsa INVALID_CREDENTIALS fırlatır" name="LoginUseCase şifre yanlışsa INVALID_CREDENTIALS fırlatır" time="0.081">
+    </testcase>
+    <testcase classname="LoginUseCase boş e-posta ile INVALID_CREDENTIALS fırlatır" name="LoginUseCase boş e-posta ile INVALID_CREDENTIALS fırlatır" time="0.013">
+    </testcase>
+    <testcase classname="LoginUseCase boş şifre ile INVALID_CREDENTIALS fırlatır" name="LoginUseCase boş şifre ile INVALID_CREDENTIALS fırlatır" time="0.005">
+    </testcase>
+    <testcase classname="LoginUseCase yalnızca boşluktan oluşan e-posta INVALID_CREDENTIALS fırlatır" name="LoginUseCase yalnızca boşluktan oluşan e-posta INVALID_CREDENTIALS fırlatır" time="0.008">
+    </testcase>
+    <testcase classname="LoginUseCase SUSPENDED kullanıcı ACCOUNT_SUSPENDED hatası alır (şifre doğru olsa bile)" name="LoginUseCase SUSPENDED kullanıcı ACCOUNT_SUSPENDED hatası alır (şifre doğru olsa bile)" time="0.004">
+    </testcase>
+    <testcase classname="LoginUseCase ACTIVE kullanıcı başarıyla giriş yapar" name="LoginUseCase ACTIVE kullanıcı başarıyla giriş yapar" time="0.006">
+    </testcase>
+    <testcase classname="LoginUseCase twoFactorEnabled=true ise pendingMfaToken döner, asıl token verilmez" name="LoginUseCase twoFactorEnabled=true ise pendingMfaToken döner, asıl token verilmez" time="0.104">
+    </testcase>
+    <testcase classname="LoginUseCase twoFactorEnabled=false ise normal token döner" name="LoginUseCase twoFactorEnabled=false ise normal token döner" time="0.037">
+    </testcase>
+    <testcase classname="LoginUseCase twoFactorEnabled=null ise 2FA gate atlanır, normal token döner" name="LoginUseCase twoFactorEnabled=null ise 2FA gate atlanır, normal token döner" time="0.002">
+    </testcase>
+    <testcase classname="LoginUseCase twoFactorSystemEnabled=false iken twoFactorEnabled=true olsa bile normal token döner" name="LoginUseCase twoFactorSystemEnabled=false iken twoFactorEnabled=true olsa bile normal token döner" time="0.005">
+    </testcase>
+    <testcase classname="LoginUseCase adminSettings satırı boş dizi dönerse 2FA sistem geneli kapalı sayılır" name="LoginUseCase adminSettings satırı boş dizi dönerse 2FA sistem geneli kapalı sayılır" time="0.016">
+    </testcase>
+    <testcase classname="LoginUseCase twoFactorSystemEnabled=true ve twoFactorEnabled=true ise 2FA akışı başlar" name="LoginUseCase twoFactorSystemEnabled=true ve twoFactorEnabled=true ise 2FA akışı başlar" time="0.151">
+    </testcase>
+  </testsuite>
+  <testsuite name="BackupSchedulerService.isValidCronExpression" errors="0" failures="0" skipped="0" timestamp="2026-05-24T14:41:16" time="25.31" tests="19">
+    <testcase classname="BackupSchedulerService.isValidCronExpression geçerli cron ifadeleri her gün 03:00 — 0 3 * * *" name="BackupSchedulerService.isValidCronExpression geçerli cron ifadeleri her gün 03:00 — 0 3 * * *" time="0.056">
+    </testcase>
+    <testcase classname="BackupSchedulerService.isValidCronExpression geçerli cron ifadeleri her dakika — * * * * *" name="BackupSchedulerService.isValidCronExpression geçerli cron ifadeleri her dakika — * * * * *" time="0.005">
+    </testcase>
+    <testcase classname="BackupSchedulerService.isValidCronExpression geçerli cron ifadeleri saat başı — 0 * * * *" name="BackupSchedulerService.isValidCronExpression geçerli cron ifadeleri saat başı — 0 * * * *" time="0.009">
+    </testcase>
+    <testcase classname="BackupSchedulerService.isValidCronExpression geçerli cron ifadeleri hafta içi 09:00 — 0 9 * * 1-5" name="BackupSchedulerService.isValidCronExpression geçerli cron ifadeleri hafta içi 09:00 — 0 9 * * 1-5" time="0.005">
+    </testcase>
+    <testcase classname="BackupSchedulerService.isValidCronExpression geçerli cron ifadeleri her 5 dakika — */5 * * * *" name="BackupSchedulerService.isValidCronExpression geçerli cron ifadeleri her 5 dakika — */5 * * * *" time="0.011">
     </testcase>
     <testcase classname="BackupSchedulerService.isValidCronExpression geçerli cron ifadeleri ayın 1&apos;inde 00:30 — 30 0 1 * *" name="BackupSchedulerService.isValidCronExpression geçerli cron ifadeleri ayın 1&apos;inde 00:30 — 30 0 1 * *" time="0.002">
     </testcase>
-    <testcase classname="BackupSchedulerService.isValidCronExpression geçerli cron ifadeleri her pazar 22:00 — 0 22 * * 0" name="BackupSchedulerService.isValidCronExpression geçerli cron ifadeleri her pazar 22:00 — 0 22 * * 0" time="0.003">
+    <testcase classname="BackupSchedulerService.isValidCronExpression geçerli cron ifadeleri her pazar 22:00 — 0 22 * * 0" name="BackupSchedulerService.isValidCronExpression geçerli cron ifadeleri her pazar 22:00 — 0 22 * * 0" time="0.002">
     </testcase>
-    <testcase classname="BackupSchedulerService.isValidCronExpression geçerli cron ifadeleri ikinci her 6 saatte — 0 */6 * * *" name="BackupSchedulerService.isValidCronExpression geçerli cron ifadeleri ikinci her 6 saatte — 0 */6 * * *" time="0.011">
+    <testcase classname="BackupSchedulerService.isValidCronExpression geçerli cron ifadeleri ikinci her 6 saatte — 0 */6 * * *" name="BackupSchedulerService.isValidCronExpression geçerli cron ifadeleri ikinci her 6 saatte — 0 */6 * * *" time="0.004">
     </testcase>
     <testcase classname="BackupSchedulerService.isValidCronExpression geçersiz cron ifadeleri boş string — " name="BackupSchedulerService.isValidCronExpression geçersiz cron ifadeleri boş string — " time="0.002">
     </testcase>
@@ -143,463 +117,765 @@
     </testcase>
     <testcase classname="BackupSchedulerService.isValidCronExpression geçersiz cron ifadeleri eksik alan (4) — 0 3 * *" name="BackupSchedulerService.isValidCronExpression geçersiz cron ifadeleri eksik alan (4) — 0 3 * *" time="0.002">
     </testcase>
-    <testcase classname="BackupSchedulerService.isValidCronExpression geçersiz cron ifadeleri fazla alan (6) — 0 3 * * * *" name="BackupSchedulerService.isValidCronExpression geçersiz cron ifadeleri fazla alan (6) — 0 3 * * * *" time="0.004">
+    <testcase classname="BackupSchedulerService.isValidCronExpression geçersiz cron ifadeleri fazla alan (6) — 0 3 * * * *" name="BackupSchedulerService.isValidCronExpression geçersiz cron ifadeleri fazla alan (6) — 0 3 * * * *" time="0.013">
     </testcase>
-    <testcase classname="BackupSchedulerService.isValidCronExpression geçersiz cron ifadeleri hatalı saat (24) — 0 24 * * *" name="BackupSchedulerService.isValidCronExpression geçersiz cron ifadeleri hatalı saat (24) — 0 24 * * *" time="0.002">
+    <testcase classname="BackupSchedulerService.isValidCronExpression geçersiz cron ifadeleri hatalı saat (24) — 0 24 * * *" name="BackupSchedulerService.isValidCronExpression geçersiz cron ifadeleri hatalı saat (24) — 0 24 * * *" time="0.014">
     </testcase>
-    <testcase classname="BackupSchedulerService.isValidCronExpression geçersiz cron ifadeleri hatalı dakika (60) — 60 * * * *" name="BackupSchedulerService.isValidCronExpression geçersiz cron ifadeleri hatalı dakika (60) — 60 * * * *" time="0.002">
+    <testcase classname="BackupSchedulerService.isValidCronExpression geçersiz cron ifadeleri hatalı dakika (60) — 60 * * * *" name="BackupSchedulerService.isValidCronExpression geçersiz cron ifadeleri hatalı dakika (60) — 60 * * * *" time="0.003">
     </testcase>
-    <testcase classname="BackupSchedulerService.isValidCronExpression geçersiz cron ifadeleri hatalı haftaGünü (8) — 0 0 * * 8" name="BackupSchedulerService.isValidCronExpression geçersiz cron ifadeleri hatalı haftaGünü (8) — 0 0 * * 8" time="0.003">
+    <testcase classname="BackupSchedulerService.isValidCronExpression geçersiz cron ifadeleri hatalı haftaGünü (8) — 0 0 * * 8" name="BackupSchedulerService.isValidCronExpression geçersiz cron ifadeleri hatalı haftaGünü (8) — 0 0 * * 8" time="0.009">
     </testcase>
-    <testcase classname="BackupSchedulerService.isValidCronExpression geçersiz cron ifadeleri hatalı ay (13) — 0 0 1 13 *" name="BackupSchedulerService.isValidCronExpression geçersiz cron ifadeleri hatalı ay (13) — 0 0 1 13 *" time="0.015">
+    <testcase classname="BackupSchedulerService.isValidCronExpression geçersiz cron ifadeleri hatalı ay (13) — 0 0 1 13 *" name="BackupSchedulerService.isValidCronExpression geçersiz cron ifadeleri hatalı ay (13) — 0 0 1 13 *" time="0.002">
     </testcase>
     <testcase classname="BackupSchedulerService.isValidCronExpression geçersiz cron ifadeleri random metin — abc def" name="BackupSchedulerService.isValidCronExpression geçersiz cron ifadeleri random metin — abc def" time="0.001">
     </testcase>
-    <testcase classname="BackupSchedulerService.isValidCronExpression geçersiz cron ifadeleri null/undefined → false" name="BackupSchedulerService.isValidCronExpression geçersiz cron ifadeleri null/undefined → false" time="0.06">
+    <testcase classname="BackupSchedulerService.isValidCronExpression geçersiz cron ifadeleri null/undefined → false" name="BackupSchedulerService.isValidCronExpression geçersiz cron ifadeleri null/undefined → false" time="0.002">
     </testcase>
-    <testcase classname="BackupSchedulerService.isValidCronExpression geçersiz cron ifadeleri non-string tip → false" name="BackupSchedulerService.isValidCronExpression geçersiz cron ifadeleri non-string tip → false" time="0.003">
-    </testcase>
-  </testsuite>
-  <testsuite name="MetricsInterceptor — prom-client köprüsü" errors="0" failures="0" skipped="0" timestamp="2026-05-24T13:29:02" time="2.526" tests="4">
-    <testcase classname="MetricsInterceptor — prom-client köprüsü başarılı istekte httpRequestsTotal ve duration histogram artar" name="MetricsInterceptor — prom-client köprüsü başarılı istekte httpRequestsTotal ve duration histogram artar" time="0.018">
-    </testcase>
-    <testcase classname="MetricsInterceptor — prom-client köprüsü exception path: httpExceptionsTotal + counter artar, status_code error.status" name="MetricsInterceptor — prom-client köprüsü exception path: httpExceptionsTotal + counter artar, status_code error.status" time="0.004">
-    </testcase>
-    <testcase classname="MetricsInterceptor — prom-client köprüsü birden fazla istek toplam counter&apos;ı doğru biriktirir" name="MetricsInterceptor — prom-client köprüsü birden fazla istek toplam counter&apos;ı doğru biriktirir" time="0.003">
-    </testcase>
-    <testcase classname="MetricsInterceptor — prom-client köprüsü metricsRegistry.metrics() Prometheus text formatında çıktı verir" name="MetricsInterceptor — prom-client köprüsü metricsRegistry.metrics() Prometheus text formatında çıktı verir" time="0.047">
+    <testcase classname="BackupSchedulerService.isValidCronExpression geçersiz cron ifadeleri non-string tip → false" name="BackupSchedulerService.isValidCronExpression geçersiz cron ifadeleri non-string tip → false" time="0.002">
     </testcase>
   </testsuite>
-  <testsuite name="LoginUseCase" errors="0" failures="0" skipped="0" timestamp="2026-05-24T13:29:04" time="2.303" tests="18">
-    <testcase classname="LoginUseCase geçerli e-posta ve şifre ile token ve user döner" name="LoginUseCase geçerli e-posta ve şifre ile token ve user döner" time="0.345">
+  <testsuite name="ContentSafetyService" errors="0" failures="0" skipped="0" timestamp="2026-05-24T14:41:38" time="5.151" tests="10">
+    <testcase classname="ContentSafetyService moderationEnabled=false olduğunda APPROVED + skipped=true döner" name="ContentSafetyService moderationEnabled=false olduğunda APPROVED + skipped=true döner" time="0.007">
     </testcase>
-    <testcase classname="LoginUseCase JWT sign sub, email, role içerir" name="LoginUseCase JWT sign sub, email, role içerir" time="0.03">
-    </testcase>
-    <testcase classname="LoginUseCase dönen user nesnesinde passwordHash bulunmaz" name="LoginUseCase dönen user nesnesinde passwordHash bulunmaz" time="0.013">
-    </testcase>
-    <testcase classname="LoginUseCase dönen user nesnesinde id, email, username, role, status, createdAt bulunur" name="LoginUseCase dönen user nesnesinde id, email, username, role, status, createdAt bulunur" time="0.01">
-    </testcase>
-    <testcase classname="LoginUseCase e-posta büyük/küçük harf ve çevreleyen boşluklar temizlenir" name="LoginUseCase e-posta büyük/küçük harf ve çevreleyen boşluklar temizlenir" time="0.011">
-    </testcase>
-    <testcase classname="LoginUseCase kullanıcı bulunamazsa INVALID_CREDENTIALS fırlatır" name="LoginUseCase kullanıcı bulunamazsa INVALID_CREDENTIALS fırlatır" time="0.167">
-    </testcase>
-    <testcase classname="LoginUseCase şifre yanlışsa INVALID_CREDENTIALS fırlatır" name="LoginUseCase şifre yanlışsa INVALID_CREDENTIALS fırlatır" time="0.012">
-    </testcase>
-    <testcase classname="LoginUseCase boş e-posta ile INVALID_CREDENTIALS fırlatır" name="LoginUseCase boş e-posta ile INVALID_CREDENTIALS fırlatır" time="0.059">
-    </testcase>
-    <testcase classname="LoginUseCase boş şifre ile INVALID_CREDENTIALS fırlatır" name="LoginUseCase boş şifre ile INVALID_CREDENTIALS fırlatır" time="0.013">
-    </testcase>
-    <testcase classname="LoginUseCase yalnızca boşluktan oluşan e-posta INVALID_CREDENTIALS fırlatır" name="LoginUseCase yalnızca boşluktan oluşan e-posta INVALID_CREDENTIALS fırlatır" time="0.031">
-    </testcase>
-    <testcase classname="LoginUseCase SUSPENDED kullanıcı ACCOUNT_SUSPENDED hatası alır (şifre doğru olsa bile)" name="LoginUseCase SUSPENDED kullanıcı ACCOUNT_SUSPENDED hatası alır (şifre doğru olsa bile)" time="0.014">
-    </testcase>
-    <testcase classname="LoginUseCase ACTIVE kullanıcı başarıyla giriş yapar" name="LoginUseCase ACTIVE kullanıcı başarıyla giriş yapar" time="0.007">
-    </testcase>
-    <testcase classname="LoginUseCase twoFactorEnabled=true ise pendingMfaToken döner, asıl token verilmez" name="LoginUseCase twoFactorEnabled=true ise pendingMfaToken döner, asıl token verilmez" time="0.044">
-    </testcase>
-    <testcase classname="LoginUseCase twoFactorEnabled=false ise normal token döner" name="LoginUseCase twoFactorEnabled=false ise normal token döner" time="0.012">
-    </testcase>
-    <testcase classname="LoginUseCase twoFactorEnabled=null ise 2FA gate atlanır, normal token döner" name="LoginUseCase twoFactorEnabled=null ise 2FA gate atlanır, normal token döner" time="0.006">
-    </testcase>
-    <testcase classname="LoginUseCase twoFactorSystemEnabled=false iken twoFactorEnabled=true olsa bile normal token döner" name="LoginUseCase twoFactorSystemEnabled=false iken twoFactorEnabled=true olsa bile normal token döner" time="0.011">
-    </testcase>
-    <testcase classname="LoginUseCase adminSettings satırı boş dizi dönerse 2FA sistem geneli kapalı sayılır" name="LoginUseCase adminSettings satırı boş dizi dönerse 2FA sistem geneli kapalı sayılır" time="0.009">
-    </testcase>
-    <testcase classname="LoginUseCase twoFactorSystemEnabled=true ve twoFactorEnabled=true ise 2FA akışı başlar" name="LoginUseCase twoFactorSystemEnabled=true ve twoFactorEnabled=true ise 2FA akışı başlar" time="0.016">
-    </testcase>
-  </testsuite>
-  <testsuite name="IdempotencyInterceptor" errors="0" failures="0" skipped="0" timestamp="2026-05-24T13:29:04" time="2.288" tests="7">
-    <testcase classname="IdempotencyInterceptor header yoksa pass-through" name="IdempotencyInterceptor header yoksa pass-through" time="0.042">
-    </testcase>
-    <testcase classname="IdempotencyInterceptor geçersiz key formatı → BadRequest" name="IdempotencyInterceptor geçersiz key formatı → BadRequest" time="0.007">
-    </testcase>
-    <testcase classname="IdempotencyInterceptor ilk istek: SET NX + use case çalışır + completed kaydı yazılır" name="IdempotencyInterceptor ilk istek: SET NX + use case çalışır + completed kaydı yazılır" time="0.026">
-    </testcase>
-    <testcase classname="IdempotencyInterceptor aynı key + aynı body → cached response, use case ÇALIŞMAZ" name="IdempotencyInterceptor aynı key + aynı body → cached response, use case ÇALIŞMAZ" time="0.007">
-    </testcase>
-    <testcase classname="IdempotencyInterceptor aynı key + farklı body → 409 Conflict" name="IdempotencyInterceptor aynı key + farklı body → 409 Conflict" time="0.01">
-    </testcase>
-    <testcase classname="IdempotencyInterceptor in-progress lock varken → 409" name="IdempotencyInterceptor in-progress lock varken → 409" time="0.003">
-    </testcase>
-    <testcase classname="IdempotencyInterceptor use case throw → lock silinir, retry edilebilir" name="IdempotencyInterceptor use case throw → lock silinir, retry edilebilir" time="0.342">
-    </testcase>
-  </testsuite>
-  <testsuite name="ContentSafetyService" errors="0" failures="0" skipped="0" timestamp="2026-05-24T13:29:05" time="2.219" tests="10">
-    <testcase classname="ContentSafetyService moderationEnabled=false olduğunda APPROVED + skipped=true döner" name="ContentSafetyService moderationEnabled=false olduğunda APPROVED + skipped=true döner" time="0.008">
-    </testcase>
-    <testcase classname="ContentSafetyService Layer1 APPROVED döndüğünde Layer2 çağrılmaz ve APPROVED döner" name="ContentSafetyService Layer1 APPROVED döndüğünde Layer2 çağrılmaz ve APPROVED döner" time="0.003">
+    <testcase classname="ContentSafetyService Layer1 APPROVED döndüğünde Layer2 çağrılmaz ve APPROVED döner" name="ContentSafetyService Layer1 APPROVED döndüğünde Layer2 çağrılmaz ve APPROVED döner" time="0.002">
     </testcase>
     <testcase classname="ContentSafetyService Layer1 APPROVED dondugunde layer1Result response da bulunur" name="ContentSafetyService Layer1 APPROVED dondugunde layer1Result response da bulunur" time="0.002">
     </testcase>
-    <testcase classname="ContentSafetyService Layer1 REJECTED döndüğünde Layer2 çağrılmaz ve REJECTED döner" name="ContentSafetyService Layer1 REJECTED döndüğünde Layer2 çağrılmaz ve REJECTED döner" time="0.003">
+    <testcase classname="ContentSafetyService Layer1 REJECTED döndüğünde Layer2 çağrılmaz ve REJECTED döner" name="ContentSafetyService Layer1 REJECTED döndüğünde Layer2 çağrılmaz ve REJECTED döner" time="0.011">
     </testcase>
-    <testcase classname="ContentSafetyService Layer1 REJECTED döndüğünde NSFWjs provider çağrılmaz" name="ContentSafetyService Layer1 REJECTED döndüğünde NSFWjs provider çağrılmaz" time="0.004">
+    <testcase classname="ContentSafetyService Layer1 REJECTED döndüğünde NSFWjs provider çağrılmaz" name="ContentSafetyService Layer1 REJECTED döndüğünde NSFWjs provider çağrılmaz" time="0.002">
     </testcase>
-    <testcase classname="ContentSafetyService Layer1 SUSPECT + claudeEnabled=true → enqueuedForLayer2=true + status=PENDING_REVIEW" name="ContentSafetyService Layer1 SUSPECT + claudeEnabled=true → enqueuedForLayer2=true + status=PENDING_REVIEW" time="0.002">
+    <testcase classname="ContentSafetyService Layer1 SUSPECT + claudeEnabled=true → enqueuedForLayer2=true + status=PENDING_REVIEW" name="ContentSafetyService Layer1 SUSPECT + claudeEnabled=true → enqueuedForLayer2=true + status=PENDING_REVIEW" time="0.014">
     </testcase>
     <testcase classname="ContentSafetyService Layer1 SUSPECT + claudeEnabled=false → MANUAL_REVIEW kararı + status=PENDING_REVIEW (şema eşlemesi)" name="ContentSafetyService Layer1 SUSPECT + claudeEnabled=false → MANUAL_REVIEW kararı + status=PENDING_REVIEW (şema eşlemesi)" time="0.002">
     </testcase>
-    <testcase classname="ContentSafetyService blocklist provider hata fırlatırsa MANUAL_REVIEW döner" name="ContentSafetyService blocklist provider hata fırlatırsa MANUAL_REVIEW döner" time="0.002">
+    <testcase classname="ContentSafetyService blocklist provider hata fırlatırsa MANUAL_REVIEW döner" name="ContentSafetyService blocklist provider hata fırlatırsa MANUAL_REVIEW döner" time="0.012">
     </testcase>
-    <testcase classname="ContentSafetyService text ve imageBuffer yoksa APPROVED döner" name="ContentSafetyService text ve imageBuffer yoksa APPROVED döner" time="0.003">
+    <testcase classname="ContentSafetyService text ve imageBuffer yoksa APPROVED döner" name="ContentSafetyService text ve imageBuffer yoksa APPROVED döner" time="0.005">
     </testcase>
-    <testcase classname="ContentSafetyService moderasyon aktifken skipped=false döner" name="ContentSafetyService moderasyon aktifken skipped=false döner" time="0.001">
-    </testcase>
-  </testsuite>
-  <testsuite name="GetAttemptResultUseCase" errors="0" failures="0" skipped="0" timestamp="2026-05-24T13:29:07" time="1.433" tests="3">
-    <testcase classname="GetAttemptResultUseCase throws when not owner" name="GetAttemptResultUseCase throws when not owner" time="0.062">
-    </testcase>
-    <testcase classname="GetAttemptResultUseCase throws when attempt not finalized" name="GetAttemptResultUseCase throws when attempt not finalized" time="0.003">
-    </testcase>
-    <testcase classname="GetAttemptResultUseCase computes summary and question analysis" name="GetAttemptResultUseCase computes summary and question analysis" time="0.005">
+    <testcase classname="ContentSafetyService moderasyon aktifken skipped=false döner" name="ContentSafetyService moderasyon aktifken skipped=false döner" time="0.007">
     </testcase>
   </testsuite>
-  <testsuite name="stats worker handler" errors="0" failures="0" skipped="0" timestamp="2026-05-24T13:29:06" time="2.181" tests="2">
-    <testcase classname="stats worker handler calls processor with prisma and testId" name="stats worker handler calls processor with prisma and testId" time="0.004">
+  <testsuite name="IdempotencyInterceptor" errors="0" failures="0" skipped="0" timestamp="2026-05-24T14:41:36" time="6.777" tests="7">
+    <testcase classname="IdempotencyInterceptor header yoksa pass-through" name="IdempotencyInterceptor header yoksa pass-through" time="0.019">
     </testcase>
-    <testcase classname="stats worker handler throws when missing testId" name="stats worker handler throws when missing testId" time="0.069">
+    <testcase classname="IdempotencyInterceptor geçersiz key formatı → BadRequest" name="IdempotencyInterceptor geçersiz key formatı → BadRequest" time="0.015">
+    </testcase>
+    <testcase classname="IdempotencyInterceptor ilk istek: SET NX + use case çalışır + completed kaydı yazılır" name="IdempotencyInterceptor ilk istek: SET NX + use case çalışır + completed kaydı yazılır" time="0.02">
+    </testcase>
+    <testcase classname="IdempotencyInterceptor aynı key + aynı body → cached response, use case ÇALIŞMAZ" name="IdempotencyInterceptor aynı key + aynı body → cached response, use case ÇALIŞMAZ" time="0.011">
+    </testcase>
+    <testcase classname="IdempotencyInterceptor aynı key + farklı body → 409 Conflict" name="IdempotencyInterceptor aynı key + farklı body → 409 Conflict" time="0.014">
+    </testcase>
+    <testcase classname="IdempotencyInterceptor in-progress lock varken → 409" name="IdempotencyInterceptor in-progress lock varken → 409" time="0.004">
+    </testcase>
+    <testcase classname="IdempotencyInterceptor use case throw → lock silinir, retry edilebilir" name="IdempotencyInterceptor use case throw → lock silinir, retry edilebilir" time="0.161">
     </testcase>
   </testsuite>
-  <testsuite name="Publish/Unpublish UseCases" errors="0" failures="0" skipped="0" timestamp="2026-05-24T13:29:07" time="1.473" tests="2">
-    <testcase classname="Publish/Unpublish UseCases publishes when rules satisfied and logs audit" name="Publish/Unpublish UseCases publishes when rules satisfied and logs audit" time="0.018">
+  <testsuite name="stats worker handler" errors="0" failures="0" skipped="0" timestamp="2026-05-24T14:41:41" time="2.985" tests="2">
+    <testcase classname="stats worker handler calls processor with prisma and testId" name="stats worker handler calls processor with prisma and testId" time="0.021">
     </testcase>
-    <testcase classname="Publish/Unpublish UseCases unpublishes and logs audit" name="Publish/Unpublish UseCases unpublishes and logs audit" time="0.008">
+    <testcase classname="stats worker handler throws when missing testId" name="stats worker handler throws when missing testId" time="0.093">
     </testcase>
   </testsuite>
-  <testsuite name="ProcessModerationJobUseCase" errors="0" failures="0" skipped="0" timestamp="2026-05-24T13:29:08" time="1.443" tests="7">
-    <testcase classname="ProcessModerationJobUseCase Claude verdict=REJECTED döndüğünde moderationResult REJECTED + violation oluşur" name="ProcessModerationJobUseCase Claude verdict=REJECTED döndüğünde moderationResult REJECTED + violation oluşur" time="0.054">
+  <testsuite name="undefined" errors="0" failures="0" skipped="0" timestamp="2026-05-24T14:41:43" time="2.976" tests="2">
+    <testcase classname=" returns limited when participants &lt;5" name=" returns limited when participants &lt;5" time="0.017">
     </testcase>
-    <testcase classname="ProcessModerationJobUseCase Claude verdict=REJECTED → ExamQuestion.moderationStatus=REJECTED ayarlanır" name="ProcessModerationJobUseCase Claude verdict=REJECTED → ExamQuestion.moderationStatus=REJECTED ayarlanır" time="0.007">
+    <testcase classname=" computes histogram and percentiles" name=" computes histogram and percentiles" time="0.018">
     </testcase>
-    <testcase classname="ProcessModerationJobUseCase Claude skoru eşik altı → APPROVED + violation oluşmaz" name="ProcessModerationJobUseCase Claude skoru eşik altı → APPROVED + violation oluşmaz" time="0.014">
+  </testsuite>
+  <testsuite name="undefined" errors="0" failures="0" skipped="0" timestamp="2026-05-24T14:41:43" time="3.287" tests="3">
+    <testcase classname=" cannot create review without purchase for any test in the package" name=" cannot create review without purchase for any test in the package" time="0.05">
     </testcase>
-    <testcase classname="ProcessModerationJobUseCase Claude overall score eşiği (0.8) aştığında verdict APPROVED bile REJECTED sayılır" name="ProcessModerationJobUseCase Claude overall score eşiği (0.8) aştığında verdict APPROVED bile REJECTED sayılır" time="0.004">
+    <testcase classname=" purchase var ama submitted attempt yoksa da review oluşturulabilir (kural gevşedi)" name=" purchase var ama submitted attempt yoksa da review oluşturulabilir (kural gevşedi)" time="0.019">
     </testcase>
-    <testcase classname="ProcessModerationJobUseCase Claude provider hata fırlatınca moderationResult ESCALATED olarak güncellenir" name="ProcessModerationJobUseCase Claude provider hata fırlatınca moderationResult ESCALATED olarak güncellenir" time="0.009">
+    <testcase classname=" upsert package review works when candidate has purchase + submitted attempt" name=" upsert package review works when candidate has purchase + submitted attempt" time="0.002">
     </testcase>
-    <testcase classname="ProcessModerationJobUseCase Claude hata durumunda ExamQuestion.moderationStatus=ESCALATED ayarlanır" name="ProcessModerationJobUseCase Claude hata durumunda ExamQuestion.moderationStatus=ESCALATED ayarlanır" time="0.003">
+  </testsuite>
+  <testsuite name="GetAttemptStateUseCase" errors="0" failures="0" skipped="0" timestamp="2026-05-24T14:41:44" time="3.146" tests="3">
+    <testcase classname="GetAttemptStateUseCase throws when not owner" name="GetAttemptStateUseCase throws when not owner" time="0.124">
+    </testcase>
+    <testcase classname="GetAttemptStateUseCase maps answered and blank counts correctly" name="GetAttemptStateUseCase maps answered and blank counts correctly" time="0.023">
+    </testcase>
+    <testcase classname="GetAttemptStateUseCase computes remainingSeconds for timed test" name="GetAttemptStateUseCase computes remainingSeconds for timed test" time="0.01">
+    </testcase>
+  </testsuite>
+  <testsuite name="Publish/Unpublish UseCases" errors="0" failures="0" skipped="0" timestamp="2026-05-24T14:41:46" time="3.498" tests="2">
+    <testcase classname="Publish/Unpublish UseCases publishes when rules satisfied and logs audit" name="Publish/Unpublish UseCases publishes when rules satisfied and logs audit" time="0.048">
+    </testcase>
+    <testcase classname="Publish/Unpublish UseCases unpublishes and logs audit" name="Publish/Unpublish UseCases unpublishes and logs audit" time="0.003">
+    </testcase>
+  </testsuite>
+  <testsuite name="GetAttemptResultUseCase" errors="0" failures="0" skipped="0" timestamp="2026-05-24T14:41:47" time="2.864" tests="3">
+    <testcase classname="GetAttemptResultUseCase throws when not owner" name="GetAttemptResultUseCase throws when not owner" time="0.138">
+    </testcase>
+    <testcase classname="GetAttemptResultUseCase throws when attempt not finalized" name="GetAttemptResultUseCase throws when attempt not finalized" time="0.006">
+    </testcase>
+    <testcase classname="GetAttemptResultUseCase computes summary and question analysis" name="GetAttemptResultUseCase computes summary and question analysis" time="0.006">
+    </testcase>
+  </testsuite>
+  <testsuite name="ProcessModerationJobUseCase" errors="0" failures="0" skipped="0" timestamp="2026-05-24T14:41:46" time="3.918" tests="7">
+    <testcase classname="ProcessModerationJobUseCase Claude verdict=REJECTED döndüğünde moderationResult REJECTED + violation oluşur" name="ProcessModerationJobUseCase Claude verdict=REJECTED döndüğünde moderationResult REJECTED + violation oluşur" time="0.088">
+    </testcase>
+    <testcase classname="ProcessModerationJobUseCase Claude verdict=REJECTED → ExamQuestion.moderationStatus=REJECTED ayarlanır" name="ProcessModerationJobUseCase Claude verdict=REJECTED → ExamQuestion.moderationStatus=REJECTED ayarlanır" time="0.013">
+    </testcase>
+    <testcase classname="ProcessModerationJobUseCase Claude skoru eşik altı → APPROVED + violation oluşmaz" name="ProcessModerationJobUseCase Claude skoru eşik altı → APPROVED + violation oluşmaz" time="0.005">
+    </testcase>
+    <testcase classname="ProcessModerationJobUseCase Claude overall score eşiği (0.8) aştığında verdict APPROVED bile REJECTED sayılır" name="ProcessModerationJobUseCase Claude overall score eşiği (0.8) aştığında verdict APPROVED bile REJECTED sayılır" time="0.003">
+    </testcase>
+    <testcase classname="ProcessModerationJobUseCase Claude provider hata fırlatınca moderationResult ESCALATED olarak güncellenir" name="ProcessModerationJobUseCase Claude provider hata fırlatınca moderationResult ESCALATED olarak güncellenir" time="0.006">
+    </testcase>
+    <testcase classname="ProcessModerationJobUseCase Claude hata durumunda ExamQuestion.moderationStatus=ESCALATED ayarlanır" name="ProcessModerationJobUseCase Claude hata durumunda ExamQuestion.moderationStatus=ESCALATED ayarlanır" time="0.004">
     </testcase>
     <testcase classname="ProcessModerationJobUseCase Claude hata durumunda transaction çağrılmaz (violation oluşmaz)" name="ProcessModerationJobUseCase Claude hata durumunda transaction çağrılmaz (violation oluşmaz)" time="0.003">
     </testcase>
   </testsuite>
-  <testsuite name="GetAttemptStateUseCase" errors="0" failures="0" skipped="0" timestamp="2026-05-24T13:29:09" time="1.616" tests="3">
-    <testcase classname="GetAttemptStateUseCase throws when not owner" name="GetAttemptStateUseCase throws when not owner" time="0.068">
+  <testsuite name="undefined" errors="0" failures="0" skipped="0" timestamp="2026-05-24T14:41:49" time="2.522" tests="5">
+    <testcase classname=" create refund fails if objections &lt;10" name=" create refund fails if objections &lt;10" time="0.051">
     </testcase>
-    <testcase classname="GetAttemptStateUseCase maps answered and blank counts correctly" name="GetAttemptStateUseCase maps answered and blank counts correctly" time="0.003">
+    <testcase classname=" create refund succeeds if objections &gt;=10" name=" create refund succeeds if objections &gt;=10" time="0.004">
     </testcase>
-    <testcase classname="GetAttemptStateUseCase computes remainingSeconds for timed test" name="GetAttemptStateUseCase computes remainingSeconds for timed test" time="0.003">
+    <testcase classname=" duplicate refund -&gt; conflict" name=" duplicate refund -&gt; conflict" time="0.024">
     </testcase>
-  </testsuite>
-  <testsuite name="undefined" errors="0" failures="0" skipped="0" timestamp="2026-05-24T13:29:09" time="1.912" tests="2">
-    <testcase classname=" returns limited when participants &lt;5" name=" returns limited when participants &lt;5" time="0.006">
-    </testcase>
-    <testcase classname=" computes histogram and percentiles" name=" computes histogram and percentiles" time="0.3">
-    </testcase>
-  </testsuite>
-  <testsuite name="undefined" errors="0" failures="0" skipped="0" timestamp="2026-05-24T13:29:10" time="1.358" tests="5">
-    <testcase classname=" create refund fails if objections &lt;10" name=" create refund fails if objections &lt;10" time="0.034">
-    </testcase>
-    <testcase classname=" create refund succeeds if objections &gt;=10" name=" create refund succeeds if objections &gt;=10" time="0.002">
-    </testcase>
-    <testcase classname=" duplicate refund -&gt; conflict" name=" duplicate refund -&gt; conflict" time="0.002">
-    </testcase>
-    <testcase classname=" admin approve -&gt; status updated" name=" admin approve -&gt; status updated" time="0.002">
+    <testcase classname=" admin approve -&gt; status updated" name=" admin approve -&gt; status updated" time="0.003">
     </testcase>
     <testcase classname=" admin reject -&gt; status updated" name=" admin reject -&gt; status updated" time="0.001">
     </testcase>
   </testsuite>
-  <testsuite name="GetQuestionSolutionUseCase" errors="0" failures="0" skipped="0" timestamp="2026-05-24T13:29:10" time="1.255" tests="5">
-    <testcase classname="GetQuestionSolutionUseCase throws when not owner" name="GetQuestionSolutionUseCase throws when not owner" time="0.021">
+  <testsuite name="ApproveModerationUseCase" errors="0" failures="0" skipped="0" timestamp="2026-05-24T14:41:50" time="2.273" tests="8">
+    <testcase classname="ApproveModerationUseCase ModerationResult.status=APPROVED + reviewedAt set edilir" name="ApproveModerationUseCase ModerationResult.status=APPROVED + reviewedAt set edilir" time="0.008">
     </testcase>
-    <testcase classname="GetQuestionSolutionUseCase throws when attempt not submitted" name="GetQuestionSolutionUseCase throws when attempt not submitted" time="0.026">
+    <testcase classname="ApproveModerationUseCase Violation DISMISSED yapılır (updateMany)" name="ApproveModerationUseCase Violation DISMISSED yapılır (updateMany)" time="0.013">
     </testcase>
-    <testcase classname="GetQuestionSolutionUseCase throws when solutions disabled" name="GetQuestionSolutionUseCase throws when solutions disabled" time="0.003">
+    <testcase classname="ApproveModerationUseCase ExamQuestion.moderationStatus=APPROVED ayarlanır" name="ApproveModerationUseCase ExamQuestion.moderationStatus=APPROVED ayarlanır" time="0.004">
     </testcase>
-    <testcase classname="GetQuestionSolutionUseCase returns solution when ok" name="GetQuestionSolutionUseCase returns solution when ok" time="0.009">
+    <testcase classname="ApproveModerationUseCase reviewerNote varsa ModerationResult güncellenmesine dahil edilir" name="ApproveModerationUseCase reviewerNote varsa ModerationResult güncellenmesine dahil edilir" time="0.011">
     </testcase>
-    <testcase classname="GetQuestionSolutionUseCase allows TIMEOUT attempts to read solutions" name="GetQuestionSolutionUseCase allows TIMEOUT attempts to read solutions" time="0.002">
+    <testcase classname="ApproveModerationUseCase entityType ExamQuestion değilse examQuestion.update çağrılmaz" name="ApproveModerationUseCase entityType ExamQuestion değilse examQuestion.update çağrılmaz" time="0.005">
+    </testcase>
+    <testcase classname="ApproveModerationUseCase zaten APPROVED olan result için transaction başlatılmaz (idempotent)" name="ApproveModerationUseCase zaten APPROVED olan result için transaction başlatılmaz (idempotent)" time="0.029">
+    </testcase>
+    <testcase classname="ApproveModerationUseCase result bulunamazsa MODERATION_RESULT_NOT_FOUND hatası fırlatır" name="ApproveModerationUseCase result bulunamazsa MODERATION_RESULT_NOT_FOUND hatası fırlatır" time="0.003">
+    </testcase>
+    <testcase classname="ApproveModerationUseCase result bulunamazsa AppError instance fırlatılır" name="ApproveModerationUseCase result bulunamazsa AppError instance fırlatılır" time="0.001">
     </testcase>
   </testsuite>
-  <testsuite name="BlocklistTextProvider" errors="0" failures="0" skipped="0" timestamp="2026-05-24T13:29:11" time="1.281" tests="17">
-    <testcase classname="BlocklistTextProvider hiç yasaklı terim yoksa APPROVED döner" name="BlocklistTextProvider hiç yasaklı terim yoksa APPROVED döner" time="0.009">
+  <testsuite name="BlocklistTextProvider" errors="0" failures="0" skipped="0" timestamp="2026-05-24T14:41:51" time="2.531" tests="17">
+    <testcase classname="BlocklistTextProvider hiç yasaklı terim yoksa APPROVED döner" name="BlocklistTextProvider hiç yasaklı terim yoksa APPROVED döner" time="0.006">
     </testcase>
-    <testcase classname="BlocklistTextProvider girdide yasaklı terim bulunmuyorsa APPROVED döner" name="BlocklistTextProvider girdide yasaklı terim bulunmuyorsa APPROVED döner" time="0.008">
+    <testcase classname="BlocklistTextProvider girdide yasaklı terim bulunmuyorsa APPROVED döner" name="BlocklistTextProvider girdide yasaklı terim bulunmuyorsa APPROVED döner" time="0.002">
     </testcase>
-    <testcase classname="BlocklistTextProvider severity 4 olan yasaklı terim eşleştiğinde REJECTED döner" name="BlocklistTextProvider severity 4 olan yasaklı terim eşleştiğinde REJECTED döner" time="0.015">
+    <testcase classname="BlocklistTextProvider severity 4 olan yasaklı terim eşleştiğinde REJECTED döner" name="BlocklistTextProvider severity 4 olan yasaklı terim eşleştiğinde REJECTED döner" time="0.002">
     </testcase>
-    <testcase classname="BlocklistTextProvider severity 5 olan yasaklı terim eşleştiğinde REJECTED döner" name="BlocklistTextProvider severity 5 olan yasaklı terim eşleştiğinde REJECTED döner" time="0.004">
+    <testcase classname="BlocklistTextProvider severity 5 olan yasaklı terim eşleştiğinde REJECTED döner" name="BlocklistTextProvider severity 5 olan yasaklı terim eşleştiğinde REJECTED döner" time="0.013">
     </testcase>
-    <testcase classname="BlocklistTextProvider SELF_HARM kategorisi severity 1 olsa bile REJECTED döner" name="BlocklistTextProvider SELF_HARM kategorisi severity 1 olsa bile REJECTED döner" time="0.002">
+    <testcase classname="BlocklistTextProvider SELF_HARM kategorisi severity 1 olsa bile REJECTED döner" name="BlocklistTextProvider SELF_HARM kategorisi severity 1 olsa bile REJECTED döner" time="0.004">
     </testcase>
     <testcase classname="BlocklistTextProvider HATE_SPEECH kategorisi severity 2 olsa bile REJECTED döner" name="BlocklistTextProvider HATE_SPEECH kategorisi severity 2 olsa bile REJECTED döner" time="0.003">
     </testcase>
-    <testcase classname="BlocklistTextProvider SEXUAL_CONTENT kategorisi severity 1 olsa bile REJECTED döner" name="BlocklistTextProvider SEXUAL_CONTENT kategorisi severity 1 olsa bile REJECTED döner" time="0.001">
+    <testcase classname="BlocklistTextProvider SEXUAL_CONTENT kategorisi severity 1 olsa bile REJECTED döner" name="BlocklistTextProvider SEXUAL_CONTENT kategorisi severity 1 olsa bile REJECTED döner" time="0.003">
     </testcase>
-    <testcase classname="BlocklistTextProvider PROFANITY kategorisi severity 1 → SUSPECT döner" name="BlocklistTextProvider PROFANITY kategorisi severity 1 → SUSPECT döner" time="0.002">
+    <testcase classname="BlocklistTextProvider PROFANITY kategorisi severity 1 → SUSPECT döner" name="BlocklistTextProvider PROFANITY kategorisi severity 1 → SUSPECT döner" time="0.004">
     </testcase>
-    <testcase classname="BlocklistTextProvider SPAM kategorisi severity 3 → SUSPECT döner" name="BlocklistTextProvider SPAM kategorisi severity 3 → SUSPECT döner" time="0.002">
+    <testcase classname="BlocklistTextProvider SPAM kategorisi severity 3 → SUSPECT döner" name="BlocklistTextProvider SPAM kategorisi severity 3 → SUSPECT döner" time="0.003">
     </testcase>
-    <testcase classname="BlocklistTextProvider eşleşen terim matchedTerms listesinde görünür" name="BlocklistTextProvider eşleşen terim matchedTerms listesinde görünür" time="0.003">
+    <testcase classname="BlocklistTextProvider eşleşen terim matchedTerms listesinde görünür" name="BlocklistTextProvider eşleşen terim matchedTerms listesinde görünür" time="0.002">
     </testcase>
-    <testcase classname="BlocklistTextProvider eşleşen kategori categories listesinde görünür" name="BlocklistTextProvider eşleşen kategori categories listesinde görünür" time="0.006">
+    <testcase classname="BlocklistTextProvider eşleşen kategori categories listesinde görünür" name="BlocklistTextProvider eşleşen kategori categories listesinde görünür" time="0.002">
     </testcase>
     <testcase classname="BlocklistTextProvider pattern doluysa regex eşleşmesi kullanılır" name="BlocklistTextProvider pattern doluysa regex eşleşmesi kullanılır" time="0.004">
     </testcase>
     <testcase classname="BlocklistTextProvider regex pattern eşleşmesi case-insensitive çalışır" name="BlocklistTextProvider regex pattern eşleşmesi case-insensitive çalışır" time="0.002">
     </testcase>
-    <testcase classname="BlocklistTextProvider geçersiz regex pattern log edilir ve atlanır — hata fırlatmaz" name="BlocklistTextProvider geçersiz regex pattern log edilir ve atlanır — hata fırlatmaz" time="0.003">
+    <testcase classname="BlocklistTextProvider geçersiz regex pattern log edilir ve atlanır — hata fırlatmaz" name="BlocklistTextProvider geçersiz regex pattern log edilir ve atlanır — hata fırlatmaz" time="0.032">
     </testcase>
-    <testcase classname="BlocklistTextProvider KÖTÜ girdisi &quot;kotu&quot; terimi ile eşleşir (Türkçe normalize)" name="BlocklistTextProvider KÖTÜ girdisi &quot;kotu&quot; terimi ile eşleşir (Türkçe normalize)" time="0.006">
+    <testcase classname="BlocklistTextProvider KÖTÜ girdisi &quot;kotu&quot; terimi ile eşleşir (Türkçe normalize)" name="BlocklistTextProvider KÖTÜ girdisi &quot;kotu&quot; terimi ile eşleşir (Türkçe normalize)" time="0.012">
     </testcase>
     <testcase classname="BlocklistTextProvider k.ö.t.ü girdisi &quot;kotu&quot; terimi ile eşleşir (ayırıcı + Türkçe normalize)" name="BlocklistTextProvider k.ö.t.ü girdisi &quot;kotu&quot; terimi ile eşleşir (ayırıcı + Türkçe normalize)" time="0.002">
     </testcase>
-    <testcase classname="BlocklistTextProvider birden fazla terim eşleştiğinde en yüksek severity maxSeverity olarak döner" name="BlocklistTextProvider birden fazla terim eşleştiğinde en yüksek severity maxSeverity olarak döner" time="0.022">
+    <testcase classname="BlocklistTextProvider birden fazla terim eşleştiğinde en yüksek severity maxSeverity olarak döner" name="BlocklistTextProvider birden fazla terim eşleştiğinde en yüksek severity maxSeverity olarak döner" time="0.012">
     </testcase>
   </testsuite>
-  <testsuite name="RecomputeEducatorRiskScoreUseCase" errors="0" failures="0" skipped="0" timestamp="2026-05-24T13:29:11" time="1.249" tests="11">
-    <testcase classname="RecomputeEducatorRiskScoreUseCase ihlal yoksa skor 0 ve LOW riskLevel ile upsert yapılır" name="RecomputeEducatorRiskScoreUseCase ihlal yoksa skor 0 ve LOW riskLevel ile upsert yapılır" time="0.016">
+  <testsuite name="SubmitAnswerUseCase" errors="0" failures="0" skipped="0" timestamp="2026-05-24T14:41:52" time="2.212" tests="4">
+    <testcase classname="SubmitAnswerUseCase creates attempt answer when not existing" name="SubmitAnswerUseCase creates attempt answer when not existing" time="0.166">
     </testcase>
-    <testcase classname="RecomputeEducatorRiskScoreUseCase 30 günlük SELF_HARM severity 5 → MEDIUM riskLevel" name="RecomputeEducatorRiskScoreUseCase 30 günlük SELF_HARM severity 5 → MEDIUM riskLevel" time="0.011">
+    <testcase classname="SubmitAnswerUseCase updates attempt answer when exists" name="SubmitAnswerUseCase updates attempt answer when exists" time="0.012">
     </testcase>
-    <testcase classname="RecomputeEducatorRiskScoreUseCase 90+ gün eski ihlal decay minimum (0.1) → düşük skor" name="RecomputeEducatorRiskScoreUseCase 90+ gün eski ihlal decay minimum (0.1) → düşük skor" time="0.002">
+    <testcase classname="SubmitAnswerUseCase rejects when option does not belong to question" name="SubmitAnswerUseCase rejects when option does not belong to question" time="0.118">
     </testcase>
-    <testcase classname="RecomputeEducatorRiskScoreUseCase skor 25 altı → LOW" name="RecomputeEducatorRiskScoreUseCase skor 25 altı → LOW" time="0.003">
+    <testcase classname="SubmitAnswerUseCase deletes existing answer when optionId missing" name="SubmitAnswerUseCase deletes existing answer when optionId missing" time="0.005">
+    </testcase>
+  </testsuite>
+  <testsuite name="GetQuestionSolutionUseCase" errors="0" failures="0" skipped="0" timestamp="2026-05-24T14:41:53" time="2.393" tests="5">
+    <testcase classname="GetQuestionSolutionUseCase throws when not owner" name="GetQuestionSolutionUseCase throws when not owner" time="0.053">
+    </testcase>
+    <testcase classname="GetQuestionSolutionUseCase throws when attempt not submitted" name="GetQuestionSolutionUseCase throws when attempt not submitted" time="0.004">
+    </testcase>
+    <testcase classname="GetQuestionSolutionUseCase throws when solutions disabled" name="GetQuestionSolutionUseCase throws when solutions disabled" time="0.037">
+    </testcase>
+    <testcase classname="GetQuestionSolutionUseCase returns solution when ok" name="GetQuestionSolutionUseCase returns solution when ok" time="0.012">
+    </testcase>
+    <testcase classname="GetQuestionSolutionUseCase allows TIMEOUT attempts to read solutions" name="GetQuestionSolutionUseCase allows TIMEOUT attempts to read solutions" time="0.001">
+    </testcase>
+  </testsuite>
+  <testsuite name="RecomputeEducatorRiskScoreUseCase" errors="0" failures="0" skipped="0" timestamp="2026-05-24T14:41:53" time="3.125" tests="11">
+    <testcase classname="RecomputeEducatorRiskScoreUseCase ihlal yoksa skor 0 ve LOW riskLevel ile upsert yapılır" name="RecomputeEducatorRiskScoreUseCase ihlal yoksa skor 0 ve LOW riskLevel ile upsert yapılır" time="0.059">
+    </testcase>
+    <testcase classname="RecomputeEducatorRiskScoreUseCase 30 günlük SELF_HARM severity 5 → MEDIUM riskLevel" name="RecomputeEducatorRiskScoreUseCase 30 günlük SELF_HARM severity 5 → MEDIUM riskLevel" time="0.052">
+    </testcase>
+    <testcase classname="RecomputeEducatorRiskScoreUseCase 90+ gün eski ihlal decay minimum (0.1) → düşük skor" name="RecomputeEducatorRiskScoreUseCase 90+ gün eski ihlal decay minimum (0.1) → düşük skor" time="0.012">
+    </testcase>
+    <testcase classname="RecomputeEducatorRiskScoreUseCase skor 25 altı → LOW" name="RecomputeEducatorRiskScoreUseCase skor 25 altı → LOW" time="0.012">
     </testcase>
     <testcase classname="RecomputeEducatorRiskScoreUseCase skor 26-60 arasinda MEDIUM" name="RecomputeEducatorRiskScoreUseCase skor 26-60 arasinda MEDIUM" time="0.003">
     </testcase>
-    <testcase classname="RecomputeEducatorRiskScoreUseCase skor 61-95 arasında → HIGH" name="RecomputeEducatorRiskScoreUseCase skor 61-95 arasında → HIGH" time="0.004">
+    <testcase classname="RecomputeEducatorRiskScoreUseCase skor 61-95 arasında → HIGH" name="RecomputeEducatorRiskScoreUseCase skor 61-95 arasında → HIGH" time="0.003">
     </testcase>
-    <testcase classname="RecomputeEducatorRiskScoreUseCase skor 80+ olduğunda ACCOUNT_SUSPENDED aksiyonu oluşturulur ve user.suspendedUntil set edilir" name="RecomputeEducatorRiskScoreUseCase skor 80+ olduğunda ACCOUNT_SUSPENDED aksiyonu oluşturulur ve user.suspendedUntil set edilir" time="0.013">
+    <testcase classname="RecomputeEducatorRiskScoreUseCase skor 80+ olduğunda ACCOUNT_SUSPENDED aksiyonu oluşturulur ve user.suspendedUntil set edilir" name="RecomputeEducatorRiskScoreUseCase skor 80+ olduğunda ACCOUNT_SUSPENDED aksiyonu oluşturulur ve user.suspendedUntil set edilir" time="0.007">
     </testcase>
     <testcase classname="RecomputeEducatorRiskScoreUseCase skor 95+ olduğunda ACCOUNT_BANNED + user.isBanned=true ayarlanır" name="RecomputeEducatorRiskScoreUseCase skor 95+ olduğunda ACCOUNT_BANNED + user.isBanned=true ayarlanır" time="0.005">
     </testcase>
-    <testcase classname="RecomputeEducatorRiskScoreUseCase kullanıcı zaten banned ise ban aksiyonu tekrar oluşturulmaz" name="RecomputeEducatorRiskScoreUseCase kullanıcı zaten banned ise ban aksiyonu tekrar oluşturulmaz" time="0.002">
+    <testcase classname="RecomputeEducatorRiskScoreUseCase kullanıcı zaten banned ise ban aksiyonu tekrar oluşturulmaz" name="RecomputeEducatorRiskScoreUseCase kullanıcı zaten banned ise ban aksiyonu tekrar oluşturulmaz" time="0.003">
     </testcase>
-    <testcase classname="RecomputeEducatorRiskScoreUseCase user bulunamazsa erken çıkar — upsert yapılmaz değil, sadece aksiyon alınmaz" name="RecomputeEducatorRiskScoreUseCase user bulunamazsa erken çıkar — upsert yapılmaz değil, sadece aksiyon alınmaz" time="0.003">
+    <testcase classname="RecomputeEducatorRiskScoreUseCase user bulunamazsa erken çıkar — upsert yapılmaz değil, sadece aksiyon alınmaz" name="RecomputeEducatorRiskScoreUseCase user bulunamazsa erken çıkar — upsert yapılmaz değil, sadece aksiyon alınmaz" time="0.028">
     </testcase>
-    <testcase classname="RecomputeEducatorRiskScoreUseCase violationCount ve openViolations doğru hesaplanır" name="RecomputeEducatorRiskScoreUseCase violationCount ve openViolations doğru hesaplanır" time="0.013">
-    </testcase>
-  </testsuite>
-  <testsuite name="ApproveModerationUseCase" errors="0" failures="0" skipped="0" timestamp="2026-05-24T13:29:11" time="1.308" tests="8">
-    <testcase classname="ApproveModerationUseCase ModerationResult.status=APPROVED + reviewedAt set edilir" name="ApproveModerationUseCase ModerationResult.status=APPROVED + reviewedAt set edilir" time="0.006">
-    </testcase>
-    <testcase classname="ApproveModerationUseCase Violation DISMISSED yapılır (updateMany)" name="ApproveModerationUseCase Violation DISMISSED yapılır (updateMany)" time="0.003">
-    </testcase>
-    <testcase classname="ApproveModerationUseCase ExamQuestion.moderationStatus=APPROVED ayarlanır" name="ApproveModerationUseCase ExamQuestion.moderationStatus=APPROVED ayarlanır" time="0.007">
-    </testcase>
-    <testcase classname="ApproveModerationUseCase reviewerNote varsa ModerationResult güncellenmesine dahil edilir" name="ApproveModerationUseCase reviewerNote varsa ModerationResult güncellenmesine dahil edilir" time="0.008">
-    </testcase>
-    <testcase classname="ApproveModerationUseCase entityType ExamQuestion değilse examQuestion.update çağrılmaz" name="ApproveModerationUseCase entityType ExamQuestion değilse examQuestion.update çağrılmaz" time="0.002">
-    </testcase>
-    <testcase classname="ApproveModerationUseCase zaten APPROVED olan result için transaction başlatılmaz (idempotent)" name="ApproveModerationUseCase zaten APPROVED olan result için transaction başlatılmaz (idempotent)" time="0.001">
-    </testcase>
-    <testcase classname="ApproveModerationUseCase result bulunamazsa MODERATION_RESULT_NOT_FOUND hatası fırlatır" name="ApproveModerationUseCase result bulunamazsa MODERATION_RESULT_NOT_FOUND hatası fırlatır" time="0.001">
-    </testcase>
-    <testcase classname="ApproveModerationUseCase result bulunamazsa AppError instance fırlatılır" name="ApproveModerationUseCase result bulunamazsa AppError instance fırlatılır" time="0.001">
+    <testcase classname="RecomputeEducatorRiskScoreUseCase violationCount ve openViolations doğru hesaplanır" name="RecomputeEducatorRiskScoreUseCase violationCount ve openViolations doğru hesaplanır" time="0.045">
     </testcase>
   </testsuite>
-  <testsuite name="CreateDiscountCodeUseCase" errors="0" failures="0" skipped="0" timestamp="2026-05-24T13:29:12" time="1.112" tests="23">
-    <testcase classname="CreateDiscountCodeUseCase başarılı kod oluşturma geçerli EDUCATOR kodu oluşturduğunda kod büyük harfe çevrilerek kaydedilir" name="CreateDiscountCodeUseCase başarılı kod oluşturma geçerli EDUCATOR kodu oluşturduğunda kod büyük harfe çevrilerek kaydedilir" time="0.018">
+  <testsuite name="ApplyModerationActionUseCase" errors="0" failures="0" skipped="0" timestamp="2026-05-24T14:41:54" time="2.471" tests="12">
+    <testcase classname="ApplyModerationActionUseCase reason 20 karakterden kısa ise REASON_TOO_SHORT hatası fırlatır" name="ApplyModerationActionUseCase reason 20 karakterden kısa ise REASON_TOO_SHORT hatası fırlatır" time="0.005">
     </testcase>
-    <testcase classname="CreateDiscountCodeUseCase başarılı kod oluşturma dönen nesne beklenen alanları içerir" name="CreateDiscountCodeUseCase başarılı kod oluşturma dönen nesne beklenen alanları içerir" time="0.008">
+    <testcase classname="ApplyModerationActionUseCase reason boş string ise REASON_TOO_SHORT hatası fırlatır" name="ApplyModerationActionUseCase reason boş string ise REASON_TOO_SHORT hatası fırlatır" time="0.002">
     </testcase>
-    <testcase classname="CreateDiscountCodeUseCase başarılı kod oluşturma code trim edilip büyük harfe çevrilmiş haliyle uniqueness kontrolü yapılır" name="CreateDiscountCodeUseCase başarılı kod oluşturma code trim edilip büyük harfe çevrilmiş haliyle uniqueness kontrolü yapılır" time="0.003">
+    <testcase classname="ApplyModerationActionUseCase reason tam 20 karakter ise hata fırlatmaz" name="ApplyModerationActionUseCase reason tam 20 karakter ise hata fırlatmaz" time="0.006">
     </testcase>
-    <testcase classname="CreateDiscountCodeUseCase kullanıcı doğrulama hataları kullanıcı bulunamazsa USER_NOT_FOUND hatası fırlatır" name="CreateDiscountCodeUseCase kullanıcı doğrulama hataları kullanıcı bulunamazsa USER_NOT_FOUND hatası fırlatır" time="0.002">
+    <testcase classname="ApplyModerationActionUseCase user bulunamazsa USER_NOT_FOUND hatası fırlatır" name="ApplyModerationActionUseCase user bulunamazsa USER_NOT_FOUND hatası fırlatır" time="0.002">
     </testcase>
-    <testcase classname="CreateDiscountCodeUseCase kullanıcı doğrulama hataları EDUCATOR rolü olmayan kullanıcı için USER_NOT_AUTHORIZED hatası fırlatır" name="CreateDiscountCodeUseCase kullanıcı doğrulama hataları EDUCATOR rolü olmayan kullanıcı için USER_NOT_AUTHORIZED hatası fırlatır" time="0.002">
+    <testcase classname="ApplyModerationActionUseCase WARN aksiyonu sadece ModerationAction kaydeder, User güncellenmez" name="ApplyModerationActionUseCase WARN aksiyonu sadece ModerationAction kaydeder, User güncellenmez" time="0.003">
     </testcase>
-    <testcase classname="CreateDiscountCodeUseCase kullanıcı doğrulama hataları SUSPENDED eğitici kod oluşturamaz — USER_SUSPENDED hatası" name="CreateDiscountCodeUseCase kullanıcı doğrulama hataları SUSPENDED eğitici kod oluşturamaz — USER_SUSPENDED hatası" time="0.003">
+    <testcase classname="ApplyModerationActionUseCase WARN aksiyonu dönen action record actionType=WARN içerir" name="ApplyModerationActionUseCase WARN aksiyonu dönen action record actionType=WARN içerir" time="0.002">
     </testcase>
-    <testcase classname="CreateDiscountCodeUseCase kod validasyon hataları 2 karakterlik kod (&lt; 3) için INVALID_CODE BadRequestException fırlatır" name="CreateDiscountCodeUseCase kod validasyon hataları 2 karakterlik kod (&lt; 3) için INVALID_CODE BadRequestException fırlatır" time="0.004">
+    <testcase classname="ApplyModerationActionUseCase ACCOUNT_SUSPENDED + durationDays=7 → User.suspendedUntil now+7g olarak set edilir" name="ApplyModerationActionUseCase ACCOUNT_SUSPENDED + durationDays=7 → User.suspendedUntil now+7g olarak set edilir" time="0.004">
     </testcase>
-    <testcase classname="CreateDiscountCodeUseCase kod validasyon hataları 2 karakterlik kod INVALID_CODE kodu içerir" name="CreateDiscountCodeUseCase kod validasyon hataları 2 karakterlik kod INVALID_CODE kodu içerir" time="0.001">
+    <testcase classname="ApplyModerationActionUseCase ACCOUNT_SUSPENDED → mockActionCreate expiresAt içerir" name="ApplyModerationActionUseCase ACCOUNT_SUSPENDED → mockActionCreate expiresAt içerir" time="0.003">
     </testcase>
-    <testcase classname="CreateDiscountCodeUseCase kod validasyon hataları boş string kod için INVALID_CODE hatası fırlatır" name="CreateDiscountCodeUseCase kod validasyon hataları boş string kod için INVALID_CODE hatası fırlatır" time="0.002">
+    <testcase classname="ApplyModerationActionUseCase ACCOUNT_SUSPENDED + durationDays null → expiresAt null" name="ApplyModerationActionUseCase ACCOUNT_SUSPENDED + durationDays null → expiresAt null" time="0.025">
     </testcase>
-    <testcase classname="CreateDiscountCodeUseCase percentOff validasyon hataları percentOff = 0 için INVALID_PERCENT hatası fırlatır" name="CreateDiscountCodeUseCase percentOff validasyon hataları percentOff = 0 için INVALID_PERCENT hatası fırlatır" time="0.002">
+    <testcase classname="ApplyModerationActionUseCase ACCOUNT_BANNED → User.isBanned=true ayarlanır" name="ApplyModerationActionUseCase ACCOUNT_BANNED → User.isBanned=true ayarlanır" time="0.001">
     </testcase>
-    <testcase classname="CreateDiscountCodeUseCase percentOff validasyon hataları EDUCATOR için percentOff = 51 → DISCOUNT_LIMIT_EXCEEDED (AdminSettings.maxDiscountPercent=50)" name="CreateDiscountCodeUseCase percentOff validasyon hataları EDUCATOR için percentOff = 51 → DISCOUNT_LIMIT_EXCEEDED (AdminSettings.maxDiscountPercent=50)" time="0.002">
+    <testcase classname="ApplyModerationActionUseCase ACCOUNT_BANNED → mockActionCreate çağrılır" name="ApplyModerationActionUseCase ACCOUNT_BANNED → mockActionCreate çağrılır" time="0.006">
     </testcase>
-    <testcase classname="CreateDiscountCodeUseCase percentOff validasyon hataları percentOff = 101 → INVALID_PERCENT (admin limiti üstünde, schema validasyonu)" name="CreateDiscountCodeUseCase percentOff validasyon hataları percentOff = 101 → INVALID_PERCENT (admin limiti üstünde, schema validasyonu)" time="0.002">
-    </testcase>
-    <testcase classname="CreateDiscountCodeUseCase percentOff validasyon hataları percentOff = 50 (sınır değer) geçerlidir" name="CreateDiscountCodeUseCase percentOff validasyon hataları percentOff = 50 (sınır değer) geçerlidir" time="0.009">
-    </testcase>
-    <testcase classname="CreateDiscountCodeUseCase percentOff validasyon hataları percentOff = 1 (alt sınır) geçerlidir" name="CreateDiscountCodeUseCase percentOff validasyon hataları percentOff = 1 (alt sınır) geçerlidir" time="0.001">
-    </testcase>
-    <testcase classname="CreateDiscountCodeUseCase maxUses validasyon hataları maxUses = 0 için INVALID_MAX_USES hatası fırlatır" name="CreateDiscountCodeUseCase maxUses validasyon hataları maxUses = 0 için INVALID_MAX_USES hatası fırlatır" time="0.002">
-    </testcase>
-    <testcase classname="CreateDiscountCodeUseCase maxUses validasyon hataları maxUses = null geçerlidir (sınırsız kullanım)" name="CreateDiscountCodeUseCase maxUses validasyon hataları maxUses = null geçerlidir (sınırsız kullanım)" time="0.002">
-    </testcase>
-    <testcase classname="CreateDiscountCodeUseCase maxUses validasyon hataları maxUses = 1 geçerlidir (alt sınır)" name="CreateDiscountCodeUseCase maxUses validasyon hataları maxUses = 1 geçerlidir (alt sınır)" time="0.002">
-    </testcase>
-    <testcase classname="CreateDiscountCodeUseCase tarih validasyon hataları validUntil validFrom ile aynı anda ise INVALID_DATES hatası fırlatır" name="CreateDiscountCodeUseCase tarih validasyon hataları validUntil validFrom ile aynı anda ise INVALID_DATES hatası fırlatır" time="0.004">
-    </testcase>
-    <testcase classname="CreateDiscountCodeUseCase tarih validasyon hataları validUntil validFrom öncesinde ise INVALID_DATES hatası fırlatır" name="CreateDiscountCodeUseCase tarih validasyon hataları validUntil validFrom öncesinde ise INVALID_DATES hatası fırlatır" time="0.002">
-    </testcase>
-    <testcase classname="CreateDiscountCodeUseCase tarih validasyon hataları validFrom eksik ama validUntil var ise tarih kontrolü atlanır" name="CreateDiscountCodeUseCase tarih validasyon hataları validFrom eksik ama validUntil var ise tarih kontrolü atlanır" time="0.001">
-    </testcase>
-    <testcase classname="CreateDiscountCodeUseCase tekrar eden kod hatası kod zaten varsa CODE_EXISTS BadRequestException fırlatır" name="CreateDiscountCodeUseCase tekrar eden kod hatası kod zaten varsa CODE_EXISTS BadRequestException fırlatır" time="0.002">
-    </testcase>
-    <testcase classname="CreateDiscountCodeUseCase tekrar eden kod hatası küçük harfli kod büyük harfe çevrilip duplicate kontrolü yapılır — duplicate bulununca CODE_EXISTS" name="CreateDiscountCodeUseCase tekrar eden kod hatası küçük harfli kod büyük harfe çevrilip duplicate kontrolü yapılır — duplicate bulununca CODE_EXISTS" time="0.004">
-    </testcase>
-    <testcase classname="CreateDiscountCodeUseCase audit log hata toleransı auditRepo.create başarısız olsa bile kod oluşturma tamamlanır" name="CreateDiscountCodeUseCase audit log hata toleransı auditRepo.create başarısız olsa bile kod oluşturma tamamlanır" time="0.007">
+    <testcase classname="ApplyModerationActionUseCase CONTENT_REMOVED → User güncellenmez, sadece aksiyon kaydedilir" name="ApplyModerationActionUseCase CONTENT_REMOVED → User güncellenmez, sadece aksiyon kaydedilir" time="0.004">
     </testcase>
   </testsuite>
-  <testsuite name="RejectModerationUseCase" errors="0" failures="0" skipped="0" timestamp="2026-05-24T13:29:12" time="1.128" tests="9">
-    <testcase classname="RejectModerationUseCase ModerationResult.status=REJECTED + reviewedAt set edilir" name="RejectModerationUseCase ModerationResult.status=REJECTED + reviewedAt set edilir" time="0.012">
+  <testsuite name="RejectModerationUseCase" errors="0" failures="0" skipped="0" timestamp="2026-05-24T14:41:55" time="2.918" tests="9">
+    <testcase classname="RejectModerationUseCase ModerationResult.status=REJECTED + reviewedAt set edilir" name="RejectModerationUseCase ModerationResult.status=REJECTED + reviewedAt set edilir" time="0.019">
     </testcase>
-    <testcase classname="RejectModerationUseCase ExamQuestion.moderationStatus=REJECTED ayarlanır" name="RejectModerationUseCase ExamQuestion.moderationStatus=REJECTED ayarlanır" time="0.004">
+    <testcase classname="RejectModerationUseCase ExamQuestion.moderationStatus=REJECTED ayarlanır" name="RejectModerationUseCase ExamQuestion.moderationStatus=REJECTED ayarlanır" time="0.032">
     </testcase>
-    <testcase classname="RejectModerationUseCase mevcut violation varsa CONFIRMED statüsüne güncellenir" name="RejectModerationUseCase mevcut violation varsa CONFIRMED statüsüne güncellenir" time="0.008">
+    <testcase classname="RejectModerationUseCase mevcut violation varsa CONFIRMED statüsüne güncellenir" name="RejectModerationUseCase mevcut violation varsa CONFIRMED statüsüne güncellenir" time="0.03">
     </testcase>
     <testcase classname="RejectModerationUseCase violation yoksa yeni CONFIRMED violation oluşturulur" name="RejectModerationUseCase violation yoksa yeni CONFIRMED violation oluşturulur" time="0.003">
     </testcase>
-    <testcase classname="RejectModerationUseCase reject sonrası RecomputeEducatorRiskScore execute çağrılır" name="RejectModerationUseCase reject sonrası RecomputeEducatorRiskScore execute çağrılır" time="0.005">
+    <testcase classname="RejectModerationUseCase reject sonrası RecomputeEducatorRiskScore execute çağrılır" name="RejectModerationUseCase reject sonrası RecomputeEducatorRiskScore execute çağrılır" time="0.008">
     </testcase>
-    <testcase classname="RejectModerationUseCase zaten REJECTED olan result için idempotent — transaction başlatılmaz" name="RejectModerationUseCase zaten REJECTED olan result için idempotent — transaction başlatılmaz" time="0.003">
+    <testcase classname="RejectModerationUseCase zaten REJECTED olan result için idempotent — transaction başlatılmaz" name="RejectModerationUseCase zaten REJECTED olan result için idempotent — transaction başlatılmaz" time="0.002">
     </testcase>
-    <testcase classname="RejectModerationUseCase result bulunamazsa MODERATION_RESULT_NOT_FOUND fırlatır" name="RejectModerationUseCase result bulunamazsa MODERATION_RESULT_NOT_FOUND fırlatır" time="0.003">
+    <testcase classname="RejectModerationUseCase result bulunamazsa MODERATION_RESULT_NOT_FOUND fırlatır" name="RejectModerationUseCase result bulunamazsa MODERATION_RESULT_NOT_FOUND fırlatır" time="0.007">
     </testcase>
-    <testcase classname="RejectModerationUseCase result bulunamazsa AppError instance fırlatılır" name="RejectModerationUseCase result bulunamazsa AppError instance fırlatılır" time="0.031">
+    <testcase classname="RejectModerationUseCase result bulunamazsa AppError instance fırlatılır" name="RejectModerationUseCase result bulunamazsa AppError instance fırlatılır" time="0.003">
     </testcase>
     <testcase classname="RejectModerationUseCase reviewerNote varsa ModerationResult güncellenmesine dahil edilir" name="RejectModerationUseCase reviewerNote varsa ModerationResult güncellenmesine dahil edilir" time="0.003">
     </testcase>
   </testsuite>
-  <testsuite name="TimeoutAttemptUseCase" errors="0" failures="0" skipped="0" timestamp="2026-05-24T13:29:13" time="1.051" tests="2">
-    <testcase classname="TimeoutAttemptUseCase throws if not owner" name="TimeoutAttemptUseCase throws if not owner" time="0.025">
+  <testsuite name="CreateDiscountCodeUseCase" errors="0" failures="0" skipped="0" timestamp="2026-05-24T14:41:56" time="2.783" tests="23">
+    <testcase classname="CreateDiscountCodeUseCase başarılı kod oluşturma geçerli EDUCATOR kodu oluşturduğunda kod büyük harfe çevrilerek kaydedilir" name="CreateDiscountCodeUseCase başarılı kod oluşturma geçerli EDUCATOR kodu oluşturduğunda kod büyük harfe çevrilerek kaydedilir" time="0.01">
     </testcase>
-    <testcase classname="TimeoutAttemptUseCase is idempotent when already timed out" name="TimeoutAttemptUseCase is idempotent when already timed out" time="0.002">
+    <testcase classname="CreateDiscountCodeUseCase başarılı kod oluşturma dönen nesne beklenen alanları içerir" name="CreateDiscountCodeUseCase başarılı kod oluşturma dönen nesne beklenen alanları içerir" time="0.003">
     </testcase>
-  </testsuite>
-  <testsuite name="SubmitAttemptUseCase" errors="0" failures="0" skipped="0" timestamp="2026-05-24T13:29:14" time="1.066" tests="3">
-    <testcase classname="SubmitAttemptUseCase finalizes attempt using stored answers" name="SubmitAttemptUseCase finalizes attempt using stored answers" time="0.032">
+    <testcase classname="CreateDiscountCodeUseCase başarılı kod oluşturma code trim edilip büyük harfe çevrilmiş haliyle uniqueness kontrolü yapılır" name="CreateDiscountCodeUseCase başarılı kod oluşturma code trim edilip büyük harfe çevrilmiş haliyle uniqueness kontrolü yapılır" time="0.002">
     </testcase>
-    <testcase classname="SubmitAttemptUseCase is idempotent when already submitted" name="SubmitAttemptUseCase is idempotent when already submitted" time="0.011">
+    <testcase classname="CreateDiscountCodeUseCase kullanıcı doğrulama hataları kullanıcı bulunamazsa USER_NOT_FOUND hatası fırlatır" name="CreateDiscountCodeUseCase kullanıcı doğrulama hataları kullanıcı bulunamazsa USER_NOT_FOUND hatası fırlatır" time="0.002">
     </testcase>
-    <testcase classname="SubmitAttemptUseCase propagates error when auditLog.create fails inside transaction" name="SubmitAttemptUseCase propagates error when auditLog.create fails inside transaction" time="0.024">
+    <testcase classname="CreateDiscountCodeUseCase kullanıcı doğrulama hataları EDUCATOR rolü olmayan kullanıcı için USER_NOT_AUTHORIZED hatası fırlatır" name="CreateDiscountCodeUseCase kullanıcı doğrulama hataları EDUCATOR rolü olmayan kullanıcı için USER_NOT_AUTHORIZED hatası fırlatır" time="0.001">
     </testcase>
-  </testsuite>
-  <testsuite name="ApplyModerationActionUseCase" errors="0" failures="0" skipped="0" timestamp="2026-05-24T13:29:14" time="1.182" tests="12">
-    <testcase classname="ApplyModerationActionUseCase reason 20 karakterden kısa ise REASON_TOO_SHORT hatası fırlatır" name="ApplyModerationActionUseCase reason 20 karakterden kısa ise REASON_TOO_SHORT hatası fırlatır" time="0.007">
+    <testcase classname="CreateDiscountCodeUseCase kullanıcı doğrulama hataları SUSPENDED eğitici kod oluşturamaz — USER_SUSPENDED hatası" name="CreateDiscountCodeUseCase kullanıcı doğrulama hataları SUSPENDED eğitici kod oluşturamaz — USER_SUSPENDED hatası" time="0.002">
     </testcase>
-    <testcase classname="ApplyModerationActionUseCase reason boş string ise REASON_TOO_SHORT hatası fırlatır" name="ApplyModerationActionUseCase reason boş string ise REASON_TOO_SHORT hatası fırlatır" time="0.016">
+    <testcase classname="CreateDiscountCodeUseCase kod validasyon hataları 2 karakterlik kod (&lt; 3) için INVALID_CODE BadRequestException fırlatır" name="CreateDiscountCodeUseCase kod validasyon hataları 2 karakterlik kod (&lt; 3) için INVALID_CODE BadRequestException fırlatır" time="0.005">
     </testcase>
-    <testcase classname="ApplyModerationActionUseCase reason tam 20 karakter ise hata fırlatmaz" name="ApplyModerationActionUseCase reason tam 20 karakter ise hata fırlatmaz" time="0.013">
+    <testcase classname="CreateDiscountCodeUseCase kod validasyon hataları 2 karakterlik kod INVALID_CODE kodu içerir" name="CreateDiscountCodeUseCase kod validasyon hataları 2 karakterlik kod INVALID_CODE kodu içerir" time="0.003">
     </testcase>
-    <testcase classname="ApplyModerationActionUseCase user bulunamazsa USER_NOT_FOUND hatası fırlatır" name="ApplyModerationActionUseCase user bulunamazsa USER_NOT_FOUND hatası fırlatır" time="0.001">
+    <testcase classname="CreateDiscountCodeUseCase kod validasyon hataları boş string kod için INVALID_CODE hatası fırlatır" name="CreateDiscountCodeUseCase kod validasyon hataları boş string kod için INVALID_CODE hatası fırlatır" time="0.003">
     </testcase>
-    <testcase classname="ApplyModerationActionUseCase WARN aksiyonu sadece ModerationAction kaydeder, User güncellenmez" name="ApplyModerationActionUseCase WARN aksiyonu sadece ModerationAction kaydeder, User güncellenmez" time="0.003">
+    <testcase classname="CreateDiscountCodeUseCase percentOff validasyon hataları percentOff = 0 için INVALID_PERCENT hatası fırlatır" name="CreateDiscountCodeUseCase percentOff validasyon hataları percentOff = 0 için INVALID_PERCENT hatası fırlatır" time="0.008">
     </testcase>
-    <testcase classname="ApplyModerationActionUseCase WARN aksiyonu dönen action record actionType=WARN içerir" name="ApplyModerationActionUseCase WARN aksiyonu dönen action record actionType=WARN içerir" time="0.004">
+    <testcase classname="CreateDiscountCodeUseCase percentOff validasyon hataları EDUCATOR için percentOff = 51 → DISCOUNT_LIMIT_EXCEEDED (AdminSettings.maxDiscountPercent=50)" name="CreateDiscountCodeUseCase percentOff validasyon hataları EDUCATOR için percentOff = 51 → DISCOUNT_LIMIT_EXCEEDED (AdminSettings.maxDiscountPercent=50)" time="0.003">
     </testcase>
-    <testcase classname="ApplyModerationActionUseCase ACCOUNT_SUSPENDED + durationDays=7 → User.suspendedUntil now+7g olarak set edilir" name="ApplyModerationActionUseCase ACCOUNT_SUSPENDED + durationDays=7 → User.suspendedUntil now+7g olarak set edilir" time="0.004">
+    <testcase classname="CreateDiscountCodeUseCase percentOff validasyon hataları percentOff = 101 → INVALID_PERCENT (admin limiti üstünde, schema validasyonu)" name="CreateDiscountCodeUseCase percentOff validasyon hataları percentOff = 101 → INVALID_PERCENT (admin limiti üstünde, schema validasyonu)" time="0.001">
     </testcase>
-    <testcase classname="ApplyModerationActionUseCase ACCOUNT_SUSPENDED → mockActionCreate expiresAt içerir" name="ApplyModerationActionUseCase ACCOUNT_SUSPENDED → mockActionCreate expiresAt içerir" time="0.002">
+    <testcase classname="CreateDiscountCodeUseCase percentOff validasyon hataları percentOff = 50 (sınır değer) geçerlidir" name="CreateDiscountCodeUseCase percentOff validasyon hataları percentOff = 50 (sınır değer) geçerlidir" time="0.003">
     </testcase>
-    <testcase classname="ApplyModerationActionUseCase ACCOUNT_SUSPENDED + durationDays null → expiresAt null" name="ApplyModerationActionUseCase ACCOUNT_SUSPENDED + durationDays null → expiresAt null" time="0.002">
+    <testcase classname="CreateDiscountCodeUseCase percentOff validasyon hataları percentOff = 1 (alt sınır) geçerlidir" name="CreateDiscountCodeUseCase percentOff validasyon hataları percentOff = 1 (alt sınır) geçerlidir" time="0.002">
     </testcase>
-    <testcase classname="ApplyModerationActionUseCase ACCOUNT_BANNED → User.isBanned=true ayarlanır" name="ApplyModerationActionUseCase ACCOUNT_BANNED → User.isBanned=true ayarlanır" time="0.002">
+    <testcase classname="CreateDiscountCodeUseCase maxUses validasyon hataları maxUses = 0 için INVALID_MAX_USES hatası fırlatır" name="CreateDiscountCodeUseCase maxUses validasyon hataları maxUses = 0 için INVALID_MAX_USES hatası fırlatır" time="0.008">
     </testcase>
-    <testcase classname="ApplyModerationActionUseCase ACCOUNT_BANNED → mockActionCreate çağrılır" name="ApplyModerationActionUseCase ACCOUNT_BANNED → mockActionCreate çağrılır" time="0.002">
+    <testcase classname="CreateDiscountCodeUseCase maxUses validasyon hataları maxUses = null geçerlidir (sınırsız kullanım)" name="CreateDiscountCodeUseCase maxUses validasyon hataları maxUses = null geçerlidir (sınırsız kullanım)" time="0.003">
     </testcase>
-    <testcase classname="ApplyModerationActionUseCase CONTENT_REMOVED → User güncellenmez, sadece aksiyon kaydedilir" name="ApplyModerationActionUseCase CONTENT_REMOVED → User güncellenmez, sadece aksiyon kaydedilir" time="0.01">
+    <testcase classname="CreateDiscountCodeUseCase maxUses validasyon hataları maxUses = 1 geçerlidir (alt sınır)" name="CreateDiscountCodeUseCase maxUses validasyon hataları maxUses = 1 geçerlidir (alt sınır)" time="0.001">
     </testcase>
-  </testsuite>
-  <testsuite name="SubmitAnswerUseCase" errors="0" failures="0" skipped="0" timestamp="2026-05-24T13:29:14" time="1.278" tests="4">
-    <testcase classname="SubmitAnswerUseCase creates attempt answer when not existing" name="SubmitAnswerUseCase creates attempt answer when not existing" time="0.007">
+    <testcase classname="CreateDiscountCodeUseCase tarih validasyon hataları validUntil validFrom ile aynı anda ise INVALID_DATES hatası fırlatır" name="CreateDiscountCodeUseCase tarih validasyon hataları validUntil validFrom ile aynı anda ise INVALID_DATES hatası fırlatır" time="0.002">
     </testcase>
-    <testcase classname="SubmitAnswerUseCase updates attempt answer when exists" name="SubmitAnswerUseCase updates attempt answer when exists" time="0.002">
+    <testcase classname="CreateDiscountCodeUseCase tarih validasyon hataları validUntil validFrom öncesinde ise INVALID_DATES hatası fırlatır" name="CreateDiscountCodeUseCase tarih validasyon hataları validUntil validFrom öncesinde ise INVALID_DATES hatası fırlatır" time="0.002">
     </testcase>
-    <testcase classname="SubmitAnswerUseCase rejects when option does not belong to question" name="SubmitAnswerUseCase rejects when option does not belong to question" time="0.064">
+    <testcase classname="CreateDiscountCodeUseCase tarih validasyon hataları validFrom eksik ama validUntil var ise tarih kontrolü atlanır" name="CreateDiscountCodeUseCase tarih validasyon hataları validFrom eksik ama validUntil var ise tarih kontrolü atlanır" time="0.032">
     </testcase>
-    <testcase classname="SubmitAnswerUseCase deletes existing answer when optionId missing" name="SubmitAnswerUseCase deletes existing answer when optionId missing" time="0.003">
+    <testcase classname="CreateDiscountCodeUseCase tekrar eden kod hatası kod zaten varsa CODE_EXISTS BadRequestException fırlatır" name="CreateDiscountCodeUseCase tekrar eden kod hatası kod zaten varsa CODE_EXISTS BadRequestException fırlatır" time="0.007">
+    </testcase>
+    <testcase classname="CreateDiscountCodeUseCase tekrar eden kod hatası küçük harfli kod büyük harfe çevrilip duplicate kontrolü yapılır — duplicate bulununca CODE_EXISTS" name="CreateDiscountCodeUseCase tekrar eden kod hatası küçük harfli kod büyük harfe çevrilip duplicate kontrolü yapılır — duplicate bulununca CODE_EXISTS" time="0.003">
+    </testcase>
+    <testcase classname="CreateDiscountCodeUseCase audit log hata toleransı auditRepo.create başarısız olsa bile kod oluşturma tamamlanır" name="CreateDiscountCodeUseCase audit log hata toleransı auditRepo.create başarısız olsa bile kod oluşturma tamamlanır" time="0.004">
     </testcase>
   </testsuite>
-  <testsuite name="EmailDispatcher.shouldSend" errors="0" failures="0" skipped="0" timestamp="2026-05-24T13:29:15" time="0.857" tests="8">
-    <testcase classname="EmailDispatcher.shouldSend global kapalı → BLOCKED_BY_ADMIN" name="EmailDispatcher.shouldSend global kapalı → BLOCKED_BY_ADMIN" time="0.005">
+  <testsuite name="SubmitAttemptUseCase" errors="0" failures="0" skipped="0" timestamp="2026-05-24T14:41:57" time="2.681" tests="3">
+    <testcase classname="SubmitAttemptUseCase finalizes attempt using stored answers" name="SubmitAttemptUseCase finalizes attempt using stored answers" time="0.035">
     </testcase>
-    <testcase classname="EmailDispatcher.shouldSend CANDIDATE NOTIFY off → BLOCKED_BY_ADMIN" name="EmailDispatcher.shouldSend CANDIDATE NOTIFY off → BLOCKED_BY_ADMIN" time="0.003">
+    <testcase classname="SubmitAttemptUseCase is idempotent when already submitted" name="SubmitAttemptUseCase is idempotent when already submitted" time="0.002">
     </testcase>
-    <testcase classname="EmailDispatcher.shouldSend CANDIDATE CRITICAL preference yoksayılır" name="EmailDispatcher.shouldSend CANDIDATE CRITICAL preference yoksayılır" time="0.009">
+    <testcase classname="SubmitAttemptUseCase propagates error when auditLog.create fails inside transaction" name="SubmitAttemptUseCase propagates error when auditLog.create fails inside transaction" time="0.18">
+    </testcase>
+  </testsuite>
+  <testsuite name="TimeoutAttemptUseCase" errors="0" failures="0" skipped="0" timestamp="2026-05-24T14:41:58" time="2.994" tests="2">
+    <testcase classname="TimeoutAttemptUseCase throws if not owner" name="TimeoutAttemptUseCase throws if not owner" time="0.287">
+    </testcase>
+    <testcase classname="TimeoutAttemptUseCase is idempotent when already timed out" name="TimeoutAttemptUseCase is idempotent when already timed out" time="0.013">
+    </testcase>
+  </testsuite>
+  <testsuite name="EmailDispatcher.shouldSend" errors="0" failures="0" skipped="0" timestamp="2026-05-24T14:42:00" time="2.303" tests="8">
+    <testcase classname="EmailDispatcher.shouldSend global kapalı → BLOCKED_BY_ADMIN" name="EmailDispatcher.shouldSend global kapalı → BLOCKED_BY_ADMIN" time="0.004">
+    </testcase>
+    <testcase classname="EmailDispatcher.shouldSend CANDIDATE NOTIFY off → BLOCKED_BY_ADMIN" name="EmailDispatcher.shouldSend CANDIDATE NOTIFY off → BLOCKED_BY_ADMIN" time="0.071">
+    </testcase>
+    <testcase classname="EmailDispatcher.shouldSend CANDIDATE CRITICAL preference yoksayılır" name="EmailDispatcher.shouldSend CANDIDATE CRITICAL preference yoksayılır" time="0.002">
     </testcase>
     <testcase classname="EmailDispatcher.shouldSend SUPPRESSED → SUPPRESSED" name="EmailDispatcher.shouldSend SUPPRESSED → SUPPRESSED" time="0.001">
     </testcase>
-    <testcase classname="EmailDispatcher.shouldSend Süresi geçmiş suppression → bypass" name="EmailDispatcher.shouldSend Süresi geçmiş suppression → bypass" time="0.001">
+    <testcase classname="EmailDispatcher.shouldSend Süresi geçmiş suppression → bypass" name="EmailDispatcher.shouldSend Süresi geçmiş suppression → bypass" time="0.005">
     </testcase>
-    <testcase classname="EmailDispatcher.shouldSend NOTIFY + preference false → BLOCKED_BY_PREFS" name="EmailDispatcher.shouldSend NOTIFY + preference false → BLOCKED_BY_PREFS" time="0.001">
+    <testcase classname="EmailDispatcher.shouldSend NOTIFY + preference false → BLOCKED_BY_PREFS" name="EmailDispatcher.shouldSend NOTIFY + preference false → BLOCKED_BY_PREFS" time="0.002">
     </testcase>
-    <testcase classname="EmailDispatcher.shouldSend Günlük cap aşımı → BLOCKED_BY_PREFS" name="EmailDispatcher.shouldSend Günlük cap aşımı → BLOCKED_BY_PREFS" time="0.002">
+    <testcase classname="EmailDispatcher.shouldSend Günlük cap aşımı → BLOCKED_BY_PREFS" name="EmailDispatcher.shouldSend Günlük cap aşımı → BLOCKED_BY_PREFS" time="0.001">
     </testcase>
-    <testcase classname="EmailDispatcher.shouldSend Tüm kontroller geçti → ALLOWED" name="EmailDispatcher.shouldSend Tüm kontroller geçti → ALLOWED" time="0.002">
-    </testcase>
-  </testsuite>
-  <testsuite name="undefined" errors="0" failures="0" skipped="0" timestamp="2026-05-24T13:29:15" time="0.537" tests="2">
-    <testcase classname=" minRating filters correctly" name=" minRating filters correctly" time="0.008">
-    </testcase>
-    <testcase classname=" GetRecommended returns items with required fields" name=" GetRecommended returns items with required fields" time="0.006">
+    <testcase classname="EmailDispatcher.shouldSend Tüm kontroller geçti → ALLOWED" name="EmailDispatcher.shouldSend Tüm kontroller geçti → ALLOWED" time="0.001">
     </testcase>
   </testsuite>
-  <testsuite name="undefined" errors="0" failures="0" skipped="0" timestamp="2026-05-24T13:29:16" time="0.558" tests="1">
+  <testsuite name="UpdateQuestionUseCase" errors="0" failures="0" skipped="0" timestamp="2026-05-24T14:41:59" time="3.396" tests="6">
+    <testcase classname="UpdateQuestionUseCase soru içeriğini günceller" name="UpdateQuestionUseCase soru içeriğini günceller" time="0.014">
+    </testcase>
+    <testcase classname="UpdateQuestionUseCase soru bulunamazsa QUESTION_NOT_FOUND fırlatır" name="UpdateQuestionUseCase soru bulunamazsa QUESTION_NOT_FOUND fırlatır" time="0.002">
+    </testcase>
+    <testcase classname="UpdateQuestionUseCase test bulunamazsa TEST_NOT_FOUND fırlatır" name="UpdateQuestionUseCase test bulunamazsa TEST_NOT_FOUND fırlatır" time="0.003">
+    </testcase>
+    <testcase classname="UpdateQuestionUseCase başkasının sorusunu güncellemeye çalışırsa FORBIDDEN_NOT_OWNER" name="UpdateQuestionUseCase başkasının sorusunu güncellemeye çalışırsa FORBIDDEN_NOT_OWNER" time="0.03">
+    </testcase>
+    <testcase classname="UpdateQuestionUseCase actorId verilmezse sahiplik kontrolü atlanır" name="UpdateQuestionUseCase actorId verilmezse sahiplik kontrolü atlanır" time="0.003">
+    </testcase>
+    <testcase classname="UpdateQuestionUseCase aktör kullanıcı bulunamazsa USER_NOT_FOUND" name="UpdateQuestionUseCase aktör kullanıcı bulunamazsa USER_NOT_FOUND" time="0.008">
+    </testcase>
+  </testsuite>
+  <testsuite name="email/encryption" errors="0" failures="0" skipped="0" timestamp="2026-05-24T14:42:01" time="1.877" tests="4">
+    <testcase classname="email/encryption round-trip encryptSecret/decryptSecret" name="email/encryption round-trip encryptSecret/decryptSecret" time="0.166">
+    </testcase>
+    <testcase classname="email/encryption encryptJson/decryptJson preserves structure" name="email/encryption encryptJson/decryptJson preserves structure" time="0.011">
+    </testcase>
+    <testcase classname="email/encryption decrypt fails with wrong key" name="email/encryption decrypt fails with wrong key" time="0.153">
+    </testcase>
+    <testcase classname="email/encryption maskSecret hides middle" name="email/encryption maskSecret hides middle" time="0.008">
+    </testcase>
+  </testsuite>
+  <testsuite name="CreateTestUseCase" errors="0" failures="0" skipped="0" timestamp="2026-05-24T14:42:02" time="1.175" tests="15">
+    <testcase classname="CreateTestUseCase temel test oluşturur, UUID atar ve DRAFT statüsü verir" name="CreateTestUseCase temel test oluşturur, UUID atar ve DRAFT statüsü verir" time="0.111">
+    </testcase>
+    <testcase classname="CreateTestUseCase packageCreationEnabled=false ise PACKAGE_CREATION_DISABLED fırlatır" name="CreateTestUseCase packageCreationEnabled=false ise PACKAGE_CREATION_DISABLED fırlatır" time="0.003">
+    </testcase>
+    <testcase classname="CreateTestUseCase adminSettings null ise kill-switch aktif sayılmaz" name="CreateTestUseCase adminSettings null ise kill-switch aktif sayılmaz" time="0.002">
+    </testcase>
+    <testcase classname="CreateTestUseCase geçersiz UUID formatında examTypeId → INVALID_UUID" name="CreateTestUseCase geçersiz UUID formatında examTypeId → INVALID_UUID" time="0.002">
+    </testcase>
+    <testcase classname="CreateTestUseCase UUID başında prefix varsa INVALID_UUID fırlatır (^ anchor)" name="CreateTestUseCase UUID başında prefix varsa INVALID_UUID fırlatır (^ anchor)" time="0.003">
+    </testcase>
+    <testcase classname="CreateTestUseCase UUID sonunda suffix varsa INVALID_UUID fırlatır ($ anchor)" name="CreateTestUseCase UUID sonunda suffix varsa INVALID_UUID fırlatır ($ anchor)" time="0.007">
+    </testcase>
+    <testcase classname="CreateTestUseCase geçersiz UUID formatında topicId → INVALID_UUID" name="CreateTestUseCase geçersiz UUID formatında topicId → INVALID_UUID" time="0.003">
+    </testcase>
+    <testcase classname="CreateTestUseCase examTypeId geçerliyse ama bulunamazsa EXAMTYPE_NOT_FOUND fırlatır" name="CreateTestUseCase examTypeId geçerliyse ama bulunamazsa EXAMTYPE_NOT_FOUND fırlatır" time="0.001">
+    </testcase>
+    <testcase classname="CreateTestUseCase topicId var ama examTypeId yok ve topic bulunamazsa TOPIC_NOT_FOUND fırlatır" name="CreateTestUseCase topicId var ama examTypeId yok ve topic bulunamazsa TOPIC_NOT_FOUND fırlatır" time="0.003">
+    </testcase>
+    <testcase classname="CreateTestUseCase topicId UUID doğru ama bulunamazsa TOPIC_NOT_FOUND fırlatır" name="CreateTestUseCase topicId UUID doğru ama bulunamazsa TOPIC_NOT_FOUND fırlatır" time="0.004">
+    </testcase>
+    <testcase classname="CreateTestUseCase topic examTypeId ile uyuşmazsa TOPIC_EXAMTYPE_MISMATCH fırlatır" name="CreateTestUseCase topic examTypeId ile uyuşmazsa TOPIC_EXAMTYPE_MISMATCH fırlatır" time="0.003">
+    </testcase>
+    <testcase classname="CreateTestUseCase topicId verilince examTypeId topic üzerinden çözülür ve kaydedilir" name="CreateTestUseCase topicId verilince examTypeId topic üzerinden çözülür ve kaydedilir" time="0.003">
+    </testcase>
+    <testcase classname="CreateTestUseCase questions belirtilmezse boş dizi ile save çağrılır" name="CreateTestUseCase questions belirtilmezse boş dizi ile save çağrılır" time="0.001">
+    </testcase>
+    <testcase classname="CreateTestUseCase questions belirtilirse UUID atanarak save çağrılır" name="CreateTestUseCase questions belirtilirse UUID atanarak save çağrılır" time="0.004">
+    </testcase>
+    <testcase classname="CreateTestUseCase questions içindeki mevcut id korunur" name="CreateTestUseCase questions içindeki mevcut id korunur" time="0.006">
+    </testcase>
+  </testsuite>
+  <testsuite name="AnswerObjectionUseCase" errors="0" failures="0" skipped="0" timestamp="2026-05-24T14:42:03" time="1.188" tests="8">
+    <testcase classname="AnswerObjectionUseCase eğitici itiraza yanıt verir" name="AnswerObjectionUseCase eğitici itiraza yanıt verir" time="0.006">
+    </testcase>
+    <testcase classname="AnswerObjectionUseCase actorId yoksa UNAUTHORIZED fırlatır" name="AnswerObjectionUseCase actorId yoksa UNAUTHORIZED fırlatır" time="0.003">
+    </testcase>
+    <testcase classname="AnswerObjectionUseCase kullanıcı bulunamazsa USER_NOT_FOUND fırlatır" name="AnswerObjectionUseCase kullanıcı bulunamazsa USER_NOT_FOUND fırlatır" time="0.002">
+    </testcase>
+    <testcase classname="AnswerObjectionUseCase itiraz bulunamazsa OBJECTION_NOT_FOUND fırlatır" name="AnswerObjectionUseCase itiraz bulunamazsa OBJECTION_NOT_FOUND fırlatır" time="0.002">
+    </testcase>
+    <testcase classname="AnswerObjectionUseCase başkasının sorusunun itirazına yanıt verilemez → FORBIDDEN_NOT_OWNER" name="AnswerObjectionUseCase başkasının sorusunun itirazına yanıt verilemez → FORBIDDEN_NOT_OWNER" time="0.003">
+    </testcase>
+    <testcase classname="AnswerObjectionUseCase yanıt 5 karakterden kısaysa ANSWER_TOO_SHORT fırlatır" name="AnswerObjectionUseCase yanıt 5 karakterden kısaysa ANSWER_TOO_SHORT fırlatır" time="0.034">
+    </testcase>
+    <testcase classname="AnswerObjectionUseCase SLA süresi dolmuşsa OBJECTION_SLA_EXPIRED fırlatır ve eskalasyon yapar" name="AnswerObjectionUseCase SLA süresi dolmuşsa OBJECTION_SLA_EXPIRED fırlatır ve eskalasyon yapar" time="0.024">
+    </testcase>
+    <testcase classname="AnswerObjectionUseCase audit log hatası ana akışı kesmez" name="AnswerObjectionUseCase audit log hatası ana akışı kesmez" time="0.003">
+    </testcase>
+  </testsuite>
+  <testsuite name="undefined" errors="0" failures="0" skipped="0" timestamp="2026-05-24T14:42:03" time="0.84" tests="1">
     <testcase classname=" update notification preferences creates or updates" name=" update notification preferences creates or updates" time="0.003">
     </testcase>
   </testsuite>
-  <testsuite name="undefined" errors="0" failures="0" skipped="0" timestamp="2026-05-24T13:29:15" time="1.774" tests="3">
-    <testcase classname=" cannot create review without purchase for any test in the package" name=" cannot create review without purchase for any test in the package" time="0.065">
-    </testcase>
-    <testcase classname=" purchase var ama submitted attempt yoksa da review oluşturulabilir (kural gevşedi)" name=" purchase var ama submitted attempt yoksa da review oluşturulabilir (kural gevşedi)" time="0.004">
-    </testcase>
-    <testcase classname=" upsert package review works when candidate has purchase + submitted attempt" name=" upsert package review works when candidate has purchase + submitted attempt" time="0.008">
+  <testsuite name="ListMarketplaceTestsUseCase" errors="0" failures="0" skipped="0" timestamp="2026-05-24T14:42:03" time="1.811" tests="1">
+    <testcase classname="ListMarketplaceTestsUseCase filters by examTypeId and pagination" name="ListMarketplaceTestsUseCase filters by examTypeId and pagination" time="0.008">
     </testcase>
   </testsuite>
-  <testsuite name="UpdateQuestionUseCase" errors="0" failures="0" skipped="0" timestamp="2026-05-24T13:29:16" time="0.942" tests="6">
-    <testcase classname="UpdateQuestionUseCase soru içeriğini günceller" name="UpdateQuestionUseCase soru içeriğini günceller" time="0.008">
+  <testsuite name="tenantContext (AsyncLocalStorage)" errors="0" failures="0" skipped="0" timestamp="2026-05-24T14:42:04" time="1.217" tests="6">
+    <testcase classname="tenantContext (AsyncLocalStorage) store dışında getTenantContext undefined döner" name="tenantContext (AsyncLocalStorage) store dışında getTenantContext undefined döner" time="0.006">
     </testcase>
-    <testcase classname="UpdateQuestionUseCase soru bulunamazsa QUESTION_NOT_FOUND fırlatır" name="UpdateQuestionUseCase soru bulunamazsa QUESTION_NOT_FOUND fırlatır" time="0.012">
+    <testcase classname="tenantContext (AsyncLocalStorage) runWithTenant context&apos;i set eder" name="tenantContext (AsyncLocalStorage) runWithTenant context&apos;i set eder" time="0.005">
     </testcase>
-    <testcase classname="UpdateQuestionUseCase test bulunamazsa TEST_NOT_FOUND fırlatır" name="UpdateQuestionUseCase test bulunamazsa TEST_NOT_FOUND fırlatır" time="0.002">
+    <testcase classname="tenantContext (AsyncLocalStorage) iç içe runWithTenant en içteki değeri okur" name="tenantContext (AsyncLocalStorage) iç içe runWithTenant en içteki değeri okur" time="0.003">
     </testcase>
-    <testcase classname="UpdateQuestionUseCase başkasının sorusunu güncellemeye çalışırsa FORBIDDEN_NOT_OWNER" name="UpdateQuestionUseCase başkasının sorusunu güncellemeye çalışırsa FORBIDDEN_NOT_OWNER" time="0.005">
+    <testcase classname="tenantContext (AsyncLocalStorage) runWithoutTenantFilter bypass:true set eder" name="tenantContext (AsyncLocalStorage) runWithoutTenantFilter bypass:true set eder" time="0.004">
     </testcase>
-    <testcase classname="UpdateQuestionUseCase actorId verilmezse sahiplik kontrolü atlanır" name="UpdateQuestionUseCase actorId verilmezse sahiplik kontrolü atlanır" time="0.002">
+    <testcase classname="tenantContext (AsyncLocalStorage) async sınırlarda context korunur" name="tenantContext (AsyncLocalStorage) async sınırlarda context korunur" time="0.07">
     </testcase>
-    <testcase classname="UpdateQuestionUseCase aktör kullanıcı bulunamazsa USER_NOT_FOUND" name="UpdateQuestionUseCase aktör kullanıcı bulunamazsa USER_NOT_FOUND" time="0.004">
-    </testcase>
-  </testsuite>
-  <testsuite name="undefined" errors="0" failures="0" skipped="0" timestamp="2026-05-24T13:29:17" time="0.356" tests="1">
-    <testcase classname=" weekly digest enqueues emails" name=" weekly digest enqueues emails" time="0.008">
+    <testcase classname="tenantContext (AsyncLocalStorage) paralel async&apos;lerde context&apos;ler izole" name="tenantContext (AsyncLocalStorage) paralel async&apos;lerde context&apos;ler izole" time="0.069">
     </testcase>
   </testsuite>
-  <testsuite name="ApproveRefundUseCase" errors="0" failures="0" skipped="0" timestamp="2026-05-24T13:29:17" time="0.398" tests="5">
-    <testcase classname="ApproveRefundUseCase calls refundRepo.approve and processor.process on success" name="ApproveRefundUseCase calls refundRepo.approve and processor.process on success" time="0.014">
+  <testsuite name="undefined" errors="0" failures="0" skipped="0" timestamp="2026-05-24T14:42:05" time="1.082" tests="2">
+    <testcase classname=" minRating filters correctly" name=" minRating filters correctly" time="0.005">
     </testcase>
-    <testcase classname="ApproveRefundUseCase throws UNAUTHORIZED when actorId is missing" name="ApproveRefundUseCase throws UNAUTHORIZED when actorId is missing" time="0.048">
-    </testcase>
-    <testcase classname="ApproveRefundUseCase throws REFUND_NOT_FOUND when refund does not exist" name="ApproveRefundUseCase throws REFUND_NOT_FOUND when refund does not exist" time="0.002">
-    </testcase>
-    <testcase classname="ApproveRefundUseCase throws REFUND_NOT_ACTIONABLE for PENDING status" name="ApproveRefundUseCase throws REFUND_NOT_ACTIONABLE for PENDING status" time="0.001">
-    </testcase>
-    <testcase classname="ApproveRefundUseCase propagates error when approve() throws (simulates tx rollback — purchase.status unchanged)" name="ApproveRefundUseCase propagates error when approve() throws (simulates tx rollback — purchase.status unchanged)" time="0.011">
+    <testcase classname=" GetRecommended returns items with required fields" name=" GetRecommended returns items with required fields" time="0.009">
     </testcase>
   </testsuite>
-  <testsuite name="ToggleDiscountCodeUseCase" errors="0" failures="0" skipped="0" timestamp="2026-05-24T13:29:17" time="0.419" tests="6">
-    <testcase classname="ToggleDiscountCodeUseCase aktif kodu deaktive eder (true → false)" name="ToggleDiscountCodeUseCase aktif kodu deaktive eder (true → false)" time="0.006">
+  <testsuite name="BrevoApiProvider" errors="0" failures="0" skipped="0" timestamp="2026-05-24T14:42:04" time="1.43" tests="7">
+    <testcase classname="BrevoApiProvider 200 + messageId → success" name="BrevoApiProvider 200 + messageId → success" time="0.007">
+    </testcase>
+    <testcase classname="BrevoApiProvider 429 → rate_limited retryable" name="BrevoApiProvider 429 → rate_limited retryable" time="0.004">
+    </testcase>
+    <testcase classname="BrevoApiProvider 401 → auth_failure non-retryable" name="BrevoApiProvider 401 → auth_failure non-retryable" time="0.004">
+    </testcase>
+    <testcase classname="BrevoApiProvider 502 → 5xx retryable" name="BrevoApiProvider 502 → 5xx retryable" time="0.006">
+    </testcase>
+    <testcase classname="BrevoApiProvider 400 invalid recipient → non-retryable" name="BrevoApiProvider 400 invalid recipient → non-retryable" time="0.025">
+    </testcase>
+    <testcase classname="BrevoApiProvider Network failure → connection_failed retryable" name="BrevoApiProvider Network failure → connection_failed retryable" time="0.004">
+    </testcase>
+    <testcase classname="BrevoApiProvider apiKey eksikse constructor fırlatır" name="BrevoApiProvider apiKey eksikse constructor fırlatır" time="0.1">
+    </testcase>
+  </testsuite>
+  <testsuite name="turkishNormalize" errors="0" failures="0" skipped="0" timestamp="2026-05-24T14:42:06" time="1.645" tests="27">
+    <testcase classname="turkishNormalize KÖTÜ girdisi kotu çıktısı üretir" name="turkishNormalize KÖTÜ girdisi kotu çıktısı üretir" time="0.004">
+    </testcase>
+    <testcase classname="turkishNormalize şehir girdisi sehir çıktısı üretir (ş→s)" name="turkishNormalize şehir girdisi sehir çıktısı üretir (ş→s)" time="0.007">
+    </testcase>
+    <testcase classname="turkishNormalize güneş girdisi gunes çıktısı üretir (ğ→g, ş→s)" name="turkishNormalize güneş girdisi gunes çıktısı üretir (ğ→g, ş→s)" time="0.013">
+    </testcase>
+    <testcase classname="turkishNormalize çiğdem girdisi cigdem çıktısı üretir (ç→c, ğ→g)" name="turkishNormalize çiğdem girdisi cigdem çıktısı üretir (ç→c, ğ→g)" time="0.002">
+    </testcase>
+    <testcase classname="turkishNormalize ılık girdisi ilik çıktısı üretir (ı→i)" name="turkishNormalize ılık girdisi ilik çıktısı üretir (ı→i)" time="0.016">
+    </testcase>
+    <testcase classname="turkishNormalize üzüm girdisi uzum çıktısı üretir (ü→u)" name="turkishNormalize üzüm girdisi uzum çıktısı üretir (ü→u)" time="0.002">
+    </testcase>
+    <testcase classname="turkishNormalize k0tü girdisi kotu döner (0→o, ü→u)" name="turkishNormalize k0tü girdisi kotu döner (0→o, ü→u)" time="0.001">
+    </testcase>
+    <testcase classname="turkishNormalize s3x girdisi sex döner (3→e)" name="turkishNormalize s3x girdisi sex döner (3→e)" time="0.082">
+    </testcase>
+    <testcase classname="turkishNormalize $ex girdisi sex döner ($→s)" name="turkishNormalize $ex girdisi sex döner ($→s)" time="0.014">
+    </testcase>
+    <testcase classname="turkishNormalize @hm@k girdisi ahmak döner (@→a)" name="turkishNormalize @hm@k girdisi ahmak döner (@→a)" time="0.001">
+    </testcase>
+    <testcase classname="turkishNormalize 5pam girdisi spam döner (5→s)" name="turkishNormalize 5pam girdisi spam döner (5→s)" time="0.001">
+    </testcase>
+    <testcase classname="turkishNormalize 7eror girdisi teror döner (7→t)" name="turkishNormalize 7eror girdisi teror döner (7→t)" time="0.002">
+    </testcase>
+    <testcase classname="turkishNormalize 1d1ot girdisi idiot döner (1→i)" name="turkishNormalize 1d1ot girdisi idiot döner (1→i)" time="0.001">
+    </testcase>
+    <testcase classname="turkishNormalize k.ö.t.ü girdisi kotu döner (nokta ayırıcı + Türkçe karakter)" name="turkishNormalize k.ö.t.ü girdisi kotu döner (nokta ayırıcı + Türkçe karakter)" time="0.001">
+    </testcase>
+    <testcase classname="turkishNormalize KO_TU girdisi kotu döner (alt çizgi ayırıcı)" name="turkishNormalize KO_TU girdisi kotu döner (alt çizgi ayırıcı)" time="0.011">
+    </testcase>
+    <testcase classname="turkishNormalize k-o-t-u girdisi kotu döner (tire ayırıcı)" name="turkishNormalize k-o-t-u girdisi kotu döner (tire ayırıcı)" time="0.002">
+    </testcase>
+    <testcase classname="turkishNormalize k*o*t*u girdisi kotu döner (yıldız ayırıcı)" name="turkishNormalize k*o*t*u girdisi kotu döner (yıldız ayırıcı)" time="0.002">
+    </testcase>
+    <testcase classname="turkishNormalize boşluklu girdi boşluksuz döner" name="turkishNormalize boşluklu girdi boşluksuz döner" time="0.001">
+    </testcase>
+    <testcase classname="turkishNormalize g@yri girdisi gayri döner (@→a)" name="turkishNormalize g@yri girdisi gayri döner (@→a)" time="0.017">
+    </testcase>
+    <testcase classname="turkishNormalize g@yr1 girdisi gayri döner (@→a, 1→i)" name="turkishNormalize g@yr1 girdisi gayri döner (@→a, 1→i)" time="0.002">
+    </testcase>
+    <testcase classname="turkishNormalize büyük harf ve Türkçe karakter kombinasyonu doğru normalize edilir" name="turkishNormalize büyük harf ve Türkçe karakter kombinasyonu doğru normalize edilir" time="0.002">
+    </testcase>
+    <testcase classname="turkishNormalize boş string girildiğinde boş string döner" name="turkishNormalize boş string girildiğinde boş string döner" time="0.001">
+    </testcase>
+    <testcase classname="turkishNormalize sadece ayırıcılardan oluşan girdi boş string döner" name="turkishNormalize sadece ayırıcılardan oluşan girdi boş string döner" time="0.009">
+    </testcase>
+    <testcase classname="tokenizeAndNormalize birden fazla token her biri ayrı normalize edilir" name="tokenizeAndNormalize birden fazla token her biri ayrı normalize edilir" time="0.03">
+    </testcase>
+    <testcase classname="tokenizeAndNormalize boş string boş dizi döner" name="tokenizeAndNormalize boş string boş dizi döner" time="0.003">
+    </testcase>
+    <testcase classname="tokenizeAndNormalize tek kelime tek elemanlı dizi döner" name="tokenizeAndNormalize tek kelime tek elemanlı dizi döner" time="0.002">
+    </testcase>
+    <testcase classname="tokenizeAndNormalize fazla boslukllu girdi dogru tokenlara ayrilir" name="tokenizeAndNormalize fazla boslukllu girdi dogru tokenlara ayrilir" time="0.007">
+    </testcase>
+  </testsuite>
+  <testsuite name="CreateQuestionUseCase" errors="0" failures="0" skipped="0" timestamp="2026-05-24T14:42:06" time="1.778" tests="7">
+    <testcase classname="CreateQuestionUseCase soru ve seçeneklere sunucu UUID atar" name="CreateQuestionUseCase soru ve seçeneklere sunucu UUID atar" time="0.222">
+    </testcase>
+    <testcase classname="CreateQuestionUseCase order verilmezse 0 atanır" name="CreateQuestionUseCase order verilmezse 0 atanır" time="0.004">
+    </testcase>
+    <testcase classname="CreateQuestionUseCase verilen order korunur" name="CreateQuestionUseCase verilen order korunur" time="0.003">
+    </testcase>
+    <testcase classname="CreateQuestionUseCase soru limiti dolmuşsa QUESTION_LIMIT_EXCEEDED fırlatır" name="CreateQuestionUseCase soru limiti dolmuşsa QUESTION_LIMIT_EXCEEDED fırlatır" time="0.01">
+    </testcase>
+    <testcase classname="CreateQuestionUseCase adminSettings null ise varsayılan limit 100 kullanılır" name="CreateQuestionUseCase adminSettings null ise varsayılan limit 100 kullanılır" time="0.013">
+    </testcase>
+    <testcase classname="CreateQuestionUseCase mediaUrl null olarak kaydedilir (varsayılan)" name="CreateQuestionUseCase mediaUrl null olarak kaydedilir (varsayılan)" time="0.002">
+    </testcase>
+    <testcase classname="CreateQuestionUseCase seçenek sayısı doğru aktarılır" name="CreateQuestionUseCase seçenek sayısı doğru aktarılır" time="0.001">
+    </testcase>
+  </testsuite>
+  <testsuite name="undefined" errors="0" failures="0" skipped="0" timestamp="2026-05-24T14:42:06" time="1.995" tests="2">
+    <testcase classname=" educator not found throws" name=" educator not found throws" time="0.094">
+    </testcase>
+    <testcase classname=" returns published tests and pagination meta with enrichment preferring TestStats" name=" returns published tests and pagination meta with enrichment preferring TestStats" time="0.012">
+    </testcase>
+  </testsuite>
+  <testsuite name="verifyStripeSignature" errors="0" failures="0" skipped="0" timestamp="2026-05-24T14:42:08" time="1.265" tests="12">
+    <testcase classname="verifyStripeSignature geçerli imzayı kabul eder" name="verifyStripeSignature geçerli imzayı kabul eder" time="0.008">
+    </testcase>
+    <testcase classname="verifyStripeSignature eksik header → missing-signature" name="verifyStripeSignature eksik header → missing-signature" time="0.002">
+    </testcase>
+    <testcase classname="verifyStripeSignature eksik secret → missing-secret" name="verifyStripeSignature eksik secret → missing-secret" time="0.002">
+    </testcase>
+    <testcase classname="verifyStripeSignature bozuk header (t/v1 yok) → malformed" name="verifyStripeSignature bozuk header (t/v1 yok) → malformed" time="0.002">
+    </testcase>
+    <testcase classname="verifyStripeSignature 5 dk üzeri timestamp → expired" name="verifyStripeSignature 5 dk üzeri timestamp → expired" time="0.016">
+    </testcase>
+    <testcase classname="verifyStripeSignature imza tek karakter farkı → signature-mismatch" name="verifyStripeSignature imza tek karakter farkı → signature-mismatch" time="0.003">
+    </testcase>
+    <testcase classname="verifyStripeSignature payload değişirse → signature-mismatch" name="verifyStripeSignature payload değişirse → signature-mismatch" time="0.004">
+    </testcase>
+    <testcase classname="verifyStripeSignature yanlış secret → signature-mismatch" name="verifyStripeSignature yanlış secret → signature-mismatch" time="0.001">
+    </testcase>
+    <testcase classname="verifyIyzicoSignature geçerli imzayı kabul eder" name="verifyIyzicoSignature geçerli imzayı kabul eder" time="0.002">
+    </testcase>
+    <testcase classname="verifyIyzicoSignature eksik header → missing-signature" name="verifyIyzicoSignature eksik header → missing-signature" time="0.002">
+    </testcase>
+    <testcase classname="verifyIyzicoSignature eksik apiKey veya secret → missing-secret" name="verifyIyzicoSignature eksik apiKey veya secret → missing-secret" time="0.001">
+    </testcase>
+    <testcase classname="verifyIyzicoSignature payload değişirse → signature-mismatch" name="verifyIyzicoSignature payload değişirse → signature-mismatch" time="0.001">
+    </testcase>
+  </testsuite>
+  <testsuite name="undefined" errors="0" failures="0" skipped="0" timestamp="2026-05-24T14:42:08" time="0.967" tests="1">
+    <testcase classname=" publish invalidates follower caches" name=" publish invalidates follower caches" time="0.006">
+    </testcase>
+  </testsuite>
+  <testsuite name="UpdateTestUseCase" errors="0" failures="0" skipped="0" timestamp="2026-05-24T14:42:07" time="1.69" tests="12">
+    <testcase classname="UpdateTestUseCase test başlığını günceller" name="UpdateTestUseCase test başlığını günceller" time="0.01">
+    </testcase>
+    <testcase classname="UpdateTestUseCase test bulunamazsa TEST_NOT_FOUND fırlatır" name="UpdateTestUseCase test bulunamazsa TEST_NOT_FOUND fırlatır" time="0.003">
+    </testcase>
+    <testcase classname="UpdateTestUseCase başkasının testini güncellemeye çalışırsa FORBIDDEN_NOT_OWNER fırlatır" name="UpdateTestUseCase başkasının testini güncellemeye çalışırsa FORBIDDEN_NOT_OWNER fırlatır" time="0.003">
+    </testcase>
+    <testcase classname="UpdateTestUseCase aktör kullanıcı bulunamazsa USER_NOT_FOUND fırlatır" name="UpdateTestUseCase aktör kullanıcı bulunamazsa USER_NOT_FOUND fırlatır" time="0.014">
+    </testcase>
+    <testcase classname="UpdateTestUseCase updateTestMetadata null döndürürse UPDATE_FAILED fırlatır" name="UpdateTestUseCase updateTestMetadata null döndürürse UPDATE_FAILED fırlatır" time="0.002">
+    </testcase>
+    <testcase classname="UpdateTestUseCase actorId undefined ise kullanıcı sorgusu yapılmaz" name="UpdateTestUseCase actorId undefined ise kullanıcı sorgusu yapılmaz" time="0.065">
+    </testcase>
+    <testcase classname="UpdateTestUseCase actorId undefined ise başka educatorId olsa bile FORBIDDEN fırlatılmaz" name="UpdateTestUseCase actorId undefined ise başka educatorId olsa bile FORBIDDEN fırlatılmaz" time="0.002">
+    </testcase>
+    <testcase classname="UpdateTestUseCase fiyat değişince audit log tam içerikle yazılır" name="UpdateTestUseCase fiyat değişince audit log tam içerikle yazılır" time="0.015">
+    </testcase>
+    <testcase classname="UpdateTestUseCase actorId yokken fiyat değişirse audit log actorId null olur" name="UpdateTestUseCase actorId yokken fiyat değişirse audit log actorId null olur" time="0.002">
+    </testcase>
+    <testcase classname="UpdateTestUseCase fiyat değişmezse audit log yazılmaz" name="UpdateTestUseCase fiyat değişmezse audit log yazılmaz" time="0.006">
+    </testcase>
+    <testcase classname="UpdateTestUseCase priceCents number değil (undefined) ise audit log yazılmaz" name="UpdateTestUseCase priceCents number değil (undefined) ise audit log yazılmaz" time="0.003">
+    </testcase>
+    <testcase classname="UpdateTestUseCase audit log hatası ana akışı kesmez" name="UpdateTestUseCase audit log hatası ana akışı kesmez" time="0.004">
+    </testcase>
+  </testsuite>
+  <testsuite name="RegisterUseCase" errors="0" failures="0" skipped="0" timestamp="2026-05-24T14:42:09" time="1.247" tests="6">
+    <testcase classname="RegisterUseCase yeni CANDIDATE kullanıcı oluşturur, public bilgi döner" name="RegisterUseCase yeni CANDIDATE kullanıcı oluşturur, public bilgi döner" time="0.009">
+    </testcase>
+    <testcase classname="RegisterUseCase passwordHash plain metin şifresini içermez" name="RegisterUseCase passwordHash plain metin şifresini içermez" time="0.002">
+    </testcase>
+    <testcase classname="RegisterUseCase e-posta küçük harfe çevrilir" name="RegisterUseCase e-posta küçük harfe çevrilir" time="0.001">
+    </testcase>
+    <testcase classname="RegisterUseCase şifre hash&apos;lenerek kaydedilir" name="RegisterUseCase şifre hash&apos;lenerek kaydedilir" time="0.001">
+    </testcase>
+    <testcase classname="RegisterUseCase sunucu tarafında UUID üretilir" name="RegisterUseCase sunucu tarafında UUID üretilir" time="0.007">
+    </testcase>
+    <testcase classname="RegisterUseCase createdAt alanı döner" name="RegisterUseCase createdAt alanı döner" time="0.002">
+    </testcase>
+  </testsuite>
+  <testsuite name="PublishTestPackageUseCase" errors="0" failures="0" skipped="0" timestamp="2026-05-24T14:42:09" time="1.555" tests="7">
+    <testcase classname="PublishTestPackageUseCase paketi yayınlar" name="PublishTestPackageUseCase paketi yayınlar" time="0.003">
+    </testcase>
+    <testcase classname="PublishTestPackageUseCase testPublishingEnabled=false ise PUBLISHING_DISABLED fırlatır" name="PublishTestPackageUseCase testPublishingEnabled=false ise PUBLISHING_DISABLED fırlatır" time="0.005">
+    </testcase>
+    <testcase classname="PublishTestPackageUseCase paket bulunamazsa PACKAGE_NOT_FOUND fırlatır" name="PublishTestPackageUseCase paket bulunamazsa PACKAGE_NOT_FOUND fırlatır" time="0.003">
+    </testcase>
+    <testcase classname="PublishTestPackageUseCase başkasının paketini yayınlamaya çalışırsa FORBIDDEN fırlatır" name="PublishTestPackageUseCase başkasının paketini yayınlamaya çalışırsa FORBIDDEN fırlatır" time="0.002">
+    </testcase>
+    <testcase classname="PublishTestPackageUseCase zaten yayınlanmışsa ALREADY_PUBLISHED fırlatır" name="PublishTestPackageUseCase zaten yayınlanmışsa ALREADY_PUBLISHED fırlatır" time="0.001">
+    </testcase>
+    <testcase classname="PublishTestPackageUseCase test yoksa PACKAGE_EMPTY fırlatır" name="PublishTestPackageUseCase test yoksa PACKAGE_EMPTY fırlatır" time="0.003">
+    </testcase>
+    <testcase classname="PublishTestPackageUseCase fiyat 0 ise INVALID_PRICE fırlatır" name="PublishTestPackageUseCase fiyat 0 ise INVALID_PRICE fırlatır" time="0.063">
+    </testcase>
+  </testsuite>
+  <testsuite name="CreateObjectionUseCase" errors="0" failures="0" skipped="0" timestamp="2026-05-24T14:42:09" time="1.811" tests="17">
+    <testcase classname="CreateObjectionUseCase başarılı itiraz oluşturma geçerli girdi ile itiraz oluşturulduğunda reporterId actorId ye eşittir" name="CreateObjectionUseCase başarılı itiraz oluşturma geçerli girdi ile itiraz oluşturulduğunda reporterId actorId ye eşittir" time="0.007">
+    </testcase>
+    <testcase classname="CreateObjectionUseCase başarılı itiraz oluşturma geçerli girdi ile itiraz oluşturulduğunda reason trim edilmiş haliyle kaydedilir" name="CreateObjectionUseCase başarılı itiraz oluşturma geçerli girdi ile itiraz oluşturulduğunda reason trim edilmiş haliyle kaydedilir" time="0.004">
+    </testcase>
+    <testcase classname="CreateObjectionUseCase başarılı itiraz oluşturma itiraz başarıyla oluşturulduğunda auditRepo.create çağrılır" name="CreateObjectionUseCase başarılı itiraz oluşturma itiraz başarıyla oluşturulduğunda auditRepo.create çağrılır" time="0.003">
+    </testcase>
+    <testcase classname="CreateObjectionUseCase kimlik doğrulama hataları actorId undefined olduğunda UNAUTHORIZED hatası fırlatır" name="CreateObjectionUseCase kimlik doğrulama hataları actorId undefined olduğunda UNAUTHORIZED hatası fırlatır" time="0.01">
+    </testcase>
+    <testcase classname="CreateObjectionUseCase kimlik doğrulama hataları actorId boş string olduğunda UNAUTHORIZED hatası fırlatır" name="CreateObjectionUseCase kimlik doğrulama hataları actorId boş string olduğunda UNAUTHORIZED hatası fırlatır" time="0.037">
+    </testcase>
+    <testcase classname="CreateObjectionUseCase UUID format doğrulaması attemptId geçersiz UUID formatında olduğunda INVALID_UUID hatası fırlatır" name="CreateObjectionUseCase UUID format doğrulaması attemptId geçersiz UUID formatında olduğunda INVALID_UUID hatası fırlatır" time="0.014">
+    </testcase>
+    <testcase classname="CreateObjectionUseCase UUID format doğrulaması questionId geçersiz UUID formatında olduğunda INVALID_UUID hatası fırlatır" name="CreateObjectionUseCase UUID format doğrulaması questionId geçersiz UUID formatında olduğunda INVALID_UUID hatası fırlatır" time="0.002">
+    </testcase>
+    <testcase classname="CreateObjectionUseCase gerekçe validasyonu reason 4 karakter olduğunda REASON_TOO_SHORT hatası fırlatır" name="CreateObjectionUseCase gerekçe validasyonu reason 4 karakter olduğunda REASON_TOO_SHORT hatası fırlatır" time="0.011">
+    </testcase>
+    <testcase classname="CreateObjectionUseCase gerekçe validasyonu reason boş string olduğunda REASON_TOO_SHORT hatası fırlatır" name="CreateObjectionUseCase gerekçe validasyonu reason boş string olduğunda REASON_TOO_SHORT hatası fırlatır" time="0.004">
+    </testcase>
+    <testcase classname="CreateObjectionUseCase gerekçe validasyonu reason sadece boşluklardan oluştuğunda REASON_TOO_SHORT hatası fırlatır" name="CreateObjectionUseCase gerekçe validasyonu reason sadece boşluklardan oluştuğunda REASON_TOO_SHORT hatası fırlatır" time="0.004">
+    </testcase>
+    <testcase classname="CreateObjectionUseCase deneme bulunamadı attemptId geçerli UUID ancak deneme bulunamıyorsa ATTEMPT_NOT_FOUND hatası fırlatır" name="CreateObjectionUseCase deneme bulunamadı attemptId geçerli UUID ancak deneme bulunamıyorsa ATTEMPT_NOT_FOUND hatası fırlatır" time="0.003">
+    </testcase>
+    <testcase classname="CreateObjectionUseCase sahiplik kontrolü deneme farklı bir adaya aitse FORBIDDEN_NOT_OWNER hatası fırlatır" name="CreateObjectionUseCase sahiplik kontrolü deneme farklı bir adaya aitse FORBIDDEN_NOT_OWNER hatası fırlatır" time="0.002">
+    </testcase>
+    <testcase classname="CreateObjectionUseCase soru doğrulaması questionId geçerli UUID ancak soru bulunamıyorsa QUESTION_NOT_FOUND hatası fırlatır" name="CreateObjectionUseCase soru doğrulaması questionId geçerli UUID ancak soru bulunamıyorsa QUESTION_NOT_FOUND hatası fırlatır" time="0.002">
+    </testcase>
+    <testcase classname="CreateObjectionUseCase soru doğrulaması soru farklı bir teste ait olduğunda QUESTION_NOT_IN_TEST hatası fırlatır" name="CreateObjectionUseCase soru doğrulaması soru farklı bir teste ait olduğunda QUESTION_NOT_IN_TEST hatası fırlatır" time="0.002">
+    </testcase>
+    <testcase classname="CreateObjectionUseCase tekrarlı itiraz kontrolü aynı deneme ve soru için itiraz zaten varsa OBJECTION_ALREADY_EXISTS hatası fırlatır" name="CreateObjectionUseCase tekrarlı itiraz kontrolü aynı deneme ve soru için itiraz zaten varsa OBJECTION_ALREADY_EXISTS hatası fırlatır" time="0.032">
+    </testcase>
+    <testcase classname="CreateObjectionUseCase itiraz limiti test başına itiraz limiti aşıldığında OBJECTION_LIMIT_EXCEEDED hatası fırlatır" name="CreateObjectionUseCase itiraz limiti test başına itiraz limiti aşıldığında OBJECTION_LIMIT_EXCEEDED hatası fırlatır" time="0.011">
+    </testcase>
+    <testcase classname="CreateObjectionUseCase itiraz limiti limit altında itiraz sayısında hata fırlatılmaz" name="CreateObjectionUseCase itiraz limiti limit altında itiraz sayısında hata fırlatılmaz" time="0.004">
+    </testcase>
+  </testsuite>
+  <testsuite name="preferenceMap" errors="0" failures="0" skipped="0" timestamp="2026-05-24T14:42:10" time="0.878" tests="6">
+    <testcase classname="preferenceMap default keys match" name="preferenceMap default keys match" time="0.012">
+    </testcase>
+    <testcase classname="preferenceMap CRITICAL şablonlar preference filtresi atlar (null map)" name="preferenceMap CRITICAL şablonlar preference filtresi atlar (null map)" time="0.003">
+    </testcase>
+    <testcase classname="preferenceMap NOTIFY/BULK şablonlar uygun preference key e bağlanır" name="preferenceMap NOTIFY/BULK şablonlar uygun preference key e bağlanır" time="0.021">
+    </testcase>
+    <testcase classname="preferenceMap readEmailPreferences null/undefined → default" name="preferenceMap readEmailPreferences null/undefined → default" time="0.002">
+    </testcase>
+    <testcase classname="preferenceMap readEmailPreferences partial override" name="preferenceMap readEmailPreferences partial override" time="0.001">
+    </testcase>
+    <testcase classname="preferenceMap readEmailPreferences yanlış tip alanları yoksayar" name="preferenceMap readEmailPreferences yanlış tip alanları yoksayar" time="0.004">
+    </testcase>
+  </testsuite>
+  <testsuite name="ForgotPasswordUseCase" errors="0" failures="0" skipped="0" timestamp="2026-05-24T14:42:11" time="1.132" tests="8">
+    <testcase classname="ForgotPasswordUseCase kullanıcı varsa token set edilir ve mail gönderilir" name="ForgotPasswordUseCase kullanıcı varsa token set edilir ve mail gönderilir" time="0.007">
+    </testcase>
+    <testcase classname="ForgotPasswordUseCase kullanıcı yoksa sessizce döner (e-posta ifşa edilmez)" name="ForgotPasswordUseCase kullanıcı yoksa sessizce döner (e-posta ifşa edilmez)" time="0.003">
+    </testcase>
+    <testcase classname="ForgotPasswordUseCase e-posta normalize edilerek aranır" name="ForgotPasswordUseCase e-posta normalize edilerek aranır" time="0.002">
+    </testcase>
+    <testcase classname="ResetPasswordUseCase geçerli token ve şifre ile şifreyi günceller" name="ResetPasswordUseCase geçerli token ve şifre ile şifreyi günceller" time="0.053">
+    </testcase>
+    <testcase classname="ResetPasswordUseCase token bulunamazsa INVALID_TOKEN fırlatır" name="ResetPasswordUseCase token bulunamazsa INVALID_TOKEN fırlatır" time="0.002">
+    </testcase>
+    <testcase classname="ResetPasswordUseCase token süresi dolmuşsa TOKEN_EXPIRED fırlatır" name="ResetPasswordUseCase token süresi dolmuşsa TOKEN_EXPIRED fırlatır" time="0.001">
+    </testcase>
+    <testcase classname="ResetPasswordUseCase şifre 8 karakterden kısaysa INVALID_INPUT fırlatır" name="ResetPasswordUseCase şifre 8 karakterden kısaysa INVALID_INPUT fırlatır" time="0.006">
+    </testcase>
+    <testcase classname="ResetPasswordUseCase token veya şifre boşsa INVALID_INPUT fırlatır" name="ResetPasswordUseCase token veya şifre boşsa INVALID_INPUT fırlatır" time="0.003">
+    </testcase>
+  </testsuite>
+  <testsuite name="unsubscribeToken" errors="0" failures="0" skipped="0" timestamp="2026-05-24T14:42:11" time="1.051" tests="3">
+    <testcase classname="unsubscribeToken üretilen token kendi imzasıyla doğrulanır" name="unsubscribeToken üretilen token kendi imzasıyla doğrulanır" time="0.188">
+    </testcase>
+    <testcase classname="unsubscribeToken imza bozulursa doğrulama fail" name="unsubscribeToken imza bozulursa doğrulama fail" time="0.012">
+    </testcase>
+    <testcase classname="unsubscribeToken formatsız input reddedilir" name="unsubscribeToken formatsız input reddedilir" time="0.004">
+    </testcase>
+  </testsuite>
+  <testsuite name="ToggleDiscountCodeUseCase" errors="0" failures="0" skipped="0" timestamp="2026-05-24T14:42:11" time="1.134" tests="6">
+    <testcase classname="ToggleDiscountCodeUseCase aktif kodu deaktive eder (true → false)" name="ToggleDiscountCodeUseCase aktif kodu deaktive eder (true → false)" time="0.091">
     </testcase>
     <testcase classname="ToggleDiscountCodeUseCase deaktif kodu aktive eder (false → true)" name="ToggleDiscountCodeUseCase deaktif kodu aktive eder (false → true)" time="0.001">
     </testcase>
-    <testcase classname="ToggleDiscountCodeUseCase kullanıcı bulunamazsa USER_NOT_FOUND fırlatır" name="ToggleDiscountCodeUseCase kullanıcı bulunamazsa USER_NOT_FOUND fırlatır" time="0.003">
+    <testcase classname="ToggleDiscountCodeUseCase kullanıcı bulunamazsa USER_NOT_FOUND fırlatır" name="ToggleDiscountCodeUseCase kullanıcı bulunamazsa USER_NOT_FOUND fırlatır" time="0.03">
     </testcase>
-    <testcase classname="ToggleDiscountCodeUseCase EDUCATOR/ADMIN olmayan kullanıcı → USER_NOT_AUTHORIZED" name="ToggleDiscountCodeUseCase EDUCATOR/ADMIN olmayan kullanıcı → USER_NOT_AUTHORIZED" time="0.004">
+    <testcase classname="ToggleDiscountCodeUseCase EDUCATOR/ADMIN olmayan kullanıcı → USER_NOT_AUTHORIZED" name="ToggleDiscountCodeUseCase EDUCATOR/ADMIN olmayan kullanıcı → USER_NOT_AUTHORIZED" time="0.001">
     </testcase>
-    <testcase classname="ToggleDiscountCodeUseCase kod bulunamazsa NOT_FOUND fırlatır" name="ToggleDiscountCodeUseCase kod bulunamazsa NOT_FOUND fırlatır" time="0.008">
+    <testcase classname="ToggleDiscountCodeUseCase kod bulunamazsa NOT_FOUND fırlatır" name="ToggleDiscountCodeUseCase kod bulunamazsa NOT_FOUND fırlatır" time="0.009">
     </testcase>
-    <testcase classname="ToggleDiscountCodeUseCase başkasının koduna erişim → FORBIDDEN_NOT_OWNER" name="ToggleDiscountCodeUseCase başkasının koduna erişim → FORBIDDEN_NOT_OWNER" time="0.003">
+    <testcase classname="ToggleDiscountCodeUseCase başkasının koduna erişim → FORBIDDEN_NOT_OWNER" name="ToggleDiscountCodeUseCase başkasının koduna erişim → FORBIDDEN_NOT_OWNER" time="0.001">
     </testcase>
   </testsuite>
-  <testsuite name="CreateTestPackageUseCase" errors="0" failures="0" skipped="0" timestamp="2026-05-24T13:29:17" time="0.376" tests="7">
-    <testcase classname="CreateTestPackageUseCase paket oluşturur ve varsayılan difficulty medium olur" name="CreateTestPackageUseCase paket oluşturur ve varsayılan difficulty medium olur" time="0.01">
+  <testsuite name="undefined" errors="0" failures="0" skipped="0" timestamp="2026-05-24T14:42:12" time="1.301" tests="6">
+    <testcase classname=" no follows -&gt; fallback only" name=" no follows -&gt; fallback only" time="0.008">
     </testcase>
-    <testcase classname="CreateTestPackageUseCase packageCreationEnabled=false ise PACKAGE_CREATION_DISABLED fırlatır" name="CreateTestPackageUseCase packageCreationEnabled=false ise PACKAGE_CREATION_DISABLED fırlatır" time="0.003">
+    <testcase classname=" educator follow -&gt; followed boosted" name=" educator follow -&gt; followed boosted" time="0.003">
+    </testcase>
+    <testcase classname=" examType follow -&gt; followed examType boosted" name=" examType follow -&gt; followed examType boosted" time="0.001">
+    </testcase>
+    <testcase classname=" dedupe when both follow types include same test" name=" dedupe when both follow types include same test" time="0.003">
+    </testcase>
+    <testcase classname=" fallback only when no follows" name=" fallback only when no follows" time="0.004">
+    </testcase>
+    <testcase classname=" limit respected and dedupe" name=" limit respected and dedupe" time="0.002">
+    </testcase>
+  </testsuite>
+  <testsuite name="ApproveRefundUseCase" errors="0" failures="0" skipped="0" timestamp="2026-05-24T14:42:12" time="1.736" tests="5">
+    <testcase classname="ApproveRefundUseCase calls refundRepo.approve and processor.process on success" name="ApproveRefundUseCase calls refundRepo.approve and processor.process on success" time="0.008">
+    </testcase>
+    <testcase classname="ApproveRefundUseCase throws UNAUTHORIZED when actorId is missing" name="ApproveRefundUseCase throws UNAUTHORIZED when actorId is missing" time="0.088">
+    </testcase>
+    <testcase classname="ApproveRefundUseCase throws REFUND_NOT_FOUND when refund does not exist" name="ApproveRefundUseCase throws REFUND_NOT_FOUND when refund does not exist" time="0.004">
+    </testcase>
+    <testcase classname="ApproveRefundUseCase throws REFUND_NOT_ACTIONABLE for PENDING status" name="ApproveRefundUseCase throws REFUND_NOT_ACTIONABLE for PENDING status" time="0.003">
+    </testcase>
+    <testcase classname="ApproveRefundUseCase propagates error when approve() throws (simulates tx rollback — purchase.status unchanged)" name="ApproveRefundUseCase propagates error when approve() throws (simulates tx rollback — purchase.status unchanged)" time="0.013">
+    </testcase>
+  </testsuite>
+  <testsuite name="undefined" errors="0" failures="0" skipped="0" timestamp="2026-05-24T14:42:13" time="1.328" tests="2">
+    <testcase classname=" follow idempotent" name=" follow idempotent" time="0.007">
+    </testcase>
+    <testcase classname=" unfollow idempotent" name=" unfollow idempotent" time="0.002">
+    </testcase>
+  </testsuite>
+  <testsuite name="CreateTestPackageUseCase" errors="0" failures="0" skipped="0" timestamp="2026-05-24T14:42:13" time="1.046" tests="7">
+    <testcase classname="CreateTestPackageUseCase paket oluşturur ve varsayılan difficulty medium olur" name="CreateTestPackageUseCase paket oluşturur ve varsayılan difficulty medium olur" time="0.009">
+    </testcase>
+    <testcase classname="CreateTestPackageUseCase packageCreationEnabled=false ise PACKAGE_CREATION_DISABLED fırlatır" name="CreateTestPackageUseCase packageCreationEnabled=false ise PACKAGE_CREATION_DISABLED fırlatır" time="0.002">
     </testcase>
     <testcase classname="CreateTestPackageUseCase adminSettings null ise kill-switch devreye girmez" name="CreateTestPackageUseCase adminSettings null ise kill-switch devreye girmez" time="0.002">
     </testcase>
@@ -607,405 +883,55 @@
     </testcase>
     <testcase classname="CreateTestPackageUseCase fiyat minPriceCents altındaysa PRICE_TOO_LOW fırlatır" name="CreateTestPackageUseCase fiyat minPriceCents altındaysa PRICE_TOO_LOW fırlatır" time="0.002">
     </testcase>
-    <testcase classname="CreateTestPackageUseCase geçerli difficulty değeri saklanır" name="CreateTestPackageUseCase geçerli difficulty değeri saklanır" time="0.001">
+    <testcase classname="CreateTestPackageUseCase geçerli difficulty değeri saklanır" name="CreateTestPackageUseCase geçerli difficulty değeri saklanır" time="0.031">
     </testcase>
-    <testcase classname="CreateTestPackageUseCase geçersiz difficulty → medium fallback" name="CreateTestPackageUseCase geçersiz difficulty → medium fallback" time="0.002">
-    </testcase>
-  </testsuite>
-  <testsuite name="UpdateTestUseCase" errors="0" failures="0" skipped="0" timestamp="2026-05-24T13:29:17" time="0.499" tests="12">
-    <testcase classname="UpdateTestUseCase test başlığını günceller" name="UpdateTestUseCase test başlığını günceller" time="0.024">
-    </testcase>
-    <testcase classname="UpdateTestUseCase test bulunamazsa TEST_NOT_FOUND fırlatır" name="UpdateTestUseCase test bulunamazsa TEST_NOT_FOUND fırlatır" time="0.003">
-    </testcase>
-    <testcase classname="UpdateTestUseCase başkasının testini güncellemeye çalışırsa FORBIDDEN_NOT_OWNER fırlatır" name="UpdateTestUseCase başkasının testini güncellemeye çalışırsa FORBIDDEN_NOT_OWNER fırlatır" time="0.002">
-    </testcase>
-    <testcase classname="UpdateTestUseCase aktör kullanıcı bulunamazsa USER_NOT_FOUND fırlatır" name="UpdateTestUseCase aktör kullanıcı bulunamazsa USER_NOT_FOUND fırlatır" time="0.002">
-    </testcase>
-    <testcase classname="UpdateTestUseCase updateTestMetadata null döndürürse UPDATE_FAILED fırlatır" name="UpdateTestUseCase updateTestMetadata null döndürürse UPDATE_FAILED fırlatır" time="0.011">
-    </testcase>
-    <testcase classname="UpdateTestUseCase actorId undefined ise kullanıcı sorgusu yapılmaz" name="UpdateTestUseCase actorId undefined ise kullanıcı sorgusu yapılmaz" time="0.005">
-    </testcase>
-    <testcase classname="UpdateTestUseCase actorId undefined ise başka educatorId olsa bile FORBIDDEN fırlatılmaz" name="UpdateTestUseCase actorId undefined ise başka educatorId olsa bile FORBIDDEN fırlatılmaz" time="0.004">
-    </testcase>
-    <testcase classname="UpdateTestUseCase fiyat değişince audit log tam içerikle yazılır" name="UpdateTestUseCase fiyat değişince audit log tam içerikle yazılır" time="0.009">
-    </testcase>
-    <testcase classname="UpdateTestUseCase actorId yokken fiyat değişirse audit log actorId null olur" name="UpdateTestUseCase actorId yokken fiyat değişirse audit log actorId null olur" time="0.019">
-    </testcase>
-    <testcase classname="UpdateTestUseCase fiyat değişmezse audit log yazılmaz" name="UpdateTestUseCase fiyat değişmezse audit log yazılmaz" time="0.002">
-    </testcase>
-    <testcase classname="UpdateTestUseCase priceCents number değil (undefined) ise audit log yazılmaz" name="UpdateTestUseCase priceCents number değil (undefined) ise audit log yazılmaz" time="0.014">
-    </testcase>
-    <testcase classname="UpdateTestUseCase audit log hatası ana akışı kesmez" name="UpdateTestUseCase audit log hatası ana akışı kesmez" time="0.012">
+    <testcase classname="CreateTestPackageUseCase geçersiz difficulty → medium fallback" name="CreateTestPackageUseCase geçersiz difficulty → medium fallback" time="0.003">
     </testcase>
   </testsuite>
-  <testsuite name="CreateQuestionUseCase" errors="0" failures="0" skipped="0" timestamp="2026-05-24T13:29:17" time="0.501" tests="7">
-    <testcase classname="CreateQuestionUseCase soru ve seçeneklere sunucu UUID atar" name="CreateQuestionUseCase soru ve seçeneklere sunucu UUID atar" time="0.048">
+  <testsuite name="sendWindow" errors="0" failures="0" skipped="0" timestamp="2026-05-24T14:42:14" time="1.087" tests="11">
+    <testcase classname="sendWindow disabled config → inWindow=true, delay=0" name="sendWindow disabled config → inWindow=true, delay=0" time="0.004">
     </testcase>
-    <testcase classname="CreateQuestionUseCase order verilmezse 0 atanır" name="CreateQuestionUseCase order verilmezse 0 atanır" time="0.002">
+    <testcase classname="sendWindow UTC pencere içi (10:00 UTC, 9-21) → inWindow" name="sendWindow UTC pencere içi (10:00 UTC, 9-21) → inWindow" time="0.004">
     </testcase>
-    <testcase classname="CreateQuestionUseCase verilen order korunur" name="CreateQuestionUseCase verilen order korunur" time="0.009">
+    <testcase classname="sendWindow UTC pencere dışı sabah erken (06:00 UTC, 9-21) → bugün 09:00 UTC" name="sendWindow UTC pencere dışı sabah erken (06:00 UTC, 9-21) → bugün 09:00 UTC" time="0.013">
     </testcase>
-    <testcase classname="CreateQuestionUseCase soru limiti dolmuşsa QUESTION_LIMIT_EXCEEDED fırlatır" name="CreateQuestionUseCase soru limiti dolmuşsa QUESTION_LIMIT_EXCEEDED fırlatır" time="0.001">
+    <testcase classname="sendWindow UTC pencere dışı gece (23:00 UTC, 9-21) → yarın 09:00 UTC" name="sendWindow UTC pencere dışı gece (23:00 UTC, 9-21) → yarın 09:00 UTC" time="0.004">
     </testcase>
-    <testcase classname="CreateQuestionUseCase adminSettings null ise varsayılan limit 100 kullanılır" name="CreateQuestionUseCase adminSettings null ise varsayılan limit 100 kullanılır" time="0.003">
+    <testcase classname="sendWindow Tam endHour saatinde → pencere dışı (end exclusive)" name="sendWindow Tam endHour saatinde → pencere dışı (end exclusive)" time="0.008">
     </testcase>
-    <testcase classname="CreateQuestionUseCase mediaUrl null olarak kaydedilir (varsayılan)" name="CreateQuestionUseCase mediaUrl null olarak kaydedilir (varsayılan)" time="0.002">
+    <testcase classname="sendWindow Tam startHour saatinde → pencere içi (start inclusive)" name="sendWindow Tam startHour saatinde → pencere içi (start inclusive)" time="0.004">
     </testcase>
-    <testcase classname="CreateQuestionUseCase seçenek sayısı doğru aktarılır" name="CreateQuestionUseCase seçenek sayısı doğru aktarılır" time="0.001">
+    <testcase classname="sendWindow Europe/Istanbul pencere — yaz UTC+3, 09:00 yerel = 06:00 UTC" name="sendWindow Europe/Istanbul pencere — yaz UTC+3, 09:00 yerel = 06:00 UTC" time="0.002">
     </testcase>
-  </testsuite>
-  <testsuite name="tenantContext (AsyncLocalStorage)" errors="0" failures="0" skipped="0" timestamp="2026-05-24T13:29:17" time="0.557" tests="6">
-    <testcase classname="tenantContext (AsyncLocalStorage) store dışında getTenantContext undefined döner" name="tenantContext (AsyncLocalStorage) store dışında getTenantContext undefined döner" time="0.002">
-    </testcase>
-    <testcase classname="tenantContext (AsyncLocalStorage) runWithTenant context&apos;i set eder" name="tenantContext (AsyncLocalStorage) runWithTenant context&apos;i set eder" time="0.023">
-    </testcase>
-    <testcase classname="tenantContext (AsyncLocalStorage) iç içe runWithTenant en içteki değeri okur" name="tenantContext (AsyncLocalStorage) iç içe runWithTenant en içteki değeri okur" time="0.003">
-    </testcase>
-    <testcase classname="tenantContext (AsyncLocalStorage) runWithoutTenantFilter bypass:true set eder" name="tenantContext (AsyncLocalStorage) runWithoutTenantFilter bypass:true set eder" time="0.007">
-    </testcase>
-    <testcase classname="tenantContext (AsyncLocalStorage) async sınırlarda context korunur" name="tenantContext (AsyncLocalStorage) async sınırlarda context korunur" time="0.024">
-    </testcase>
-    <testcase classname="tenantContext (AsyncLocalStorage) paralel async&apos;lerde context&apos;ler izole" name="tenantContext (AsyncLocalStorage) paralel async&apos;lerde context&apos;ler izole" time="0.011">
-    </testcase>
-  </testsuite>
-  <testsuite name="verifyStripeSignature" errors="0" failures="0" skipped="0" timestamp="2026-05-24T13:29:18" time="0.496" tests="12">
-    <testcase classname="verifyStripeSignature geçerli imzayı kabul eder" name="verifyStripeSignature geçerli imzayı kabul eder" time="0.003">
-    </testcase>
-    <testcase classname="verifyStripeSignature eksik header → missing-signature" name="verifyStripeSignature eksik header → missing-signature" time="0.002">
-    </testcase>
-    <testcase classname="verifyStripeSignature eksik secret → missing-secret" name="verifyStripeSignature eksik secret → missing-secret" time="0.001">
-    </testcase>
-    <testcase classname="verifyStripeSignature bozuk header (t/v1 yok) → malformed" name="verifyStripeSignature bozuk header (t/v1 yok) → malformed" time="0.006">
-    </testcase>
-    <testcase classname="verifyStripeSignature 5 dk üzeri timestamp → expired" name="verifyStripeSignature 5 dk üzeri timestamp → expired" time="0.002">
-    </testcase>
-    <testcase classname="verifyStripeSignature imza tek karakter farkı → signature-mismatch" name="verifyStripeSignature imza tek karakter farkı → signature-mismatch" time="0.002">
-    </testcase>
-    <testcase classname="verifyStripeSignature payload değişirse → signature-mismatch" name="verifyStripeSignature payload değişirse → signature-mismatch" time="0.001">
-    </testcase>
-    <testcase classname="verifyStripeSignature yanlış secret → signature-mismatch" name="verifyStripeSignature yanlış secret → signature-mismatch" time="0.003">
-    </testcase>
-    <testcase classname="verifyIyzicoSignature geçerli imzayı kabul eder" name="verifyIyzicoSignature geçerli imzayı kabul eder" time="0.001">
-    </testcase>
-    <testcase classname="verifyIyzicoSignature eksik header → missing-signature" name="verifyIyzicoSignature eksik header → missing-signature" time="0.004">
-    </testcase>
-    <testcase classname="verifyIyzicoSignature eksik apiKey veya secret → missing-secret" name="verifyIyzicoSignature eksik apiKey veya secret → missing-secret" time="0.002">
-    </testcase>
-    <testcase classname="verifyIyzicoSignature payload değişirse → signature-mismatch" name="verifyIyzicoSignature payload değişirse → signature-mismatch" time="0.002">
-    </testcase>
-  </testsuite>
-  <testsuite name="ListMarketplaceTestsUseCase" errors="0" failures="0" skipped="0" timestamp="2026-05-24T13:29:18" time="0.575" tests="1">
-    <testcase classname="ListMarketplaceTestsUseCase filters by examTypeId and pagination" name="ListMarketplaceTestsUseCase filters by examTypeId and pagination" time="0.009">
-    </testcase>
-  </testsuite>
-  <testsuite name="CreateTestUseCase" errors="0" failures="0" skipped="0" timestamp="2026-05-24T13:29:18" time="0.596" tests="15">
-    <testcase classname="CreateTestUseCase temel test oluşturur, UUID atar ve DRAFT statüsü verir" name="CreateTestUseCase temel test oluşturur, UUID atar ve DRAFT statüsü verir" time="0.016">
-    </testcase>
-    <testcase classname="CreateTestUseCase packageCreationEnabled=false ise PACKAGE_CREATION_DISABLED fırlatır" name="CreateTestUseCase packageCreationEnabled=false ise PACKAGE_CREATION_DISABLED fırlatır" time="0.012">
-    </testcase>
-    <testcase classname="CreateTestUseCase adminSettings null ise kill-switch aktif sayılmaz" name="CreateTestUseCase adminSettings null ise kill-switch aktif sayılmaz" time="0.003">
-    </testcase>
-    <testcase classname="CreateTestUseCase geçersiz UUID formatında examTypeId → INVALID_UUID" name="CreateTestUseCase geçersiz UUID formatında examTypeId → INVALID_UUID" time="0.008">
-    </testcase>
-    <testcase classname="CreateTestUseCase UUID başında prefix varsa INVALID_UUID fırlatır (^ anchor)" name="CreateTestUseCase UUID başında prefix varsa INVALID_UUID fırlatır (^ anchor)" time="0.006">
-    </testcase>
-    <testcase classname="CreateTestUseCase UUID sonunda suffix varsa INVALID_UUID fırlatır ($ anchor)" name="CreateTestUseCase UUID sonunda suffix varsa INVALID_UUID fırlatır ($ anchor)" time="0.002">
-    </testcase>
-    <testcase classname="CreateTestUseCase geçersiz UUID formatında topicId → INVALID_UUID" name="CreateTestUseCase geçersiz UUID formatında topicId → INVALID_UUID" time="0.004">
-    </testcase>
-    <testcase classname="CreateTestUseCase examTypeId geçerliyse ama bulunamazsa EXAMTYPE_NOT_FOUND fırlatır" name="CreateTestUseCase examTypeId geçerliyse ama bulunamazsa EXAMTYPE_NOT_FOUND fırlatır" time="0.014">
-    </testcase>
-    <testcase classname="CreateTestUseCase topicId var ama examTypeId yok ve topic bulunamazsa TOPIC_NOT_FOUND fırlatır" name="CreateTestUseCase topicId var ama examTypeId yok ve topic bulunamazsa TOPIC_NOT_FOUND fırlatır" time="0.004">
-    </testcase>
-    <testcase classname="CreateTestUseCase topicId UUID doğru ama bulunamazsa TOPIC_NOT_FOUND fırlatır" name="CreateTestUseCase topicId UUID doğru ama bulunamazsa TOPIC_NOT_FOUND fırlatır" time="0.002">
-    </testcase>
-    <testcase classname="CreateTestUseCase topic examTypeId ile uyuşmazsa TOPIC_EXAMTYPE_MISMATCH fırlatır" name="CreateTestUseCase topic examTypeId ile uyuşmazsa TOPIC_EXAMTYPE_MISMATCH fırlatır" time="0.004">
-    </testcase>
-    <testcase classname="CreateTestUseCase topicId verilince examTypeId topic üzerinden çözülür ve kaydedilir" name="CreateTestUseCase topicId verilince examTypeId topic üzerinden çözülür ve kaydedilir" time="0.004">
-    </testcase>
-    <testcase classname="CreateTestUseCase questions belirtilmezse boş dizi ile save çağrılır" name="CreateTestUseCase questions belirtilmezse boş dizi ile save çağrılır" time="0.011">
-    </testcase>
-    <testcase classname="CreateTestUseCase questions belirtilirse UUID atanarak save çağrılır" name="CreateTestUseCase questions belirtilirse UUID atanarak save çağrılır" time="0.018">
-    </testcase>
-    <testcase classname="CreateTestUseCase questions içindeki mevcut id korunur" name="CreateTestUseCase questions içindeki mevcut id korunur" time="0.001">
-    </testcase>
-  </testsuite>
-  <testsuite name="BrevoApiProvider" errors="0" failures="0" skipped="0" timestamp="2026-05-24T13:29:18" time="0.551" tests="7">
-    <testcase classname="BrevoApiProvider 200 + messageId → success" name="BrevoApiProvider 200 + messageId → success" time="0.013">
-    </testcase>
-    <testcase classname="BrevoApiProvider 429 → rate_limited retryable" name="BrevoApiProvider 429 → rate_limited retryable" time="0.003">
-    </testcase>
-    <testcase classname="BrevoApiProvider 401 → auth_failure non-retryable" name="BrevoApiProvider 401 → auth_failure non-retryable" time="0.002">
-    </testcase>
-    <testcase classname="BrevoApiProvider 502 → 5xx retryable" name="BrevoApiProvider 502 → 5xx retryable" time="0.007">
-    </testcase>
-    <testcase classname="BrevoApiProvider 400 invalid recipient → non-retryable" name="BrevoApiProvider 400 invalid recipient → non-retryable" time="0.003">
-    </testcase>
-    <testcase classname="BrevoApiProvider Network failure → connection_failed retryable" name="BrevoApiProvider Network failure → connection_failed retryable" time="0.002">
-    </testcase>
-    <testcase classname="BrevoApiProvider apiKey eksikse constructor fırlatır" name="BrevoApiProvider apiKey eksikse constructor fırlatır" time="0.088">
-    </testcase>
-  </testsuite>
-  <testsuite name="PublishTestPackageUseCase" errors="0" failures="0" skipped="0" timestamp="2026-05-24T13:29:19" time="0.457" tests="7">
-    <testcase classname="PublishTestPackageUseCase paketi yayınlar" name="PublishTestPackageUseCase paketi yayınlar" time="0.004">
-    </testcase>
-    <testcase classname="PublishTestPackageUseCase testPublishingEnabled=false ise PUBLISHING_DISABLED fırlatır" name="PublishTestPackageUseCase testPublishingEnabled=false ise PUBLISHING_DISABLED fırlatır" time="0.008">
-    </testcase>
-    <testcase classname="PublishTestPackageUseCase paket bulunamazsa PACKAGE_NOT_FOUND fırlatır" name="PublishTestPackageUseCase paket bulunamazsa PACKAGE_NOT_FOUND fırlatır" time="0.024">
-    </testcase>
-    <testcase classname="PublishTestPackageUseCase başkasının paketini yayınlamaya çalışırsa FORBIDDEN fırlatır" name="PublishTestPackageUseCase başkasının paketini yayınlamaya çalışırsa FORBIDDEN fırlatır" time="0.003">
-    </testcase>
-    <testcase classname="PublishTestPackageUseCase zaten yayınlanmışsa ALREADY_PUBLISHED fırlatır" name="PublishTestPackageUseCase zaten yayınlanmışsa ALREADY_PUBLISHED fırlatır" time="0.003">
-    </testcase>
-    <testcase classname="PublishTestPackageUseCase test yoksa PACKAGE_EMPTY fırlatır" name="PublishTestPackageUseCase test yoksa PACKAGE_EMPTY fırlatır" time="0.011">
-    </testcase>
-    <testcase classname="PublishTestPackageUseCase fiyat 0 ise INVALID_PRICE fırlatır" name="PublishTestPackageUseCase fiyat 0 ise INVALID_PRICE fırlatır" time="0.005">
-    </testcase>
-  </testsuite>
-  <testsuite name="email/encryption" errors="0" failures="0" skipped="0" timestamp="2026-05-24T13:29:19" time="0.69" tests="4">
-    <testcase classname="email/encryption round-trip encryptSecret/decryptSecret" name="email/encryption round-trip encryptSecret/decryptSecret" time="0.096">
-    </testcase>
-    <testcase classname="email/encryption encryptJson/decryptJson preserves structure" name="email/encryption encryptJson/decryptJson preserves structure" time="0.005">
-    </testcase>
-    <testcase classname="email/encryption decrypt fails with wrong key" name="email/encryption decrypt fails with wrong key" time="0.146">
-    </testcase>
-    <testcase classname="email/encryption maskSecret hides middle" name="email/encryption maskSecret hides middle" time="0.007">
-    </testcase>
-  </testsuite>
-  <testsuite name="AnswerObjectionUseCase" errors="0" failures="0" skipped="0" timestamp="2026-05-24T13:29:19" time="0.565" tests="8">
-    <testcase classname="AnswerObjectionUseCase eğitici itiraza yanıt verir" name="AnswerObjectionUseCase eğitici itiraza yanıt verir" time="0.017">
-    </testcase>
-    <testcase classname="AnswerObjectionUseCase actorId yoksa UNAUTHORIZED fırlatır" name="AnswerObjectionUseCase actorId yoksa UNAUTHORIZED fırlatır" time="0.007">
-    </testcase>
-    <testcase classname="AnswerObjectionUseCase kullanıcı bulunamazsa USER_NOT_FOUND fırlatır" name="AnswerObjectionUseCase kullanıcı bulunamazsa USER_NOT_FOUND fırlatır" time="0.003">
-    </testcase>
-    <testcase classname="AnswerObjectionUseCase itiraz bulunamazsa OBJECTION_NOT_FOUND fırlatır" name="AnswerObjectionUseCase itiraz bulunamazsa OBJECTION_NOT_FOUND fırlatır" time="0.001">
-    </testcase>
-    <testcase classname="AnswerObjectionUseCase başkasının sorusunun itirazına yanıt verilemez → FORBIDDEN_NOT_OWNER" name="AnswerObjectionUseCase başkasının sorusunun itirazına yanıt verilemez → FORBIDDEN_NOT_OWNER" time="0.003">
-    </testcase>
-    <testcase classname="AnswerObjectionUseCase yanıt 5 karakterden kısaysa ANSWER_TOO_SHORT fırlatır" name="AnswerObjectionUseCase yanıt 5 karakterden kısaysa ANSWER_TOO_SHORT fırlatır" time="0.001">
-    </testcase>
-    <testcase classname="AnswerObjectionUseCase SLA süresi dolmuşsa OBJECTION_SLA_EXPIRED fırlatır ve eskalasyon yapar" name="AnswerObjectionUseCase SLA süresi dolmuşsa OBJECTION_SLA_EXPIRED fırlatır ve eskalasyon yapar" time="0.008">
-    </testcase>
-    <testcase classname="AnswerObjectionUseCase audit log hatası ana akışı kesmez" name="AnswerObjectionUseCase audit log hatası ana akışı kesmez" time="0.002">
-    </testcase>
-  </testsuite>
-  <testsuite name="undefined" errors="0" failures="0" skipped="0" timestamp="2026-05-24T13:29:19" time="0.5" tests="2">
-    <testcase classname=" educator not found throws" name=" educator not found throws" time="0.083">
-    </testcase>
-    <testcase classname=" returns published tests and pagination meta with enrichment preferring TestStats" name=" returns published tests and pagination meta with enrichment preferring TestStats" time="0.01">
-    </testcase>
-  </testsuite>
-  <testsuite name="turkishNormalize" errors="0" failures="0" skipped="0" timestamp="2026-05-24T13:29:19" time="0.507" tests="27">
-    <testcase classname="turkishNormalize KÖTÜ girdisi kotu çıktısı üretir" name="turkishNormalize KÖTÜ girdisi kotu çıktısı üretir" time="0.004">
-    </testcase>
-    <testcase classname="turkishNormalize şehir girdisi sehir çıktısı üretir (ş→s)" name="turkishNormalize şehir girdisi sehir çıktısı üretir (ş→s)" time="0.005">
-    </testcase>
-    <testcase classname="turkishNormalize güneş girdisi gunes çıktısı üretir (ğ→g, ş→s)" name="turkishNormalize güneş girdisi gunes çıktısı üretir (ğ→g, ş→s)" time="0.001">
-    </testcase>
-    <testcase classname="turkishNormalize çiğdem girdisi cigdem çıktısı üretir (ç→c, ğ→g)" name="turkishNormalize çiğdem girdisi cigdem çıktısı üretir (ç→c, ğ→g)" time="0.002">
-    </testcase>
-    <testcase classname="turkishNormalize ılık girdisi ilik çıktısı üretir (ı→i)" name="turkishNormalize ılık girdisi ilik çıktısı üretir (ı→i)" time="0.002">
-    </testcase>
-    <testcase classname="turkishNormalize üzüm girdisi uzum çıktısı üretir (ü→u)" name="turkishNormalize üzüm girdisi uzum çıktısı üretir (ü→u)" time="0.001">
-    </testcase>
-    <testcase classname="turkishNormalize k0tü girdisi kotu döner (0→o, ü→u)" name="turkishNormalize k0tü girdisi kotu döner (0→o, ü→u)" time="0.013">
-    </testcase>
-    <testcase classname="turkishNormalize s3x girdisi sex döner (3→e)" name="turkishNormalize s3x girdisi sex döner (3→e)" time="0.001">
-    </testcase>
-    <testcase classname="turkishNormalize $ex girdisi sex döner ($→s)" name="turkishNormalize $ex girdisi sex döner ($→s)" time="0.002">
-    </testcase>
-    <testcase classname="turkishNormalize @hm@k girdisi ahmak döner (@→a)" name="turkishNormalize @hm@k girdisi ahmak döner (@→a)" time="0.011">
-    </testcase>
-    <testcase classname="turkishNormalize 5pam girdisi spam döner (5→s)" name="turkishNormalize 5pam girdisi spam döner (5→s)" time="0.013">
-    </testcase>
-    <testcase classname="turkishNormalize 7eror girdisi teror döner (7→t)" name="turkishNormalize 7eror girdisi teror döner (7→t)" time="0.014">
-    </testcase>
-    <testcase classname="turkishNormalize 1d1ot girdisi idiot döner (1→i)" name="turkishNormalize 1d1ot girdisi idiot döner (1→i)" time="0.003">
-    </testcase>
-    <testcase classname="turkishNormalize k.ö.t.ü girdisi kotu döner (nokta ayırıcı + Türkçe karakter)" name="turkishNormalize k.ö.t.ü girdisi kotu döner (nokta ayırıcı + Türkçe karakter)" time="0.001">
-    </testcase>
-    <testcase classname="turkishNormalize KO_TU girdisi kotu döner (alt çizgi ayırıcı)" name="turkishNormalize KO_TU girdisi kotu döner (alt çizgi ayırıcı)" time="0.002">
-    </testcase>
-    <testcase classname="turkishNormalize k-o-t-u girdisi kotu döner (tire ayırıcı)" name="turkishNormalize k-o-t-u girdisi kotu döner (tire ayırıcı)" time="0.001">
-    </testcase>
-    <testcase classname="turkishNormalize k*o*t*u girdisi kotu döner (yıldız ayırıcı)" name="turkishNormalize k*o*t*u girdisi kotu döner (yıldız ayırıcı)" time="0.001">
-    </testcase>
-    <testcase classname="turkishNormalize boşluklu girdi boşluksuz döner" name="turkishNormalize boşluklu girdi boşluksuz döner" time="0.002">
-    </testcase>
-    <testcase classname="turkishNormalize g@yri girdisi gayri döner (@→a)" name="turkishNormalize g@yri girdisi gayri döner (@→a)" time="0.001">
-    </testcase>
-    <testcase classname="turkishNormalize g@yr1 girdisi gayri döner (@→a, 1→i)" name="turkishNormalize g@yr1 girdisi gayri döner (@→a, 1→i)" time="0.001">
-    </testcase>
-    <testcase classname="turkishNormalize büyük harf ve Türkçe karakter kombinasyonu doğru normalize edilir" name="turkishNormalize büyük harf ve Türkçe karakter kombinasyonu doğru normalize edilir" time="0.001">
-    </testcase>
-    <testcase classname="turkishNormalize boş string girildiğinde boş string döner" name="turkishNormalize boş string girildiğinde boş string döner" time="0.002">
-    </testcase>
-    <testcase classname="turkishNormalize sadece ayırıcılardan oluşan girdi boş string döner" name="turkishNormalize sadece ayırıcılardan oluşan girdi boş string döner" time="0.001">
-    </testcase>
-    <testcase classname="tokenizeAndNormalize birden fazla token her biri ayrı normalize edilir" name="tokenizeAndNormalize birden fazla token her biri ayrı normalize edilir" time="0.003">
-    </testcase>
-    <testcase classname="tokenizeAndNormalize boş string boş dizi döner" name="tokenizeAndNormalize boş string boş dizi döner" time="0.001">
-    </testcase>
-    <testcase classname="tokenizeAndNormalize tek kelime tek elemanlı dizi döner" name="tokenizeAndNormalize tek kelime tek elemanlı dizi döner" time="0.001">
-    </testcase>
-    <testcase classname="tokenizeAndNormalize fazla boslukllu girdi dogru tokenlara ayrilir" name="tokenizeAndNormalize fazla boslukllu girdi dogru tokenlara ayrilir" time="0.015">
-    </testcase>
-  </testsuite>
-  <testsuite name="sendWindow" errors="0" failures="0" skipped="0" timestamp="2026-05-24T13:29:19" time="0.366" tests="11">
-    <testcase classname="sendWindow disabled config → inWindow=true, delay=0" name="sendWindow disabled config → inWindow=true, delay=0" time="0.007">
-    </testcase>
-    <testcase classname="sendWindow UTC pencere içi (10:00 UTC, 9-21) → inWindow" name="sendWindow UTC pencere içi (10:00 UTC, 9-21) → inWindow" time="0.005">
-    </testcase>
-    <testcase classname="sendWindow UTC pencere dışı sabah erken (06:00 UTC, 9-21) → bugün 09:00 UTC" name="sendWindow UTC pencere dışı sabah erken (06:00 UTC, 9-21) → bugün 09:00 UTC" time="0.008">
-    </testcase>
-    <testcase classname="sendWindow UTC pencere dışı gece (23:00 UTC, 9-21) → yarın 09:00 UTC" name="sendWindow UTC pencere dışı gece (23:00 UTC, 9-21) → yarın 09:00 UTC" time="0.005">
-    </testcase>
-    <testcase classname="sendWindow Tam endHour saatinde → pencere dışı (end exclusive)" name="sendWindow Tam endHour saatinde → pencere dışı (end exclusive)" time="0.003">
-    </testcase>
-    <testcase classname="sendWindow Tam startHour saatinde → pencere içi (start inclusive)" name="sendWindow Tam startHour saatinde → pencere içi (start inclusive)" time="0.003">
-    </testcase>
-    <testcase classname="sendWindow Europe/Istanbul pencere — yaz UTC+3, 09:00 yerel = 06:00 UTC" name="sendWindow Europe/Istanbul pencere — yaz UTC+3, 09:00 yerel = 06:00 UTC" time="0.04">
-    </testcase>
-    <testcase classname="sendWindow Europe/Istanbul — 03:00 UTC = 06:00 Istanbul → dışı, bugün 09:00 Istanbul (06:00 UTC)" name="sendWindow Europe/Istanbul — 03:00 UTC = 06:00 Istanbul → dışı, bugün 09:00 Istanbul (06:00 UTC)" time="0.003">
+    <testcase classname="sendWindow Europe/Istanbul — 03:00 UTC = 06:00 Istanbul → dışı, bugün 09:00 Istanbul (06:00 UTC)" name="sendWindow Europe/Istanbul — 03:00 UTC = 06:00 Istanbul → dışı, bugün 09:00 Istanbul (06:00 UTC)" time="0.008">
     </testcase>
     <testcase classname="sendWindow Geçersiz pencere (start &gt; end) → invalid" name="sendWindow Geçersiz pencere (start &gt; end) → invalid" time="0.001">
     </testcase>
     <testcase classname="sendWindow Geçersiz pencere (start == end) → invalid" name="sendWindow Geçersiz pencere (start == end) → invalid" time="0.001">
     </testcase>
-    <testcase classname="sendWindow Hatalı TZ → UTC fallback ile çalışır, hata fırlatmaz" name="sendWindow Hatalı TZ → UTC fallback ile çalışır, hata fırlatmaz" time="0.002">
+    <testcase classname="sendWindow Hatalı TZ → UTC fallback ile çalışır, hata fırlatmaz" name="sendWindow Hatalı TZ → UTC fallback ile çalışır, hata fırlatmaz" time="0.004">
     </testcase>
   </testsuite>
-  <testsuite name="CreateObjectionUseCase" errors="0" failures="0" skipped="0" timestamp="2026-05-24T13:29:20" time="0.445" tests="17">
-    <testcase classname="CreateObjectionUseCase başarılı itiraz oluşturma geçerli girdi ile itiraz oluşturulduğunda reporterId actorId ye eşittir" name="CreateObjectionUseCase başarılı itiraz oluşturma geçerli girdi ile itiraz oluşturulduğunda reporterId actorId ye eşittir" time="0.007">
-    </testcase>
-    <testcase classname="CreateObjectionUseCase başarılı itiraz oluşturma geçerli girdi ile itiraz oluşturulduğunda reason trim edilmiş haliyle kaydedilir" name="CreateObjectionUseCase başarılı itiraz oluşturma geçerli girdi ile itiraz oluşturulduğunda reason trim edilmiş haliyle kaydedilir" time="0.003">
-    </testcase>
-    <testcase classname="CreateObjectionUseCase başarılı itiraz oluşturma itiraz başarıyla oluşturulduğunda auditRepo.create çağrılır" name="CreateObjectionUseCase başarılı itiraz oluşturma itiraz başarıyla oluşturulduğunda auditRepo.create çağrılır" time="0.012">
-    </testcase>
-    <testcase classname="CreateObjectionUseCase kimlik doğrulama hataları actorId undefined olduğunda UNAUTHORIZED hatası fırlatır" name="CreateObjectionUseCase kimlik doğrulama hataları actorId undefined olduğunda UNAUTHORIZED hatası fırlatır" time="0.003">
-    </testcase>
-    <testcase classname="CreateObjectionUseCase kimlik doğrulama hataları actorId boş string olduğunda UNAUTHORIZED hatası fırlatır" name="CreateObjectionUseCase kimlik doğrulama hataları actorId boş string olduğunda UNAUTHORIZED hatası fırlatır" time="0.001">
-    </testcase>
-    <testcase classname="CreateObjectionUseCase UUID format doğrulaması attemptId geçersiz UUID formatında olduğunda INVALID_UUID hatası fırlatır" name="CreateObjectionUseCase UUID format doğrulaması attemptId geçersiz UUID formatında olduğunda INVALID_UUID hatası fırlatır" time="0.004">
-    </testcase>
-    <testcase classname="CreateObjectionUseCase UUID format doğrulaması questionId geçersiz UUID formatında olduğunda INVALID_UUID hatası fırlatır" name="CreateObjectionUseCase UUID format doğrulaması questionId geçersiz UUID formatında olduğunda INVALID_UUID hatası fırlatır" time="0.003">
-    </testcase>
-    <testcase classname="CreateObjectionUseCase gerekçe validasyonu reason 4 karakter olduğunda REASON_TOO_SHORT hatası fırlatır" name="CreateObjectionUseCase gerekçe validasyonu reason 4 karakter olduğunda REASON_TOO_SHORT hatası fırlatır" time="0.003">
-    </testcase>
-    <testcase classname="CreateObjectionUseCase gerekçe validasyonu reason boş string olduğunda REASON_TOO_SHORT hatası fırlatır" name="CreateObjectionUseCase gerekçe validasyonu reason boş string olduğunda REASON_TOO_SHORT hatası fırlatır" time="0.003">
-    </testcase>
-    <testcase classname="CreateObjectionUseCase gerekçe validasyonu reason sadece boşluklardan oluştuğunda REASON_TOO_SHORT hatası fırlatır" name="CreateObjectionUseCase gerekçe validasyonu reason sadece boşluklardan oluştuğunda REASON_TOO_SHORT hatası fırlatır" time="0.005">
-    </testcase>
-    <testcase classname="CreateObjectionUseCase deneme bulunamadı attemptId geçerli UUID ancak deneme bulunamıyorsa ATTEMPT_NOT_FOUND hatası fırlatır" name="CreateObjectionUseCase deneme bulunamadı attemptId geçerli UUID ancak deneme bulunamıyorsa ATTEMPT_NOT_FOUND hatası fırlatır" time="0.004">
-    </testcase>
-    <testcase classname="CreateObjectionUseCase sahiplik kontrolü deneme farklı bir adaya aitse FORBIDDEN_NOT_OWNER hatası fırlatır" name="CreateObjectionUseCase sahiplik kontrolü deneme farklı bir adaya aitse FORBIDDEN_NOT_OWNER hatası fırlatır" time="0.001">
-    </testcase>
-    <testcase classname="CreateObjectionUseCase soru doğrulaması questionId geçerli UUID ancak soru bulunamıyorsa QUESTION_NOT_FOUND hatası fırlatır" name="CreateObjectionUseCase soru doğrulaması questionId geçerli UUID ancak soru bulunamıyorsa QUESTION_NOT_FOUND hatası fırlatır" time="0.003">
-    </testcase>
-    <testcase classname="CreateObjectionUseCase soru doğrulaması soru farklı bir teste ait olduğunda QUESTION_NOT_IN_TEST hatası fırlatır" name="CreateObjectionUseCase soru doğrulaması soru farklı bir teste ait olduğunda QUESTION_NOT_IN_TEST hatası fırlatır" time="0.003">
-    </testcase>
-    <testcase classname="CreateObjectionUseCase tekrarlı itiraz kontrolü aynı deneme ve soru için itiraz zaten varsa OBJECTION_ALREADY_EXISTS hatası fırlatır" name="CreateObjectionUseCase tekrarlı itiraz kontrolü aynı deneme ve soru için itiraz zaten varsa OBJECTION_ALREADY_EXISTS hatası fırlatır" time="0.003">
-    </testcase>
-    <testcase classname="CreateObjectionUseCase itiraz limiti test başına itiraz limiti aşıldığında OBJECTION_LIMIT_EXCEEDED hatası fırlatır" name="CreateObjectionUseCase itiraz limiti test başına itiraz limiti aşıldığında OBJECTION_LIMIT_EXCEEDED hatası fırlatır" time="0.002">
-    </testcase>
-    <testcase classname="CreateObjectionUseCase itiraz limiti limit altında itiraz sayısında hata fırlatılmaz" name="CreateObjectionUseCase itiraz limiti limit altında itiraz sayısında hata fırlatılmaz" time="0.004">
+  <testsuite name="undefined" errors="0" failures="0" skipped="0" timestamp="2026-05-24T14:42:14" time="1.41" tests="1">
+    <testcase classname=" weekly digest enqueues emails" name=" weekly digest enqueues emails" time="0.047">
     </testcase>
   </testsuite>
-  <testsuite name="undefined" errors="0" failures="0" skipped="0" timestamp="2026-05-24T13:29:20" time="0.412" tests="6">
-    <testcase classname=" no follows -&gt; fallback only" name=" no follows -&gt; fallback only" time="0.01">
+  <testsuite name="DeleteQuestionUseCase" errors="0" failures="0" skipped="0" timestamp="2026-05-24T14:42:14" time="1.361" tests="6">
+    <testcase classname="DeleteQuestionUseCase sahip eğitici kendi sorusunu siler" name="DeleteQuestionUseCase sahip eğitici kendi sorusunu siler" time="0.006">
     </testcase>
-    <testcase classname=" educator follow -&gt; followed boosted" name=" educator follow -&gt; followed boosted" time="0.002">
+    <testcase classname="DeleteQuestionUseCase soru bulunamazsa NOT_FOUND fırlatır" name="DeleteQuestionUseCase soru bulunamazsa NOT_FOUND fırlatır" time="0.003">
     </testcase>
-    <testcase classname=" examType follow -&gt; followed examType boosted" name=" examType follow -&gt; followed examType boosted" time="0.004">
+    <testcase classname="DeleteQuestionUseCase soru farklı bir teste aitse NOT_FOUND fırlatır" name="DeleteQuestionUseCase soru farklı bir teste aitse NOT_FOUND fırlatır" time="0.004">
     </testcase>
-    <testcase classname=" dedupe when both follow types include same test" name=" dedupe when both follow types include same test" time="0.006">
-    </testcase>
-    <testcase classname=" fallback only when no follows" name=" fallback only when no follows" time="0.002">
-    </testcase>
-    <testcase classname=" limit respected and dedupe" name=" limit respected and dedupe" time="0.002">
-    </testcase>
-  </testsuite>
-  <testsuite name="undefined" errors="0" failures="0" skipped="0" timestamp="2026-05-24T13:29:20" time="0.481" tests="1">
-    <testcase classname=" publish invalidates follower caches" name=" publish invalidates follower caches" time="0.014">
-    </testcase>
-  </testsuite>
-  <testsuite name="ForgotPasswordUseCase" errors="0" failures="0" skipped="0" timestamp="2026-05-24T13:29:20" time="0.435" tests="8">
-    <testcase classname="ForgotPasswordUseCase kullanıcı varsa token set edilir ve mail gönderilir" name="ForgotPasswordUseCase kullanıcı varsa token set edilir ve mail gönderilir" time="0.018">
-    </testcase>
-    <testcase classname="ForgotPasswordUseCase kullanıcı yoksa sessizce döner (e-posta ifşa edilmez)" name="ForgotPasswordUseCase kullanıcı yoksa sessizce döner (e-posta ifşa edilmez)" time="0.007">
-    </testcase>
-    <testcase classname="ForgotPasswordUseCase e-posta normalize edilerek aranır" name="ForgotPasswordUseCase e-posta normalize edilerek aranır" time="0.002">
-    </testcase>
-    <testcase classname="ResetPasswordUseCase geçerli token ve şifre ile şifreyi günceller" name="ResetPasswordUseCase geçerli token ve şifre ile şifreyi günceller" time="0.011">
-    </testcase>
-    <testcase classname="ResetPasswordUseCase token bulunamazsa INVALID_TOKEN fırlatır" name="ResetPasswordUseCase token bulunamazsa INVALID_TOKEN fırlatır" time="0.009">
-    </testcase>
-    <testcase classname="ResetPasswordUseCase token süresi dolmuşsa TOKEN_EXPIRED fırlatır" name="ResetPasswordUseCase token süresi dolmuşsa TOKEN_EXPIRED fırlatır" time="0.008">
-    </testcase>
-    <testcase classname="ResetPasswordUseCase şifre 8 karakterden kısaysa INVALID_INPUT fırlatır" name="ResetPasswordUseCase şifre 8 karakterden kısaysa INVALID_INPUT fırlatır" time="0.005">
-    </testcase>
-    <testcase classname="ResetPasswordUseCase token veya şifre boşsa INVALID_INPUT fırlatır" name="ResetPasswordUseCase token veya şifre boşsa INVALID_INPUT fırlatır" time="0.016">
-    </testcase>
-  </testsuite>
-  <testsuite name="unsubscribeToken" errors="0" failures="0" skipped="0" timestamp="2026-05-24T13:29:20" time="0.432" tests="3">
-    <testcase classname="unsubscribeToken üretilen token kendi imzasıyla doğrulanır" name="unsubscribeToken üretilen token kendi imzasıyla doğrulanır" time="0.023">
-    </testcase>
-    <testcase classname="unsubscribeToken imza bozulursa doğrulama fail" name="unsubscribeToken imza bozulursa doğrulama fail" time="0.016">
-    </testcase>
-    <testcase classname="unsubscribeToken formatsız input reddedilir" name="unsubscribeToken formatsız input reddedilir" time="0.005">
-    </testcase>
-  </testsuite>
-  <testsuite name="RegisterUseCase" errors="0" failures="0" skipped="0" timestamp="2026-05-24T13:29:20" time="0.446" tests="6">
-    <testcase classname="RegisterUseCase yeni CANDIDATE kullanıcı oluşturur, public bilgi döner" name="RegisterUseCase yeni CANDIDATE kullanıcı oluşturur, public bilgi döner" time="0.014">
-    </testcase>
-    <testcase classname="RegisterUseCase passwordHash plain metin şifresini içermez" name="RegisterUseCase passwordHash plain metin şifresini içermez" time="0.002">
-    </testcase>
-    <testcase classname="RegisterUseCase e-posta küçük harfe çevrilir" name="RegisterUseCase e-posta küçük harfe çevrilir" time="0.002">
-    </testcase>
-    <testcase classname="RegisterUseCase şifre hash&apos;lenerek kaydedilir" name="RegisterUseCase şifre hash&apos;lenerek kaydedilir" time="0.005">
-    </testcase>
-    <testcase classname="RegisterUseCase sunucu tarafında UUID üretilir" name="RegisterUseCase sunucu tarafında UUID üretilir" time="0.006">
-    </testcase>
-    <testcase classname="RegisterUseCase createdAt alanı döner" name="RegisterUseCase createdAt alanı döner" time="0.002">
-    </testcase>
-  </testsuite>
-  <testsuite name="undefined" errors="0" failures="0" skipped="0" timestamp="2026-05-24T13:29:21" time="0.323" tests="1">
-    <testcase classname=" worker health endpoint placeholder" name=" worker health endpoint placeholder" time="0.004">
-    </testcase>
-  </testsuite>
-  <testsuite name="preferenceMap" errors="0" failures="0" skipped="0" timestamp="2026-05-24T13:29:21" time="0.438" tests="6">
-    <testcase classname="preferenceMap default keys match" name="preferenceMap default keys match" time="0.002">
-    </testcase>
-    <testcase classname="preferenceMap CRITICAL şablonlar preference filtresi atlar (null map)" name="preferenceMap CRITICAL şablonlar preference filtresi atlar (null map)" time="0.001">
-    </testcase>
-    <testcase classname="preferenceMap NOTIFY/BULK şablonlar uygun preference key e bağlanır" name="preferenceMap NOTIFY/BULK şablonlar uygun preference key e bağlanır" time="0.003">
-    </testcase>
-    <testcase classname="preferenceMap readEmailPreferences null/undefined → default" name="preferenceMap readEmailPreferences null/undefined → default" time="0.004">
-    </testcase>
-    <testcase classname="preferenceMap readEmailPreferences partial override" name="preferenceMap readEmailPreferences partial override" time="0.002">
-    </testcase>
-    <testcase classname="preferenceMap readEmailPreferences yanlış tip alanları yoksayar" name="preferenceMap readEmailPreferences yanlış tip alanları yoksayar" time="0.002">
-    </testcase>
-  </testsuite>
-  <testsuite name="undefined" errors="0" failures="0" skipped="0" timestamp="2026-05-24T13:29:21" time="0.388" tests="2">
-    <testcase classname=" follow idempotent" name=" follow idempotent" time="0.009">
-    </testcase>
-    <testcase classname=" unfollow idempotent" name=" unfollow idempotent" time="0.003">
-    </testcase>
-  </testsuite>
-  <testsuite name="DeleteQuestionUseCase" errors="0" failures="0" skipped="0" timestamp="2026-05-24T13:29:21" time="0.331" tests="6">
-    <testcase classname="DeleteQuestionUseCase sahip eğitici kendi sorusunu siler" name="DeleteQuestionUseCase sahip eğitici kendi sorusunu siler" time="0.005">
-    </testcase>
-    <testcase classname="DeleteQuestionUseCase soru bulunamazsa NOT_FOUND fırlatır" name="DeleteQuestionUseCase soru bulunamazsa NOT_FOUND fırlatır" time="0.001">
-    </testcase>
-    <testcase classname="DeleteQuestionUseCase soru farklı bir teste aitse NOT_FOUND fırlatır" name="DeleteQuestionUseCase soru farklı bir teste aitse NOT_FOUND fırlatır" time="0.002">
-    </testcase>
-    <testcase classname="DeleteQuestionUseCase başkasının sorusunu silmeye çalışırsa FORBIDDEN fırlatır" name="DeleteQuestionUseCase başkasının sorusunu silmeye çalışırsa FORBIDDEN fırlatır" time="0.001">
+    <testcase classname="DeleteQuestionUseCase başkasının sorusunu silmeye çalışırsa FORBIDDEN fırlatır" name="DeleteQuestionUseCase başkasının sorusunu silmeye çalışırsa FORBIDDEN fırlatır" time="0.006">
     </testcase>
     <testcase classname="DeleteQuestionUseCase cevaplanmış soru silinemez → QUESTION_HAS_ATTEMPTS" name="DeleteQuestionUseCase cevaplanmış soru silinemez → QUESTION_HAS_ATTEMPTS" time="0.002">
     </testcase>
-    <testcase classname="DeleteQuestionUseCase cevap yoksa delete çağrılır" name="DeleteQuestionUseCase cevap yoksa delete çağrılır" time="0.001">
+    <testcase classname="DeleteQuestionUseCase cevap yoksa delete çağrılır" name="DeleteQuestionUseCase cevap yoksa delete çağrılır" time="0.002">
+    </testcase>
+  </testsuite>
+  <testsuite name="undefined" errors="0" failures="0" skipped="0" timestamp="2026-05-24T14:42:15" time="0.908" tests="1">
+    <testcase classname=" worker health endpoint placeholder" name=" worker health endpoint placeholder" time="0.005">
     </testcase>
   </testsuite>
 </testsuites>

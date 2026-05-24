@@ -15,6 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { TopicCombobox } from "@/components/ui/TopicCombobox";
 import { ImagePlus, X, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -268,34 +269,20 @@ export function QuestionForm({
           ))}
         </div>
 
-        {/* Konu seçici */}
+        {/* Konu seçici — arama destekli combobox, ağaç yolu görünür */}
         {topicList.length > 0 && (
           <div className="space-y-2">
             <Label>
               Konu{" "}
               <span className="text-slate-400 font-normal">(opsiyonel)</span>
             </Label>
-            <Select
-              value={data.topicId ?? "none"}
-              onValueChange={(v) =>
-                setData((d) => ({
-                  ...d,
-                  topicId: v === "none" ? null : v,
-                }))
-              }
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Konu seçin..." />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="none">— Seçilmedi —</SelectItem>
-                {topicList.map((t) => (
-                  <SelectItem key={t.id} value={t.id}>
-                    {t.parentName ? `${t.parentName} › ${t.name}` : t.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <TopicCombobox
+              value={data.topicId ?? null}
+              onChange={(id) => setData((d) => ({ ...d, topicId: id }))}
+              topics={topicList}
+              placeholder="Konu seçin..."
+              searchPlaceholder="Konu ara (örn. Sayılar)..."
+            />
           </div>
         )}
 

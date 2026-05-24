@@ -15,9 +15,7 @@ import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import {
-  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
-} from "@/components/ui/select";
+import { TopicCombobox } from "@/components/ui/TopicCombobox";
 import { toast } from "sonner";
 import {
   Plus, Trash2, CheckCircle2, ArrowLeft, Zap, Loader2, Users,
@@ -290,23 +288,16 @@ function QuestionEditDialog({ question, questionIndex, topicList, onSave, onSave
             </div>
           </div>
 
-          {/* Konu seçimi */}
+          {/* Konu seçimi — arama destekli + ağaç yolu */}
           <div className="space-y-2">
             <Label>Konu (İsteğe Bağlı)</Label>
-            <Select
-              value={local.topicId || "none"}
-              onValueChange={(v) => setLocal(p => ({ ...p, topicId: v === "none" ? null : v }))}
-            >
-              <SelectTrigger><SelectValue placeholder="Konu seçin" /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="none">— Seçilmedi —</SelectItem>
-                {topicList.map((t) => (
-                  <SelectItem key={t.id} value={t.id}>
-                    {t.parentName ? `${t.parentName} / ${t.name}` : t.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <TopicCombobox
+              value={local.topicId ?? null}
+              onChange={(id) => setLocal(p => ({ ...p, topicId: id }))}
+              topics={topicList}
+              placeholder="Konu seçin..."
+              searchPlaceholder="Konu ara (örn. Sayılar)..."
+            />
           </div>
 
           {/* Seçenekler */}

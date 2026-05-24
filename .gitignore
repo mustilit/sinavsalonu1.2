@@ -37,3 +37,7 @@ apps/frontend/playwright-report/
 
 # Coverage
 coverage/
+
+# Runtime upload'ları — backend kullanıcı yüklemelerini diske yazar; repo'ya girmesin.
+# Üretimde S3 / object storage'a taşınacak.
+apps/backend/uploads/

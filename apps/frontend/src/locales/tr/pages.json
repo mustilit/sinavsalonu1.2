@@ -400,6 +400,8 @@
       "topicLabel": "Konu (İsteğe Bağlı)",
       "topicPlaceholder": "Konu seçin",
       "topicNone": "— Seçilmedi —",
+      "topicSearchPlaceholder": "Konu ara (örn. Sayılar)...",
+      "topicEmpty": "Konu bulunamadı",
       "optionsLabel": "Seçenekler",
       "optionPlaceholder": "Seçenek {{letter}}",
       "optionImage": "Görsel",

@@ -400,6 +400,8 @@
       "topicLabel": "主题(可选)",
       "topicPlaceholder": "选择主题",
       "topicNone": "— 未选择 —",
+      "topicSearchPlaceholder": "搜索主题(例如:数字)...",
+      "topicEmpty": "未找到主题",
       "optionsLabel": "选项",
       "optionPlaceholder": "选项 {{letter}}",
       "optionImage": "图片",

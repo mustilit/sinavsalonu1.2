@@ -12,6 +12,7 @@ import { Label } from "@/components/ui/label";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
+import { TopicCombobox } from "@/components/ui/TopicCombobox";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
@@ -303,24 +304,18 @@ function QuestionEditDialog({ question, questionIndex, topicList, onSave, onSave
             </div>
           </div>
 
-          {/* Konu seçimi */}
+          {/* Konu seçimi — arama destekli + ağaç yolu */}
           <div className="space-y-2">
             <Label>{t("pages:testForm.question.topicLabel")}</Label>
-            <Select
-              value={local.topicId || "none"}
-              onValueChange={(v) => setLocal(prev => ({ ...prev, topicId: v === "none" ? null : v }))}
-            >
-              <SelectTrigger><SelectValue placeholder={t("pages:testForm.question.topicPlaceholder")} /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="none">{t("pages:testForm.question.topicNone")}</SelectItem>
-                {/* topic.name user-generated — çevrilmez */}
-                {topicList.map((tp) => (
-                  <SelectItem key={tp.id} value={tp.id}>
-                    {tp.parentName ? `${tp.parentName} / ${tp.name}` : tp.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <TopicCombobox
+              value={local.topicId ?? null}
+              onChange={(id) => setLocal(prev => ({ ...prev, topicId: id }))}
+              topics={topicList}
+              placeholder={t("pages:testForm.question.topicPlaceholder")}
+              emptyLabel={t("pages:testForm.question.topicNone")}
+              searchPlaceholder={t("pages:testForm.question.topicSearchPlaceholder", "Konu ara...")}
+              emptyText={t("pages:testForm.question.topicEmpty", "Konu bulunamadı")}
+            />
           </div>
 
           {/* Seçenekler */}
