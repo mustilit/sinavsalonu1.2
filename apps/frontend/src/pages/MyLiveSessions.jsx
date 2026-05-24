@@ -17,12 +17,59 @@ import { toast } from "sonner";
 import { format } from "date-fns";
 import { tr } from "date-fns/locale";
 
-// status label artık i18n key — render anında t() ile çözülür.
-const STATUS_CONFIG = {
-  DRAFT:  { labelKey: "pages:myLiveSessions.status.draft",  color: "bg-slate-100 text-slate-600",     icon: FileEdit    },
-  ACTIVE: { labelKey: "pages:myLiveSessions.status.active", color: "bg-emerald-100 text-emerald-700", icon: Radio       },
-  ENDED:  { labelKey: "pages:myLiveSessions.status.ended",  color: "bg-blue-100 text-blue-700",       icon: CheckCircle2 },
+// Tek badge — tur 1 + tur 2 durumlarını efektif tek bir state'e indirir.
+// 5 efektif state: draft | active | round1Completed | round2Active | round2Completed.
+// İki ayrı badge yerine kullanıcının görmek istediği tek özet etiket.
+const EFFECTIVE_STATUS = {
+  draft: {
+    labelKey: "pages:myLiveSessions.status.draft",
+    badge:    "bg-slate-100 text-slate-600",
+    avatarBg: "bg-slate-100",
+    avatarFg: "text-slate-500",
+    icon:     FileEdit,
+  },
+  active: {
+    labelKey: "pages:myLiveSessions.status.active",
+    badge:    "bg-emerald-100 text-emerald-700",
+    avatarBg: "bg-emerald-100",
+    avatarFg: "text-emerald-600",
+    icon:     Radio,
+  },
+  round1Completed: {
+    labelKey: "pages:myLiveSessions.status.round1Completed",
+    badge:    "bg-blue-100 text-blue-700",
+    avatarBg: "bg-blue-100",
+    avatarFg: "text-blue-600",
+    icon:     CheckCircle2,
+  },
+  round2Active: {
+    labelKey: "pages:myLiveSessions.status.round2Active",
+    badge:    "bg-emerald-100 text-emerald-700",
+    avatarBg: "bg-emerald-100",
+    avatarFg: "text-emerald-600",
+    icon:     Radio,
+  },
+  round2Completed: {
+    labelKey: "pages:myLiveSessions.status.round2Completed",
+    badge:    "bg-indigo-100 text-indigo-700",
+    avatarBg: "bg-indigo-100",
+    avatarFg: "text-indigo-600",
+    icon:     CheckCircle2,
+  },
 };
+
+/**
+ * Tur 1 + Tur 2 durumlarından tek efektif state üretir.
+ * Tur 2 varsa onun durumu önceliklidir (en güncel aşama).
+ * Tur 2 DRAFT ise henüz başlatılmadığından "round1Completed" gösterilir.
+ */
+function getEffectiveStatus(session, round2) {
+  if (round2?.status === "ENDED")  return "round2Completed";
+  if (round2?.status === "ACTIVE") return "round2Active";
+  if (session.status === "ENDED")  return "round1Completed";
+  if (session.status === "ACTIVE") return "active";
+  return "draft";
+}
 
 function safeDate(iso) {
   if (!iso) return null;
@@ -48,7 +95,8 @@ function safeDate(iso) {
  */
 function SessionCard({ session, round2, onOpenHost, onEdit, onStartRound1, onStartRound2, starting }) {
   const { t } = useTranslation(["pages"]);
-  const cfg        = STATUS_CONFIG[session.status] ?? STATUS_CONFIG.DRAFT;
+  const effective  = getEffectiveStatus(session, round2);
+  const cfg        = EFFECTIVE_STATUS[effective];
   const StatusIcon = cfg.icon;
   const qCount     = session.questions?.length ?? session._count?.questions ?? 0;
   const pCount     = session.participants?.length ?? session._count?.participants ?? 0;
@@ -56,7 +104,7 @@ function SessionCard({ session, round2, onOpenHost, onEdit, onStartRound1, onSta
   const isActive   = session.status === "ACTIVE";
   const isDraft    = session.status === "DRAFT";
 
-  // Tur 2'nin durumu (varsa)
+  // Tur 2'nin durumu (varsa) — buton koşulları için
   const r2Status = round2?.status;
   const r2Ended  = r2Status === "ENDED";
 
@@ -65,29 +113,14 @@ function SessionCard({ session, round2, onOpenHost, onEdit, onStartRound1, onSta
       <CardContent className="p-5">
         <div className="flex items-start justify-between gap-4">
           <div className="flex items-start gap-3 flex-1 min-w-0">
-            <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${
-              isActive ? "bg-emerald-100" :
-              isEnded  ? "bg-blue-100"    : "bg-slate-100"
-            }`}>
-              <StatusIcon className={`w-5 h-5 ${
-                isActive ? "text-emerald-600" :
-                isEnded  ? "text-blue-600"    : "text-slate-500"
-              }`} />
+            <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${cfg.avatarBg}`}>
+              <StatusIcon className={`w-5 h-5 ${cfg.avatarFg}`} />
             </div>
 
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 flex-wrap mb-1">
                 <h3 className="font-semibold text-slate-900 truncate">{session.title}</h3>
-                <Badge className={cfg.color}>{t(cfg.labelKey)}</Badge>
-                {round2 && (
-                  <Badge className="bg-indigo-100 text-indigo-700">
-                    {r2Ended
-                      ? t("pages:myLiveSessions.round2.completedBadge")
-                      : r2Status === "ACTIVE"
-                      ? t("pages:myLiveSessions.round2.activeBadge")
-                      : t("pages:myLiveSessions.round2.draftBadge")}
-                  </Badge>
-                )}
+                <Badge className={cfg.badge}>{t(cfg.labelKey)}</Badge>
               </div>
 
               <div className="flex items-center gap-4 text-xs text-slate-500 flex-wrap">

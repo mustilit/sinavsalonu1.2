@@ -815,12 +815,9 @@
     "status": {
       "draft": "Entwurf",
       "active": "Aktiv",
-      "ended": "Abgeschlossen"
-    },
-    "round2": {
-      "completedBadge": "Runde 2 abgeschlossen",
-      "activeBadge": "Runde 2 aktiv",
-      "draftBadge": "Runde 2 Entwurf"
+      "round1Completed": "Runde 1 abgeschlossen",
+      "round2Active": "Runde 2 aktiv",
+      "round2Completed": "Runde 2 abgeschlossen"
     },
     "card": {
       "questions": "{{count}} Fragen",

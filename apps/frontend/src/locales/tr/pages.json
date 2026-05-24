@@ -815,12 +815,9 @@
     "status": {
       "draft": "Taslak",
       "active": "Aktif",
-      "ended": "Tamamlandı"
-    },
-    "round2": {
-      "completedBadge": "Tur 2 tamamlandı",
-      "activeBadge": "Tur 2 aktif",
-      "draftBadge": "Tur 2 taslak"
+      "round1Completed": "1. Tur Tamamlandı",
+      "round2Active": "2. Tur Aktif",
+      "round2Completed": "2. Tur Tamamlandı"
     },
     "card": {
       "questions": "{{count}} soru",

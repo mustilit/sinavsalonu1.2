@@ -815,12 +815,9 @@
     "status": {
       "draft": "草稿",
       "active": "进行中",
-      "ended": "已结束"
-    },
-    "round2": {
-      "completedBadge": "第 2 轮已完成",
-      "activeBadge": "第 2 轮进行中",
-      "draftBadge": "第 2 轮草稿"
+      "round1Completed": "第 1 轮已完成",
+      "round2Active": "第 2 轮进行中",
+      "round2Completed": "第 2 轮已完成"
     },
     "card": {
       "questions": "{{count}} 道题",

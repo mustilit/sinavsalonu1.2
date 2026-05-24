@@ -815,12 +815,9 @@
     "status": {
       "draft": "Draft",
       "active": "Active",
-      "ended": "Completed"
-    },
-    "round2": {
-      "completedBadge": "Round 2 completed",
-      "activeBadge": "Round 2 active",
-      "draftBadge": "Round 2 draft"
+      "round1Completed": "Round 1 Completed",
+      "round2Active": "Round 2 Active",
+      "round2Completed": "Round 2 Completed"
     },
     "card": {
       "questions": "{{count}} questions",
