@@ -135,7 +135,6 @@ function QuestionEditDialog({ question, questionIndex, topicList, onSave, onSave
   });
 
   const [local, setLocal]           = useState(() => makeLocalState(question));
-  const [displayIndex, setDisplayIndex] = useState(questionIndex);
   const [submitting, setSubmitting] = useState(false);
   const [dupLoading, setDupLoading] = useState(false);
   const [dialogErrors, setDialogErrors] = useState({});
@@ -192,17 +191,21 @@ function QuestionEditDialog({ question, questionIndex, topicList, onSave, onSave
     catch (e) { toast.error(e?.message || "Kaydedilirken hata oluştu"); setSubmitting(false); }
   };
 
+  // "Yeni Soru": mevcut soruyu kaydet, dialog'u kapat. Parent'taki addQuestion
+  // (onSaveAndNew içinden çağrılır) yeni soruyu ekler ve pendingEditKey ile
+  // yeni QuestionItem'ın dialog'unu auto-open eder. Burada dialog'u kapatmazsak
+  // iki dialog üst üste açık kalır.
   const handleSaveAndNew = async () => {
     if (!validate()) return;
     setSubmitting(true);
     try {
       const saved = await prepareAndUpload();
       onSaveAndNew(saved);
-      const newQ = emptyQuestion();
-      setDisplayIndex(p => p + 1);
-      setLocal(makeLocalState(newQ));
-    } catch (e) { toast.error(e?.message || "Kaydedilirken hata oluştu"); }
-    finally { setSubmitting(false); }
+      onClose();
+    } catch (e) {
+      toast.error(e?.message || "Kaydedilirken hata oluştu");
+      setSubmitting(false);
+    }
   };
 
   const qImgDisplay = local._imgPreview || local.mediaUrl || null;
@@ -219,8 +222,8 @@ function QuestionEditDialog({ question, questionIndex, topicList, onSave, onSave
         <DialogHeader>
           <DialogTitle>
             {isBrandNew
-              ? `Soru ${displayIndex + 1} Ekle`
-              : `Soru ${displayIndex + 1} Düzenle`}
+              ? `Soru ${questionIndex + 1} Ekle`
+              : `Soru ${questionIndex + 1} Düzenle`}
           </DialogTitle>
         </DialogHeader>
 
