@@ -294,8 +294,15 @@ export default function LiveSessionHost() {
               {t("pages:liveHost.question.label", { n: state.currentQuestionIdx + 1 })}
             </span>
             {q?.mediaUrl && (
-              <div className="mt-2 w-full max-h-64 rounded-xl overflow-hidden border border-slate-100">
-                <img src={q.mediaUrl} alt={t("pages:liveHost.question.mediaAlt")} className="w-full h-full object-contain" />
+              // Soru görseli: container max-h + img h-full kombinasyonu crop'a yol
+              // açıyordu. max-h'yi img'in kendisine taşıdık; w-full + max-h + object-contain
+              // ile tam görsel görünür, sığmazsa orantılı küçülür (kırpılmaz).
+              <div className="mt-2 w-full rounded-xl overflow-hidden border border-slate-100 bg-slate-50 flex items-center justify-center">
+                <img
+                  src={q.mediaUrl}
+                  alt={t("pages:liveHost.question.mediaAlt")}
+                  className="max-h-96 max-w-full w-auto h-auto object-contain"
+                />
               </div>
             )}
             <p className="text-slate-700 text-lg mt-3 leading-relaxed">
