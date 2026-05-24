@@ -383,12 +383,14 @@ export default function LiveSessionJoin() {
               <span className={`w-9 h-9 rounded-xl flex items-center justify-center text-sm font-bold text-white shrink-0 ${LETTER_BG[idx % LETTER_BG.length]}`}>
                 {LETTERS[idx]}
               </span>
-              <div className="flex-1 flex items-center gap-2 min-w-0">
+              <div className="flex-1 flex items-center gap-3 min-w-0">
                 {opt.mediaUrl && (
+                  // Aday tarafı — TakeTest'teki TestPreviewModal ile aynı max-h-32.
+                  // Genişlik auto, object-contain ile aspect ratio korunur.
                   <img
                     src={opt.mediaUrl}
                     alt=""
-                    className="h-14 w-14 object-contain rounded border border-white/40 bg-white flex-shrink-0"
+                    className="max-h-32 w-auto max-w-xs object-contain rounded-lg border border-white/40 bg-white flex-shrink-0"
                   />
                 )}
                 {opt.content && (

@@ -369,12 +369,14 @@ export default function LiveSessionHost() {
                       >
                         {LETTERS[idx]}
                       </span>
-                      <div className="relative flex-1 flex items-center gap-2 min-w-0">
+                      <div className="relative flex-1 flex items-center gap-3 min-w-0">
                         {opt.mediaUrl && (
+                          // Normal test (TestPreviewModal/QuestionForm) ile aynı max-h:
+                          // max-h-32 (128px), genişlik auto. object-contain ile aspect korunur.
                           <img
                             src={opt.mediaUrl}
                             alt=""
-                            className="h-12 w-12 object-contain rounded border border-slate-200 bg-white flex-shrink-0"
+                            className="max-h-32 w-auto max-w-xs object-contain rounded-lg border border-slate-200 bg-white flex-shrink-0"
                           />
                         )}
                         {opt.content && <span className="text-slate-700">{opt.content}</span>}
