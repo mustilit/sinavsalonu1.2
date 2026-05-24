@@ -1079,7 +1079,7 @@ export default function LiveSessionCreate() {
                 >
                   {createMutation.isPending
                     ? <><Loader2 className="w-4 h-4 animate-spin" /> Oluşturuluyor...</>
-                    : <><Zap className="w-4 h-4" /> Ödeme Yap ve Başlat</>}
+                    : <><Zap className="w-4 h-4" /> Ödeme Yap ve Oluştur</>}
                 </Button>
               </div>
             </CardContent>
