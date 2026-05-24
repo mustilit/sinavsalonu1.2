@@ -15,7 +15,7 @@ interface CreateLiveSessionInput {
   tierId?: string | null;
   maxParticipants?: number | null;
   questions: Array<{
-    content: string;
+    content?: string | null;
     mediaUrl?: string | null;
     order: number;
     options: Array<{ content: string; isCorrect: boolean; order: number }>;
@@ -43,7 +43,11 @@ export class CreateLiveSessionUseCase {
     }
 
     for (const q of questions) {
-      if (!q.content?.trim()) throw new AppError('VALIDATION_ERROR', 'Question content cannot be empty', 400);
+      // Soru: metin VEYA görsel olmalı (eğitici görsel-only soru da yazabilir)
+      const hasContent = !!q.content?.trim();
+      const hasMedia   = !!q.mediaUrl?.trim();
+      if (!hasContent && !hasMedia)
+        throw new AppError('VALIDATION_ERROR', 'Question must have content or image', 400);
       if (!q.options || q.options.length < 2)
         throw new AppError('VALIDATION_ERROR', 'Each question must have at least 2 options', 400);
       if (!q.options.some((o) => o.isCorrect))
@@ -78,8 +82,9 @@ export class CreateLiveSessionUseCase {
         maxParticipants,
         questions: {
           create: questions.map((q) => ({
-            content: q.content.trim(),
-            mediaUrl: q.mediaUrl ?? null,
+            // content nullable değil — empty string yazılır (görsel-only soru).
+            content: q.content?.trim() ?? '',
+            mediaUrl: q.mediaUrl?.trim() || null,
             order: q.order,
             options: {
               create: q.options.map((o) => ({

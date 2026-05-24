@@ -11,9 +11,11 @@ export class LiveOptionDto {
 }
 
 export class LiveQuestionDto {
+  // Soru içeriği VEYA mediaUrl olmalı. Use case'de cross-field doğrulama yapılır.
+  // Frontend görsel-only sorulara izin verir; eski @IsNotEmpty() bunu engelliyordu.
+  @IsOptional()
   @IsString()
-  @IsNotEmpty()
-  content!: string;
+  content?: string;
 
   @IsOptional()
   @IsString()
