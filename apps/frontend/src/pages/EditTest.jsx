@@ -299,7 +299,7 @@ function QuestionEditDialog({ question, questionIndex, topicList, onSave, onSave
   );
 }
 
-function QuestionItem({ questionIndex, question, topicList, onUpdate, onDelete, onAddNew }) {
+function QuestionItem({ questionIndex, question, topicList, onUpdate, onDelete, onAddNew, validationAttempted }) {
   const { t } = useTranslation(["pages"]);
   const [editOpen, setEditOpen] = useState(false);
   const complete = isQComplete(question);
@@ -308,11 +308,19 @@ function QuestionItem({ questionIndex, question, topicList, onUpdate, onDelete, 
   const correctText = correctIdx >= 0
     ? t("pages:testForm.question.correctIs", { letter: LETTERS[correctIdx] })
     : t("pages:testForm.question.correctMissing");
+  // Kullanıcı "Önizleme →" denemiş ve bu soru hâlâ eksik mi?
+  // İçerik dokunulmuş ama tamamlanmamış soruları yakalar (boş satır = atılabilir taslak).
+  const touched =
+    (question.content && question.content.trim()) ||
+    question.mediaUrl ||
+    question.options.some(o => (o.content && o.content.trim()) || o.mediaUrl || o.isCorrect);
+  const showError = validationAttempted && touched && !complete;
   return (
     <>
       {/* Hep görünür tek satır: numara + durum + içerik özet + seçenek/doğru cevap + butonlar.
-          Accordion açma/kapama kaldırıldı; her şey aynı satırda, dar ekranda flex-wrap ile alt satıra düşer. */}
-      <div className="border border-slate-200 rounded-lg px-3 py-2 hover:bg-slate-50/50">
+          Accordion açma/kapama kaldırıldı; her şey aynı satırda, dar ekranda flex-wrap ile alt satıra düşer.
+          showError → kırmızı çerçeve, eksik alan uyarısı. */}
+      <div className={`rounded-lg px-3 py-2 hover:bg-slate-50/50 border ${showError ? 'border-rose-400 bg-rose-50/40' : 'border-slate-200'}`}>
         <div className="flex items-center gap-3 flex-wrap">
           <span className="text-sm font-semibold text-slate-600 flex-shrink-0">
             {t("pages:testForm.question.label", { n: questionIndex + 1 })}
@@ -356,13 +364,25 @@ function QuestionItem({ questionIndex, question, topicList, onUpdate, onDelete, 
             {t("pages:testForm.question.rejectedNotice")}
           </div>
         )}
+        {showError && (
+          <p className="mt-1 text-xs text-rose-600 flex items-center gap-1">
+            <AlertTriangle className="w-3 h-3" aria-hidden="true" />
+            {!question.content?.trim() && !question.mediaUrl
+              ? t("pages:testForm.question.errorMissingContent", "Soru metni veya görseli eksik")
+              : filledOpts < 2
+                ? t("pages:testForm.question.errorMinOptions", "En az 2 seçenek dolu olmalı")
+                : correctIdx < 0
+                  ? t("pages:testForm.question.errorMissingCorrect", "Doğru cevap işaretlenmemiş")
+                  : t("pages:testForm.question.errorIncomplete", "Eksik alan var")}
+          </p>
+        )}
       </div>
       {editOpen && <QuestionEditDialog question={question} questionIndex={questionIndex} topicList={topicList} onSave={u => onUpdate(u)} onSaveAndNew={u => { onUpdate(u); onAddNew?.(); }} onClose={() => setEditOpen(false)} />}
     </>
   );
 }
 
-function TestCard({ test, testIndex, examTypes, topicList, onTestUpdate, onTestDelete, totalTests, isExpanded, onToggleExpand }) {
+function TestCard({ test, testIndex, examTypes, topicList, onTestUpdate, onTestDelete, totalTests, isExpanded, onToggleExpand, validationAttempted }) {
   const { t } = useTranslation(["pages"]);
   const completedCount = test.questions.filter(isQComplete).length;
   const [confirmDelete, setConfirmDelete] = useState(false);
@@ -507,6 +527,7 @@ function TestCard({ test, testIndex, examTypes, topicList, onTestUpdate, onTestD
         <div className="space-y-2">
           {test.questions.map((q, qi) => (
             <QuestionItem key={q._k} questionIndex={qi} question={q} topicList={topicList}
+              validationAttempted={validationAttempted}
               onUpdate={u => onTestUpdate({ ...test, questions: test.questions.map((x, i) => i === qi ? u : x) })}
               onDelete={idx => onTestUpdate({ ...test, questions: test.questions.filter((_, i) => i !== idx) })}
               onAddNew={() => onTestUpdate({ ...test, questions: [...test.questions, emptyQuestion()] })}
@@ -534,6 +555,9 @@ export default function EditTest() {
   const [previewIdx, setPreviewIdx]           = useState(null);
   const [initialized, setInitialized]         = useState(false);
   const [expandedTestKey, setExpandedTestKey] = useState(null);
+  // Önizleme denenince true olur — eksik sorular kırmızı çerçeveyle vurgulanır.
+  // Soru içeriği değişince tekrar false'a çekilir (kullanıcı düzelttiyse uyarı kalkar).
+  const [validationAttempted, setValidationAttempted] = useState(false);
   const [showDraftDialog, setShowDraftDialog] = useState(false);
   const [draftInfo, setDraftInfo]             = useState(null);
 
@@ -741,7 +765,34 @@ export default function EditTest() {
     setStep(2);
   };
   const goToPreview = () => {
-    if (!tests.some(t2 => t2.title.trim() && t2.questions.some(isQComplete))) { toast.error(t("pages:testForm.testsStep.validateAtLeastOne")); return; }
+    if (!tests.some(t2 => t2.title.trim() && t2.questions.some(isQComplete))) {
+      toast.error(t("pages:testForm.testsStep.validateAtLeastOne"));
+      return;
+    }
+    // Eksik soruları say. Boş soru (içerik + tüm seçenek boş + işaretsiz) bilinçli
+    // taslak satırı olabilir — yalnızca "kısmen doldurulmuş" olanlar uyarıya konu.
+    // İşaret: en az bir alana dokunulmuş ama complete değil → eksik kabul edilir.
+    let incompleteCount = 0;
+    let firstIncompleteTestKey = null;
+    for (const tt of tests) {
+      for (const q of tt.questions) {
+        const touched =
+          (q.content && q.content.trim()) ||
+          q.mediaUrl ||
+          q.options.some(o => (o.content && o.content.trim()) || o.mediaUrl || o.isCorrect);
+        if (touched && !isQComplete(q)) {
+          incompleteCount += 1;
+          if (!firstIncompleteTestKey) firstIncompleteTestKey = tt._k;
+        }
+      }
+    }
+    if (incompleteCount > 0) {
+      setValidationAttempted(true);
+      if (firstIncompleteTestKey) setExpandedTestKey(firstIncompleteTestKey);
+      toast.error(t("pages:testForm.testCard.incompleteQuestionsWarning", { count: incompleteCount }));
+      return;
+    }
+    setValidationAttempted(false);
     setStep(3);
   };
 
@@ -888,8 +939,14 @@ export default function EditTest() {
             <TestCard key={tt._k} test={tt} testIndex={ti} examTypes={examTypes} topicList={topicList}
               totalTests={tests.length}
               isExpanded={tt._k === expandedTestKey}
+              validationAttempted={validationAttempted}
               onToggleExpand={() => setExpandedTestKey(prev => prev === tt._k ? null : tt._k)}
-              onTestUpdate={u => setTests(tests.map((x, i) => i === ti ? u : x))}
+              onTestUpdate={u => {
+                setTests(tests.map((x, i) => i === ti ? u : x));
+                // Kullanıcı bir değişiklik yapıyorsa eski uyarıları temizle —
+                // düzelttikçe kırmızı çerçeveler kaybolur.
+                if (validationAttempted) setValidationAttempted(false);
+              }}
               onTestDelete={idx => {
                 const removed = tests[idx];
                 setTests(tests.filter((_, i) => i !== idx));

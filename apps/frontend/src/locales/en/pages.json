@@ -382,6 +382,7 @@
       "deleteConfirmBody": "This test and all its questions will be permanently deleted. This action cannot be undone.",
       "deleteConfirmCancel": "Cancel",
       "deleteConfirmConfirm": "Yes, delete",
+      "incompleteQuestionsWarning": "{{count}} question(s) have missing fields. They are highlighted with a red border — please complete them.",
       "questionCountStat": "{{count}} questions",
       "completedSuffix": "({{count}} completed)",
       "addQuestion": "Add Question",
@@ -417,6 +418,10 @@
       "selectedCount": "{{filled}}/5 options",
       "correctMissing": "• No correct option selected",
       "correctIs": "• Correct: {{letter}}",
+      "errorMissingContent": "Question text or image is missing",
+      "errorMinOptions": "At least 2 options must be filled",
+      "errorMissingCorrect": "Correct answer not marked",
+      "errorIncomplete": "Missing fields",
       "edit": "Edit",
       "delete": "Delete",
       "rejectedNotice": "This question was found to violate content policy."

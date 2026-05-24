@@ -382,6 +382,7 @@
       "deleteConfirmBody": "Este examen y todas sus preguntas se eliminarán permanentemente. Esta acción no se puede deshacer.",
       "deleteConfirmCancel": "Cancelar",
       "deleteConfirmConfirm": "Sí, eliminar",
+      "incompleteQuestionsWarning": "Hay {{count}} pregunta(s) con campos incompletos. Están marcadas con borde rojo; por favor complétalas.",
       "questionCountStat": "{{count}} preguntas",
       "completedSuffix": "({{count}} completadas)",
       "addQuestion": "Añadir pregunta",
@@ -417,6 +418,10 @@
       "selectedCount": "{{filled}}/5 opciones",
       "correctMissing": "• Sin opción correcta",
       "correctIs": "• Correcta: {{letter}}",
+      "errorMissingContent": "Falta el enunciado o la imagen de la pregunta",
+      "errorMinOptions": "Al menos 2 opciones deben estar llenas",
+      "errorMissingCorrect": "Respuesta correcta no marcada",
+      "errorIncomplete": "Faltan campos",
       "edit": "Editar",
       "delete": "Eliminar",
       "rejectedNotice": "Esta pregunta infringe la política de contenido."

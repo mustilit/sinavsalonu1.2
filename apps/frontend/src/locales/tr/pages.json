@@ -382,6 +382,7 @@
       "deleteConfirmBody": "Bu test ve içindeki tüm sorular kalıcı olarak silinecek. İşlem geri alınamaz.",
       "deleteConfirmCancel": "Vazgeç",
       "deleteConfirmConfirm": "Evet, sil",
+      "incompleteQuestionsWarning": "{{count}} soruda eksik alan var. Kırmızı çerçeveyle işaretlendi; lütfen tamamlayın.",
       "questionCountStat": "{{count}} soru",
       "completedSuffix": "({{count}} tamamlanmış)",
       "addQuestion": "Soru Ekle",
@@ -417,6 +418,10 @@
       "selectedCount": "{{filled}}/5 seçenek",
       "correctMissing": "• Doğru seçilmedi",
       "correctIs": "• Doğru: {{letter}}",
+      "errorMissingContent": "Soru metni veya görseli eksik",
+      "errorMinOptions": "En az 2 seçenek dolu olmalı",
+      "errorMissingCorrect": "Doğru cevap işaretlenmemiş",
+      "errorIncomplete": "Eksik alan var",
       "edit": "Düzenle",
       "delete": "Sil",
       "rejectedNotice": "Bu soru içerik politikasına aykırı bulundu."

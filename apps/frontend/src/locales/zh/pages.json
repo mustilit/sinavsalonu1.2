@@ -382,6 +382,7 @@
       "deleteConfirmBody": "该测试及其所有题目将被永久删除。此操作无法撤销。",
       "deleteConfirmCancel": "取消",
       "deleteConfirmConfirm": "确认删除",
+      "incompleteQuestionsWarning": "有 {{count}} 道题目存在缺失项,已用红框标记,请补全。",
       "questionCountStat": "{{count}} 道题",
       "completedSuffix": "(已完成 {{count}} 道)",
       "addQuestion": "添加题目",
@@ -417,6 +418,10 @@
       "selectedCount": "{{filled}}/5 选项",
       "correctMissing": "• 未选择正确答案",
       "correctIs": "• 正确答案: {{letter}}",
+      "errorMissingContent": "缺少题干或图片",
+      "errorMinOptions": "至少需要填写 2 个选项",
+      "errorMissingCorrect": "未标记正确答案",
+      "errorIncomplete": "存在缺失项",
       "edit": "编辑",
       "delete": "删除",
       "rejectedNotice": "此题违反内容政策。"

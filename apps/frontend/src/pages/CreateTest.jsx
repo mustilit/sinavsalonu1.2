@@ -532,18 +532,26 @@ function QuestionEditDialog({ question, questionIndex, topicList, onSave, onSave
 }
 
 // ─── Soru maddesi accordion ──────────────────────────────────────────────────
-function QuestionItem({ questionIndex, question, topicList, onUpdate, onDelete, onAddNew }) {
+function QuestionItem({ questionIndex, question, topicList, onUpdate, onDelete, onAddNew, validationAttempted }) {
   const { t } = useTranslation(["pages"]);
   const [editOpen, setEditOpen] = useState(false);
 
+  const filledOpts = question.options.filter(o => o.content.trim() || o.mediaUrl).length;
+  const correctIdx = question.options.findIndex(o => o.isCorrect);
   const isComplete = (question.content.trim() || question.mediaUrl) &&
-    question.options.filter(o => o.content.trim() || o.mediaUrl).length >= 2 &&
-    question.options.some(o => o.isCorrect);
+    filledOpts >= 2 &&
+    correctIdx >= 0;
+  // Touched: bir alana dokunulmuş ama complete değil → eksik
+  const touched =
+    (question.content && question.content.trim()) ||
+    question.mediaUrl ||
+    question.options.some(o => (o.content && o.content.trim()) || o.mediaUrl || o.isCorrect);
+  const showError = validationAttempted && touched && !isComplete;
 
   return (
     <>
       {/* Hep görünür tek satır — Accordion açma/kapama yok. Dar ekranda flex-wrap ile alt satıra düşer. */}
-      <div className="border border-slate-200 rounded-lg px-3 py-2 hover:bg-slate-50/50">
+      <div className={`rounded-lg px-3 py-2 hover:bg-slate-50/50 border ${showError ? 'border-rose-400 bg-rose-50/40' : 'border-slate-200'}`}>
         <div className="flex items-center gap-3 flex-wrap">
           <span className="text-sm font-semibold text-slate-600 flex-shrink-0">
             {t("pages:testForm.question.label", { n: questionIndex + 1 })}
@@ -596,6 +604,18 @@ function QuestionItem({ questionIndex, question, topicList, onUpdate, onDelete, 
             {t("pages:testForm.question.rejectedNotice")}
           </div>
         )}
+        {showError && (
+          <p className="mt-1 text-xs text-rose-600 flex items-center gap-1">
+            <AlertTriangle className="w-3 h-3" aria-hidden="true" />
+            {!question.content?.trim() && !question.mediaUrl
+              ? t("pages:testForm.question.errorMissingContent", "Soru metni veya görseli eksik")
+              : filledOpts < 2
+                ? t("pages:testForm.question.errorMinOptions", "En az 2 seçenek dolu olmalı")
+                : correctIdx < 0
+                  ? t("pages:testForm.question.errorMissingCorrect", "Doğru cevap işaretlenmemiş")
+                  : t("pages:testForm.question.errorIncomplete", "Eksik alan var")}
+          </p>
+        )}
         {question.mediaUrl && (
           <p className="text-xs text-slate-500 mt-1">{t("pages:testForm.createPage.imageAdded")}</p>
         )}
@@ -619,7 +639,7 @@ function QuestionItem({ questionIndex, question, topicList, onUpdate, onDelete, 
 }
 
 // ─── Test kartı (Adım 2'de) ─────────────────────────────────────────────────
-function TestCard({ test, testIndex, examTypes, topicList, onTestUpdate, onTestDelete, error, onErrorClear, totalTests, isExpanded, onToggleExpand }) {
+function TestCard({ test, testIndex, examTypes, topicList, onTestUpdate, onTestDelete, error, onErrorClear, totalTests, isExpanded, onToggleExpand, validationAttempted }) {
   const { t } = useTranslation(["pages"]);
   const [showDOCXDialog, setShowDOCXDialog] = useState(false);
   const [docxLoading, setDocxLoading] = useState(false);
@@ -904,6 +924,7 @@ function TestCard({ test, testIndex, examTypes, topicList, onTestUpdate, onTestD
                 questionIndex={qIdx}
                 question={q}
                 topicList={topicList}
+                validationAttempted={validationAttempted}
                 onUpdate={(updated) => {
                   onTestUpdate({
                     ...test,
@@ -985,6 +1006,8 @@ export default function CreateTest() {
   const [previewTestIndex, setPreviewTestIndex] = useState(null);
   const [pkgErrors, setPkgErrors] = useState({});
   const [testErrors, setTestErrors] = useState({});
+  // Önizleme denenince true olur — eksik sorular kırmızı çerçeveyle vurgulanır.
+  const [validationAttempted, setValidationAttempted] = useState(false);
 
   const [pkgData, setPkgData] = useState({
     title: "",
@@ -1224,12 +1247,39 @@ export default function CreateTest() {
       }
     });
 
+    // Eksik (touched ama complete olmayan) soruları say. Boş satırlar (taslak) sayılmaz.
+    let incompleteCount = 0;
+    let firstIncompleteKey = null;
+    for (const tt of tests) {
+      for (const q of tt.questions) {
+        const filledOpts = q.options.filter(o => o.content.trim() || o.mediaUrl);
+        const complete =
+          (q.content.trim() || q.mediaUrl) &&
+          filledOpts.length >= 2 &&
+          q.options.some(o => o.isCorrect);
+        const touched =
+          (q.content && q.content.trim()) ||
+          q.mediaUrl ||
+          q.options.some(o => (o.content && o.content.trim()) || o.mediaUrl || o.isCorrect);
+        if (touched && !complete) {
+          incompleteCount += 1;
+          if (!firstIncompleteKey) firstIncompleteKey = tt._k;
+        }
+      }
+    }
+
     const validTests = tests.filter((tt) => !errs[tt._k]);
-    if (validTests.length === 0) {
+    if (validTests.length === 0 || incompleteCount > 0) {
       setTestErrors(errs);
+      if (incompleteCount > 0) {
+        setValidationAttempted(true);
+        if (firstIncompleteKey) setExpandedTestKey(firstIncompleteKey);
+        toast.error(t("pages:testForm.testCard.incompleteQuestionsWarning", { count: incompleteCount }));
+      }
       return;
     }
     setTestErrors(errs);
+    setValidationAttempted(false);
     setStep(3);
   };
 
@@ -1415,10 +1465,12 @@ export default function CreateTest() {
               error={testErrors[test._k]}
               totalTests={tests.length}
               isExpanded={test._k === expandedTestKey}
+              validationAttempted={validationAttempted}
               onToggleExpand={() => setExpandedTestKey(prev => prev === test._k ? null : test._k)}
               onErrorClear={(key) => setTestErrors(p => ({ ...p, [key]: "" }))}
               onTestUpdate={(updated) => {
                 setTests(tests.map((t, i) => i === tIdx ? updated : t));
+                if (validationAttempted) setValidationAttempted(false);
               }}
               onTestDelete={(idx) => {
                 const removed = tests[idx];

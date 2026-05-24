@@ -382,6 +382,7 @@
       "deleteConfirmBody": "Dieser Test und alle enthaltenen Fragen werden dauerhaft gelöscht. Diese Aktion kann nicht rückgängig gemacht werden.",
       "deleteConfirmCancel": "Abbrechen",
       "deleteConfirmConfirm": "Ja, löschen",
+      "incompleteQuestionsWarning": "Bei {{count}} Frage(n) fehlen Angaben. Sie sind rot umrahmt — bitte vervollständigen.",
       "questionCountStat": "{{count}} Fragen",
       "completedSuffix": "({{count}} abgeschlossen)",
       "addQuestion": "Frage hinzufügen",
@@ -417,6 +418,10 @@
       "selectedCount": "{{filled}}/5 Optionen",
       "correctMissing": "• Richtige Option nicht ausgewählt",
       "correctIs": "• Richtig: {{letter}}",
+      "errorMissingContent": "Fragetext oder Bild fehlt",
+      "errorMinOptions": "Mindestens 2 Optionen müssen ausgefüllt sein",
+      "errorMissingCorrect": "Richtige Antwort nicht markiert",
+      "errorIncomplete": "Felder fehlen",
       "edit": "Bearbeiten",
       "delete": "Löschen",
       "rejectedNotice": "Diese Frage verstößt gegen die Inhaltsrichtlinie."
