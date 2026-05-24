@@ -504,7 +504,11 @@ export default function LiveSessionHost() {
             <ComparisonPanel sessionId={sessionId} />
           )}
 
-        {/* ── Alt satır: sol Aktif Katılımcılar + İlerleme, sağ QR (küçük) ── */}
+        {/* ── Alt satır: sol Aktif Katılımcılar + İlerleme, sağ QR (küçük) ──
+            Round 2 ENDED iken katılım kodu ve aktif katılımcı blokları anlamsız:
+            yeni kimse katılamaz, herkes çıkmıştır; ComparisonPanel zaten yukarıda
+            tüm istatistikleri verir. Bu yüzden gizleniyor. */}
+        {!(isEnded && state.roundNumber === 2) && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
           {/* Sol: Aktif katılımcılar — İlerleme zaten soru kartı başlığında var, ayrı bloka gerek yok */}
           <div className="bg-white rounded-xl border border-slate-200 p-4 space-y-3">
@@ -558,6 +562,7 @@ export default function LiveSessionHost() {
             </div>
           </div>
         </div>
+        )}
       </div>
 
       {/* ── Oturum bitirme onay modal'ı (site-içi, native confirm yerine) ── */}
