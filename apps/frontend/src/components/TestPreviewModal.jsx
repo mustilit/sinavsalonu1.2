@@ -234,15 +234,22 @@ export function TestPreviewModal({
             )}
 
             <div className="space-y-3">
-              {(q.options || []).map((opt, idx) => (
-                <OptionCard
-                  key={opt.id}
-                  option={opt}
-                  letter={LETTERS[idx]}
-                  selected={selectedAnswers[q.id] === opt.id}
-                  onClick={handleSelect}
-                />
-              ))}
+              {/* Sadece dolu seçenekler render edilir.
+                  EditTest'teki apiQToLocal editör UI için diziyi 5'e padding yapar
+                  (boş slot kutuları); aday önizlemesinde bu boş kutular gözükmemeli.
+                  Letter (A/B/C/D/E) görünür sıraya göre yeniden atanır — boş bir
+                  D varsa filtrelenir ve E "D" olarak gösterilir. */}
+              {(q.options || [])
+                .filter((opt) => (opt.content && opt.content.trim()) || opt.mediaUrl)
+                .map((opt, idx) => (
+                  <OptionCard
+                    key={opt.id}
+                    option={opt}
+                    letter={LETTERS[idx]}
+                    selected={selectedAnswers[q.id] === opt.id}
+                    onClick={handleSelect}
+                  />
+                ))}
             </div>
           </div>
         </div>
