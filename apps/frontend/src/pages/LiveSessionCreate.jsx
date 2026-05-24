@@ -211,7 +211,7 @@ function QuestionEditDialog({ question, questionIndex, topicList, onSave, onSave
 
   return (
     <Dialog open onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-screen overflow-y-auto">
+      <DialogContent className="max-w-5xl max-h-screen overflow-y-auto">
         <DialogHeader>
           <DialogTitle>
             {isBrandNew
@@ -220,7 +220,10 @@ function QuestionEditDialog({ question, questionIndex, topicList, onSave, onSave
           </DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-5 py-2">
+        {/* 2-sütun düzen: sol metadata (soru/görsel/konu), sağ seçenekler.
+            lg altı tek sütun (mobile-friendly). CreateTest/EditTest ile aynı düzen. */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-6 gap-y-5 py-2">
+          <div className="space-y-5">
           {/* Soru metni */}
           <div className="space-y-2">
             <Label>Soru Metni</Label>
@@ -298,8 +301,9 @@ function QuestionEditDialog({ question, questionIndex, topicList, onSave, onSave
               searchPlaceholder="Konu ara (örn. Sayılar)..."
             />
           </div>
+          </div>{/* /sol sütun */}
 
-          {/* Seçenekler */}
+          {/* Seçenekler — sağ sütun */}
           <div className="space-y-3">
             <Label>Seçenekler</Label>
             {local.options.map((opt, oi) => {
