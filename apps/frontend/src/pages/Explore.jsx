@@ -1,6 +1,7 @@
 import { useState, useDeferredValue } from "react";
 import { useTranslation } from "react-i18next";
 import { entities } from "@/api/dalClient";
+import api from "@/lib/api/apiClient";
 import { useAuth } from "@/lib/AuthContext";
 import { useQuery } from "@tanstack/react-query";
 import { Input } from "@/components/ui/input";
@@ -66,6 +67,23 @@ export default function Explore() {
     enabled: !!user,
   });
 
+  // Aday'ın takip ettiği sınav türleri — Keşfet sıralamasında bunlar öne çekilir.
+  // /follows?followType=EXAM_TYPE ham listesi; backend yoksa boş döner.
+  const { data: examTypeFollows = [] } = useQuery({
+    queryKey: ["examTypeFollows", user?.id],
+    queryFn: async () => {
+      try {
+        const { data } = await api.get("/follows", { params: { followType: "EXAM_TYPE" } });
+        return Array.isArray(data) ? data : (data?.items ?? []);
+      } catch { return []; }
+    },
+    enabled: !!user,
+    staleTime: 60_000,
+  });
+  const followedExamTypeIds = new Set(
+    examTypeFollows.map((f) => f.examTypeId ?? f.examType?.id).filter(Boolean)
+  );
+
   const purchasedIds = new Set(purchases.map(p => p.test_package_id));
   const completedIds = new Set(results.map(r => r.test_package_id));
   const inProgressIds = new Set(testProgress.map(p => p.test_package_id));
@@ -96,8 +114,14 @@ export default function Explore() {
   });
 
   // Metin araması + examType sunucuda yapılıyor;
-  // difficulty, price, rating, educator client-side kalan hafif filtreler
+  // difficulty, price, rating, educator client-side kalan hafif filtreler.
+  // Aday Keşfet sayfasında zaten satın aldığı paketleri görmemeli — onları
+  // 'Satın Alınan Testler' sayfasında görüyor. Burada potansiyel yeni alımlar
+  // ve ilgi alanına uyan öneriler listelenir.
   const filteredTests = allTests.filter((test) => {
+    // Satın alınmış paketleri Keşfet'ten gizle
+    if (purchasedIds.has(test.id)) return false;
+
     const matchesDifficulty = !selectedDifficulty || test.difficulty === selectedDifficulty;
     const matchesRating = !minRating || (test.average_rating || 0) >= minRating;
     const matchesEducator = !selectedEducator || test.educator_email === selectedEducator;
@@ -110,6 +134,18 @@ export default function Explore() {
 
     return matchesDifficulty && matchesPrice && matchesRating && matchesEducator;
   });
+
+  // İlgi alanı (takip edilen sınav türü) bazlı ranking: aday'ın takip ettiği
+  // sınav türündeki paketler listenin başına çekilir. Diğerleri API'nin
+  // döndüğü sıra (yayım tarihi DESC) korunur. Hiç takip yoksa sıralama
+  // değişmez. View history bazlı puanlama backend desteği gerektirir; sonra.
+  const sortedTests = followedExamTypeIds.size > 0
+    ? [...filteredTests].sort((a, b) => {
+        const aMatch = followedExamTypeIds.has(a.exam_type_id) ? 1 : 0;
+        const bMatch = followedExamTypeIds.has(b.exam_type_id) ? 1 : 0;
+        return bMatch - aMatch; // takip edilenler önce
+      })
+    : filteredTests;
 
   // Get unique educators for filter
   const educators = [...new Set(allTests.map(t => t.educator_email))].map(email => {
@@ -247,7 +283,7 @@ export default function Explore() {
             </div>
           ))}
         </div>
-      ) : filteredTests.length === 0 ? (
+      ) : sortedTests.length === 0 ? (
         <div className="text-center py-20">
           <div className="w-20 h-20 mx-auto bg-slate-100 rounded-full flex items-center justify-center mb-4">
             <Search className="w-10 h-10 text-slate-400" />
@@ -257,9 +293,9 @@ export default function Explore() {
         </div>
       ) : (
         <>
-          <p className="text-sm text-slate-500 mb-6">{t("pages:explore.countFound", { count: filteredTests.length })}</p>
+          <p className="text-sm text-slate-500 mb-6">{t("pages:explore.countFound", { count: sortedTests.length })}</p>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredTests.map((test) => {
+            {sortedTests.map((test) => {
               const agg = packageAggregate[test.id];
               const isCompleted = agg ? agg.allCompleted : completedIds.has(test.id);
               const isInProgress = agg
