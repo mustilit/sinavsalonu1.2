@@ -46,7 +46,8 @@ describe('MyTestPackages', () => {
     );
 
     expect(screen.getByText(/Test Paketlerim/i)).toBeInTheDocument();
-    expect(screen.getByText(/Oluşturduğun tüm test paketleri/i)).toBeInTheDocument();
+    // v5+ i18n: desc "Oluşturduğun test paketlerini yönet"
+    expect(screen.getByText(/Oluşturduğun test paketlerini yönet/i)).toBeInTheDocument();
 
     // Empty state should appear after loading
     expect(await screen.findByText(/Henüz test oluşturmadın/i)).toBeInTheDocument();

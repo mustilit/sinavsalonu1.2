@@ -13,12 +13,24 @@
 const mockUserFindUnique = jest.fn();
 const mockUserUpdate = jest.fn();
 
+// UC artık actionRepo'yu kullanmıyor; prisma.$transaction içinden moderationAction.create
+// ve user.update'i direkt çağırıyor. Test'in kontrol noktası: mockActionCreate çağrı
+// argümanları (actionType, reason, expiresAt) + mockUserUpdate (suspendedUntil/isBanned).
+const mockActionCreate = jest.fn();
+
 jest.mock('../../../src/infrastructure/database/prisma', () => ({
   prisma: {
     user: {
       findUnique: (...args: any[]) => mockUserFindUnique(...args),
       update: (...args: any[]) => mockUserUpdate(...args),
     },
+    $transaction: (cb: any) =>
+      typeof cb === 'function'
+        ? cb({
+            user: { update: (...args: any[]) => mockUserUpdate(...args) },
+            moderationAction: { create: (...args: any[]) => mockActionCreate(...args) },
+          })
+        : Promise.all(cb),
   },
 }));
 
@@ -80,6 +92,18 @@ describe('ApplyModerationActionUseCase', () => {
       isBanned: false,
       suspendedUntil: null,
     });
+    // Varsayılan moderationAction.create dönüşü
+    mockActionCreate.mockResolvedValue({
+      id: 'act-1',
+      tenantId: 'tenant-1',
+      userId: 'edu-1',
+      actorId: 'admin-1',
+      actionType: 'WARN',
+      reason: 'Test gerekçesi (yirmi karakter)',
+      metadata: {},
+      expiresAt: null,
+      createdAt: new Date(),
+    });
   });
 
   // ── Validation hatası ────────────────────────────────────────────────────
@@ -138,7 +162,7 @@ describe('ApplyModerationActionUseCase', () => {
     // Act
     const result = await uc.execute(params);
     // Assert
-    expect(actionRepo.create).toHaveBeenCalledTimes(1);
+    expect(mockActionCreate).toHaveBeenCalledTimes(1);
     expect(mockUserUpdate).not.toHaveBeenCalled();
     expect(result).toBeDefined();
   });
@@ -173,7 +197,7 @@ describe('ApplyModerationActionUseCase', () => {
     expect(suspendedUntil.getTime()).toBeLessThan(before + 7 * 86400000 + 5000);
   });
 
-  it('ACCOUNT_SUSPENDED → actionRepo.create expiresAt içerir', async () => {
+  it('ACCOUNT_SUSPENDED → mockActionCreate expiresAt içerir', async () => {
     // Arrange
     const actionRepo = makeActionRepo();
     const uc = new ApplyModerationActionUseCase(actionRepo);
@@ -181,7 +205,7 @@ describe('ApplyModerationActionUseCase', () => {
     // Act
     await uc.execute(params);
     // Assert
-    const createArgs = (actionRepo.create as jest.Mock).mock.calls[0][0];
+    const createArgs = mockActionCreate.mock.calls[0][0]?.data ?? {};
     expect(createArgs.expiresAt).toBeInstanceOf(Date);
   });
 
@@ -193,7 +217,7 @@ describe('ApplyModerationActionUseCase', () => {
     // Act
     await uc.execute(params);
     // Assert
-    const createArgs = (actionRepo.create as jest.Mock).mock.calls[0][0];
+    const createArgs = mockActionCreate.mock.calls[0][0]?.data ?? {};
     expect(createArgs.expiresAt).toBeNull();
   });
 
@@ -211,14 +235,14 @@ describe('ApplyModerationActionUseCase', () => {
     expect(updateCall.data.isBanned).toBe(true);
   });
 
-  it('ACCOUNT_BANNED → actionRepo.create çağrılır', async () => {
+  it('ACCOUNT_BANNED → mockActionCreate çağrılır', async () => {
     // Arrange
     const actionRepo = makeActionRepo({ actionType: 'ACCOUNT_BANNED' });
     const uc = new ApplyModerationActionUseCase(actionRepo);
     // Act
     await uc.execute(makeParams({ actionType: 'ACCOUNT_BANNED' }));
     // Assert
-    expect(actionRepo.create).toHaveBeenCalledTimes(1);
+    expect(mockActionCreate).toHaveBeenCalledTimes(1);
   });
 
   // ── CONTENT_REMOVED aksiyonu ─────────────────────────────────────────────
@@ -230,7 +254,7 @@ describe('ApplyModerationActionUseCase', () => {
     // Act
     await uc.execute(makeParams({ actionType: 'CONTENT_REMOVED' }));
     // Assert
-    expect(actionRepo.create).toHaveBeenCalledTimes(1);
+    expect(mockActionCreate).toHaveBeenCalledTimes(1);
     expect(mockUserUpdate).not.toHaveBeenCalled();
   });
 });

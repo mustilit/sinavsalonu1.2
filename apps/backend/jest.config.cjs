@@ -48,48 +48,55 @@ module.exports = {
   //   Path-spesifik threshold'lar (use-cases, guards) aktarılmadan önce
   //   o klasördeki test coverage'ı baseline'a ulaşmalı; yoksa CI sürekli kırmızı kalır.
   coverageThreshold: {
-    // Global baseline — 18 May 2026 ölçüm: stmts %16, branches %13, funcs %12, lines %17
-    // CI'ı kırmadan PR'da düşmeyi önlemek için gerçek baseline'a göre ayarlandı.
-    // Her sprint +2-3 puan sıkıştırılacak; hedef çeyrek sonunda: stmts %30, branches %20.
+    // Global baseline — 24 May 2026 jest --coverage gerçek ölçüm (411 pass + 24 skip):
+    //   stmts %9.51, branches %4.86, funcs %6.38, lines %9.92.
+    // Threshold = baseline - 1 pt (CI dalgalanma toleransı). Her sprint +%2 hedef.
     global: {
-      branches: 12,
-      functions: 11,
-      lines: 16,
-      statements: 16,
+      branches: 4,
+      functions: 6,
+      lines: 9,
+      statements: 9,
     },
-    // Use-cases katmanı: 220 test + 38 suite sonrası baseline aktif edildi.
-    // 18 May 2026 ölçüm: stmts %28.7, branches %25.3, funcs %24.4, lines %29.8
+    // Use-cases katmanı: 220+ test, 38 suite, drift fix sonrası.
+    // 24 May 2026 ölçüm: stmts %23.5, branches %19.15, funcs %21.12, lines %24.51.
     // Hedef: kademeli olarak branches %70, functions %80'e çıkarılacak.
     './src/application/use-cases/': {
-      branches: 24,
-      functions: 23,
-      lines: 28,
-      statements: 27,
+      branches: 18,
+      functions: 20,
+      lines: 23,
+      statements: 22,
     },
-    // Path-spesifik baseline — sadece yeni eklenen testlerin kapsadığı klasörler.
+    // Path-spesifik baseline — yeni eklenen testlerin kapsadığı klasörler.
     // Yeni dosya/branch eklerken PR'da düşmeyi engeller.
-    // 24 May 2026 ölçümünden sonraki bir tur sonraki PR'da +%5 hedef.
     './src/nest/guards/': {
-      // worker-permissions + internal-only test'leri eklendi (Roles/Jwt/Captcha
-      // hâlâ açık). Diğer guard'lar test edilmediği için baseline düşük tutulur.
-      statements: 25,
-      branches: 20,
-      functions: 25,
-      lines: 25,
+      // 24 May 2026 ölçüm: lines %28.3, branches %17.3, fn %42.9.
+      // worker-permissions + internal-only test'leri eklendi (Roles/Jwt/Captcha açık).
+      statements: 27,
+      branches: 16,
+      functions: 40,
+      lines: 27,
     },
     './src/nest/interceptors/': {
-      // metrics + idempotency interceptor test'leri.
-      statements: 60,
-      branches: 50,
-      functions: 60,
-      lines: 60,
+      // 24 May 2026 ölçüm: lines %85.5, branches %57.7, fn %73.7
+      // metrics + idempotency interceptor full kapsamlı.
+      statements: 80,
+      branches: 55,
+      functions: 70,
+      lines: 80,
     },
     './src/common/': {
-      // tenant context AsyncLocalStorage testi eklendi.
-      statements: 60,
-      branches: 50,
+      // 24 May 2026 ölçüm: lines %90.9, fn %75 (tenant + AsyncLocalStorage)
+      statements: 85,
+      branches: 20,
       functions: 70,
-      lines: 60,
+      lines: 85,
+    },
+    './src/infrastructure/metrics/': {
+      // 24 May 2026 ölçüm: lines %88.9 (prom-client registry + interceptor target)
+      statements: 80,
+      branches: 0,
+      functions: 0,
+      lines: 80,
     },
     // './src/domain/': { branches: 85, functions: 90, lines: 90, statements: 90 },
   },

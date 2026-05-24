@@ -30,13 +30,19 @@ test('cannot create review without purchase for any test in the package', async 
   await expect(uc.execute('pkg1', 'c1', { testRating: 4 })).rejects.toThrow();
 });
 
-test('cannot create review without any submitted attempt in the package', async () => {
-  const reviewRepo: any = { upsertPackageReview: async () => null };
+// UC v5+: "review için en az bir submitted attempt" kuralı kaldırıldı — paketi
+// satın almak yeterli (attempt geçmişi UC'de kontrol edilmiyor). Bu test
+// önceki davranışı bekliyordu; mevcut sözleşmeye göre purchase varken
+// attempt olmasa da review oluşturulabilir.
+test('purchase var ama submitted attempt yoksa da review oluşturulabilir (kural gevşedi)', async () => {
+  const created = { id: 'r1', packageId: 'pkg1', candidateId: 'c1', testRating: 5 };
+  const reviewRepo: any = { upsertPackageReview: async () => created };
   const purchaseRepo: any = { hasPurchase: async () => true };
   const attemptRepo: any = { hasSubmittedAttempt: async () => false };
   const auditRepo: any = { create: async () => null };
   const uc = new CreateOrUpdateReviewUseCase(reviewRepo, purchaseRepo, attemptRepo, auditRepo);
-  await expect(uc.execute('pkg1', 'c1', { testRating: 5 })).rejects.toThrow();
+  const res = await uc.execute('pkg1', 'c1', { testRating: 5 });
+  expect(res).toEqual(created);
 });
 
 test('upsert package review works when candidate has purchase + submitted attempt', async () => {

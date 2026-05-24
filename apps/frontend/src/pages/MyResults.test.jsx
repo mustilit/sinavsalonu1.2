@@ -38,10 +38,9 @@ describe('MyResults', () => {
       </QueryClientProvider>
     );
 
-    expect(screen.getByText(/Sonuçlarım/i)).toBeInTheDocument();
-
-    // Page title and content should appear after loading
-    expect(await screen.findByText(/Sonuçlarım/i)).toBeInTheDocument();
-    expect(screen.getByText(/Test performansını takip et/i)).toBeInTheDocument();
+    // v5+ i18n: title "Performans Raporlarım", desc "Çözdüğün testlerin sonuçlarını..."
+    expect(screen.getByText(/Performans Raporlarım/i)).toBeInTheDocument();
+    expect(await screen.findByText(/Performans Raporlarım/i)).toBeInTheDocument();
+    expect(screen.getByText(/Çözdüğün testlerin sonuçlarını/i)).toBeInTheDocument();
   });
 });

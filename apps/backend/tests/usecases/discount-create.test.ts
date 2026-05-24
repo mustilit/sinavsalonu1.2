@@ -21,6 +21,9 @@ jest.mock('../../src/infrastructure/database/prisma', () => ({
       findUnique: jest.fn(),
       create: jest.fn(),
     },
+    // EDUCATOR için maxDiscountPercent kontrolü (AdminSettings sorgusu).
+    // Varsayılan 50 — testler bu limiti aşmadığı sürece şikayet etmez.
+    $queryRaw: jest.fn(async () => [{ maxDiscountPercent: 50 }]),
   },
 }));
 
@@ -169,19 +172,22 @@ describe('CreateDiscountCodeUseCase', () => {
       });
     });
 
-    it('EDUCATOR rolü olmayan kullanıcı için USER_NOT_EDUCATOR hatası fırlatır', async () => {
+    it('EDUCATOR rolü olmayan kullanıcı için USER_NOT_AUTHORIZED hatası fırlatır', async () => {
       // Arrange
       const userRepo = makeUserRepo(makeUser({ role: 'CANDIDATE' }));
       const auditRepo = makeAuditRepo();
       const uc = new CreateDiscountCodeUseCase(userRepo as any, auditRepo as any);
 
       // Act & Assert
+      // UseCase v5+ yetki kodlarını normalize etti: EDUCATOR-spesifik kodlar
+      // (USER_NOT_EDUCATOR / EDUCATOR_SUSPENDED) yerine generic USER_NOT_AUTHORIZED
+      // / USER_SUSPENDED kullanılıyor.
       await expect(uc.execute('edu-1', makeInput())).rejects.toMatchObject({
-        code: 'USER_NOT_EDUCATOR',
+        code: 'USER_NOT_AUTHORIZED',
       });
     });
 
-    it('SUSPENDED eğitici kod oluşturamaz — EDUCATOR_SUSPENDED hatası', async () => {
+    it('SUSPENDED eğitici kod oluşturamaz — USER_SUSPENDED hatası', async () => {
       // Arrange
       const userRepo = makeUserRepo(makeUser({ status: 'SUSPENDED' }));
       const auditRepo = makeAuditRepo();
@@ -189,7 +195,7 @@ describe('CreateDiscountCodeUseCase', () => {
 
       // Act & Assert
       await expect(uc.execute('edu-1', makeInput())).rejects.toMatchObject({
-        code: 'EDUCATOR_SUSPENDED',
+        code: 'USER_SUSPENDED',
       });
     });
   });
@@ -249,14 +255,26 @@ describe('CreateDiscountCodeUseCase', () => {
       });
     });
 
-    it('percentOff = 51 için INVALID_PERCENT hatası fırlatır', async () => {
+    it('EDUCATOR için percentOff = 51 → DISCOUNT_LIMIT_EXCEEDED (AdminSettings.maxDiscountPercent=50)', async () => {
       // Arrange
       const userRepo = makeUserRepo();
       const auditRepo = makeAuditRepo();
       const uc = new CreateDiscountCodeUseCase(userRepo as any, auditRepo as any);
 
       // Act & Assert
+      // UseCase v5+: EDUCATOR için admin'in belirlediği maxDiscountPercent (varsayılan 50)
+      // aşımı INVALID_PERCENT (sadece 1-100 dışı için) yerine DISCOUNT_LIMIT_EXCEEDED ile
+      // ayrı koda düştü. 100+ değerler hâlâ INVALID_PERCENT.
       await expect(uc.execute('edu-1', makeInput({ percentOff: 51 }))).rejects.toMatchObject({
+        response: expect.objectContaining({ code: 'DISCOUNT_LIMIT_EXCEEDED' }),
+      });
+    });
+
+    it('percentOff = 101 → INVALID_PERCENT (admin limiti üstünde, schema validasyonu)', async () => {
+      const userRepo = makeUserRepo();
+      const auditRepo = makeAuditRepo();
+      const uc = new CreateDiscountCodeUseCase(userRepo as any, auditRepo as any);
+      await expect(uc.execute('edu-1', makeInput({ percentOff: 101 }))).rejects.toMatchObject({
         response: expect.objectContaining({ code: 'INVALID_PERCENT' }),
       });
     });
