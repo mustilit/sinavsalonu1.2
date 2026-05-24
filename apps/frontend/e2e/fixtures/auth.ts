@@ -37,16 +37,24 @@ export async function loginAs(
 ): Promise<void> {
   const creds = DEMO_CREDENTIALS[role];
   await page.goto('/Login');
-  await expect(page.getByRole('heading', { name: /giriş yap/i })).toBeVisible({ timeout: 8000 });
+  // Heading dil/i18n koşusuna duyarlı — onun yerine email input'unu bekle
+  const emailInput = page.getByLabel(/e-?(posta|mail)/i).first();
+  await expect(emailInput).toBeVisible({ timeout: 15000 });
 
-  await page.getByLabel(/e-posta/i).fill(creds.email);
-  await page.getByLabel(/şifre/i).fill(creds.password);
-  await page.getByRole('button', { name: /giriş yap/i }).click();
+  await emailInput.fill(creds.email);
+  await page.getByLabel(/şifre|password/i).first().fill(creds.password);
+  await page.getByRole('button', { name: /giriş yap|sign in|log in/i }).first().click();
 
   // Yönlendirmeyi bekle — 401 değil başka bir URL olmalı
   await page.waitForURL((url) => !url.pathname.toLowerCase().includes('/login'), {
     timeout: 15000,
   });
+
+  // Çerez consent dialog'u testleri bloklar — varsa kabul et
+  const cookieAccept = page.getByRole('button', { name: /kabul et|accept|tümüne izin/i }).first();
+  if (await cookieAccept.isVisible({ timeout: 3000 }).catch(() => false)) {
+    await cookieAccept.click();
+  }
 }
 
 /**
@@ -81,9 +89,33 @@ type AuthFixtures = {
  * Playwright fixture uzantısı — adminPage, educatorPage, candidatePage
  * Her test kendi browser context'ini alır (state izolasyonu).
  */
+/** Çerez consent + onboarding tour overlay'lerini suppress et + TR locale.
+    Playwright varsayılan 'en-US' kullanır; i18n LanguageDetector EN seçer ve
+    testlerin TR text aramaları başarısız olur. localStorage.i18nextLng='tr' set ederiz. */
+async function suppressOverlays(ctx: BrowserContext) {
+  // baseURL üzerinden initial storage yazımı için bir page açıp set ediyoruz
+  const page = await ctx.newPage();
+  await page.goto('/');
+  await page.evaluate(() => {
+    try {
+      localStorage.setItem('analytics_consent', 'granted');
+      localStorage.setItem('i18nextLng', 'tr');
+      // Onboarding tour'larını da "tamamlandı" olarak işaretle
+      sessionStorage.setItem('dal_completed_tours', JSON.stringify({
+        ob_cand_welcome: true,
+        ob_cand_test: true,
+        ob_edu_welcome: true,
+        ob_edu_create: true,
+      }));
+    } catch { /* ignore */ }
+  });
+  await page.close();
+}
+
 export const test = base.extend<AuthFixtures>({
   adminPage: async ({ browser }, use) => {
     const ctx: BrowserContext = await browser.newContext();
+    await suppressOverlays(ctx);
     const page = await ctx.newPage();
     await loginAs(page, 'admin');
     await use(page);
@@ -92,6 +124,7 @@ export const test = base.extend<AuthFixtures>({
 
   educatorPage: async ({ browser }, use) => {
     const ctx: BrowserContext = await browser.newContext();
+    await suppressOverlays(ctx);
     const page = await ctx.newPage();
     await loginAs(page, 'educator');
     await use(page);
@@ -100,6 +133,7 @@ export const test = base.extend<AuthFixtures>({
 
   candidatePage: async ({ browser }, use) => {
     const ctx: BrowserContext = await browser.newContext();
+    await suppressOverlays(ctx);
     const page = await ctx.newPage();
     await loginAs(page, 'candidate');
     await use(page);
