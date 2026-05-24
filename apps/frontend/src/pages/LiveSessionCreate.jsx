@@ -347,16 +347,38 @@ function QuestionEditDialog({ question, questionIndex, topicList, onSave, onSave
                       <div className="flex items-center gap-2 flex-wrap">
                         <label className="cursor-pointer inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium border border-slate-200 bg-white hover:bg-slate-50 text-slate-600">
                           <ImagePlus className="w-3 h-3" />Görsel
-                          <input type="file" accept="image/*" className="hidden"
+                          {/* multiple: birden fazla dosya seçilirse mevcut seçenekten itibaren
+                              sıralı olarak A, B, C... seçeneklerine dağıtılır. Tek dosya seçimi
+                              eski davranışla aynı. Mevcut seçenek sayısını aşan dosyalar atılır. */}
+                          <input type="file" accept="image/*" multiple className="hidden"
                             onChange={(e) => {
-                              const f = e.target.files?.[0]; e.target.value = "";
-                              if (!f) return;
-                              if (opt._imgPreview) URL.revokeObjectURL(opt._imgPreview);
-                              setLocal(p => ({
-                                ...p, options: p.options.map((o, i) =>
-                                  i === oi ? { ...o, _imgFile: f, _imgPreview: URL.createObjectURL(f), mediaUrl: "" } : o
-                                ),
-                              }));
+                              const files = Array.from(e.target.files ?? []);
+                              e.target.value = "";
+                              if (files.length === 0) return;
+                              setLocal((p) => {
+                                const next = [...p.options];
+                                let filled = 0;
+                                for (let k = 0; k < files.length && (oi + k) < next.length; k++) {
+                                  const idx = oi + k;
+                                  const target = next[idx];
+                                  if (target._imgPreview) URL.revokeObjectURL(target._imgPreview);
+                                  next[idx] = {
+                                    ...target,
+                                    _imgFile: files[k],
+                                    _imgPreview: URL.createObjectURL(files[k]),
+                                    mediaUrl: "",
+                                  };
+                                  filled++;
+                                }
+                                // Çoklu seçim & taşma bilgilendirmesi
+                                if (files.length > 1) {
+                                  toast.success(`${filled} seçeneğe görsel atandı`);
+                                }
+                                if (files.length > filled) {
+                                  toast.warning(`${files.length - filled} dosya kalan seçenek olmadığı için atlandı`);
+                                }
+                                return { ...p, options: next };
+                              });
                             }}
                           />
                         </label>
