@@ -27,18 +27,47 @@ export default function MyTests() {
     enabled: !!user,
   });
 
-  const { data: testPackages = [] } = useQuery({
-    queryKey: ["testPackages", purchases?.length],
-    queryFn: async () => {
-      if (purchases.length === 0) return [];
-      const packageIds = [...new Set(purchases.map(p => p.test_package_id))];
-      const packages = (await Promise.all(packageIds.map(id => entities.TestPackage.filter({ id }).then(r => r[0])))).filter(Boolean);
-      return packages.filter(p => p && p.is_published && p.is_active !== false);
-    },
-    enabled: purchases.length > 0,
-  });
-
-  const testsWithRealCounts = testPackages;
+  // Paketleri purchase response'undan türet — backend findByCandidateId artık
+  // card'ın ihtiyacı tüm alanları include ediyor (coverImageUrl, educator,
+  // difficulty, tests + examType + question count). Eskiden her purchase için
+  // ayrı GET /marketplace/packages/:id çağrısı vardı; N+1 idi ve biri fail
+  // olunca tüm sayfa boşalıyordu. Şimdi tek query'den hepsi.
+  const testPackages = useMemo(() => {
+    const seen = new Set();
+    const result = [];
+    for (const p of purchases) {
+      const pkg = p?.package;
+      if (!pkg || seen.has(pkg.id)) continue;
+      seen.add(pkg.id);
+      // Yayımı kalkmış paketleri gizle (eski satın alma korunur ama listede yok)
+      if (!pkg.publishedAt) continue;
+      const firstTestWithType = (pkg.tests ?? []).find((t) => t.examTypeId != null);
+      result.push({
+        id: pkg.id,
+        title: pkg.title ?? "",
+        description: pkg.description ?? "",
+        educator_email: pkg.educatorId ?? "",
+        educator_name: pkg.educator?.username ?? "",
+        exam_type_id: firstTestWithType?.examTypeId ?? null,
+        exam_type_name: firstTestWithType?.examType?.name ?? null,
+        question_count: (pkg.tests ?? []).reduce(
+          (s, t) => s + (t._count?.questions ?? 0),
+          0,
+        ),
+        test_count: (pkg.tests ?? []).length,
+        price: pkg.priceCents != null ? pkg.priceCents / 100 : 0,
+        priceCents: pkg.priceCents ?? 0,
+        difficulty: pkg.difficulty ?? "medium",
+        cover_image: pkg.coverImageUrl ?? null,
+        is_published: !!pkg.publishedAt,
+        is_active: !!pkg.publishedAt,
+        average_rating: null,
+        rating_count: 0,
+        created_date: pkg.publishedAt,
+      });
+    }
+    return result;
+  }, [purchases]);
 
   const { data: results = [] } = useQuery({
     queryKey: ["myResults", user?.id],
@@ -99,7 +128,7 @@ export default function MyTests() {
     packageAggregate[pkgId] = { allCompleted, noneStarted };
   });
   
-  let purchasedTests = testsWithRealCounts.filter(t => purchasedTestIds.has(t.id));
+  let purchasedTests = testPackages.filter(t => purchasedTestIds.has(t.id));
   
   // Apply filters
   if (selectedExamType !== "all") {
@@ -133,7 +162,7 @@ export default function MyTests() {
   );
 
   // Get unique educators
-  const educators = [...new Set(testsWithRealCounts.filter(t => purchasedTestIds.has(t.id)).map(t => ({
+  const educators = [...new Set(testPackages.filter(t => purchasedTestIds.has(t.id)).map(t => ({
     email: t.educator_email,
     name: t.educator_name
   })).map(e => JSON.stringify(e)))].map(e => JSON.parse(e));

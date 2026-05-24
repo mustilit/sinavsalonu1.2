@@ -43,12 +43,29 @@ export class PrismaPurchaseRepository implements IPurchaseRepository {
       include: {
         test: { select: { id: true, title: true, status: true, examTypeId: true, _count: { select: { questions: true } } } },
         package: {
+          // Frontend (MyTests) eski hâlinde her purchase için ayrı GET /marketplace/packages/:id
+          // çağrısı yapıyordu — N+1 + bir tanesi fail edince tüm liste boşalıyordu.
+          // Şimdi card'ın ihtiyaç duyduğu tüm alanlar tek query ile gelir.
           select: {
             id: true,
             title: true,
+            description: true,
+            coverImageUrl: true,
             priceCents: true,
-            // Paket kapsamındaki tüm ExamTest ID'leri — frontend "bu test bu paketteki mi" kontrolünde kullanır
-            tests: { where: { deletedAt: null }, select: { id: true, title: true } },
+            difficulty: true,
+            publishedAt: true,
+            educatorId: true,
+            educator: { select: { username: true } },
+            tests: {
+              where: { deletedAt: null },
+              select: {
+                id: true,
+                title: true,
+                examTypeId: true,
+                examType: { select: { id: true, name: true } },
+                _count: { select: { questions: true } },
+              },
+            },
           },
         },
       },
