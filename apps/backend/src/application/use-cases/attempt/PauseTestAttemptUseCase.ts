@@ -35,7 +35,19 @@ export class PauseTestAttemptUseCase {
     // Son devam etme zamanından bu yana geçen saniyeyi hesapla
     const lastResumedAt = (attempt as any).lastResumedAt ?? attempt.startedAt;
     const elapsedSec = Math.max(0, Math.floor((now.getTime() - lastResumedAt.getTime()) / 1000));
-    const prevRemaining = (attempt as any).remainingSec ?? 0;
+    // Defansif: legacy attempt'larda remainingSec=null olabilir; bu durumda
+    // test'in full duration'ını başlangıç kabul et. Aksi takdirde 0 - elapsed = 0
+    // → her pause EXPIRED yapıyor (yaşanan bug).
+    let prevRemaining = (attempt as any).remainingSec;
+    if (prevRemaining == null) {
+      const test = await this.prisma.examTest.findUnique({
+        where: { id: attempt.testId },
+        select: { duration: true, durationSec: true } as any,
+      });
+      prevRemaining =
+        (test as any)?.durationSec ??
+        ((test as any)?.duration ? Number((test as any).duration) * 60 : 0);
+    }
     // Kalan süre sıfırın altına düşmemeli
     const remainingSec = Math.max(0, prevRemaining - elapsedSec);
 

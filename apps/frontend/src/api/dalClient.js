@@ -626,7 +626,9 @@ export const entities = {
           ? p.attempts
           : (p.attempt ? [p.attempt] : []);
         for (const a of allAttempts) {
-          if (opts.is_completed === false && a.status !== 'IN_PROGRESS') continue;
+          // PAUSED de 'devam ediyor' sayılır — aday teste geri dönüp resume edebilir.
+          // Aksi takdirde 'Kaydet ve Çık' diyen aday test başlamamış gibi görüyordu.
+          if (opts.is_completed === false && a.status !== 'IN_PROGRESS' && a.status !== 'PAUSED') continue;
           if (opts.is_completed === true && a.status !== 'SUBMITTED' && a.status !== 'TIMEOUT') continue;
           progress.push({
             id: a.id,

@@ -209,9 +209,11 @@ export class PurchaseUseCase {
           } as any,
         });
 
-        const attempt = await tx.testAttempt.create({
-          data: { testId: examTestId, candidateId, status: 'IN_PROGRESS' },
-        });
+        // NOT: Satın alma anında TestAttempt yaratılmaz. Attempt, aday teste
+        // ilk başladığında StartTestAttemptUseCase tarafından durationSec +
+        // lastResumedAt + remainingSec ile birlikte oluşturulur. Aksi takdirde
+        // remainingSec=null ile attempt yaratılıyor ve pause hesabı sıfırlayıp
+        // testi EXPIRED'a düşürüyordu (gerçek bir bug yaşandı).
 
         await tx.auditLog.create({
           data: {
@@ -240,7 +242,9 @@ export class PurchaseUseCase {
           }
         }
 
-          return { purchase, attempt };
+          // Attempt artık satın alma anında oluşturulmuyor (StartTestAttempt'a bırakıldı).
+          // Geriye dönük API uyumu için attempt: null döndürülür.
+          return { purchase, attempt: null };
         }),
       );
       // Satın alma sonrası adayın önerileri değişebilir — home öneri cache'ini temizle

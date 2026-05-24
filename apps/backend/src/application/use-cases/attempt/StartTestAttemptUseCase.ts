@@ -126,11 +126,16 @@ export class StartTestAttemptUseCase {
     }
 
     if ((existing as any).status === 'PAUSED') {
+      // Legacy bug: bazı eski attempt'lar remainingSec=null ile oluşmuştu
+      // (PurchaseUseCase yanlış pre-create yapıyordu). Resume sırasında
+      // null görürsek test duration'ını backfill ederiz.
+      const existingRemaining = (existing as any).remainingSec;
       const updated = await this.prisma.testAttempt.update({
         where: { id: existing.id },
         data: {
           status: 'IN_PROGRESS',
           lastResumedAt: now,
+          ...(existingRemaining == null && { remainingSec: durationSec }),
         } as any,
       });
 
@@ -140,11 +145,30 @@ export class StartTestAttemptUseCase {
       };
     }
 
-    // Eğer zaten IN_PROGRESS ise kalan süreyi döndür
+    // Eğer zaten IN_PROGRESS ise kalan süreyi döndür; null/eksik alanları backfill et
     if ((existing as any).status === 'IN_PROGRESS') {
+      const existingRemaining = (existing as any).remainingSec;
+      const existingLastResumed = (existing as any).lastResumedAt;
+      // Legacy: PurchaseUseCase satın alma anında IN_PROGRESS attempt oluşturuyordu
+      // ama remainingSec/lastResumedAt set etmiyordu. Şimdi düzelt — pause matematiği
+      // doğru çalışsın diye.
+      if (existingRemaining == null || existingLastResumed == null) {
+        const fixed = await this.prisma.testAttempt.update({
+          where: { id: existing.id },
+          data: {
+            ...(existingRemaining == null && { remainingSec: durationSec }),
+            ...(existingLastResumed == null && { lastResumedAt: now }),
+            ...(existingLastResumed == null && { startedAt: now }), // gerçek başlangıç
+          } as any,
+        });
+        return {
+          attemptId: fixed.id,
+          remainingSec: (fixed as any).remainingSec ?? durationSec,
+        };
+      }
       return {
         attemptId: existing.id,
-        remainingSec: (existing as any).remainingSec ?? durationSec,
+        remainingSec: existingRemaining,
       };
     }
 
