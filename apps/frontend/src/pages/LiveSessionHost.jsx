@@ -268,7 +268,7 @@ export default function LiveSessionHost() {
             <Button
               onClick={() => startMut.mutate()}
               disabled={startMut.isPending}
-              className="gap-2"
+              className="bg-blue-600 hover:bg-blue-700 text-white gap-2"
             >
               <Play className="w-4 h-4 fill-white" /> {t("pages:liveHost.controls.start")}
             </Button>
