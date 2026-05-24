@@ -1090,15 +1090,15 @@ export default function TakeTest() {
                 Boş Bırak
               </Button>
             )}
-            {isReviewMode && test?.has_solutions && (currentQuestion?.explanation || currentQuestion?.solutionMediaUrl) && (
+            {isReviewMode && test?.has_solutions && (currentQuestion?.explanation || currentQuestion?.solutionMediaUrl) && !showSolution && (
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => setShowSolution(!showSolution)}
+                onClick={() => setShowSolution(true)}
                 className="text-indigo-600"
               >
                 <Lightbulb className="w-4 h-4 mr-1" />
-                Çözüm
+                Çözümü Gör
               </Button>
             )}
             {/* Kalem — her modda görünür */}
@@ -1165,22 +1165,39 @@ export default function TakeTest() {
           </p>
         )}
 
-        {showSolution && (currentQuestion?.explanation || currentQuestion?.solutionMediaUrl) && (
-          <div className="p-4 bg-indigo-50 border border-indigo-200 rounded-xl mb-6">
-            <p className="text-sm font-medium text-indigo-700 mb-2">Çözüm:</p>
+        {/* Çözüm görünürken seçenekler gizlenir; tek alanda toggle olur.
+            'Seçeneklere Dön' butonu çözümün alt sağında. */}
+        {showSolution && (currentQuestion?.explanation || currentQuestion?.solutionMediaUrl) ? (
+          <div className="p-5 bg-indigo-50 border border-indigo-200 rounded-xl mb-6 space-y-3">
+            <div className="flex items-center justify-between">
+              <p className="text-sm font-semibold text-indigo-700 flex items-center gap-1.5">
+                <Lightbulb className="w-4 h-4" /> Çözüm
+              </p>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowSolution(false)}
+                className="text-indigo-700 hover:bg-indigo-100"
+              >
+                <ChevronLeft className="w-4 h-4 mr-1" />
+                Seçeneklere Dön
+              </Button>
+            </div>
             {currentQuestion.explanation && (
-              <p className="text-indigo-900 mb-2">{currentQuestion.explanation}</p>
+              <p className="text-indigo-900 whitespace-pre-wrap leading-relaxed">{currentQuestion.explanation}</p>
             )}
             {currentQuestion.solutionMediaUrl && (
               <ZoomableImage
                 src={currentQuestion.solutionMediaUrl}
                 alt="Çözüm görseli"
                 className="max-w-full rounded-lg border border-indigo-200"
+                size="lg"
               />
             )}
           </div>
-        )}
+        ) : null}
 
+        {!showSolution && (
         <div className="space-y-3">
           {optionsForCurrent.map((opt, idx) => {
             const letter = letters[idx];
@@ -1233,6 +1250,7 @@ export default function TakeTest() {
             );
           })}
         </div>
+        )}
       </div>
 
       {/* Soru navigasyon paneli — sağ sütun */}
