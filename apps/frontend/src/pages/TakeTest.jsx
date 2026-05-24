@@ -1090,18 +1090,22 @@ export default function TakeTest() {
                 Boş Bırak
               </Button>
             )}
-            {/* Çözümü Gör — bu sorunun explanation/solutionMediaUrl'i varsa görünür.
-                Test çözerken (fresh take) de + review modunda da etkin. Eğiticinin
-                eklediği çözüme aday her zaman erişebilir; 'Seçeneklere Dön' ile kapatılır. */}
-            {(currentQuestion?.explanation || currentQuestion?.solutionMediaUrl) && !showSolution && (
+            {/* Çözüm toggle butonu — header'ın sabit konumunda yer alır.
+                showSolution=false → 'Çözümü Gör' (Lightbulb)
+                showSolution=true  → 'Seçeneklere Dön' (ChevronLeft)
+                Aynı yerde toggle olur; aday fare hareketi yapmadan açıp kapatabilir. */}
+            {(currentQuestion?.explanation || currentQuestion?.solutionMediaUrl) && (
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => setShowSolution(true)}
+                onClick={() => setShowSolution((v) => !v)}
                 className="text-indigo-600"
               >
-                <Lightbulb className="w-4 h-4 mr-1" />
-                Çözümü Gör
+                {showSolution ? (
+                  <><ChevronLeft className="w-4 h-4 mr-1" />Seçeneklere Dön</>
+                ) : (
+                  <><Lightbulb className="w-4 h-4 mr-1" />Çözümü Gör</>
+                )}
               </Button>
             )}
             {/* Kalem — her modda görünür */}
@@ -1168,24 +1172,14 @@ export default function TakeTest() {
           </p>
         )}
 
-        {/* Çözüm görünürken seçenekler gizlenir; tek alanda toggle olur.
-            'Seçeneklere Dön' butonu çözümün alt sağında. */}
+        {/* Çözüm görünürken seçenekler gizlenir; toggle butonu header'da.
+            Buradaki kart sadece çözüm içeriğini gösterir, ayrı bir 'Seçeneklere Dön'
+            butonu yoktur (header'daki toggle yeterli). */}
         {showSolution && (currentQuestion?.explanation || currentQuestion?.solutionMediaUrl) ? (
           <div className="p-5 bg-indigo-50 border border-indigo-200 rounded-xl mb-6 space-y-3">
-            <div className="flex items-center justify-between">
-              <p className="text-sm font-semibold text-indigo-700 flex items-center gap-1.5">
-                <Lightbulb className="w-4 h-4" /> Çözüm
-              </p>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setShowSolution(false)}
-                className="text-indigo-700 hover:bg-indigo-100"
-              >
-                <ChevronLeft className="w-4 h-4 mr-1" />
-                Seçeneklere Dön
-              </Button>
-            </div>
+            <p className="text-sm font-semibold text-indigo-700 flex items-center gap-1.5">
+              <Lightbulb className="w-4 h-4" /> Çözüm
+            </p>
             {currentQuestion.explanation && (
               <p className="text-indigo-900 whitespace-pre-wrap leading-relaxed">{currentQuestion.explanation}</p>
             )}
