@@ -101,13 +101,12 @@ test.describe('Aday — Test çözme akışı', () => {
     await expect(optionA).toBeVisible({ timeout: 10000 });
     await optionA.click();
 
-    // Bitir butonunu bul
+    // Bitir butonu — onay dialog'unu açar
     const finishButton = candidatePage.getByRole('button', { name: /testi bitir/i }).first();
     await expect(finishButton).toBeVisible();
     await finishButton.click();
-
-    // Onay modal'ı varsa onayla
-    // Onay dialog'u şu an yok — handleFinish direkt finishMutation tetikler.
+    // Dialog'da 'Evet, bitir' butonuna tıkla
+    await candidatePage.getByRole('button', { name: /evet, bitir/i }).click();
 
     // Sonuç ekranı bekle
     await expect(
@@ -150,12 +149,13 @@ test.describe('Aday — Test çözme akışı', () => {
   test('Boş cevap bırakıp Bitir → submit kabul edilir', async ({ candidatePage }) => {
     await openFirstTest(candidatePage);
 
-    // Hiçbir şık seçmeden Bitir
+    // Hiçbir şık seçmeden Bitir → onay dialog'u açılır
     const finishButton = candidatePage.getByRole('button', { name: /testi bitir/i }).first();
     await expect(finishButton).toBeVisible();
     await finishButton.click();
 
-    // Onay dialog'u şu an yok — handleFinish direkt finishMutation tetikler.
+    // Dialog'da 'Evet, bitir' butonuna tıkla
+    await candidatePage.getByRole('button', { name: /evet, bitir/i }).click();
 
     // Sonuç ekranı görünmeli (0 doğru olabilir)
     await expect(

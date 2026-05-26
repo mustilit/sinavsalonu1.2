@@ -25,8 +25,12 @@ const DialogOverlay = React.forwardRef(({ className, ...props }, ref) => (
 ))
 DialogOverlay.displayName = DialogPrimitive.Overlay.displayName
 
-const DialogContent = React.forwardRef(({ className, children, ...props }, ref) => (
-  <DialogPortal>
+// `container` prop'u: fullscreen veya proctor container içinde render etmek için.
+// Verilmezse Radix default'u (document.body) kullanılır. Fullscreen API aktifken
+// document.body dışındaki portal görünmez/tıklanamaz olduğundan TakeTest gibi
+// fullscreen sayfalarda container={ref.current} geçilmelidir.
+const DialogContent = React.forwardRef(({ className, children, container, ...props }, ref) => (
+  <DialogPortal container={container}>
     <DialogOverlay />
     <DialogPrimitive.Content
       ref={ref}

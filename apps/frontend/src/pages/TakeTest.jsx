@@ -132,6 +132,7 @@ export default function TakeTest() {
   // Proctoring container — UX engelleri bu DOM altında uygulanır
   const proctorContainerRef = useRef(null);
   const [showExitWarning, setShowExitWarning] = useState(false);
+  const [showFinishConfirm, setShowFinishConfirm] = useState(false);
   // Her 3 cevapta bir DB checkpoint tetiklemek için sayaç
   const checkpointCountRef = useRef(0);
   const [navAtTop, setNavAtTop] = useState(true);
@@ -980,7 +981,7 @@ export default function TakeTest() {
       {/* Çoklu sekme/pencere çıkışı uyarısı — 1. ve 2. çıkışta gösterilir.
           3.'de useTestProctoring onViolationLimit ile auto-submit eder. */}
       <Dialog open={showExitWarning} onOpenChange={setShowExitWarning}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="max-w-md" container={proctorContainerRef.current}>
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-amber-700">
               <AlertCircle className="w-5 h-5" />
@@ -1004,6 +1005,71 @@ export default function TakeTest() {
               </Button>
             </div>
           </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Testi Bitir onay dialog'u — final submit geri alınamaz.
+          Cevaplanan/boş soru sayısı ve Kaydet ve Çık alternatifi gösterilir. */}
+      <Dialog open={showFinishConfirm} onOpenChange={setShowFinishConfirm}>
+        <DialogContent className="max-w-md" container={proctorContainerRef.current}>
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-rose-700">
+              <AlertCircle className="w-5 h-5" aria-hidden="true" />
+              Testi bitirmek istediğine emin misin?
+            </DialogTitle>
+          </DialogHeader>
+          {(() => {
+            const answeredCount = questions.filter((q) => answers[q.id]).length;
+            const blankCount = questions.length - answeredCount;
+            return (
+              <div className="space-y-4 text-sm text-slate-700">
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="rounded-xl bg-emerald-50 border border-emerald-200 p-3 text-center">
+                    <p className="text-2xl font-bold text-emerald-700">{answeredCount}</p>
+                    <p className="text-xs text-emerald-700/80">cevaplandı</p>
+                  </div>
+                  <div className="rounded-xl bg-amber-50 border border-amber-200 p-3 text-center">
+                    <p className="text-2xl font-bold text-amber-700">{blankCount}</p>
+                    <p className="text-xs text-amber-700/80">boş bırakıldı</p>
+                  </div>
+                </div>
+                <p>
+                  <strong>Testi Bitir</strong> seçeneği sınavı sonlandırır ve sonuç kaydedilir.
+                  Bu işlem <span className="font-semibold text-rose-700">geri alınamaz</span>.
+                </p>
+                <p className="text-slate-600">
+                  Eğer cevaplamaya devam etmek istiyorsan <strong>Kaydet ve Çık</strong> demen
+                  yeterli — ilerlemen kaydedilir, kaldığın yerden devam edebilirsin.
+                </p>
+                <div className="flex justify-end gap-2 pt-1 flex-wrap">
+                  <Button variant="outline" onClick={() => setShowFinishConfirm(false)}>
+                    İptal
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="text-slate-700"
+                    onClick={() => {
+                      setShowFinishConfirm(false);
+                      saveAndExit();
+                    }}
+                  >
+                    <Save className="w-4 h-4 mr-1.5" aria-hidden="true" />
+                    Kaydet ve Çık
+                  </Button>
+                  <Button
+                    className="bg-rose-600 hover:bg-rose-700 text-white"
+                    onClick={() => {
+                      setShowFinishConfirm(false);
+                      handleFinish();
+                    }}
+                  >
+                    <LogOut className="w-4 h-4 mr-1.5" aria-hidden="true" />
+                    Evet, bitir
+                  </Button>
+                </div>
+              </div>
+            );
+          })()}
         </DialogContent>
       </Dialog>
 
@@ -1031,7 +1097,7 @@ export default function TakeTest() {
               <Button
                 variant="ghost"
                 className="text-rose-600 hover:bg-rose-50"
-                onClick={handleFinish}
+                onClick={() => setShowFinishConfirm(true)}
               >
                 <LogOut className="w-4 h-4 mr-1.5" />
                 Testi Bitir
@@ -1353,7 +1419,7 @@ export default function TakeTest() {
       />
 
       <Dialog open={showAnswerSheet} onOpenChange={setShowAnswerSheet}>
-        <DialogContent className="max-w-2xl max-h-[80vh] flex flex-col">
+        <DialogContent className="max-w-2xl max-h-[80vh] flex flex-col" container={proctorContainerRef.current}>
           <DialogHeader className="shrink-0">
             <div className="flex items-center justify-between pr-6">
               <DialogTitle>Cevaplarım</DialogTitle>
