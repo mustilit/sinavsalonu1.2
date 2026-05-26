@@ -193,6 +193,35 @@ test.describe('Aday — Test çözme akışı', () => {
     await expect(clearAnswer).toBeVisible({ timeout: 5000 });
   });
 
+  test('Q5 spesifik: 5. soruda cevap işaretle → anında çık → dön → Q5 cevabı geri geliyor', async ({ candidatePage }) => {
+    await openFirstTest(candidatePage);
+
+    // Q1 → Q5'e kadar Sonraki ile git
+    for (let i = 1; i <= 4; i++) {
+      await candidatePage.getByRole('button', { name: /^sonraki$/i }).first().click();
+      await candidatePage.waitForTimeout(100);
+    }
+    await expect(candidatePage.locator('h2', { hasText: 'Soru 5' })).toBeVisible({ timeout: 10000 });
+
+    // Q5'te B şıkkını seç
+    await candidatePage.locator('button:has(span:text-is("B"))').first().click();
+    await expect(candidatePage.getByRole('button', { name: /boş bırak/i })).toBeVisible({ timeout: 5000 });
+
+    // ANINDA Kaydet ve Çık (race koşullarını test et — flush garantili)
+    await candidatePage.getByRole('button', { name: /kaydet ve çık/i }).click();
+    await candidatePage.waitForURL(/\/MyTests/i, { timeout: 10000 });
+
+    // Tek geri dönüşte Q5'e git, cevabın hâlâ orada olduğunu doğrula
+    await openFirstTest(candidatePage);
+    for (let i = 1; i <= 4; i++) {
+      await candidatePage.getByRole('button', { name: /^sonraki$/i }).first().click();
+      await candidatePage.waitForTimeout(100);
+    }
+    await expect(candidatePage.locator('h2', { hasText: 'Soru 5' })).toBeVisible({ timeout: 10000 });
+    // Q5 işaretli — 'Boş Bırak' butonu görünür olmalı
+    await expect(candidatePage.getByRole('button', { name: /boş bırak/i })).toBeVisible({ timeout: 10000 });
+  });
+
   test('Race fix: işaretle + ANINDA Kaydet ve Çık → flush garanti, dönüşte cevap geliyor', async ({ candidatePage }) => {
     await openFirstTest(candidatePage);
 
