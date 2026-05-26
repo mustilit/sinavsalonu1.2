@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { adminUsers, adminAudit } from "@/api/dalClient";
 import { useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -383,10 +384,31 @@ export default function AdminUserActivity() {
                         )}
                       </td>
                       <td className="px-3 py-2 text-slate-600">{log.entityType ?? "—"}</td>
-                      <td className="px-3 py-2">
-                        <code className="text-xs text-slate-500">
-                          {log.entityId ? String(log.entityId).slice(0, 16) + (String(log.entityId).length > 16 ? "…" : "") : "—"}
-                        </code>
+                      <td className="px-3 py-2 max-w-[260px]">
+                        {/* Anlamlı varlık etiketi: backend ListAuditLogs enrich eder.
+                            - entityLabel + entityLink → Link bileşeniyle tıklanabilir
+                            - entityLabel sadece → düz metin
+                            - hiçbiri yok → kısa UUID fallback */}
+                        {log.entityLabel ? (
+                          log.entityLink ? (
+                            <Link
+                              to={log.entityLink}
+                              className="text-indigo-600 hover:text-indigo-800 hover:underline text-sm break-words"
+                            >
+                              {log.entityLabel}
+                            </Link>
+                          ) : (
+                            <span className="text-slate-700 text-sm break-words">
+                              {log.entityLabel}
+                            </span>
+                          )
+                        ) : log.entityId ? (
+                          <code className="text-xs text-slate-400">
+                            {String(log.entityId).slice(0, 8)}…
+                          </code>
+                        ) : (
+                          <span className="text-slate-300">—</span>
+                        )}
                       </td>
                       <td className="px-3 py-2 max-w-[300px]">
                         <MetadataPreview metadata={log.metadata} />
