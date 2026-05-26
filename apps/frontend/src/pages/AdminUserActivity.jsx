@@ -9,9 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -170,7 +168,11 @@ export default function AdminUserActivity() {
   const [query, setQuery] = useState("");
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
-  // 'all' → tüm işlem tipleri; aksi halde tek bir AuditAction değeri
+  // İki kademeli işlem tipi filtresi:
+  //   actionGroup  = 'all' veya grup başlığı (örn. "Test İşlemleri")
+  //   actionFilter = 'all' (grup içinde tümü) veya tek bir AuditAction değeri
+  // Grup değişince işlem filtresi 'all'a sıfırlanır.
+  const [actionGroup, setActionGroup] = useState("all");
   const [actionFilter, setActionFilter] = useState("all");
 
   const [foundUser, setFoundUser] = useState(null);
@@ -197,6 +199,11 @@ export default function AdminUserActivity() {
         d.setHours(23, 59, 59, 999);
         toIso = d.toISOString();
       }
+      // Action filtreleme stratejisi:
+      // - Belirli action seçili → o tek action backend'e gider
+      // - Grup seçili ama action='all' → tüm aksiyonları çekip client-side
+      //   filter et (backend bulk action filter desteklemiyor; tek değer veya yok).
+      // - Grup='all' → filtre yok, hepsi gelir
       const data = await adminAudit.list({
         actorId: user.id,
         from: fromIso,
@@ -205,7 +212,19 @@ export default function AdminUserActivity() {
         page: 1,
         limit: 200,
       });
-      const items = Array.isArray(data) ? data : (data?.items ?? data?.logs ?? []);
+      let items = Array.isArray(data) ? data : (data?.items ?? data?.logs ?? []);
+
+      // Client-side grup filtresi: grup seçili + action='all' ise, sadece
+      // o grubun action'larını içeren log'ları göster. Backend tek action
+      // alıyor — bulk filtering burada yapılır.
+      if (actionGroup !== "all" && actionFilter === "all") {
+        const grp = ACTION_GROUPS.find((g) => g.label === actionGroup);
+        if (grp) {
+          const allowed = new Set(grp.actions.map((a) => a.value));
+          items = items.filter((log) => allowed.has(log.action));
+        }
+      }
+
       return { user, items, total: data?.total ?? items.length };
     },
     onSuccess: (data) => {
@@ -249,8 +268,8 @@ export default function AdminUserActivity() {
         onSubmit={handleSubmit}
         className="bg-white border border-slate-200 rounded-xl p-5 space-y-4"
       >
-        <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
-          <div className="sm:col-span-4">
+        <div className="grid grid-cols-1 sm:grid-cols-5 gap-4">
+          <div className="sm:col-span-5">
             <Label className="text-xs mb-1 block">Kullanıcı adı veya email</Label>
             <Input
               value={query}
@@ -261,7 +280,7 @@ export default function AdminUserActivity() {
             />
           </div>
           <div>
-            <Label className="text-xs mb-1 block">Başlangıç tarihi (opsiyonel)</Label>
+            <Label className="text-xs mb-1 block">Başlangıç tarihi</Label>
             <Input
               type="date"
               value={from}
@@ -270,7 +289,7 @@ export default function AdminUserActivity() {
             />
           </div>
           <div>
-            <Label className="text-xs mb-1 block">Bitiş tarihi (opsiyonel)</Label>
+            <Label className="text-xs mb-1 block">Bitiş tarihi</Label>
             <Input
               type="date"
               value={to}
@@ -278,33 +297,56 @@ export default function AdminUserActivity() {
               className="h-9"
             />
           </div>
+          {/* Kategori seçimi — ikinci dropdown'ı (İşlem) doldurur */}
           <div>
-            <Label className="text-xs mb-1 block">İşlem Tipi (opsiyonel)</Label>
-            <Select value={actionFilter} onValueChange={setActionFilter}>
-              <SelectTrigger className="h-9" aria-label="İşlem tipi filtresi">
+            <Label className="text-xs mb-1 block">İşlem Kategorisi</Label>
+            <Select
+              value={actionGroup}
+              onValueChange={(v) => {
+                setActionGroup(v);
+                setActionFilter("all"); // grup değişince işlem sıfırla
+              }}
+            >
+              <SelectTrigger className="h-9" aria-label="İşlem kategorisi filtresi">
                 <SelectValue placeholder="Tümü" />
               </SelectTrigger>
-              <SelectContent className="max-h-80">
+              <SelectContent>
                 <SelectItem value="all">Tümü</SelectItem>
                 {ACTION_GROUPS.map((grp) => (
-                  <SelectGroup key={grp.label}>
-                    <SelectLabel className="text-xs text-slate-500 uppercase">
-                      {grp.label}
-                    </SelectLabel>
-                    {grp.actions.map((act) => (
-                      <SelectItem key={act.value} value={act.value}>
-                        {act.label}
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
+                  <SelectItem key={grp.label} value={grp.label}>
+                    {grp.label}
+                  </SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </div>
-          <div className="flex items-end">
+          {/* İşlem seçimi — kategori seçili değilse pasif */}
+          <div>
+            <Label className="text-xs mb-1 block">İşlem</Label>
+            <Select
+              value={actionFilter}
+              onValueChange={setActionFilter}
+              disabled={actionGroup === "all"}
+            >
+              <SelectTrigger className="h-9" aria-label="İşlem tipi filtresi">
+                <SelectValue placeholder={actionGroup === "all" ? "Önce kategori seç" : "Tümü"} />
+              </SelectTrigger>
+              <SelectContent className="max-h-80">
+                <SelectItem value="all">Tümü</SelectItem>
+                {ACTION_GROUPS
+                  .find((g) => g.label === actionGroup)
+                  ?.actions.map((act) => (
+                    <SelectItem key={act.value} value={act.value}>
+                      {act.label}
+                    </SelectItem>
+                  ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="flex items-end sm:col-span-5">
             <Button
               type="submit"
-              className="w-full h-9 bg-indigo-600 hover:bg-indigo-700"
+              className="w-full sm:w-auto sm:ml-auto h-9 px-6 bg-indigo-600 hover:bg-indigo-700"
               disabled={searchMut.isPending || !query.trim()}
             >
               <Search className="w-4 h-4 mr-1.5" />
