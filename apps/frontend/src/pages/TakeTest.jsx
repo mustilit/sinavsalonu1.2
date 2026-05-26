@@ -424,7 +424,7 @@ export default function TakeTest() {
       const { data } = await api.post(`/tests/${testId}/start`);
       return data; // { attemptId, remainingSec }
     },
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       setActiveAttemptId(data.attemptId);
       setTestStarted(true);
       // Aday test başlatınca fullscreen iste — kullanıcı izin vermezse
@@ -437,13 +437,15 @@ export default function TakeTest() {
       } else if (test?.is_timed && test?.duration_minutes) {
         setTimeLeft(test.duration_minutes * 60);
       }
-      // PAUSED → IN_PROGRESS geçişinden sonra attemptState taze çekilmeli
-      // (önceden seçili cevaplar UI'da işaretlensin)
+      // KRİTİK SIRA: önce queue'yu flush (geçen oturumdan kuyrukta kalmış
+      // cevapları DB'ye yaz), SONRA attemptState'i invalidate et. Aksi takdirde
+      // refetch flush'tan önce biter ve state response cevapları görmez —
+      // kullanıcı ilk girişte 'cevap yok' görür, ikinci girişte (DB'de olduğu
+      // için) görür. Sıralama bug'ını giderir.
+      try {
+        await flushQueue();
+      } catch { /* sessiz */ }
       queryClient.invalidateQueries({ queryKey: ["attemptState", data.attemptId] });
-      // Eski sürümlerde queue'da takılı kalmış cevaplar varsa şimdi flush et —
-      // attempt IN_PROGRESS, backend kabul eder. Aksi takdirde geçmiş cevap
-      // yeniden gözükmeyebilir (queue'da kalmış olur).
-      flushQueue().catch(() => { /* sessiz */ });
     },
     onError: (err) => {
       const code = err?.response?.data?.code ?? err?.code;
