@@ -141,8 +141,16 @@ export default function MyTests() {
   
   if (completionFilter === "completed") {
     purchasedTests = purchasedTests.filter(t => completedTestIds.has(t.id));
+  } else if (completionFilter === "in_progress") {
+    // Devam Eden = en az bir attempt başlamış (IN_PROGRESS/PAUSED) ama henüz tamamlanmamış
+    purchasedTests = purchasedTests.filter(
+      t => inProgressTestIds.has(t.id) && !completedTestIds.has(t.id),
+    );
   } else if (completionFilter === "pending") {
-    purchasedTests = purchasedTests.filter(t => !completedTestIds.has(t.id));
+    // Bekleyen = hiç attempt başlamamış (tamamlanmamış VE devam etmiyor)
+    purchasedTests = purchasedTests.filter(
+      t => !completedTestIds.has(t.id) && !inProgressTestIds.has(t.id),
+    );
   }
   
   const pendingTests = purchasedTests.filter(t => !completedTestIds.has(t.id));
@@ -245,6 +253,7 @@ export default function MyTests() {
                 <SelectContent>
                   <SelectItem value="all">{t("pages:myTests.filter.all")}</SelectItem>
                   <SelectItem value="pending">{t("pages:myTests.filter.pending")}</SelectItem>
+                  <SelectItem value="in_progress">{t("pages:myTests.filter.inProgress")}</SelectItem>
                   <SelectItem value="completed">{t("pages:myTests.filter.completed")}</SelectItem>
                 </SelectContent>
               </Select>

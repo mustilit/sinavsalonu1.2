@@ -1118,6 +1118,7 @@
       "completionLabel": "Completion Status",
       "all": "All",
       "pending": "Pending",
+      "inProgress": "In Progress",
       "completed": "Completed",
       "examTypeAria": "Exam type filter",
       "educatorAria": "Educator filter",

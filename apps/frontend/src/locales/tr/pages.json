@@ -1118,6 +1118,7 @@
       "completionLabel": "Çözülme Durumu",
       "all": "Tümü",
       "pending": "Bekleyen",
+      "inProgress": "Devam Eden",
       "completed": "Tamamlanan",
       "examTypeAria": "Sınav türü filtresi",
       "educatorAria": "Eğitici filtresi",

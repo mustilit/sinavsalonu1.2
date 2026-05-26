@@ -1121,6 +1121,7 @@
       "completionLabel": "Estado de finalización",
       "all": "Todos",
       "pending": "Pendientes",
+      "inProgress": "En curso",
       "completed": "Completados",
       "examTypeAria": "Filtro de tipo de examen",
       "educatorAria": "Filtro de educador",
