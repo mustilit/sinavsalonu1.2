@@ -957,215 +957,6 @@ export default function AdminSystemControls() {
               ve sistem normal akışta devam eder (kayıt + login bloklanmaz).
             </p>
           </div>
-        </>
-      )}
-
-      {/* ── Mali Kontrol sekmesi ───────────────────────────────────── */}
-      {activeTab === "finance" && (
-        <>
-          {/* Minimum Paket Fiyatı */}
-          <div className="p-5 bg-white border border-slate-200 rounded-xl space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-lg bg-emerald-50 flex items-center justify-center flex-shrink-0">
-                <BadgeDollarSign className="w-5 h-5 text-emerald-600" />
-              </div>
-              <div>
-                <p className="font-semibold text-slate-900">Minimum Paket Fiyatı</p>
-                <p className="text-sm text-slate-500">
-                  Eğiticilerin paket oluştururken girebileceği en düşük fiyat.
-                  Mevcut değer:{" "}
-                  <strong className="text-slate-700">
-                    {settings?.minPackagePriceCents != null
-                      ? `${(settings.minPackagePriceCents / 100).toFixed(2)} ₺`
-                      : "1,00 ₺"}
-                  </strong>
-                </p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="relative flex-1 max-w-xs">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">₺</span>
-                <input
-                  type="number"
-                  min="0.01"
-                  step="0.01"
-                  placeholder={
-                    settings?.minPackagePriceCents != null
-                      ? (settings.minPackagePriceCents / 100).toFixed(2)
-                      : "1.00"
-                  }
-                  value={minPriceInput}
-                  onChange={(e) => setMinPriceInput(e.target.value)}
-                  className="w-full pl-7 pr-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                />
-              </div>
-              <button
-                onClick={handleMinPriceSave}
-                disabled={!minPriceInput || savingKey === "minPackagePriceCents"}
-                className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white text-sm font-medium rounded-lg transition-colors flex items-center gap-2"
-              >
-                {savingKey === "minPackagePriceCents"
-                  ? <><Loader2 className="w-4 h-4 animate-spin" />Kaydediliyor...</>
-                  : "Kaydet"}
-              </button>
-            </div>
-          </div>
-
-          {/* İndirim Sınırı — eğiticinin tanımlayabileceği maksimum indirim oranı */}
-          <div className="p-5 bg-white border border-slate-200 rounded-xl space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-lg bg-amber-50 flex items-center justify-center flex-shrink-0">
-                <Percent className="w-5 h-5 text-amber-600" />
-              </div>
-              <div>
-                <p className="font-semibold text-slate-900">İndirim Sınırı</p>
-                <p className="text-sm text-slate-500">
-                  Eğiticilerin indirim kodu oluştururken belirleyebileceği maksimum oran.
-                  Admin tarafından oluşturulan kodlar bu sınırla kısıtlı değildir.
-                  Mevcut değer:{" "}
-                  <strong className="text-slate-700">
-                    %{settings?.maxDiscountPercent ?? 50}
-                  </strong>
-                </p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="relative flex-1 max-w-xs">
-                <input
-                  type="number"
-                  min="1"
-                  max="100"
-                  step="1"
-                  placeholder={String(settings?.maxDiscountPercent ?? 50)}
-                  value={maxDiscountInput}
-                  onChange={(e) => setMaxDiscountInput(e.target.value)}
-                  className="w-full pl-3 pr-8 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
-                />
-                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">%</span>
-              </div>
-              <button
-                onClick={handleMaxDiscountSave}
-                disabled={!maxDiscountInput || savingKey === "maxDiscountPercent"}
-                className="px-4 py-2 bg-amber-600 hover:bg-amber-700 disabled:opacity-50 text-white text-sm font-medium rounded-lg transition-colors flex items-center gap-2"
-              >
-                {savingKey === "maxDiscountPercent"
-                  ? <><Loader2 className="w-4 h-4 animate-spin" />Kaydediliyor...</>
-                  : "Kaydet"}
-              </button>
-            </div>
-          </div>
-
-          {/* Komisyon Oranı */}
-          <div className="p-5 bg-white border border-slate-200 rounded-xl space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-lg bg-sky-50 flex items-center justify-center flex-shrink-0">
-                <Percent className="w-5 h-5 text-sky-600" />
-              </div>
-              <div>
-                <p className="font-semibold text-slate-900">Komisyon Oranı</p>
-                <p className="text-sm text-slate-500">
-                  Satışlardan alınan platform komisyonu. Değiştirirseniz, önceki oran tarih bazlı saklanır.
-                  {rateHistory.length > 0 && (
-                    <span className="ml-1 font-medium text-slate-700">
-                      Mevcut: %{rateHistory[0]?.commissionPercent}
-                    </span>
-                  )}
-                </p>
-              </div>
-            </div>
-
-            {/* Yeni oran formu */}
-            <div className="flex flex-wrap items-end gap-3">
-              <div>
-                <label className="block text-xs text-slate-500 mb-1">Yeni Oran (%)</label>
-                <div className="relative w-28">
-                  <input
-                    type="number"
-                    min="0"
-                    max="100"
-                    placeholder="örn. 20"
-                    value={newRate}
-                    onChange={(e) => setNewRate(e.target.value)}
-                    className="w-full pr-7 pl-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-500"
-                  />
-                  <span className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 text-sm">%</span>
-                </div>
-              </div>
-              <div>
-                <label className="block text-xs text-slate-500 mb-1">Geçerlilik Tarihi (isteğe bağlı)</label>
-                <input
-                  type="date"
-                  value={newEffectiveFrom}
-                  onChange={(e) => setNewEffectiveFrom(e.target.value)}
-                  className="py-2 px-3 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-500"
-                />
-              </div>
-              <div className="flex-1 min-w-40">
-                <label className="block text-xs text-slate-500 mb-1">Not (isteğe bağlı)</label>
-                <input
-                  type="text"
-                  placeholder="Değişiklik nedeni..."
-                  value={newNote}
-                  onChange={(e) => setNewNote(e.target.value)}
-                  className="w-full py-2 px-3 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-500"
-                />
-              </div>
-              <button
-                onClick={handleRateSave}
-                disabled={!newRate || savingRate}
-                className="flex items-center gap-2 px-4 py-2 bg-sky-600 hover:bg-sky-700 disabled:opacity-50 text-white text-sm font-medium rounded-lg transition-colors"
-              >
-                {savingRate ? (
-                  <><Loader2 className="w-4 h-4 animate-spin" />Kaydediliyor...</>
-                ) : (
-                  <><Plus className="w-4 h-4" />Kaydet</>
-                )}
-              </button>
-            </div>
-
-            {/* Geçmiş oran listesi */}
-            {ratesLoading ? (
-              <div className="flex items-center gap-2 text-sm text-slate-400 py-2">
-                <Loader2 className="w-4 h-4 animate-spin" />
-                <span>Yükleniyor...</span>
-              </div>
-            ) : rateHistory.length === 0 ? (
-              <p className="text-sm text-slate-400 italic">Henüz komisyon oranı kaydı yok.</p>
-            ) : (
-              <div className="space-y-1">
-                <div className="flex items-center gap-2 text-xs font-medium text-slate-500 mb-2">
-                  <History className="w-3.5 h-3.5" />
-                  <span>Oran Geçmişi</span>
-                </div>
-                {rateHistory.map((entry, idx) => (
-                  <div
-                    key={entry.id}
-                    className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm ${
-                      idx === 0
-                        ? "bg-sky-50 border border-sky-200 text-sky-800 font-medium"
-                        : "bg-slate-50 text-slate-600"
-                    }`}
-                  >
-                    <span className="min-w-0 flex-1">
-                      {formatDate(entry.effectiveFrom)}
-                      <span className="mx-1.5 text-slate-400">
-                        <ArrowRight className="inline w-3 h-3" />
-                      </span>
-                      {entry.effectiveTo ? formatDate(entry.effectiveTo) : (
-                        <span className="text-sky-600 font-semibold">bugün</span>
-                      )}
-                    </span>
-                    <span className={`font-bold ${idx === 0 ? "text-sky-700" : "text-slate-700"}`}>
-                      %{entry.commissionPercent}
-                    </span>
-                    {entry.note && (
-                      <span className="text-xs text-slate-400 italic truncate max-w-48">— {entry.note}</span>
-                    )}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
 
           {/* ── Ödeme Sağlayıcıları bölümü ayırıcı ─────────────────────── */}
           <div className="flex items-center gap-3 pt-2">
@@ -1449,6 +1240,215 @@ export default function AdminSystemControls() {
               }
               saving={savingPayment === "amazonPayMerchantId"}
             />
+          </div>
+        </>
+      )}
+
+      {/* ── Mali Kontrol sekmesi ───────────────────────────────────── */}
+      {activeTab === "finance" && (
+        <>
+          {/* Minimum Paket Fiyatı */}
+          <div className="p-5 bg-white border border-slate-200 rounded-xl space-y-4">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-lg bg-emerald-50 flex items-center justify-center flex-shrink-0">
+                <BadgeDollarSign className="w-5 h-5 text-emerald-600" />
+              </div>
+              <div>
+                <p className="font-semibold text-slate-900">Minimum Paket Fiyatı</p>
+                <p className="text-sm text-slate-500">
+                  Eğiticilerin paket oluştururken girebileceği en düşük fiyat.
+                  Mevcut değer:{" "}
+                  <strong className="text-slate-700">
+                    {settings?.minPackagePriceCents != null
+                      ? `${(settings.minPackagePriceCents / 100).toFixed(2)} ₺`
+                      : "1,00 ₺"}
+                  </strong>
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="relative flex-1 max-w-xs">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">₺</span>
+                <input
+                  type="number"
+                  min="0.01"
+                  step="0.01"
+                  placeholder={
+                    settings?.minPackagePriceCents != null
+                      ? (settings.minPackagePriceCents / 100).toFixed(2)
+                      : "1.00"
+                  }
+                  value={minPriceInput}
+                  onChange={(e) => setMinPriceInput(e.target.value)}
+                  className="w-full pl-7 pr-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                />
+              </div>
+              <button
+                onClick={handleMinPriceSave}
+                disabled={!minPriceInput || savingKey === "minPackagePriceCents"}
+                className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white text-sm font-medium rounded-lg transition-colors flex items-center gap-2"
+              >
+                {savingKey === "minPackagePriceCents"
+                  ? <><Loader2 className="w-4 h-4 animate-spin" />Kaydediliyor...</>
+                  : "Kaydet"}
+              </button>
+            </div>
+          </div>
+
+          {/* İndirim Sınırı — eğiticinin tanımlayabileceği maksimum indirim oranı */}
+          <div className="p-5 bg-white border border-slate-200 rounded-xl space-y-4">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-lg bg-amber-50 flex items-center justify-center flex-shrink-0">
+                <Percent className="w-5 h-5 text-amber-600" />
+              </div>
+              <div>
+                <p className="font-semibold text-slate-900">İndirim Sınırı</p>
+                <p className="text-sm text-slate-500">
+                  Eğiticilerin indirim kodu oluştururken belirleyebileceği maksimum oran.
+                  Admin tarafından oluşturulan kodlar bu sınırla kısıtlı değildir.
+                  Mevcut değer:{" "}
+                  <strong className="text-slate-700">
+                    %{settings?.maxDiscountPercent ?? 50}
+                  </strong>
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="relative flex-1 max-w-xs">
+                <input
+                  type="number"
+                  min="1"
+                  max="100"
+                  step="1"
+                  placeholder={String(settings?.maxDiscountPercent ?? 50)}
+                  value={maxDiscountInput}
+                  onChange={(e) => setMaxDiscountInput(e.target.value)}
+                  className="w-full pl-3 pr-8 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+                />
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">%</span>
+              </div>
+              <button
+                onClick={handleMaxDiscountSave}
+                disabled={!maxDiscountInput || savingKey === "maxDiscountPercent"}
+                className="px-4 py-2 bg-amber-600 hover:bg-amber-700 disabled:opacity-50 text-white text-sm font-medium rounded-lg transition-colors flex items-center gap-2"
+              >
+                {savingKey === "maxDiscountPercent"
+                  ? <><Loader2 className="w-4 h-4 animate-spin" />Kaydediliyor...</>
+                  : "Kaydet"}
+              </button>
+            </div>
+          </div>
+
+          {/* Komisyon Oranı */}
+          <div className="p-5 bg-white border border-slate-200 rounded-xl space-y-4">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-lg bg-sky-50 flex items-center justify-center flex-shrink-0">
+                <Percent className="w-5 h-5 text-sky-600" />
+              </div>
+              <div>
+                <p className="font-semibold text-slate-900">Komisyon Oranı</p>
+                <p className="text-sm text-slate-500">
+                  Satışlardan alınan platform komisyonu. Değiştirirseniz, önceki oran tarih bazlı saklanır.
+                  {rateHistory.length > 0 && (
+                    <span className="ml-1 font-medium text-slate-700">
+                      Mevcut: %{rateHistory[0]?.commissionPercent}
+                    </span>
+                  )}
+                </p>
+              </div>
+            </div>
+
+            {/* Yeni oran formu */}
+            <div className="flex flex-wrap items-end gap-3">
+              <div>
+                <label className="block text-xs text-slate-500 mb-1">Yeni Oran (%)</label>
+                <div className="relative w-28">
+                  <input
+                    type="number"
+                    min="0"
+                    max="100"
+                    placeholder="örn. 20"
+                    value={newRate}
+                    onChange={(e) => setNewRate(e.target.value)}
+                    className="w-full pr-7 pl-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-500"
+                  />
+                  <span className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 text-sm">%</span>
+                </div>
+              </div>
+              <div>
+                <label className="block text-xs text-slate-500 mb-1">Geçerlilik Tarihi (isteğe bağlı)</label>
+                <input
+                  type="date"
+                  value={newEffectiveFrom}
+                  onChange={(e) => setNewEffectiveFrom(e.target.value)}
+                  className="py-2 px-3 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-500"
+                />
+              </div>
+              <div className="flex-1 min-w-40">
+                <label className="block text-xs text-slate-500 mb-1">Not (isteğe bağlı)</label>
+                <input
+                  type="text"
+                  placeholder="Değişiklik nedeni..."
+                  value={newNote}
+                  onChange={(e) => setNewNote(e.target.value)}
+                  className="w-full py-2 px-3 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-500"
+                />
+              </div>
+              <button
+                onClick={handleRateSave}
+                disabled={!newRate || savingRate}
+                className="flex items-center gap-2 px-4 py-2 bg-sky-600 hover:bg-sky-700 disabled:opacity-50 text-white text-sm font-medium rounded-lg transition-colors"
+              >
+                {savingRate ? (
+                  <><Loader2 className="w-4 h-4 animate-spin" />Kaydediliyor...</>
+                ) : (
+                  <><Plus className="w-4 h-4" />Kaydet</>
+                )}
+              </button>
+            </div>
+
+            {/* Geçmiş oran listesi */}
+            {ratesLoading ? (
+              <div className="flex items-center gap-2 text-sm text-slate-400 py-2">
+                <Loader2 className="w-4 h-4 animate-spin" />
+                <span>Yükleniyor...</span>
+              </div>
+            ) : rateHistory.length === 0 ? (
+              <p className="text-sm text-slate-400 italic">Henüz komisyon oranı kaydı yok.</p>
+            ) : (
+              <div className="space-y-1">
+                <div className="flex items-center gap-2 text-xs font-medium text-slate-500 mb-2">
+                  <History className="w-3.5 h-3.5" />
+                  <span>Oran Geçmişi</span>
+                </div>
+                {rateHistory.map((entry, idx) => (
+                  <div
+                    key={entry.id}
+                    className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm ${
+                      idx === 0
+                        ? "bg-sky-50 border border-sky-200 text-sky-800 font-medium"
+                        : "bg-slate-50 text-slate-600"
+                    }`}
+                  >
+                    <span className="min-w-0 flex-1">
+                      {formatDate(entry.effectiveFrom)}
+                      <span className="mx-1.5 text-slate-400">
+                        <ArrowRight className="inline w-3 h-3" />
+                      </span>
+                      {entry.effectiveTo ? formatDate(entry.effectiveTo) : (
+                        <span className="text-sky-600 font-semibold">bugün</span>
+                      )}
+                    </span>
+                    <span className={`font-bold ${idx === 0 ? "text-sky-700" : "text-slate-700"}`}>
+                      %{entry.commissionPercent}
+                    </span>
+                    {entry.note && (
+                      <span className="text-xs text-slate-400 italic truncate max-w-48">— {entry.note}</span>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* ── Firma bilgileri bölüm ayırıcı ─────────────────────────── */}
