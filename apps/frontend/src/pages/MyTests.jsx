@@ -81,12 +81,25 @@ export default function MyTests() {
     enabled: !!user,
   });
 
-  const { data: examTypes = [] } = useQuery({
-    queryKey: ["examTypes"],
-    queryFn: () => entities.ExamType.filter({ is_active: true }),
-  });
-
   const purchasedTestIds = new Set(purchases.map(p => p.test_package_id));
+
+  // Sınav türü filtresi: tüm aktif türleri değil, yalnızca KULLANICININ satın aldığı
+  // paketlerde geçen türleri göster. examTypes endpoint çağrısı yapılmaz —
+  // her paketin exam_type_id/exam_type_name alanları zaten purchases response'unda
+  // mevcut, dolayısıyla buradan türetilir (deduped + alfabetik sıra).
+  const examTypes = useMemo(() => {
+    const map = new Map();
+    for (const pkg of testPackages) {
+      if (!purchasedTestIds.has(pkg.id)) continue;
+      if (!pkg.exam_type_id || !pkg.exam_type_name) continue;
+      if (!map.has(pkg.exam_type_id)) {
+        map.set(pkg.exam_type_id, { id: pkg.exam_type_id, name: pkg.exam_type_name });
+      }
+    }
+    return Array.from(map.values()).sort((a, b) => a.name.localeCompare(b.name, "tr"));
+    // purchases.length tetikleyici — testPackages içeriği purchases'a bağlı
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [testPackages, purchases.length]);
 
   // testId → attempt map'i: tamamlanan testlerde kullanılan süreyi TestPackageCard'a geçirmek için
   const attemptByTestId = {};
