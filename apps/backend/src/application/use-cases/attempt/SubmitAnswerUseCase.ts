@@ -29,33 +29,28 @@ export class SubmitAnswerUseCase {
     }
 
     const now = new Date();
-    // remainingSec null ise zamanlayıcı henüz başlatılmamış demektir — süre kontrolü atlanır
-    const rawRemainingSec = (attempt as any).remainingSec;
-    let remainingSec: number | null = rawRemainingSec;
-    if (rawRemainingSec !== null && rawRemainingSec !== undefined) {
-      // Son devam etme anından bu yana geçen süre kalan süreden düşülür
-      const lastResumedAt = (attempt as any).lastResumedAt ?? attempt.startedAt;
-      if ((attempt as any).status === 'IN_PROGRESS') {
-        const elapsedSec = Math.max(0, Math.floor((now.getTime() - lastResumedAt.getTime()) / 1000));
-        remainingSec = Math.max(0, rawRemainingSec - elapsedSec);
-      }
 
-      // Süre bitmişse deneme otomatik TIMEOUT durumuna alınır ve hata döndürülür
-      if ((remainingSec as number) <= 0) {
-        await this.prisma.testAttempt.update({
-          where: { id: attemptId },
-          data: {
-            status: 'TIMEOUT',
-            remainingSec: 0,
-            finishedAt: now,
-          } as any,
-        });
-        throw new BadRequestException({ code: 'ATTEMPT_EXPIRED', message: 'Attempt has expired' });
-      }
-    }
-
+    // Status kontrolü: yalnızca IN_PROGRESS attempt'lara cevap kabul edilir.
+    // PAUSED/SUBMITTED/TIMEOUT durumda yeni cevap reddedilir.
     if ((attempt as any).status !== 'IN_PROGRESS') {
       throw new BadRequestException({ code: 'ATTEMPT_NOT_IN_PROGRESS', message: 'Attempt is not in progress' });
+    }
+
+    // Süre aşımı POLITIKASI: zamanlı test'te süre dolsa bile aday cevap
+    // gönderebilir (UX kararı — finish ekranına kadar engellemeyiz). Aşılan
+    // süre attempt.overtimeSeconds'a finish anında işlenir, audit log'da
+    // her overtime cevabı flag'lenir. Önceki davranış TIMEOUT'a çevirip
+    // reddediyordu, artık YOK.
+    const rawRemainingSec = (attempt as any).remainingSec;
+    let isOvertime = false;
+    let currentOvertimeSec = 0;
+    if (rawRemainingSec !== null && rawRemainingSec !== undefined) {
+      const lastResumedAt = (attempt as any).lastResumedAt ?? attempt.startedAt;
+      const elapsedSinceResume = Math.max(0, Math.floor((now.getTime() - lastResumedAt.getTime()) / 1000));
+      if (elapsedSinceResume > rawRemainingSec) {
+        isOvertime = true;
+        currentOvertimeSec = elapsedSinceResume - rawRemainingSec;
+      }
     }
 
     // Sorunun bu teste ait olduğu doğrulanır
@@ -63,6 +58,10 @@ export class SubmitAnswerUseCase {
     if (!question || (question as any).testId !== attempt.testId) {
       throw new BadRequestException({ code: 'QUESTION_NOT_IN_TEST', message: 'Question does not belong to this test' });
     }
+
+    // Audit log metadata için overtime flag — forensic ve raporlama amaçlı.
+    // Aday süre aşımında bu cevabı verdiyse log'da görünür.
+    const overtimeMeta = isOvertime ? { overtime: true, overtimeSec: currentOvertimeSec } : {};
 
     // selectedOptionId yoksa: soruyu boş bırak — mevcut cevap varsa sil
     if (!selectedOptionId) {
@@ -75,7 +74,7 @@ export class SubmitAnswerUseCase {
               entityType: 'AttemptAnswer',
               entityId: attemptId,
               actorId: actorId ?? null,
-              metadata: { questionId, action: 'DELETE_ANSWER' },
+              metadata: { questionId, action: 'DELETE_ANSWER', ...overtimeMeta },
             },
           }),
         ]);
@@ -107,7 +106,7 @@ export class SubmitAnswerUseCase {
             entityType: 'AttemptAnswer',
             entityId: attemptId,
             actorId: actorId ?? null,
-            metadata: { questionId },
+            metadata: { questionId, ...overtimeMeta },
           },
         }),
       ]);

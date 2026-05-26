@@ -29,7 +29,23 @@ export class PrismaAttemptRepository implements IAttemptRepository {
     // questionsSnapshot, prisma generate sonrası type'a eklenecek; şimdilik any cast
     const row: any = await (prisma.testAttempt as any).findUnique({
       where: { id: attemptId },
-      select: { id: true, candidateId: true, testId: true, status: true, score: true, startedAt: true, completedAt: true, submittedAt: true, questionsSnapshot: true, metadata: true },
+      select: {
+        id: true,
+        candidateId: true,
+        testId: true,
+        status: true,
+        score: true,
+        startedAt: true,
+        completedAt: true,
+        submittedAt: true,
+        questionsSnapshot: true,
+        metadata: true,
+        // Süre aşımı kalıcı kaydı — finish anında SubmitAttemptUseCase yazar,
+        // state ve result endpoint'leri buradan okur (UI overtime badge gösterimi).
+        overtimeSeconds: true,
+        remainingSec: true,
+        lastResumedAt: true,
+      },
     });
     if (!row) return null;
     return {
@@ -43,7 +59,10 @@ export class PrismaAttemptRepository implements IAttemptRepository {
       submittedAt: row.submittedAt ?? null,
       questionsSnapshot: row.questionsSnapshot ?? null,
       metadata: (row as any).metadata ?? null,
-    };
+      ...(row.overtimeSeconds != null ? { overtimeSeconds: row.overtimeSeconds } : {}),
+      ...(row.remainingSec != null ? { remainingSec: row.remainingSec } : {}),
+      ...(row.lastResumedAt != null ? { lastResumedAt: row.lastResumedAt } : {}),
+    } as any;
   }
 
   async hasSubmittedAttempt(testId: string, candidateId: string): Promise<boolean> {

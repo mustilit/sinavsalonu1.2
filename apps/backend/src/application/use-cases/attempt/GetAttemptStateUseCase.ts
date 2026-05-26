@@ -73,6 +73,10 @@ export class GetAttemptStateUseCase {
     let durationMinutes: number | undefined = undefined;
     let endsAt: string | undefined = undefined;
     let remainingSeconds: number | undefined = undefined;
+    // Süre aşımı (overtime) hesaplama — backend artık aşımda cevap kabul ediyor,
+    // frontend bu alanları kullanarak "Süre Aşımı +Xm Ys" badge'i gösterir.
+    let isOvertime = false;
+    let overtimeSeconds = 0;
     if (test.isTimed && typeof test.duration === 'number') {
       durationMinutes = test.duration;
       const started = new Date(attempt.startedAt).getTime();
@@ -80,6 +84,10 @@ export class GetAttemptStateUseCase {
       endsAt = new Date(ends).toISOString();
       const now = Date.now();
       remainingSeconds = Math.max(0, Math.floor((ends - now) / 1000));
+      if (now > ends && attempt.status === 'IN_PROGRESS') {
+        isOvertime = true;
+        overtimeSeconds = Math.floor((now - ends) / 1000);
+      }
     }
     let totalSeconds: number | undefined = undefined;
     let isInLast10Percent = false;
@@ -93,11 +101,18 @@ export class GetAttemptStateUseCase {
       }
     }
 
-    // If attempt is already finished, normalize timing fields: remaining 0 and warnings false
+    // If attempt is already finished, normalize timing fields: remaining 0 and warnings false.
+    // Tamamlanmış attempt'ta overtime değeri DB'deki kalıcı kayıttan alınır
+    // (SubmitAttemptUseCase finish anında attempt.overtimeSeconds'a yazar).
     if (attempt.status !== 'IN_PROGRESS') {
       remainingSeconds = 0;
       isInLast10Percent = false;
       isInLast3Minutes = false;
+      const persistedOvertime = (attempt as any).overtimeSeconds ?? 0;
+      if (persistedOvertime > 0) {
+        isOvertime = true;
+        overtimeSeconds = persistedOvertime;
+      }
     }
 
     return {
@@ -113,6 +128,8 @@ export class GetAttemptStateUseCase {
         remainingSeconds,
         isInLast10Percent,
         isInLast3Minutes,
+        isOvertime,
+        overtimeSeconds,
         savedElapsedSeconds: (attempt as any).metadata != null
           ? ((attempt as any).metadata as any)?.elapsedSeconds ?? null
           : null,
