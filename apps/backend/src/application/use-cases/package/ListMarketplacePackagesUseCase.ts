@@ -61,6 +61,9 @@ export class ListMarketplacePackagesUseCase {
           )`
         : Prisma.sql``;
 
+      // Arama kapsamı: paket title/description (tsvector) + educator username (ILIKE)
+      // + paket içindeki testlerin sınav türü adı (LGS, KPSS, MSÜ vb. shortcode'lar).
+      // Aday "LGS" yazdığında title'ında geçmese bile examType.name eşleşmesi sonuç döner.
       packageRows = await prisma.$queryRaw<any[]>`
         SELECT
           tp.id,
@@ -80,6 +83,14 @@ export class ListMarketplacePackagesUseCase {
           AND (
             tp.search_vector @@ to_tsquery('simple', ${tsquery})
             OR u.username ILIKE ${'%' + rawQuery + '%'}
+            OR EXISTS (
+              SELECT 1
+              FROM exam_tests et
+              JOIN exam_types ext ON ext.id = et."examTypeId"
+              WHERE et."packageId" = tp.id
+                AND et."deletedAt" IS NULL
+                AND ext.name ILIKE ${'%' + rawQuery + '%'}
+            )
           )
           ${examTypeClause}
         ORDER BY rank DESC, tp."publishedAt" DESC
