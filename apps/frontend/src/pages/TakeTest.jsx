@@ -699,13 +699,30 @@ export default function TakeTest() {
         api.patch(`/attempts/${resolvedAttemptId}/checkpoint`, { elapsedSeconds: elapsedSec }).catch(() => {});
       }
     }
-    // Seri Mod: cevap verildikten sonra otomatik bir sonraki soruya geç.
-    // Son soruysa ilerletme; aday Testi Bitir / Cevaplarım butonlarını kullanır.
-    // Küçük gecikme: aday seçtiği şıkkın vurgulanmasını görsün (UX).
-    if (testMode === 'serial' && currentIndex < questions.length - 1) {
-      setTimeout(() => {
-        setCurrentIndex((idx) => (idx < questions.length - 1 ? idx + 1 : idx));
-      }, 250);
+    // Seri Mod: cevap verildikten sonra otomatik BİR SONRAKİ BOŞ soruya geç.
+    // Linear ilerletme (idx+1) yeterli değil; aday geri dönüp eski bir
+    // cevabını değiştirdiğinde sıradaki cevaplanmış soruya geçer ve seri
+    // odaklı tekrarda kötü UX oluşur. Bunun yerine current+1'den itibaren
+    // ilk boş soru bulunur; sona kadar boş yoksa baştan tarar; hiç boş
+    // yoksa hareketsiz kalır (aday Testi Bitir butonunu görür).
+    if (testMode === 'serial') {
+      const answeredIds = new Set(
+        Object.entries(answers).filter(([, v]) => v).map(([id]) => id),
+      );
+      answeredIds.add(q.id); // az önce cevaplanan soru
+      let nextIdx = -1;
+      for (let i = currentIndex + 1; i < questions.length; i++) {
+        if (!answeredIds.has(questions[i].id)) { nextIdx = i; break; }
+      }
+      if (nextIdx === -1) {
+        for (let i = 0; i < currentIndex; i++) {
+          if (!answeredIds.has(questions[i].id)) { nextIdx = i; break; }
+        }
+      }
+      if (nextIdx !== -1) {
+        // Küçük gecikme: aday seçtiği şıkkın vurgulanmasını görsün (UX)
+        setTimeout(() => setCurrentIndex(nextIdx), 250);
+      }
     }
   };
 
