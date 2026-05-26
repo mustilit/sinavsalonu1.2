@@ -425,23 +425,9 @@ export default function TakeTest() {
     autoExitSeconds: 30,
   });
 
-  // localStorage destekli cevap kuyruğu — kalıcı hatalar (timeout, ownership)
-  // toast ile yüzeye çıkar. Aksi takdirde aday cevap kaybettiğini fark etmiyor.
+  // localStorage destekli cevap kuyruğu
   const { submitAnswer: queuedSubmitAnswer, pendingCount, isFlushing, clearQueue, flush: flushQueue } = useAnswerQueue(
     resolvedAttemptId ?? null,
-    {
-      onSubmitError: (err) => {
-        const code = err?.response?.data?.error?.code
-          ?? err?.response?.data?.code
-          ?? err?.code;
-        if (code === 'ATTEMPT_EXPIRED' || code === 'ATTEMPT_NOT_IN_PROGRESS') {
-          toast.error(
-            'Süre doldu, cevap kaydedilemedi. Testi Bitir butonu ile sonucu kaydet.',
-            { id: 'attempt-expired' }, // Aynı toast tekrar tekrar çıkmasın
-          );
-        }
-      },
-    },
   );
 
   // Attempt oluştur/başlat: POST /tests/:id/start
@@ -565,15 +551,9 @@ export default function TakeTest() {
       setTimeLeft((prev) => {
         if (prev <= 1) {
           clearInterval(timer);
-          // Süre bitti: timeout() ÇAĞRILMIYOR — aday inceleme/karar için sayfada
-          // kalabilir ama yeni cevap kaydetme YASAK (backend SubmitAnswerUseCase
-          // ATTEMPT_EXPIRED ile reddeder). handleAnswer overtime'da block ediyor.
+          // Süre bitti: timeout() ÇAĞRILMIYOR — aday teste devam edebilir
+          // Overtime modu aktifleştirilir ve ayrı sayaç başlar
           setIsOvertime(true);
-          // Tek seferlik uçtan uca uyarı — toast id ile duplicate engellenir
-          toast.error(
-            'Süre doldu. Mevcut cevapların kaydedildi. Yeni cevap işaretlemek mümkün değil — Testi Bitir butonu ile sonucu kaydet.',
-            { id: 'overtime-start', duration: 8000 },
-          );
           return 0;
         }
         return prev - 1;
@@ -691,17 +671,6 @@ export default function TakeTest() {
 
   const handleAnswer = (optionId) => {
     if (isReviewMode) return;
-    // Süre dolduğunda backend (SubmitAnswerUseCase) cevabı ATTEMPT_EXPIRED ile
-    // reddediyor. Aday overtime'da işaretleme yaparsa cevap kayboluyor — toast
-    // ile durumu açıkla ve API çağrısını hiç yapma. Aday Testi Bitir'e basarak
-    // mevcut sonucu kaydedebilir; süre dolduktan sonra yeni cevap girmek yasak.
-    if (isOvertime) {
-      toast.error(
-        'Süre doldu. Yeni cevap kaydedilemiyor; Testi Bitir butonu ile sonucu kaydet.',
-        { id: 'overtime-block' },
-      );
-      return;
-    }
     const q = questions[currentIndex];
     if (!q) return;
     const letter = q.options?.find((o) => o.id === optionId)
@@ -723,14 +692,6 @@ export default function TakeTest() {
 
   const clearAnswer = () => {
     if (isReviewMode) return;
-    // Boş bırakma da SubmitAnswer endpoint'ine gider — overtime'da reddedilir.
-    if (isOvertime) {
-      toast.error(
-        'Süre doldu. Yeni değişiklik kaydedilemiyor; Testi Bitir butonu ile sonucu kaydet.',
-        { id: 'overtime-block' },
-      );
-      return;
-    }
     const q = questions[currentIndex];
     if (!q) return;
     setAnswers((prev) => {
