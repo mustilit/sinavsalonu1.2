@@ -198,11 +198,24 @@ export default function MyTests() {
     [currentPage, selectedExamType, selectedEducator, completionFilter, purchases.length],
   );
 
-  // Get unique educators
-  const educators = [...new Set(testPackages.filter(t => purchasedTestIds.has(t.id)).map(t => ({
-    email: t.educator_email,
-    name: t.educator_name
-  })).map(e => JSON.stringify(e)))].map(e => JSON.parse(e));
+  // Eğitici filtresi: yalnızca aday'ın satın aldığı paketlere ait eğiticiler.
+  // testPackages zaten purchases response'undan türetildiği için extra fetch yok.
+  // Map ile educator_email (educatorId) üzerinden dedupe + isim alfabetik sıralama.
+  const educators = useMemo(() => {
+    const map = new Map();
+    for (const pkg of testPackages) {
+      if (!purchasedTestIds.has(pkg.id)) continue;
+      if (!pkg.educator_email) continue;
+      if (!map.has(pkg.educator_email)) {
+        map.set(pkg.educator_email, {
+          email: pkg.educator_email,
+          name: pkg.educator_name || pkg.educator_email,
+        });
+      }
+    }
+    return Array.from(map.values()).sort((a, b) => a.name.localeCompare(b.name, "tr"));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [testPackages, purchases.length]);
 
   const hasActiveFilters = selectedExamType !== "all" || selectedEducator !== "all" || completionFilter !== "all";
   
