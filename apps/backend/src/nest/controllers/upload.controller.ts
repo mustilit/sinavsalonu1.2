@@ -13,6 +13,7 @@ import { join } from 'path';
 import { existsSync, mkdirSync, writeFileSync } from 'fs';
 import { randomBytes } from 'crypto';
 import { validateImageUpload } from '../../application/security/fileTypeDetection';
+import { isClean as scanForVirus } from '../../application/security/clamavScan';
 
 const UPLOAD_DIR = join(process.cwd(), 'uploads');
 const MAX_SIZE_BYTES = 5 * 1024 * 1024; // 5MB
@@ -60,7 +61,7 @@ export class UploadController {
     }),
   )
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  uploadImage(@UploadedFile() file: any) {
+  async uploadImage(@UploadedFile() file: any) {
     if (!file) throw new BadRequestException('Dosya bulunamadı');
     if (!file.buffer || !Buffer.isBuffer(file.buffer)) {
       throw new BadRequestException('Dosya içeriği okunamadı');
@@ -69,10 +70,24 @@ export class UploadController {
       throw new BadRequestException(`Dosya boyutu ${MAX_SIZE_BYTES / 1024 / 1024}MB'dan büyük olamaz`);
     }
 
-    // KRITIK: Magic byte detection — HTTP MIME header'a asla güvenme.
+    // KATMAN 1: Magic byte detection — HTTP MIME header'a asla güvenme.
     const validation = validateImageUpload(file.buffer);
     if (!validation.ok) {
       throw new BadRequestException(validation.reason);
+    }
+
+    // KATMAN 2: ClamAV virus scan — env CLAMAV_ENABLED=true ise aktif.
+    // Polyglot dosya (PNG header + PHP shell) magic byte'tan geçer ama
+    // ClamAV imzasıyla yakalanabilir. Üretimde fail-closed (CLAMAV_FAIL_OPEN=false).
+    if (process.env.CLAMAV_ENABLED === 'true') {
+      const scan = await scanForVirus(file.buffer);
+      if (!scan.clean) {
+        throw new BadRequestException(
+          scan.threat
+            ? `Dosya virüs taramasından geçemedi: ${scan.threat}`
+            : 'Dosya virüs taramasından geçemedi',
+        );
+      }
     }
 
     // Filename'i CRYPTO ile üret — kullanıcı originalName'i ile alakası yok.

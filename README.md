@@ -229,6 +229,34 @@ cd apps/frontend && npm run typecheck
 - `apps/backend/src/nest/swagger/` — OpenAPI export script
 - `infra/docker/` — Compose ve Dockerfile'lar
 
+## Mimari Diyagramlar
+
+| Doküman | İçerik |
+|---|---|
+| [ER Diagram](docs/architecture/er-diagram.md) | 55 Prisma model, 27 enum, 152 ilişki (otomatik — `npm run db:erd`) |
+| [C4 Context](docs/architecture/c4-context.mmd) | Yüksek seviye sistem bağlamı |
+| [C4 Container](docs/architecture/c4-container.mmd) | Backend/Frontend/DB/Redis container'lar |
+| [Purchase Sequence](docs/architecture/sequence-purchase.mmd) | Satın alma akışı uçtan uca |
+| [ADR'ler](docs/adr/) | Mimari karar kayıtları (Clean Arch, Cursor, Multi-tenant, JWT, Prisma, Vite, URI Versioning) |
+| [OWASP ASVS L2 Audit](docs/compliance/asvs-l2-self-audit.md) | 83 kontrol — %87 karşılanıyor |
+
+## Performans testleri (k6)
+
+```bash
+k6 run tests/load/01-auth.js
+for f in tests/load/0*.js; do k6 run "$f"; done
+```
+
+Bkz. [tests/load/README.md](tests/load/README.md) — 5 senaryo, threshold tablosu.
+
+## DORA Metrikleri
+
+Her ayın 1'i 06:00 UTC otomatik ölçüm + GitHub issue. Manuel:
+```bash
+GITHUB_TOKEN=ghp_xxx DAYS_BACK=30 node scripts/measure-dora.js
+```
+Workflow: `.github/workflows/dora-metrics.yml`.
+
 ## Lisans
 
 MIT (bkz. `apps/backend/package.json`).

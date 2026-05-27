@@ -33,6 +33,22 @@ services:
       interval: 5s
       retries: 5
 
+  # ClamAV antivirus daemon — file upload virus scan (Sprint 8).
+  # Aktivasyon: env CLAMAV_ENABLED=true ve CLAMAV_HOST=clamav.
+  # İlk başlatma 2-5 dk (imza veritabanı freshclam ile indirilir).
+  # Disk: ~700MB imza veritabanı için.
+  clamav:
+    image: clamav/clamav:stable
+    restart: unless-stopped
+    ports:
+      - "3310:3310"
+    healthcheck:
+      test: ["CMD", "clamdcheck.sh"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 5m # freshclam ilk indirme süresi
+
   backend:
     image: dal-backend:dev
     build:

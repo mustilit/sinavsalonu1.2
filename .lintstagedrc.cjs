@@ -18,11 +18,13 @@ module.exports = {
     'npm --prefix apps/backend run typecheck',
   ],
 
-  // Frontend JS/JSX staged ise → ESLint --fix, sadece staged dosyalar.
-  // Path'ler repo root'tan absolute olarak verilir.
+  // Frontend JS/JSX staged ise → cross-platform Node script ile ESLint --fix
+  // (Windows cmd.exe `cd subdir &&` formatını yanlış yorumluyordu; Git Bash + cmd
+  // farklı davranır). scripts/lint-staged-frontend.js cwd'yi process.chdir ile
+  // bağımsız ayarlar.
   'apps/frontend/**/*.{js,jsx}': (files) => {
     if (files.length === 0) return [];
-    const args = files.map((f) => `"${path.relative('apps/frontend', f).replace(/\\/g, '/')}"`).join(' ');
-    return [`npm --prefix apps/frontend exec -- eslint --fix --no-warn-ignored ${args}`];
+    const args = files.map((f) => `"${f}"`).join(' ');
+    return [`node scripts/lint-staged-frontend.js ${args}`];
   },
 };

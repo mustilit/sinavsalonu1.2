@@ -35,7 +35,9 @@
     "coverage:ratchet": "node scripts/coverage-ratchet.js",
     "coverage:ratchet:apply": "node scripts/coverage-ratchet.js --apply",
     "db:erd": "node scripts/generate-er-diagram.js",
-    "db:erd:check": "node scripts/generate-er-diagram.js --check"
+    "db:erd:check": "node scripts/generate-er-diagram.js --check",
+    "contract:test": "node scripts/contract-test.js",
+    "contract:test:verbose": "node scripts/contract-test.js --verbose"
   },
   "keywords": [
     "code-review",

@@ -1,0 +1,59 @@
+name: DORA Metrics
+
+# Aylık DORA (DevOps Research and Assessment) metriklerini ölç + raporla.
+# 4 ana metrik:
+#   1. Deployment Frequency       — main'e push sıklığı
+#   2. Lead Time for Changes      — commit → production arası süre
+#   3. Mean Time to Restore       — incident açılması → kapanması
+#   4. Change Failure Rate        — production deployment hata oranı
+#
+# Tetikleyici:
+#   - Cron: her ayın 1'i 06:00 UTC (önceki ay raporu)
+#   - Manuel: workflow_dispatch (ad-hoc rapor)
+
+on:
+  workflow_dispatch:
+    inputs:
+      days:
+        description: 'Kaç gün geriye bakılsın'
+        required: false
+        default: '30'
+  schedule:
+    # Her ayın 1'i 06:00 UTC
+    - cron: '0 6 1 * *'
+
+jobs:
+  measure:
+    name: DORA Metrics ölç
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write # Sonuç GitHub issue'da yayınlanır
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Tüm commit geçmişi için
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Measure DORA
+        id: dora
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DAYS_BACK: ${{ inputs.days || 30 }}
+        run: node scripts/measure-dora.js > dora-report.md
+
+      - name: Sonucu issue olarak yayınla
+        uses: peter-evans/create-issue-from-file@v5
+        with:
+          title: 'DORA Metrics — ${{ github.run_id }}'
+          content-filepath: dora-report.md
+          labels: |
+            metrics
+            automated
+            dora

@@ -1,39 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuites name="jest tests" tests="17" failures="0" errors="0" time="2.818">
-  <testsuite name="fileTypeDetection — magic byte" errors="0" failures="0" skipped="0" timestamp="2026-05-27T20:17:31" time="1.943" tests="17">
-    <testcase classname="fileTypeDetection — magic byte detectImageType JPEG dosyasını FF D8 FF imzasından tanır" name="fileTypeDetection — magic byte detectImageType JPEG dosyasını FF D8 FF imzasından tanır" time="0.011">
+<testsuites name="jest tests" tests="6" failures="0" errors="0" time="5.896">
+  <testsuite name="clamavScan — daemon mock" errors="0" failures="0" skipped="0" timestamp="2026-05-27T20:45:30" time="3.769" tests="6">
+    <testcase classname="clamavScan — daemon mock temiz dosyada clean=true döner" name="clamavScan — daemon mock temiz dosyada clean=true döner" time="0.036">
     </testcase>
-    <testcase classname="fileTypeDetection — magic byte detectImageType PNG dosyasını 8 byte imzadan tanır" name="fileTypeDetection — magic byte detectImageType PNG dosyasını 8 byte imzadan tanır" time="0.002">
+    <testcase classname="clamavScan — daemon mock virüs bulunduğunda clean=false + threat name döner" name="clamavScan — daemon mock virüs bulunduğunda clean=false + threat name döner" time="0.006">
     </testcase>
-    <testcase classname="fileTypeDetection — magic byte detectImageType WebP imzasını tanır" name="fileTypeDetection — magic byte detectImageType WebP imzasını tanır" time="0.001">
+    <testcase classname="clamavScan — daemon mock daemon erişilemezse fail-closed (clean=false)" name="clamavScan — daemon mock daemon erişilemezse fail-closed (clean=false)" time="0.013">
     </testcase>
-    <testcase classname="fileTypeDetection — magic byte detectImageType GIF87a imzasını tanır" name="fileTypeDetection — magic byte detectImageType GIF87a imzasını tanır" time="0.001">
+    <testcase classname="clamavScan — daemon mock failOpen=true ile daemon hatası clean=true döner" name="clamavScan — daemon mock failOpen=true ile daemon hatası clean=true döner" time="0.012">
     </testcase>
-    <testcase classname="fileTypeDetection — magic byte detectImageType GIF89a imzasını tanır" name="fileTypeDetection — magic byte detectImageType GIF89a imzasını tanır" time="0.001">
+    <testcase classname="clamavScan — daemon mock isClean yüksek seviye yardımcı doğru çalışır" name="clamavScan — daemon mock isClean yüksek seviye yardımcı doğru çalışır" time="0.004">
     </testcase>
-    <testcase classname="fileTypeDetection — magic byte detectImageType rastgele bytes için null döner" name="fileTypeDetection — magic byte detectImageType rastgele bytes için null döner" time="0.003">
-    </testcase>
-    <testcase classname="fileTypeDetection — magic byte detectImageType boş buffer için null döner" name="fileTypeDetection — magic byte detectImageType boş buffer için null döner" time="0.002">
-    </testcase>
-    <testcase classname="fileTypeDetection — magic byte detectImageType PDF tanınmaz" name="fileTypeDetection — magic byte detectImageType PDF tanınmaz" time="0.002">
-    </testcase>
-    <testcase classname="fileTypeDetection — magic byte looksLikeSvg UTF-8 &lt;svg&gt; tag tespit eder" name="fileTypeDetection — magic byte looksLikeSvg UTF-8 &lt;svg&gt; tag tespit eder" time="0.001">
-    </testcase>
-    <testcase classname="fileTypeDetection — magic byte looksLikeSvg XML deklarasyonlu SVG tanır" name="fileTypeDetection — magic byte looksLikeSvg XML deklarasyonlu SVG tanır" time="0.001">
-    </testcase>
-    <testcase classname="fileTypeDetection — magic byte looksLikeSvg PNG/JPEG için false" name="fileTypeDetection — magic byte looksLikeSvg PNG/JPEG için false" time="0.001">
-    </testcase>
-    <testcase classname="fileTypeDetection — magic byte looksLikeSvg case-insensitive" name="fileTypeDetection — magic byte looksLikeSvg case-insensitive" time="0.001">
-    </testcase>
-    <testcase classname="fileTypeDetection — magic byte validateImageUpload SVG XSS payload reddedilir" name="fileTypeDetection — magic byte validateImageUpload SVG XSS payload reddedilir" time="0.004">
-    </testcase>
-    <testcase classname="fileTypeDetection — magic byte validateImageUpload geçerli PNG kabul edilir" name="fileTypeDetection — magic byte validateImageUpload geçerli PNG kabul edilir" time="0.003">
-    </testcase>
-    <testcase classname="fileTypeDetection — magic byte validateImageUpload PHP shell reddedilir" name="fileTypeDetection — magic byte validateImageUpload PHP shell reddedilir" time="0.001">
-    </testcase>
-    <testcase classname="fileTypeDetection — magic byte validateImageUpload boş buffer reddedilir" name="fileTypeDetection — magic byte validateImageUpload boş buffer reddedilir" time="0.001">
-    </testcase>
-    <testcase classname="fileTypeDetection — magic byte validateImageUpload tanınmayan binary reddedilir" name="fileTypeDetection — magic byte validateImageUpload tanınmayan binary reddedilir" time="0.001">
+    <testcase classname="clamavScan — daemon mock zINSTREAM komutu + büyük endian size + terminator gönderir" name="clamavScan — daemon mock zINSTREAM komutu + büyük endian size + terminator gönderir" time="0.017">
     </testcase>
   </testsuite>
 </testsuites>
