@@ -31,7 +31,9 @@
     "admin:set-price": "ts-node apps/backend/scripts/admin-set-test-price.ts",
     "openapi:export": "NODE_ENV=development ts-node apps/backend/src/nest/swagger/export-openapi.ts",
     "test:mutation": "stryker run",
-    "test:mutation:ci": "stryker run --reporters json,html,clear-text"
+    "test:mutation:ci": "stryker run --reporters json,html,clear-text",
+    "coverage:ratchet": "node scripts/coverage-ratchet.js",
+    "coverage:ratchet:apply": "node scripts/coverage-ratchet.js --apply"
   },
   "keywords": [
     "code-review",

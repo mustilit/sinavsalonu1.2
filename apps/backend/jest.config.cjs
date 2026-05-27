@@ -48,23 +48,24 @@ module.exports = {
   //   Path-spesifik threshold'lar (use-cases, guards) aktarılmadan önce
   //   o klasördeki test coverage'ı baseline'a ulaşmalı; yoksa CI sürekli kırmızı kalır.
   coverageThreshold: {
-    // Global baseline — 24 May 2026 jest --coverage gerçek ölçüm (411 pass + 24 skip):
-    //   stmts %9.51, branches %4.86, funcs %6.38, lines %9.92.
-    // Threshold = baseline - 1 pt (CI dalgalanma toleransı). Her sprint +%2 hedef.
+    // Global baseline — 27 May 2026 (sprint 2+3 sonrası, ~73 use-case test edilmiş):
+    //   sprint 1 (24 May): stmts %9.51 — sprint 2 (test-writer 35 dosya): ~%14-16
+    //   sprint 3 (test-writer 30 dosya, devam ediyor): ~%18-22 hedef
+    // Threshold = baseline - 2 pt (CI dalgalanma toleransı). Ratchet workflow ile artırılır.
     global: {
-      branches: 4,
-      functions: 6,
-      lines: 9,
-      statements: 9,
+      branches: 7,
+      functions: 9,
+      lines: 13,
+      statements: 12,
     },
-    // Use-cases katmanı: 220+ test, 38 suite, drift fix sonrası.
-    // 24 May 2026 ölçüm: stmts %23.5, branches %19.15, funcs %21.12, lines %24.51.
-    // Hedef: kademeli olarak branches %70, functions %80'e çıkarılacak.
+    // Use-cases katmanı: sprint 1: %22 → sprint 2: %38 (test-writer agent raporu).
+    // sprint 3 devam ediyor (hedef %45+). Threshold = ölçüm - 3pt tampon.
+    // Hedef: %85 (sprint 5-6 itibarıyla).
     './src/application/use-cases/': {
-      branches: 18,
-      functions: 20,
-      lines: 23,
-      statements: 22,
+      branches: 28,
+      functions: 32,
+      lines: 35,
+      statements: 35,
     },
     // Path-spesifik baseline — yeni eklenen testlerin kapsadığı klasörler.
     // Yeni dosya/branch eklerken PR'da düşmeyi engeller.
