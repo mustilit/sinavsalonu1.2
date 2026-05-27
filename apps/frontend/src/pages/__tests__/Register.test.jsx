@@ -86,9 +86,9 @@ describe('Register sayfası', () => {
   it('educator rolü seçildiğinde ad ve soyad alanları görünür', () => {
     // Arrange & Act
     renderRegister('?role=educator');
-    // Assert — educator alanları render edilmeli
-    expect(screen.getByLabelText(/ad/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/soyad/i)).toBeInTheDocument();
+    // Assert — educator alanları render edilmeli (exact match: "Ad", "Soyad")
+    expect(screen.getByLabelText(/^ad$/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/^soyad$/i)).toBeInTheDocument();
   });
 
   it('aday modu seçildiğinde ad/soyad alanları görünmez', () => {

@@ -255,7 +255,117 @@ Toplam aylık: ~$30–80.
 - CDN dashboard: Cache hit ratio > %80
 - WebPageTest: TTFB, FCP, LCP
 
+## Kod kullanımı (frontend helper)
+
+### Setup
+
+```bash
+# Frontend .env (production build sırasında)
+VITE_CDN_BASE_URL=https://cdn.sinavsalonu.example
+```
+
+`VITE_CDN_BASE_URL` tanımlı değilse helper transparent — origin URL'lere düşer.
+
+### Helper API
+
+`apps/frontend/src/lib/cdn.js`:
+
+```javascript
+import { cdnUrl, responsiveImage, isCdnEnabled } from '@/lib/cdn';
+
+// 1. Basit URL rewrite
+const src = cdnUrl('/uploads/test-image.jpg');
+// CDN tanımlı: https://cdn.../uploads/test-image.jpg
+// Tanımsız:   /uploads/test-image.jpg
+
+// 2. Tam URL'ler dokunulmaz (Google avatar, Stripe images, vs.)
+const avatarSrc = cdnUrl('https://lh3.googleusercontent.com/a/avatar');
+// → https://lh3.googleusercontent.com/a/avatar (değişmez)
+
+// 3. Responsive image
+import { responsiveImage } from '@/lib/cdn';
+
+function TestCard({ test }) {
+  const img = responsiveImage(test.coverImageUrl, {
+    defaultWidth: 800,
+    widths: [400, 800, 1600],
+  });
+  return <img {...img} alt={test.title} loading="lazy" />;
+}
+
+// Output (CDN aktifken):
+// <img
+//   src="https://cdn.../foo.jpg?w=800"
+//   srcset="https://cdn.../foo.jpg?w=400 400w, ?w=800 800w, ?w=1600 1600w"
+//   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 800px"
+//   loading="lazy"
+// />
+```
+
+### Cloudflare Image Resizing aktivasyonu
+
+Cloudflare Image Resizing (Pro plan, $5/ay) `?w=N` query param'ı otomatik
+resize'a çevirir. Etkinleştir:
+
+1. Cloudflare Dashboard → Zone → Speed → Optimization → **Image Resizing: On**
+2. Frontend `VITE_CDN_BASE_URL` set et
+3. Bundle build + deploy — `responsiveImage()` helper otomatik srcset üretir
+
+### Bunny Image Optimizer
+
+Bunny CDN ücretsiz tier'da image optimizer dahil:
+
+1. Pull Zone → Optimizer → **WebP/AVIF: Auto, Resize: Query Parameter**
+2. Query parametre formatı: `?width=N` (Bunny) yerine `?w=N` (Cloudflare).
+   Bunny için helper'da `{w}` yerine `{width}` kullanın veya rewrite kuralı ekleyin:
+   ```
+   /uploads/* → ?w=$1 → ?width=$1
+   ```
+
+## CDN URL backward compatibility
+
+CDN tanımlanmadan önce kaydedilen URL'ler (DB'de `/uploads/foo.jpg`) `cdnUrl()`
+helper'ından geçtikleri sürece çalışır. Migration yok — sadece deploy zamanı
+env var değişimi.
+
+## Test
+
+`apps/frontend/src/lib/__tests__/cdn.test.js` — 8 test case:
+- cdnUrl path/URL/empty
+- responsiveImage CDN aktif/inaktif
+- isCdnEnabled
+
+## Production deployment
+
+1. CDN sağlayıcı seç (Cloudflare Free + Image Resizing Pro veya Bunny)
+2. DNS: `cdn.sinavsalonu.example` → CDN origin
+3. Origin: backend (`/uploads/*`) veya S3 bucket
+4. `VITE_CDN_BASE_URL` build env
+5. `npm run build` → CDN URL'leri bundle'a girer
+6. Deploy + smoke test:
+   ```bash
+   curl -I https://cdn.sinavsalonu.example/uploads/test.jpg
+   # Beklenen:
+   #   HTTP/2 200
+   #   Cache-Control: public, max-age=604800
+   #   CF-Cache-Status: HIT (veya MISS ilk çağrıda)
+   ```
+
+## Nginx Brotli
+
+Mevcut nginx config'i (`infra/nginx/default.conf.template`) gzip aktif.
+Brotli ekleme:
+
+1. Docker image değiştir: `openresty/openresty:1.25-alpine-fat` (Brotli dahil)
+   veya `nginx:1.27-alpine` + `ngx_brotli` build
+2. Config'de `brotli on; brotli_comp_level 5; brotli_static on;` blokunu aç
+   (default.conf.template'te zaten yorum satırı olarak hazır)
+3. Build + deploy → modern browser'lar Brotli accept eder, %20-30 ekstra
+   sıkıştırma. Eski browser'lar gzip fallback.
+
 ## İlgili
 
 - KALITE-DEGERLENDIRME §4 (Verimlilik)
 - Skill: `release-engineering` (cache invalidation release script'i)
+- Frontend helper: `apps/frontend/src/lib/cdn.js`
+- Test: `apps/frontend/src/lib/__tests__/cdn.test.js`

@@ -178,8 +178,97 @@ Read replica = +%50–100 DB maliyeti (instance + storage + IO + cross-AZ traffi
 
 Eşik: primary `pg_stat_database.tup_fetched` > 10M/saat veya CPU > %70 → replica zamanı geldi.
 
+## Kod kullanımı (dbRouter)
+
+### Helper'lar
+
+`apps/backend/src/infrastructure/database/dbRouter.ts` iki temel client expose eder:
+
+```typescript
+import { prismaWrite, prismaRead } from '../../infrastructure/database/dbRouter';
+
+// Mutation — daima primary
+await prismaWrite.purchase.create({ data: { ... } });
+
+// Read — replica tercih (lag toleranslı use case'ler)
+const stats = await prismaRead().testStats.findMany({ where: { ... } });
+
+// Read-after-write — son yazılan kaydı oku, replica lag riski → primary
+await prismaWrite.user.update({ where: { id }, data: { ... } });
+const fresh = await prismaRead({ requireFresh: true }).user.findUnique({ where: { id } });
+```
+
+### Lag detection
+
+```typescript
+import { measureReplicaLag, getReplicaStatus } from '../../infrastructure/database/dbRouter';
+
+// Çıplak lag (saniye)
+const lag = await measureReplicaLag();
+
+// Detaylı status — health endpoint için
+const status = await getReplicaStatus();
+// { enabled, lagSeconds, healthy, degradedMode }
+```
+
+### Otomatik fallback
+
+`prismaRead()` her çağrıda cache kontrolü yapar:
+- Cache miss + ilk çağrı → primary (LAG_FAIL_OPEN=true)
+- Cache hit + lag ≤ 5s → replica
+- Cache hit + lag > 5s → primary
+
+Cache TTL: 5 saniye. Lag query başarısızsa fail-open.
+
+### Test
+
+`apps/backend/tests/infrastructure/dbRouter.test.ts` — 13 test case:
+- prismaWrite/prismaRead client seçimi
+- requireFresh override
+- measureReplicaLag (success/error/0-lag)
+- getReplicaStatus (healthy/degraded/unhealthy)
+
+### Migration plan (use-case bazlı)
+
+İlk batch (lag toleranslı, **şu an primary kullanıyor → replica'ya geçirilebilir**):
+- `ListMarketplacePackagesUseCase` — marketplace listing
+- `GetCommissionReportUseCase` — admin raporu
+- `GetCandidateReportUseCase` — admin raporu
+- `GetEducatorReportUseCase` — admin raporu
+- `ListAuditLogsUseCase` — admin audit query
+- `MeTopicPerformanceController` — kullanıcı istatistik
+- `MyResults` listing
+
+İkinci batch (deneysel — primary'de kalmaya devam edebilir):
+- `GetEducatorPageUseCase`
+- `ListEducatorTestsUseCase`
+
+ASLA replica kullanma:
+- `CreatePurchaseUseCase` ve tüm para akışı
+- `LoginUseCase` (session lookup)
+- `SubmitAnswerUseCase` (yarış koşulu)
+- `GetAttemptStateUseCase` (kullanıcı az önce kendi attempt'ını yazdı)
+
+### Production deployment
+
+1. Replica'yı ayağa kaldır (AWS RDS Read Replica veya self-hosted streaming):
+   ```bash
+   # AWS CLI
+   aws rds create-db-instance-read-replica \
+     --db-instance-identifier sinavsalonu-replica-1 \
+     --source-db-instance-identifier sinavsalonu-primary
+   ```
+2. `DATABASE_REPLICA_URL` env var set et (read-only user):
+   ```bash
+   DATABASE_REPLICA_URL=postgresql://readonly:xxx@replica.aws.com:5432/sinavsalonu
+   ```
+3. Backend pod restart — `isReplicaEnabled()` true döner, `prismaRead()` aktif olur
+4. `/health/replica` endpoint izle — lag <1s olmalı
+5. K8s HPA replica pool'a yansıt (`worker-deployment.yaml` zaten ayrı pod)
+
 ## İlgili
 
 - KALITE-DEGERLENDIRME §4
-- ADR-0005 (Prisma — yazıldığında ekle)
+- ADR-0005 Prisma ORM
 - Skill: `observability` (replication lag monitor)
+- Test: `tests/infrastructure/dbRouter.test.ts`

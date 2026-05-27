@@ -8,7 +8,11 @@ import { MemoryRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import AdminDashboard from '../AdminDashboard';
 
-const mockGetAdminStats = vi.fn();
+// vi.hoisted ile hoisting sorunu çözüldü — factory içinde referans güvenli
+const { mockGetAdminStats, mockUseAuth } = vi.hoisted(() => ({
+  mockGetAdminStats: vi.fn(),
+  mockUseAuth: vi.fn(),
+}));
 
 vi.mock('@/api/dalClient', () => ({
   getAdminStats: mockGetAdminStats,
@@ -17,11 +21,14 @@ vi.mock('@/api/dalClient', () => ({
   },
 }));
 
+vi.mock('@/lib/AuthContext', () => ({
+  useAuth: mockUseAuth,
+}));
+
 vi.mock('@/utils', () => ({
   createPageUrl: (name) => `/${name}`,
 }));
 
-// Mock StatCard bileşeni
 vi.mock('@/components/ui/StatCard', () => ({
   default: ({ title, value }) => (
     <div data-testid="stat-card">
@@ -31,12 +38,7 @@ vi.mock('@/components/ui/StatCard', () => ({
   ),
 }));
 
-function renderAdminDashboard(user = { role: 'ADMIN' }) {
-  // AuthContext mock — her test için farklı user
-  vi.doMock('@/lib/AuthContext', () => ({
-    useAuth: () => ({ user }),
-  }));
-
+function renderAdminDashboard() {
   const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   return render(
     <QueryClientProvider client={qc}>
@@ -54,25 +56,16 @@ beforeEach(() => {
     packages: { total: 80, published: 60, draft: 20 },
     sales: { total: 320, totalRevenueCents: 4800000 },
   });
+  // Varsayılan: ADMIN kullanıcı
+  mockUseAuth.mockReturnValue({ user: { role: 'ADMIN' } });
 });
 
 describe('AdminDashboard sayfası', () => {
   it('admin rolüyle yönetim paneli başlığı render edilir', async () => {
-    // Arrange
-    vi.mock('@/lib/AuthContext', () => ({
-      useAuth: () => ({ user: { role: 'ADMIN' } }),
-    }));
-
-    const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+    // Arrange — mockUseAuth already set to ADMIN in beforeEach
 
     // Act
-    render(
-      <QueryClientProvider client={qc}>
-        <MemoryRouter>
-          <AdminDashboard />
-        </MemoryRouter>
-      </QueryClientProvider>
-    );
+    renderAdminDashboard();
 
     // Assert — "Yönetim Paneli" başlığı mevcut olmalı
     await waitFor(() => {
@@ -84,20 +77,10 @@ describe('AdminDashboard sayfası', () => {
 
   it('admin olmayan kullanıcıda erişim engeli mesajı gösterilir', async () => {
     // Arrange
-    vi.mock('@/lib/AuthContext', () => ({
-      useAuth: () => ({ user: { role: 'CANDIDATE' } }),
-    }));
-
-    const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+    mockUseAuth.mockReturnValue({ user: { role: 'CANDIDATE' } });
 
     // Act
-    render(
-      <QueryClientProvider client={qc}>
-        <MemoryRouter>
-          <AdminDashboard />
-        </MemoryRouter>
-      </QueryClientProvider>
-    );
+    renderAdminDashboard();
 
     // Assert
     await waitFor(() => {
@@ -107,25 +90,14 @@ describe('AdminDashboard sayfası', () => {
 
   it('stat kartları getAdminStats verisiyle render edilir', async () => {
     // Arrange
-    vi.mock('@/lib/AuthContext', () => ({
-      useAuth: () => ({ user: { role: 'ADMIN' } }),
-    }));
     mockGetAdminStats.mockResolvedValue({
       users: { candidates: 42, educators: 7 },
       packages: { total: 15, published: 10, draft: 5 },
       sales: { total: 55, totalRevenueCents: 1200000 },
     });
 
-    const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
-
     // Act
-    render(
-      <QueryClientProvider client={qc}>
-        <MemoryRouter>
-          <AdminDashboard />
-        </MemoryRouter>
-      </QueryClientProvider>
-    );
+    renderAdminDashboard();
 
     // Assert — getAdminStats çağrılmalı
     await waitFor(() => {
@@ -135,21 +107,11 @@ describe('AdminDashboard sayfası', () => {
 
   it('null user ile render hata fırlatmaz', async () => {
     // Arrange
-    vi.mock('@/lib/AuthContext', () => ({
-      useAuth: () => ({ user: null }),
-    }));
-
-    const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+    mockUseAuth.mockReturnValue({ user: null });
 
     // Act & Assert — çökmemeli
     expect(() => {
-      render(
-        <QueryClientProvider client={qc}>
-          <MemoryRouter>
-            <AdminDashboard />
-          </MemoryRouter>
-        </QueryClientProvider>
-      );
+      renderAdminDashboard();
     }).not.toThrow();
   });
 });

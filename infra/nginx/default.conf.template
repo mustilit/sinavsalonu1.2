@@ -14,6 +14,7 @@ server {
     index index.html;
 
     # ── Sıkıştırma ────────────────────────────────────────────────────────
+    # Gzip — geriye uyumluluk için her zaman aktif (HTTP/1.0 client'lar dahil).
     gzip on;
     gzip_vary on;
     gzip_min_length 256;
@@ -33,6 +34,26 @@ server {
         image/svg+xml
         font/ttf
         font/otf;
+
+    # Brotli — modern browser'lar (HTTPS zorunlu) için %20-30 daha iyi sıkıştırma.
+    # Nginx module yüklü değilse comment'lerin altındaki satırlar pas geçilir
+    # (nginx config syntax error vermez; ngx_brotli yüklü değilse blok hayalî).
+    # Production image: openresty/openresty:1.25.3.1-alpine-fat veya
+    # nginx:1.27-alpine + ngx_brotli build (Dockerfile'a eklenir).
+    # brotli on;
+    # brotli_comp_level 5;
+    # brotli_static on;
+    # brotli_types
+    #     text/plain
+    #     text/css
+    #     text/javascript
+    #     application/javascript
+    #     application/json
+    #     application/xml
+    #     application/manifest+json
+    #     image/svg+xml
+    #     font/ttf
+    #     font/otf;
 
     # ── Güvenlik başlıkları ───────────────────────────────────────────────
     # CSP Report-Only — production'da gerçek violation toplanır, akış kırılmaz.

@@ -1,17 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuites name="jest tests" tests="6" failures="0" errors="0" time="5.896">
-  <testsuite name="clamavScan — daemon mock" errors="0" failures="0" skipped="0" timestamp="2026-05-27T20:45:30" time="3.769" tests="6">
-    <testcase classname="clamavScan — daemon mock temiz dosyada clean=true döner" name="clamavScan — daemon mock temiz dosyada clean=true döner" time="0.036">
+<testsuites name="jest tests" tests="13" failures="0" errors="0" time="20.416">
+  <testsuite name="dbRouter" errors="0" failures="0" skipped="0" timestamp="2026-05-27T21:20:08" time="13.622" tests="13">
+    <testcase classname="dbRouter prismaWrite her zaman primary client döner" name="dbRouter prismaWrite her zaman primary client döner" time="0.016">
     </testcase>
-    <testcase classname="clamavScan — daemon mock virüs bulunduğunda clean=false + threat name döner" name="clamavScan — daemon mock virüs bulunduğunda clean=false + threat name döner" time="0.006">
+    <testcase classname="dbRouter prismaRead replica aktif değilse primary döner" name="dbRouter prismaRead replica aktif değilse primary döner" time="0.005">
     </testcase>
-    <testcase classname="clamavScan — daemon mock daemon erişilemezse fail-closed (clean=false)" name="clamavScan — daemon mock daemon erişilemezse fail-closed (clean=false)" time="0.013">
+    <testcase classname="dbRouter prismaRead requireFresh=true ise replica aktif olsa bile primary döner" name="dbRouter prismaRead requireFresh=true ise replica aktif olsa bile primary döner" time="0.002">
     </testcase>
-    <testcase classname="clamavScan — daemon mock failOpen=true ile daemon hatası clean=true döner" name="clamavScan — daemon mock failOpen=true ile daemon hatası clean=true döner" time="0.012">
+    <testcase classname="dbRouter prismaRead replica aktif + cache yok ise fail-open ile primary döner" name="dbRouter prismaRead replica aktif + cache yok ise fail-open ile primary döner" time="0.002">
     </testcase>
-    <testcase classname="clamavScan — daemon mock isClean yüksek seviye yardımcı doğru çalışır" name="clamavScan — daemon mock isClean yüksek seviye yardımcı doğru çalışır" time="0.004">
+    <testcase classname="dbRouter measureReplicaLag replica aktif değilse 0 döner" name="dbRouter measureReplicaLag replica aktif değilse 0 döner" time="0.003">
     </testcase>
-    <testcase classname="clamavScan — daemon mock zINSTREAM komutu + büyük endian size + terminator gönderir" name="clamavScan — daemon mock zINSTREAM komutu + büyük endian size + terminator gönderir" time="0.017">
+    <testcase classname="dbRouter measureReplicaLag replica aktif + sorgu başarılı → lag saniye olarak döner" name="dbRouter measureReplicaLag replica aktif + sorgu başarılı → lag saniye olarak döner" time="0.003">
+    </testcase>
+    <testcase classname="dbRouter measureReplicaLag sorgu hatası → null döner (fail-open)" name="dbRouter measureReplicaLag sorgu hatası → null döner (fail-open)" time="0.005">
+    </testcase>
+    <testcase classname="dbRouter measureReplicaLag pg_is_in_recovery=false (primary mode) → 0 döner" name="dbRouter measureReplicaLag pg_is_in_recovery=false (primary mode) → 0 döner" time="0.002">
+    </testcase>
+    <testcase classname="dbRouter refreshLagCache lag ölçüp cache&apos;i günceller" name="dbRouter refreshLagCache lag ölçüp cache&apos;i günceller" time="0.002">
+    </testcase>
+    <testcase classname="dbRouter getReplicaStatus replica aktif değilse healthy döner" name="dbRouter getReplicaStatus replica aktif değilse healthy döner" time="0.072">
+    </testcase>
+    <testcase classname="dbRouter getReplicaStatus replica sağlıklı + düşük lag → healthy &amp; not degraded" name="dbRouter getReplicaStatus replica sağlıklı + düşük lag → healthy &amp; not degraded" time="0.014">
+    </testcase>
+    <testcase classname="dbRouter getReplicaStatus lag &gt; 5s → degraded mode" name="dbRouter getReplicaStatus lag &gt; 5s → degraded mode" time="0.001">
+    </testcase>
+    <testcase classname="dbRouter getReplicaStatus lag sorgusu başarısız → unhealthy + degraded" name="dbRouter getReplicaStatus lag sorgusu başarısız → unhealthy + degraded" time="0.013">
     </testcase>
   </testsuite>
 </testsuites>
