@@ -10,7 +10,9 @@
   "scripts": {
     "prepare": "husky",
     "release": "semantic-release",
-    "release:dry": "semantic-release --dry-run"
+    "release:dry": "semantic-release --dry-run",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "devDependencies": {
     "@semantic-release/changelog": "^6.0.3",
@@ -21,6 +23,7 @@
     "conventional-changelog-conventionalcommits": "^8.0.0",
     "husky": "^9.1.7",
     "lint-staged": "^15.5.2",
+    "prettier": "^3.4.2",
     "semantic-release": "^24.2.9"
   },
   "release": {
@@ -125,6 +128,17 @@
         }
       ],
       "@semantic-release/github"
+    ]
+  },
+  "lint-staged": {
+    "apps/frontend/**/*.{js,jsx}": [
+      "prettier --write"
+    ],
+    "apps/backend/**/*.ts": [
+      "prettier --write"
+    ],
+    "*.{json,md,yml,yaml}": [
+      "prettier --write"
     ]
   }
 }

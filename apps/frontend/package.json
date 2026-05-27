@@ -15,7 +15,10 @@
     "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
     "test:e2e:a11y": "playwright test e2e/specs/a11y.spec.ts",
-    "test:e2e:ui": "playwright test --ui"
+    "test:e2e:ui": "playwright test --ui",
+    "i18n:extract": "node scripts/i18n-extract.cjs",
+    "i18n:extract:update": "node scripts/i18n-extract.cjs --update-locales",
+    "i18n:check": "node scripts/i18n-extract.cjs --check"
   },
   "dependencies": {
     "@hello-pangea/dnd": "^17.0.0",
@@ -116,5 +119,21 @@
     "typescript": "^5.8.2",
     "vite": "^6.1.0",
     "vitest": "^2.0.0"
+  },
+  "browserslist": {
+    "production": [
+      ">0.5%",
+      "not dead",
+      "not op_mini all",
+      "last 2 chrome versions",
+      "last 2 firefox versions",
+      "last 2 safari versions",
+      "last 2 edge versions"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }

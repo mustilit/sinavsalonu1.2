@@ -1,0 +1,5476 @@
+{
+  "summary": {
+    "totalFiles": 161,
+    "totalStrings": 781,
+    "affectedFiles": 62
+  },
+  "findings": [
+    {
+      "file": "src/pages/AdminAdPackages.jsx",
+      "location": "jsx-text",
+      "text": "Paket Adı",
+      "suggestedKey": "AdminAdPackages.paketAdi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminAdPackages.jsx",
+      "location": "jsx-text",
+      "text": "Süre (gün)",
+      "suggestedKey": "AdminAdPackages.sureGun",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminAdPackages.jsx",
+      "location": "jsx-text",
+      "text": "Gösterim Sayısı",
+      "suggestedKey": "AdminAdPackages.gosterimSayisi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminAdPackages.jsx",
+      "location": "jsx-text",
+      "text": "Satışta (eğiticilere göster)",
+      "suggestedKey": "AdminAdPackages.satistaEgiticilereGoster",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminAdPackages.jsx",
+      "location": "jsx-text",
+      "text": "İptal",
+      "suggestedKey": "AdminAdPackages.iptal",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminAdPackages.jsx",
+      "location": "jsx-text",
+      "text": "Eğiticilerin \"Reklamı Satın Al\" akışında göreceği paketleri tanımla",
+      "suggestedKey": "AdminAdPackages.egiticilerinReklamiSatinAlAkisindaGorece",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminAdPackages.jsx",
+      "location": "jsx-text",
+      "text": "Nasıl çalışır?",
+      "suggestedKey": "AdminAdPackages.nasilCalisir",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminAdPackages.jsx",
+      "location": "jsx-text",
+      "text": ": Paket satın alındıktan sonra reklamın yayında kalacağı maksimum gün sayısı.",
+      "suggestedKey": "AdminAdPackages.paketSatinAlindiktanSonraReklaminYayinda",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminAdPackages.jsx",
+      "location": "jsx-text",
+      "text": "Gösterim",
+      "suggestedKey": "AdminAdPackages.gosterim",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminAdPackages.jsx",
+      "location": "jsx-text",
+      "text": ": Reklam tüketildikçe azalır; süresi dolmadan biterse reklam otomatik kapanır.",
+      "suggestedKey": "AdminAdPackages.reklamTuketildikceAzalirSuresiDolmadanBi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminAdPackages.jsx",
+      "location": "jsx-text",
+      "text": "Satışta",
+      "suggestedKey": "AdminAdPackages.satista",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminAdPackages.jsx",
+      "location": "jsx-text",
+      "text": "kapalı olursa eğitici dropdown'unda görünmez (mevcut satın almalar etkilenmez).",
+      "suggestedKey": "AdminAdPackages.kapaliOlursaEgiticiDropdownundaGorunmezM",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminAdPackages.jsx",
+      "location": "jsx-text",
+      "text": "Yükleniyor…",
+      "suggestedKey": "AdminAdPackages.yukleniyor",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminAdPackages.jsx",
+      "location": "jsx-text",
+      "text": "Paketler yüklenemedi",
+      "suggestedKey": "AdminAdPackages.paketlerYuklenemedi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminAdPackages.jsx",
+      "location": "jsx-text",
+      "text": "Henüz paket tanımlanmadı.",
+      "suggestedKey": "AdminAdPackages.henuzPaketTanimlanmadi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminAdPackages.jsx",
+      "location": "jsx-text",
+      "text": "gün",
+      "suggestedKey": "AdminAdPackages.gun",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminAdPackages.jsx",
+      "location": "jsx-text",
+      "text": "gösterim",
+      "suggestedKey": "AdminAdPackages.gosterim",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminAdPackages.jsx",
+      "location": "jsx-text",
+      "text": "Düzenle",
+      "suggestedKey": "AdminAdPackages.duzenle",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminAdPackages.jsx",
+      "location": "prop:placeholder",
+      "text": "ör. Standart Reklam (30 gün, 1.000 gösterim)",
+      "suggestedKey": "AdminAdPackages.placeholder.orStandartReklam30Gun1000Gosterim",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminAdReport.jsx",
+      "location": "jsx-text",
+      "text": "Eğiticilerin reklam satın alımlarını ve gösterim istatistiklerini görüntüleyin",
+      "suggestedKey": "AdminAdReport.egiticilerinReklamSatinAlimlariniVeGoste",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminAdReport.jsx",
+      "location": "jsx-text",
+      "text": "Yıl",
+      "suggestedKey": "AdminAdReport.yil",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminAdReport.jsx",
+      "location": "jsx-text",
+      "text": "Tümü",
+      "suggestedKey": "AdminAdReport.tumu",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminAdReport.jsx",
+      "location": "jsx-text",
+      "text": "Tüm Aylar",
+      "suggestedKey": "AdminAdReport.tumAylar",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminAdReport.jsx",
+      "location": "jsx-text",
+      "text": "Hedef Türü",
+      "suggestedKey": "AdminAdReport.hedefTuru",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminAdReport.jsx",
+      "location": "jsx-text",
+      "text": "Eğitici Profili",
+      "suggestedKey": "AdminAdReport.egiticiProfili",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminAdReport.jsx",
+      "location": "jsx-text",
+      "text": "Eğitici Ara",
+      "suggestedKey": "AdminAdReport.egiticiAra",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminAdReport.jsx",
+      "location": "jsx-text",
+      "text": "Süresi Dolmuş",
+      "suggestedKey": "AdminAdReport.suresiDolmus",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminAdReport.jsx",
+      "location": "jsx-text",
+      "text": "Reklam Satın Alımları",
+      "suggestedKey": "AdminAdReport.reklamSatinAlimlari",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminAdReport.jsx",
+      "location": "jsx-text",
+      "text": "Rapor yüklenemedi",
+      "suggestedKey": "AdminAdReport.raporYuklenemedi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminAdReport.jsx",
+      "location": "jsx-text",
+      "text": "Kayıt bulunamadı",
+      "suggestedKey": "AdminAdReport.kayitBulunamadi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminAdReport.jsx",
+      "location": "jsx-text",
+      "text": "Filtre kriterlerinizi değiştirmeyi deneyin",
+      "suggestedKey": "AdminAdReport.filtreKriterleriniziDegistirmeyiDeneyin",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminAdReport.jsx",
+      "location": "jsx-text",
+      "text": "Eğitici",
+      "suggestedKey": "AdminAdReport.egitici",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminAdReport.jsx",
+      "location": "jsx-text",
+      "text": "Tür",
+      "suggestedKey": "AdminAdReport.tur",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminAdReport.jsx",
+      "location": "jsx-text",
+      "text": "Gösterim",
+      "suggestedKey": "AdminAdReport.gosterim",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminAdReport.jsx",
+      "location": "jsx-text",
+      "text": "Geçerlilik",
+      "suggestedKey": "AdminAdReport.gecerlilik",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminAdReport.jsx",
+      "location": "jsx-text",
+      "text": "Eğitici profili",
+      "suggestedKey": "AdminAdReport.egiticiProfili",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminAdReport.jsx",
+      "location": "prop:placeholder",
+      "text": "Kullanıcı adı veya e-posta...",
+      "suggestedKey": "AdminAdReport.placeholder.kullaniciAdiVeyaEposta",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminCandidateReport.jsx",
+      "location": "jsx-text",
+      "text": "Erişim Engellendi",
+      "suggestedKey": "AdminCandidateReport.erisimEngellendi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminCandidateReport.jsx",
+      "location": "jsx-text",
+      "text": "Bu sayfaya erişim yetkiniz yok",
+      "suggestedKey": "AdminCandidateReport.buSayfayaErisimYetkinizYok",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminCandidateReport.jsx",
+      "location": "jsx-text",
+      "text": "Tüm adaylar hakkında ayrıntılı analitik",
+      "suggestedKey": "AdminCandidateReport.tumAdaylarHakkindaAyrintiliAnalitik",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminCandidateReport.jsx",
+      "location": "jsx-text",
+      "text": "Arama (E-posta / Kullanıcı Adı)",
+      "suggestedKey": "AdminCandidateReport.aramaEpostaKullaniciAdi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminCandidateReport.jsx",
+      "location": "jsx-text",
+      "text": "Tümü",
+      "suggestedKey": "AdminCandidateReport.tumu",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminCandidateReport.jsx",
+      "location": "jsx-text",
+      "text": "Askıya Alınmış",
+      "suggestedKey": "AdminCandidateReport.askiyaAlinmis",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminCandidateReport.jsx",
+      "location": "jsx-text",
+      "text": "Kayıt: Başlangıç",
+      "suggestedKey": "AdminCandidateReport.kayitBaslangic",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminCandidateReport.jsx",
+      "location": "jsx-text",
+      "text": "Kayıt: Bitiş",
+      "suggestedKey": "AdminCandidateReport.kayitBitis",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminCandidateReport.jsx",
+      "location": "jsx-text",
+      "text": "Son Giriş: Başlangıç",
+      "suggestedKey": "AdminCandidateReport.sonGirisBaslangic",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminCandidateReport.jsx",
+      "location": "jsx-text",
+      "text": "Son Giriş: Bitiş",
+      "suggestedKey": "AdminCandidateReport.sonGirisBitis",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminCandidateReport.jsx",
+      "location": "jsx-text",
+      "text": "Hiç giriş yapmamış",
+      "suggestedKey": "AdminCandidateReport.hicGirisYapmamis",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminCandidateReport.jsx",
+      "location": "jsx-text",
+      "text": "Min. Satın Alma",
+      "suggestedKey": "AdminCandidateReport.minSatinAlma",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminCandidateReport.jsx",
+      "location": "jsx-text",
+      "text": "Max. Satın Alma",
+      "suggestedKey": "AdminCandidateReport.maxSatinAlma",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminCandidateReport.jsx",
+      "location": "jsx-text",
+      "text": "Min. Doğru Oranı (%)",
+      "suggestedKey": "AdminCandidateReport.minDogruOrani",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminCandidateReport.jsx",
+      "location": "jsx-text",
+      "text": "Max. Doğru Oranı (%)",
+      "suggestedKey": "AdminCandidateReport.maxDogruOrani",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminCandidateReport.jsx",
+      "location": "jsx-text",
+      "text": "seçili",
+      "suggestedKey": "AdminCandidateReport.secili",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminCandidateReport.jsx",
+      "location": "jsx-text",
+      "text": "Toplu Mail Gönder",
+      "suggestedKey": "AdminCandidateReport.topluMailGonder",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminCandidateReport.jsx",
+      "location": "jsx-text",
+      "text": "Aday bulunamadı",
+      "suggestedKey": "AdminCandidateReport.adayBulunamadi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminCandidateReport.jsx",
+      "location": "jsx-text",
+      "text": "Kullanıcı Adı",
+      "suggestedKey": "AdminCandidateReport.kullaniciAdi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminCandidateReport.jsx",
+      "location": "jsx-text",
+      "text": "Kayıt Tarihi",
+      "suggestedKey": "AdminCandidateReport.kayitTarihi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminCandidateReport.jsx",
+      "location": "jsx-text",
+      "text": "Son Giriş",
+      "suggestedKey": "AdminCandidateReport.sonGiris",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminCandidateReport.jsx",
+      "location": "jsx-text",
+      "text": "Son Satın Alma",
+      "suggestedKey": "AdminCandidateReport.sonSatinAlma",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminCandidateReport.jsx",
+      "location": "jsx-text",
+      "text": "Toplam Satın Alma",
+      "suggestedKey": "AdminCandidateReport.toplamSatinAlma",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminCandidateReport.jsx",
+      "location": "jsx-text",
+      "text": "Ort. Test Puanı",
+      "suggestedKey": "AdminCandidateReport.ortTestPuani",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminCandidateReport.jsx",
+      "location": "jsx-text",
+      "text": "Ort. Eğitici Puanı",
+      "suggestedKey": "AdminCandidateReport.ortEgiticiPuani",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminCandidateReport.jsx",
+      "location": "jsx-text",
+      "text": "Doğru Oranı",
+      "suggestedKey": "AdminCandidateReport.dogruOrani",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminCandidateReport.jsx",
+      "location": "jsx-text",
+      "text": "İptal",
+      "suggestedKey": "AdminCandidateReport.iptal",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminCandidateReport.jsx",
+      "location": "prop:placeholder",
+      "text": "Mail mesajı (en az 20 karakter)...",
+      "suggestedKey": "AdminCandidateReport.placeholder.mailMesajiEnAz20Karakter",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminClaims.jsx",
+      "location": "jsx-text",
+      "text": "İade talepleri ve hata bildirimlerini yönet",
+      "suggestedKey": "AdminClaims.iadeTalepleriVeHataBildirimleriniYonet",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminCommissionReport.jsx",
+      "location": "jsx-text",
+      "text": "Eğiticilerin aylık satış komisyonlarını görüntüleyin ve muhasebe çıktısı alın",
+      "suggestedKey": "AdminCommissionReport.egiticilerinAylikSatisKomisyonlariniGoru",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminCommissionReport.jsx",
+      "location": "jsx-text",
+      "text": "Yıl",
+      "suggestedKey": "AdminCommissionReport.yil",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminCommissionReport.jsx",
+      "location": "jsx-text",
+      "text": "Eğitici Sayısı",
+      "suggestedKey": "AdminCommissionReport.egiticiSayisi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminCommissionReport.jsx",
+      "location": "jsx-text",
+      "text": "Normal Paket Satışı",
+      "suggestedKey": "AdminCommissionReport.normalPaketSatisi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminCommissionReport.jsx",
+      "location": "jsx-text",
+      "text": "Canlı Test Satışı",
+      "suggestedKey": "AdminCommissionReport.canliTestSatisi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminCommissionReport.jsx",
+      "location": "jsx-text",
+      "text": "Toplam Ödenecek",
+      "suggestedKey": "AdminCommissionReport.toplamOdenecek",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminCommissionReport.jsx",
+      "location": "jsx-text",
+      "text": "Yalnızca normal paket satışlarına uygulanır — canlı testler komisyon dışıdır.",
+      "suggestedKey": "AdminCommissionReport.yalnizcaNormalPaketSatislarinaUygulanirC",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminCommissionReport.jsx",
+      "location": "jsx-text",
+      "text": "Bu dönemde uygulanan komisyon oranları:",
+      "suggestedKey": "AdminCommissionReport.buDonemdeUygulananKomisyonOranlari",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminCommissionReport.jsx",
+      "location": "jsx-text",
+      "text": "Sayfa başına:",
+      "suggestedKey": "AdminCommissionReport.sayfaBasina",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminCommissionReport.jsx",
+      "location": "jsx-text",
+      "text": "Rapor yüklenemedi",
+      "suggestedKey": "AdminCommissionReport.raporYuklenemedi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminCommissionReport.jsx",
+      "location": "jsx-text",
+      "text": "Bu döneme ait satış bulunamadı",
+      "suggestedKey": "AdminCommissionReport.buDonemeAitSatisBulunamadi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminCommissionReport.jsx",
+      "location": "jsx-text",
+      "text": "Eğitici",
+      "suggestedKey": "AdminCommissionReport.egitici",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminCommissionReport.jsx",
+      "location": "jsx-text",
+      "text": "Satış",
+      "suggestedKey": "AdminCommissionReport.satis",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminCommissionReport.jsx",
+      "location": "jsx-text",
+      "text": "Ödenecek",
+      "suggestedKey": "AdminCommissionReport.odenecek",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminCommissionReport.jsx",
+      "location": "jsx-text",
+      "text": "Canlı Test",
+      "suggestedKey": "AdminCommissionReport.canliTest",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminCommissionReport.jsx",
+      "location": "jsx-text",
+      "text": "Girilmemiş",
+      "suggestedKey": "AdminCommissionReport.girilmemis",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminDashboard.jsx",
+      "location": "jsx-text",
+      "text": "Erişim Engellendi",
+      "suggestedKey": "AdminDashboard.erisimEngellendi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminDashboard.jsx",
+      "location": "jsx-text",
+      "text": "Bu sayfaya erişim yetkiniz yok",
+      "suggestedKey": "AdminDashboard.buSayfayaErisimYetkinizYok",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminDashboard.jsx",
+      "location": "jsx-text",
+      "text": "Yönetim Paneli",
+      "suggestedKey": "AdminDashboard.yonetimPaneli",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminDashboard.jsx",
+      "location": "jsx-text",
+      "text": "Platform genel bakış",
+      "suggestedKey": "AdminDashboard.platformGenelBakis",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminDashboard.jsx",
+      "location": "jsx-text",
+      "text": "Kullanıcılar",
+      "suggestedKey": "AdminDashboard.kullanicilar",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminDashboard.jsx",
+      "location": "jsx-text",
+      "text": "Yönet",
+      "suggestedKey": "AdminDashboard.yonet",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminDashboard.jsx",
+      "location": "jsx-text",
+      "text": "Eğiticiler",
+      "suggestedKey": "AdminDashboard.egiticiler",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminDashboard.jsx",
+      "location": "jsx-text",
+      "text": "Yayında",
+      "suggestedKey": "AdminDashboard.yayinda",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminDashboard.jsx",
+      "location": "jsx-text",
+      "text": "Sınav Türleri",
+      "suggestedKey": "AdminDashboard.sinavTurleri",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminDashboard.jsx",
+      "location": "jsx-text",
+      "text": "Sınav türü yok",
+      "suggestedKey": "AdminDashboard.sinavTuruYok",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminDashboard.jsx",
+      "location": "prop:title",
+      "text": "Toplam Eğitici",
+      "suggestedKey": "AdminDashboard.title.toplamEgitici",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminDashboard.jsx",
+      "location": "prop:title",
+      "text": "Toplam Satış",
+      "suggestedKey": "AdminDashboard.title.toplamSatis",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminEducatorReport.jsx",
+      "location": "jsx-text",
+      "text": "Erişim Engellendi",
+      "suggestedKey": "AdminEducatorReport.erisimEngellendi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminEducatorReport.jsx",
+      "location": "jsx-text",
+      "text": "Bu sayfaya erişim yetkiniz yok",
+      "suggestedKey": "AdminEducatorReport.buSayfayaErisimYetkinizYok",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminEducatorReport.jsx",
+      "location": "jsx-text",
+      "text": "Eğitici Profil Raporu",
+      "suggestedKey": "AdminEducatorReport.egiticiProfilRaporu",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminEducatorReport.jsx",
+      "location": "jsx-text",
+      "text": "Tüm eğiticiler hakkında ayrıntılı analitik",
+      "suggestedKey": "AdminEducatorReport.tumEgiticilerHakkindaAyrintiliAnalitik",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminEducatorReport.jsx",
+      "location": "jsx-text",
+      "text": "Arama (E-posta / Kullanıcı Adı)",
+      "suggestedKey": "AdminEducatorReport.aramaEpostaKullaniciAdi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminEducatorReport.jsx",
+      "location": "jsx-text",
+      "text": "Tümü",
+      "suggestedKey": "AdminEducatorReport.tumu",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminEducatorReport.jsx",
+      "location": "jsx-text",
+      "text": "Askıya Alınmış",
+      "suggestedKey": "AdminEducatorReport.askiyaAlinmis",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminEducatorReport.jsx",
+      "location": "jsx-text",
+      "text": "Son Giriş: Başlangıç",
+      "suggestedKey": "AdminEducatorReport.sonGirisBaslangic",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminEducatorReport.jsx",
+      "location": "jsx-text",
+      "text": "Son Giriş: Bitiş",
+      "suggestedKey": "AdminEducatorReport.sonGirisBitis",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminEducatorReport.jsx",
+      "location": "jsx-text",
+      "text": "Onay Tarihi: Başlangıç",
+      "suggestedKey": "AdminEducatorReport.onayTarihiBaslangic",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminEducatorReport.jsx",
+      "location": "jsx-text",
+      "text": "Onay Tarihi: Bitiş",
+      "suggestedKey": "AdminEducatorReport.onayTarihiBitis",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminEducatorReport.jsx",
+      "location": "jsx-text",
+      "text": "Min. Test Sayısı",
+      "suggestedKey": "AdminEducatorReport.minTestSayisi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminEducatorReport.jsx",
+      "location": "jsx-text",
+      "text": "Maks. Test Sayısı",
+      "suggestedKey": "AdminEducatorReport.maksTestSayisi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminEducatorReport.jsx",
+      "location": "jsx-text",
+      "text": "Min. Satış",
+      "suggestedKey": "AdminEducatorReport.minSatis",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminEducatorReport.jsx",
+      "location": "jsx-text",
+      "text": "Maks. Satış",
+      "suggestedKey": "AdminEducatorReport.maksSatis",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminEducatorReport.jsx",
+      "location": "jsx-text",
+      "text": "Açık Hata Bildirimi Olanlar",
+      "suggestedKey": "AdminEducatorReport.acikHataBildirimiOlanlar",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminEducatorReport.jsx",
+      "location": "jsx-text",
+      "text": "seçili",
+      "suggestedKey": "AdminEducatorReport.secili",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminEducatorReport.jsx",
+      "location": "jsx-text",
+      "text": "Toplu Mail Gönder",
+      "suggestedKey": "AdminEducatorReport.topluMailGonder",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminEducatorReport.jsx",
+      "location": "jsx-text",
+      "text": "Eğitici bulunamadı",
+      "suggestedKey": "AdminEducatorReport.egiticiBulunamadi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminEducatorReport.jsx",
+      "location": "jsx-text",
+      "text": "Kullanıcı Adı",
+      "suggestedKey": "AdminEducatorReport.kullaniciAdi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminEducatorReport.jsx",
+      "location": "jsx-text",
+      "text": "Kayıt Tarihi",
+      "suggestedKey": "AdminEducatorReport.kayitTarihi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminEducatorReport.jsx",
+      "location": "jsx-text",
+      "text": "Son Giriş",
+      "suggestedKey": "AdminEducatorReport.sonGiris",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminEducatorReport.jsx",
+      "location": "jsx-text",
+      "text": "Satış",
+      "suggestedKey": "AdminEducatorReport.satis",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminEducatorReport.jsx",
+      "location": "jsx-text",
+      "text": "Test Puanı",
+      "suggestedKey": "AdminEducatorReport.testPuani",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminEducatorReport.jsx",
+      "location": "jsx-text",
+      "text": "Eğitici Puanı",
+      "suggestedKey": "AdminEducatorReport.egiticiPuani",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminEducatorReport.jsx",
+      "location": "jsx-text",
+      "text": "İçerik Alanı",
+      "suggestedKey": "AdminEducatorReport.icerikAlani",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminEducatorReport.jsx",
+      "location": "jsx-text",
+      "text": "İptal",
+      "suggestedKey": "AdminEducatorReport.iptal",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminEducatorReport.jsx",
+      "location": "prop:placeholder",
+      "text": "Mail mesajı (en az 20 karakter)...",
+      "suggestedKey": "AdminEducatorReport.placeholder.mailMesajiEnAz20Karakter",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminObjections.jsx",
+      "location": "jsx-text",
+      "text": "Hata Bildirimleri — Yönetim",
+      "suggestedKey": "AdminObjections.hataBildirimleriYonetim",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminObjections.jsx",
+      "location": "jsx-text",
+      "text": "Tüm adaylardan gelen soru itirazlarını görüntüle",
+      "suggestedKey": "AdminObjections.tumAdaylardanGelenSoruItirazlariniGorunt",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminObjections.jsx",
+      "location": "jsx-text",
+      "text": "Tüm Bildirimler",
+      "suggestedKey": "AdminObjections.tumBildirimler",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminObjections.jsx",
+      "location": "jsx-text",
+      "text": "Tüm Durumlar",
+      "suggestedKey": "AdminObjections.tumDurumlar",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminObjections.jsx",
+      "location": "jsx-text",
+      "text": "Yanıtlandı",
+      "suggestedKey": "AdminObjections.yanitlandi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminObjections.jsx",
+      "location": "jsx-text",
+      "text": "İletildi",
+      "suggestedKey": "AdminObjections.iletildi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminObjections.jsx",
+      "location": "jsx-text",
+      "text": "Eğitici",
+      "suggestedKey": "AdminObjections.egitici",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminObjections.jsx",
+      "location": "jsx-text",
+      "text": "Hata türü / sebep",
+      "suggestedKey": "AdminObjections.hataTuruSebep",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminObjections.jsx",
+      "location": "jsx-text",
+      "text": "Eğitici:",
+      "suggestedKey": "AdminObjections.egitici",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminObjections.jsx",
+      "location": "jsx-text",
+      "text": "Detayı Görüntüle",
+      "suggestedKey": "AdminObjections.detayiGoruntule",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminObjections.jsx",
+      "location": "jsx-text",
+      "text": "En Çok Bildirim Alan Testler",
+      "suggestedKey": "AdminObjections.enCokBildirimAlanTestler",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminObjections.jsx",
+      "location": "jsx-text",
+      "text": "Henüz bildirim yok",
+      "suggestedKey": "AdminObjections.henuzBildirimYok",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminObjections.jsx",
+      "location": "jsx-text",
+      "text": "Bildirim Detayı",
+      "suggestedKey": "AdminObjections.bildirimDetayi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminObjections.jsx",
+      "location": "jsx-text",
+      "text": "Eğitici Yanıtı:",
+      "suggestedKey": "AdminObjections.egiticiYaniti",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminObjections.jsx",
+      "location": "jsx-text",
+      "text": "Eğitici henüz yanıt vermedi.",
+      "suggestedKey": "AdminObjections.egiticiHenuzYanitVermedi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminObjections.jsx",
+      "location": "jsx-text",
+      "text": "Bu yanıt eğitici işleminden bağımsızdır; itirazın durumunu değiştirmez.",
+      "suggestedKey": "AdminObjections.buYanitEgiticiIslemindenBagimsizdirItira",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminObjections.jsx",
+      "location": "prop:placeholder",
+      "text": "Test seçin...",
+      "suggestedKey": "AdminObjections.placeholder.testSecin",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminObjections.jsx",
+      "location": "prop:placeholder",
+      "text": "Eğitici seçin...",
+      "suggestedKey": "AdminObjections.placeholder.egiticiSecin",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminObjections.jsx",
+      "location": "prop:placeholder",
+      "text": "Aday seçin...",
+      "suggestedKey": "AdminObjections.placeholder.adaySecin",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminObjections.jsx",
+      "location": "prop:placeholder",
+      "text": "örn. kötü içerik, yanlış cevap...",
+      "suggestedKey": "AdminObjections.placeholder.ornKotuIcerikYanlisCevap",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminObjections.jsx",
+      "location": "prop:aria-label",
+      "text": "Hata türü veya sebep ara",
+      "suggestedKey": "AdminObjections.aria-label.hataTuruVeyaSebepAra",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminObjections.jsx",
+      "location": "prop:placeholder",
+      "text": "Admin yanıtınızı yazın (en az 5 karakter)...",
+      "suggestedKey": "AdminObjections.placeholder.adminYanitiniziYazinEnAz5Karakter",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminObjections.jsx",
+      "location": "prop:aria-label",
+      "text": "Admin yanıtı",
+      "suggestedKey": "AdminObjections.aria-label.adminYaniti",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminRevenue.jsx",
+      "location": "jsx-text",
+      "text": "Komisyon ve reklam gelir raporları",
+      "suggestedKey": "AdminRevenue.komisyonVeReklamGelirRaporlari",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminSystemControls.jsx",
+      "location": "jsx-text",
+      "text": "Kullanıcı mesajı:",
+      "suggestedKey": "AdminSystemControls.kullaniciMesaji",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminSystemControls.jsx",
+      "location": "jsx-text",
+      "text": "Henüz ayarlanmadı",
+      "suggestedKey": "AdminSystemControls.henuzAyarlanmadi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminSystemControls.jsx",
+      "location": "jsx-text",
+      "text": "Nasıl çalışır?",
+      "suggestedKey": "AdminSystemControls.nasilCalisir",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminSystemControls.jsx",
+      "location": "jsx-text",
+      "text": "Bir hizmeti durdurmak anlık olarak devreye girer — bekleyen işlemleri kesmez.",
+      "suggestedKey": "AdminSystemControls.birHizmetiDurdurmakAnlikOlarakDevreyeGir",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminSystemControls.jsx",
+      "location": "jsx-text",
+      "text": "Devam eden test oturumları, aktif satın almalar etkilenmez.",
+      "suggestedKey": "AdminSystemControls.devamEdenTestOturumlariAktifSatinAlmalar",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminSystemControls.jsx",
+      "location": "jsx-text",
+      "text": "Kullanıcılar engellenen bir eylemi yapmaya çalışırken ilgili uyarı mesajını görür.",
+      "suggestedKey": "AdminSystemControls.kullanicilarEngellenenBirEylemiYapmayaCa",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminSystemControls.jsx",
+      "location": "jsx-text",
+      "text": "Yeniden açmak için anahtarı kapatıp açmanız yeterlidir; veri değişmez.",
+      "suggestedKey": "AdminSystemControls.yenidenAcmakIcinAnahtariKapatipAcmanizYe",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminSystemControls.jsx",
+      "location": "jsx-text",
+      "text": "Bu limitler anlık olarak devreye girer.",
+      "suggestedKey": "AdminSystemControls.buLimitlerAnlikOlarakDevreyeGirer",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminSystemControls.jsx",
+      "location": "jsx-text",
+      "text": "Test Başına Soru Sayısı",
+      "suggestedKey": "AdminSystemControls.testBasinaSoruSayisi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminSystemControls.jsx",
+      "location": "jsx-text",
+      "text": "Bir teste eklenebilecek minimum ve maksimum soru sayısını belirler.",
+      "suggestedKey": "AdminSystemControls.birTesteEklenebilecekMinimumVeMaksimumSo",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminSystemControls.jsx",
+      "location": "jsx-text",
+      "text": "Minimum Soru Sayısı",
+      "suggestedKey": "AdminSystemControls.minimumSoruSayisi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminSystemControls.jsx",
+      "location": "jsx-text",
+      "text": "Maksimum Soru Sayısı",
+      "suggestedKey": "AdminSystemControls.maksimumSoruSayisi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminSystemControls.jsx",
+      "location": "jsx-text",
+      "text": "Paket Başına Maksimum Test Sayısı",
+      "suggestedKey": "AdminSystemControls.paketBasinaMaksimumTestSayisi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminSystemControls.jsx",
+      "location": "jsx-text",
+      "text": "Canlı Test Başına Maksimum Soru Sayısı",
+      "suggestedKey": "AdminSystemControls.canliTestBasinaMaksimumSoruSayisi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminSystemControls.jsx",
+      "location": "jsx-text",
+      "text": "Google ile Giriş — OAuth Client ID",
+      "suggestedKey": "AdminSystemControls.googleIleGirisOauthClientId",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminSystemControls.jsx",
+      "location": "jsx-text",
+      "text": "Google Cloud Console → APIs & Services → Credentials'tan oluşturduğunuz OAuth 2.0",
+      "suggestedKey": "AdminSystemControls.googleCloudConsoleApisServicesCredential",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminSystemControls.jsx",
+      "location": "jsx-text",
+      "text": "eklemeyi unutmayın.",
+      "suggestedKey": "AdminSystemControls.eklemeyiUnutmayin",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminSystemControls.jsx",
+      "location": "jsx-text",
+      "text": "Tanımlanmamış (Google ile giriş kapalı)",
+      "suggestedKey": "AdminSystemControls.tanimlanmamisGoogleIleGirisKapali",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminSystemControls.jsx",
+      "location": "jsx-text",
+      "text": "→ \"Add Site\" ile site key + secret key alın.",
+      "suggestedKey": "AdminSystemControls.addSiteIleSiteKeySecretKeyAlin",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminSystemControls.jsx",
+      "location": "jsx-text",
+      "text": "Tanımlanmamış",
+      "suggestedKey": "AdminSystemControls.tanimlanmamis",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminSystemControls.jsx",
+      "location": "jsx-text",
+      "text": "CAPTCHA şu an devre dışı. Login + kayıt normal akışta çalışır.",
+      "suggestedKey": "AdminSystemControls.captchaSuAnDevreDisiLoginKayitNormalAkis",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminSystemControls.jsx",
+      "location": "jsx-text",
+      "text": "Site Key (public — tarayıcıya gönderilir)",
+      "suggestedKey": "AdminSystemControls.siteKeyPublicTarayiciyaGonderilir",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminSystemControls.jsx",
+      "location": "jsx-text",
+      "text": "Ödeme Sağlayıcıları",
+      "suggestedKey": "AdminSystemControls.odemeSaglayicilari",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminSystemControls.jsx",
+      "location": "jsx-text",
+      "text": "Çalışma Modu",
+      "suggestedKey": "AdminSystemControls.calismaModu",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminSystemControls.jsx",
+      "location": "jsx-text",
+      "text": "Türkiye'nin ödeme altyapısı",
+      "suggestedKey": "AdminSystemControls.turkiyeninOdemeAltyapisi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminSystemControls.jsx",
+      "location": "jsx-text",
+      "text": "Google ödeme entegrasyonu",
+      "suggestedKey": "AdminSystemControls.googleOdemeEntegrasyonu",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminSystemControls.jsx",
+      "location": "jsx-text",
+      "text": "Amazon ödeme entegrasyonu",
+      "suggestedKey": "AdminSystemControls.amazonOdemeEntegrasyonu",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminSystemControls.jsx",
+      "location": "jsx-text",
+      "text": "Minimum Paket Fiyatı",
+      "suggestedKey": "AdminSystemControls.minimumPaketFiyati",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminSystemControls.jsx",
+      "location": "jsx-text",
+      "text": "İndirim Sınırı",
+      "suggestedKey": "AdminSystemControls.indirimSiniri",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminSystemControls.jsx",
+      "location": "jsx-text",
+      "text": "Komisyon Oranı",
+      "suggestedKey": "AdminSystemControls.komisyonOrani",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminSystemControls.jsx",
+      "location": "jsx-text",
+      "text": "Geçerlilik Tarihi (isteğe bağlı)",
+      "suggestedKey": "AdminSystemControls.gecerlilikTarihiIstegeBagli",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminSystemControls.jsx",
+      "location": "jsx-text",
+      "text": "Not (isteğe bağlı)",
+      "suggestedKey": "AdminSystemControls.notIstegeBagli",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminSystemControls.jsx",
+      "location": "jsx-text",
+      "text": "Yükleniyor...",
+      "suggestedKey": "AdminSystemControls.yukleniyor",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminSystemControls.jsx",
+      "location": "jsx-text",
+      "text": "Henüz komisyon oranı kaydı yok.",
+      "suggestedKey": "AdminSystemControls.henuzKomisyonOraniKaydiYok",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminSystemControls.jsx",
+      "location": "jsx-text",
+      "text": "Oran Geçmişi",
+      "suggestedKey": "AdminSystemControls.oranGecmisi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminSystemControls.jsx",
+      "location": "jsx-text",
+      "text": "bugün",
+      "suggestedKey": "AdminSystemControls.bugun",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminSystemControls.jsx",
+      "location": "jsx-text",
+      "text": "Ödeme Makbuzunda Görünen Firma Bilgileri",
+      "suggestedKey": "AdminSystemControls.odemeMakbuzundaGorunenFirmaBilgileri",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminSystemControls.jsx",
+      "location": "prop:placeholder",
+      "text": "örn. 123456789-abc.apps.googleusercontent.com",
+      "suggestedKey": "AdminSystemControls.placeholder.orn123456789abcappsgoogleusercontentcom",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminSystemControls.jsx",
+      "location": "prop:placeholder",
+      "text": "örn. 20",
+      "suggestedKey": "AdminSystemControls.placeholder.orn20",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminSystemControls.jsx",
+      "location": "prop:placeholder",
+      "text": "Değişiklik nedeni...",
+      "suggestedKey": "AdminSystemControls.placeholder.degisiklikNedeni",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminSystemControls.jsx",
+      "location": "prop:label",
+      "text": "Firma Adı",
+      "suggestedKey": "AdminSystemControls.label.firmaAdi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminUserActivity.jsx",
+      "location": "jsx-text",
+      "text": "İşlem Geçmişi",
+      "suggestedKey": "AdminUserActivity.islemGecmisi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminUserActivity.jsx",
+      "location": "jsx-text",
+      "text": "Aday veya eğitici hesabının audit log kayıtlarını görüntüle",
+      "suggestedKey": "AdminUserActivity.adayVeyaEgiticiHesabininAuditLogKayitlar",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminUserActivity.jsx",
+      "location": "jsx-text",
+      "text": "Kullanıcı adı veya email",
+      "suggestedKey": "AdminUserActivity.kullaniciAdiVeyaEmail",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminUserActivity.jsx",
+      "location": "jsx-text",
+      "text": "Başlangıç tarihi",
+      "suggestedKey": "AdminUserActivity.baslangicTarihi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminUserActivity.jsx",
+      "location": "jsx-text",
+      "text": "Bitiş tarihi",
+      "suggestedKey": "AdminUserActivity.bitisTarihi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminUserActivity.jsx",
+      "location": "jsx-text",
+      "text": "İşlem Kategorisi",
+      "suggestedKey": "AdminUserActivity.islemKategorisi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminUserActivity.jsx",
+      "location": "jsx-text",
+      "text": "Tümü",
+      "suggestedKey": "AdminUserActivity.tumu",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminUserActivity.jsx",
+      "location": "jsx-text",
+      "text": "İşlem",
+      "suggestedKey": "AdminUserActivity.islem",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminUserActivity.jsx",
+      "location": "jsx-text",
+      "text": "İşlem Kayıtları",
+      "suggestedKey": "AdminUserActivity.islemKayitlari",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminUserActivity.jsx",
+      "location": "jsx-text",
+      "text": "Bu kullanıcı için seçilen aralıkta kayıt bulunamadı.",
+      "suggestedKey": "AdminUserActivity.buKullaniciIcinSecilenAraliktaKayitBulun",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminUserActivity.jsx",
+      "location": "jsx-text",
+      "text": "Varlık Tipi",
+      "suggestedKey": "AdminUserActivity.varlikTipi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminUserActivity.jsx",
+      "location": "jsx-text",
+      "text": "Varlık ID",
+      "suggestedKey": "AdminUserActivity.varlikId",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminUserActivity.jsx",
+      "location": "prop:placeholder",
+      "text": "ör. aday@demo.com veya demo_egitici",
+      "suggestedKey": "AdminUserActivity.placeholder.orAdaydemocomVeyaDemoegitici",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminUserActivity.jsx",
+      "location": "prop:aria-label",
+      "text": "İşlem kategorisi filtresi",
+      "suggestedKey": "AdminUserActivity.aria-label.islemKategorisiFiltresi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/AdminUserActivity.jsx",
+      "location": "prop:aria-label",
+      "text": "İşlem tipi filtresi",
+      "suggestedKey": "AdminUserActivity.aria-label.islemTipiFiltresi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/BlockedTerms.jsx",
+      "location": "jsx-text",
+      "text": "Sistem tarafından otomatik olarak algılanacak kelime veya deseni tanımlayın.",
+      "suggestedKey": "BlockedTerms.sistemTarafindanOtomatikOlarakAlgilanaca",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/BlockedTerms.jsx",
+      "location": "jsx-text",
+      "text": "Regex Deseni (İsteğe Bağlı)",
+      "suggestedKey": "BlockedTerms.regexDeseniIstegeBagli",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/BlockedTerms.jsx",
+      "location": "jsx-text",
+      "text": "Regex desteği — boş bırakılırsa kesin eşleşme",
+      "suggestedKey": "BlockedTerms.regexDestegiBosBirakilirsaKesinEslesme",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/BlockedTerms.jsx",
+      "location": "jsx-text",
+      "text": "İptal",
+      "suggestedKey": "BlockedTerms.iptal",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/BlockedTerms.jsx",
+      "location": "jsx-text",
+      "text": "Otomatik moderasyon için kelime/desen listesi",
+      "suggestedKey": "BlockedTerms.otomatikModerasyonIcinKelimedesenListesi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/BlockedTerms.jsx",
+      "location": "jsx-text",
+      "text": "Yükleme Başarısız",
+      "suggestedKey": "BlockedTerms.yuklemeBasarisiz",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/BlockedTerms.jsx",
+      "location": "jsx-text",
+      "text": "Yasak kelimeler yüklenemedi.",
+      "suggestedKey": "BlockedTerms.yasakKelimelerYuklenemedi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/BlockedTerms.jsx",
+      "location": "jsx-text",
+      "text": "Tümü",
+      "suggestedKey": "BlockedTerms.tumu",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/BlockedTerms.jsx",
+      "location": "jsx-text",
+      "text": "Tanımlanmış kelime yok.",
+      "suggestedKey": "BlockedTerms.tanimlanmisKelimeYok",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/BlockedTerms.jsx",
+      "location": "jsx-text",
+      "text": "Şiddet",
+      "suggestedKey": "BlockedTerms.siddet",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/BlockedTerms.jsx",
+      "location": "jsx-text",
+      "text": "Oluşturulma",
+      "suggestedKey": "BlockedTerms.olusturulma",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/BlockedTerms.jsx",
+      "location": "jsx-text",
+      "text": "İşlem",
+      "suggestedKey": "BlockedTerms.islem",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/BlockedTerms.jsx",
+      "location": "prop:placeholder",
+      "text": "Örn: ^ad.*min$",
+      "suggestedKey": "BlockedTerms.placeholder.ornAdmin",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/CompleteProfile.jsx",
+      "location": "jsx-text",
+      "text": "Hoş Geldiniz!",
+      "suggestedKey": "CompleteProfile.hosGeldiniz",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/CompleteProfile.jsx",
+      "location": "jsx-text",
+      "text": "Şehir",
+      "suggestedKey": "CompleteProfile.sehir",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/CompleteProfile.jsx",
+      "location": "jsx-text",
+      "text": "🌍 Yurt Dışı",
+      "suggestedKey": "CompleteProfile.yurtDisi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/CompleteProfile.jsx",
+      "location": "jsx-text",
+      "text": "Ülke Kodu",
+      "suggestedKey": "CompleteProfile.ulkeKodu",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/CompleteProfile.jsx",
+      "location": "jsx-text",
+      "text": "Telefon Numarası",
+      "suggestedKey": "CompleteProfile.telefonNumarasi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/CompleteProfile.jsx",
+      "location": "jsx-text",
+      "text": "Bu bilgiler güvenli bir şekilde saklanır ve yalnızca sizinle iletişim için kullanılır.",
+      "suggestedKey": "CompleteProfile.buBilgilerGuvenliBirSekildeSaklanirVeYal",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/CompleteProfile.jsx",
+      "location": "prop:placeholder",
+      "text": "Şehir seçin",
+      "suggestedKey": "CompleteProfile.placeholder.sehirSecin",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/CompleteProfile.jsx",
+      "location": "prop:placeholder",
+      "text": "Ülke kodu seçin",
+      "suggestedKey": "CompleteProfile.placeholder.ulkeKoduSecin",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EducatorDashboard.jsx",
+      "location": "jsx-text",
+      "text": "Tümü",
+      "suggestedKey": "EducatorDashboard.tumu",
+      "usesI18n": true
+    },
+    {
+      "file": "src/pages/EducatorDashboard.jsx",
+      "location": "jsx-text",
+      "text": "Henüz test oluşturmadınız",
+      "suggestedKey": "EducatorDashboard.henuzTestOlusturmadiniz",
+      "usesI18n": true
+    },
+    {
+      "file": "src/pages/EducatorDashboard.jsx",
+      "location": "jsx-text",
+      "text": "İlk Testini Oluştur",
+      "suggestedKey": "EducatorDashboard.ilkTestiniOlustur",
+      "usesI18n": true
+    },
+    {
+      "file": "src/pages/EducatorDashboard.jsx",
+      "location": "jsx-text",
+      "text": "Son Satışlar",
+      "suggestedKey": "EducatorDashboard.sonSatislar",
+      "usesI18n": true
+    },
+    {
+      "file": "src/pages/EducatorDashboard.jsx",
+      "location": "jsx-text",
+      "text": "Henüz satış yok",
+      "suggestedKey": "EducatorDashboard.henuzSatisYok",
+      "usesI18n": true
+    },
+    {
+      "file": "src/pages/EducatorDashboard.jsx",
+      "location": "prop:title",
+      "text": "Yayında",
+      "suggestedKey": "EducatorDashboard.title.yayinda",
+      "usesI18n": true
+    },
+    {
+      "file": "src/pages/EducatorDashboard.jsx",
+      "location": "prop:title",
+      "text": "Toplam Satış",
+      "suggestedKey": "EducatorDashboard.title.toplamSatis",
+      "usesI18n": true
+    },
+    {
+      "file": "src/pages/EducatorProfile.jsx",
+      "location": "jsx-text",
+      "text": "Eğitici bulunamadı",
+      "suggestedKey": "EducatorProfile.egiticiBulunamadi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EducatorProfile.jsx",
+      "location": "jsx-text",
+      "text": "Eğiticilere Dön",
+      "suggestedKey": "EducatorProfile.egiticilereDon",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EducatorProfile.jsx",
+      "location": "jsx-text",
+      "text": "Eğitici yüklenemedi",
+      "suggestedKey": "EducatorProfile.egiticiYuklenemedi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EducatorProfile.jsx",
+      "location": "jsx-text",
+      "text": "Lütfen daha sonra tekrar deneyin.",
+      "suggestedKey": "EducatorProfile.lutfenDahaSonraTekrarDeneyin",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EducatorProfile.jsx",
+      "location": "jsx-text",
+      "text": "Henüz tanıtım metni eklenmemiş.",
+      "suggestedKey": "EducatorProfile.henuzTanitimMetniEklenmemis",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EducatorProfile.jsx",
+      "location": "jsx-text",
+      "text": "Uzmanlık:",
+      "suggestedKey": "EducatorProfile.uzmanlik",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EducatorProfile.jsx",
+      "location": "jsx-text",
+      "text": "Bu eğiticinin yayında testi yok.",
+      "suggestedKey": "EducatorProfile.buEgiticininYayindaTestiYok",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EducatorProfile.jsx",
+      "location": "jsx-text",
+      "text": "Henüz yorum yapılmamış.",
+      "suggestedKey": "EducatorProfile.henuzYorumYapilmamis",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EducatorProfile.jsx",
+      "location": "jsx-text",
+      "text": "Eğitici:",
+      "suggestedKey": "EducatorProfile.egitici",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/Educators.jsx",
+      "location": "jsx-text",
+      "text": "Uzmanlık:",
+      "suggestedKey": "Educators.uzmanlik",
+      "usesI18n": true
+    },
+    {
+      "file": "src/pages/Educators.jsx",
+      "location": "jsx-text",
+      "text": "Tümü",
+      "suggestedKey": "Educators.tumu",
+      "usesI18n": true
+    },
+    {
+      "file": "src/pages/Educators.jsx",
+      "location": "jsx-text",
+      "text": "Eğitici bulunamadı",
+      "suggestedKey": "Educators.egiticiBulunamadi",
+      "usesI18n": true
+    },
+    {
+      "file": "src/pages/Educators.jsx",
+      "location": "jsx-text",
+      "text": "Tüm eğiticileri göster",
+      "suggestedKey": "Educators.tumEgiticileriGoster",
+      "usesI18n": true
+    },
+    {
+      "file": "src/pages/Educators.jsx",
+      "location": "jsx-text",
+      "text": "Testleri Görüntüle",
+      "suggestedKey": "Educators.testleriGoruntule",
+      "usesI18n": true
+    },
+    {
+      "file": "src/pages/Educators.jsx",
+      "location": "prop:placeholder",
+      "text": "Eğitici ara...",
+      "suggestedKey": "Educators.placeholder.egiticiAra",
+      "usesI18n": true
+    },
+    {
+      "file": "src/pages/EducatorSettings.jsx",
+      "location": "prop:placeholder",
+      "text": "İstanbul",
+      "suggestedKey": "EducatorSettings.placeholder.istanbul",
+      "usesI18n": true
+    },
+    {
+      "file": "src/pages/EducatorViolationDetail.jsx",
+      "location": "jsx-text",
+      "text": "Gerekçe (min 20 karakter)",
+      "suggestedKey": "EducatorViolationDetail.gerekceMin20Karakter",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EducatorViolationDetail.jsx",
+      "location": "jsx-text",
+      "text": "Askıya Alma Süresi",
+      "suggestedKey": "EducatorViolationDetail.askiyaAlmaSuresi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EducatorViolationDetail.jsx",
+      "location": "jsx-text",
+      "text": "3 gün",
+      "suggestedKey": "EducatorViolationDetail.3Gun",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EducatorViolationDetail.jsx",
+      "location": "jsx-text",
+      "text": "7 gün",
+      "suggestedKey": "EducatorViolationDetail.7Gun",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EducatorViolationDetail.jsx",
+      "location": "jsx-text",
+      "text": "30 gün",
+      "suggestedKey": "EducatorViolationDetail.30Gun",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EducatorViolationDetail.jsx",
+      "location": "jsx-text",
+      "text": "Sınırsız",
+      "suggestedKey": "EducatorViolationDetail.sinirsiz",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EducatorViolationDetail.jsx",
+      "location": "jsx-text",
+      "text": "İptal",
+      "suggestedKey": "EducatorViolationDetail.iptal",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EducatorViolationDetail.jsx",
+      "location": "jsx-text",
+      "text": "Yaptırımı Geri Al?",
+      "suggestedKey": "EducatorViolationDetail.yaptirimiGeriAl",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EducatorViolationDetail.jsx",
+      "location": "jsx-text",
+      "text": "Geri Dön",
+      "suggestedKey": "EducatorViolationDetail.geriDon",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EducatorViolationDetail.jsx",
+      "location": "jsx-text",
+      "text": "Eğitici bulunamadı",
+      "suggestedKey": "EducatorViolationDetail.egiticiBulunamadi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EducatorViolationDetail.jsx",
+      "location": "jsx-text",
+      "text": "Eğitici İhlal Geçmişi",
+      "suggestedKey": "EducatorViolationDetail.egiticiIhlalGecmisi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EducatorViolationDetail.jsx",
+      "location": "jsx-text",
+      "text": "Hesap Yasaklandı",
+      "suggestedKey": "EducatorViolationDetail.hesapYasaklandi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EducatorViolationDetail.jsx",
+      "location": "jsx-text",
+      "text": "Bu eğitici platform'tan kalıcı olarak yasaklanmıştır.",
+      "suggestedKey": "EducatorViolationDetail.buEgiticiPlatformtanKaliciOlarakYasaklan",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EducatorViolationDetail.jsx",
+      "location": "jsx-text",
+      "text": "Hesap Askıya Alındı",
+      "suggestedKey": "EducatorViolationDetail.hesapAskiyaAlindi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EducatorViolationDetail.jsx",
+      "location": "jsx-text",
+      "text": "Toplam İhlal",
+      "suggestedKey": "EducatorViolationDetail.toplamIhlal",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EducatorViolationDetail.jsx",
+      "location": "jsx-text",
+      "text": "Açık İhlal",
+      "suggestedKey": "EducatorViolationDetail.acikIhlal",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EducatorViolationDetail.jsx",
+      "location": "jsx-text",
+      "text": "Ağır İhlal",
+      "suggestedKey": "EducatorViolationDetail.agirIhlal",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EducatorViolationDetail.jsx",
+      "location": "jsx-text",
+      "text": "İşlem Yönetimi",
+      "suggestedKey": "EducatorViolationDetail.islemYonetimi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EducatorViolationDetail.jsx",
+      "location": "jsx-text",
+      "text": "Askıya Al",
+      "suggestedKey": "EducatorViolationDetail.askiyaAl",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EducatorViolationDetail.jsx",
+      "location": "jsx-text",
+      "text": "Yaptırımı Geri Al",
+      "suggestedKey": "EducatorViolationDetail.yaptirimiGeriAl",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EducatorViolationDetail.jsx",
+      "location": "jsx-text",
+      "text": "İhlal Geçmişi",
+      "suggestedKey": "EducatorViolationDetail.ihlalGecmisi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EducatorViolationDetail.jsx",
+      "location": "jsx-text",
+      "text": "İhlal bulunamadı",
+      "suggestedKey": "EducatorViolationDetail.ihlalBulunamadi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EducatorViolationDetail.jsx",
+      "location": "jsx-text",
+      "text": "Uygulanan Yaptırımlar",
+      "suggestedKey": "EducatorViolationDetail.uygulananYaptirimlar",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EducatorViolationDetail.jsx",
+      "location": "prop:placeholder",
+      "text": "Bu işlemin nedenini açıklayınız...",
+      "suggestedKey": "EducatorViolationDetail.placeholder.buIsleminNedeniniAciklayiniz",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EducatorViolationDetail.jsx",
+      "location": "prop:aria-label",
+      "text": "İşlem gerekçesi",
+      "suggestedKey": "EducatorViolationDetail.aria-label.islemGerekcesi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EducatorViolationDetail.jsx",
+      "location": "prop:aria-label",
+      "text": "Askıya alma süresi",
+      "suggestedKey": "EducatorViolationDetail.aria-label.askiyaAlmaSuresi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EducatorViolationDetail.jsx",
+      "location": "prop:aria-label",
+      "text": "Geri dön",
+      "suggestedKey": "EducatorViolationDetail.aria-label.geriDon",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailDashboard.jsx",
+      "location": "jsx-text",
+      "text": "Email trafiği metrikleri ve durumu",
+      "suggestedKey": "EmailDashboard.emailTrafigiMetrikleriVeDurumu",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailDashboard.jsx",
+      "location": "jsx-text",
+      "text": "Sağlayıcı Sağlığı",
+      "suggestedKey": "EmailDashboard.saglayiciSagligi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailDashboard.jsx",
+      "location": "jsx-text",
+      "text": "Şablon Performansı",
+      "suggestedKey": "EmailDashboard.sablonPerformansi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailDashboard.jsx",
+      "location": "jsx-text",
+      "text": "Şablon",
+      "suggestedKey": "EmailDashboard.sablon",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailDashboard.jsx",
+      "location": "jsx-text",
+      "text": "Gönderilen",
+      "suggestedKey": "EmailDashboard.gonderilen",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailDashboard.jsx",
+      "location": "jsx-text",
+      "text": "Geri Dönüş %",
+      "suggestedKey": "EmailDashboard.geriDonus",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailDashboard.jsx",
+      "location": "jsx-text",
+      "text": "Toplu email kuyruğunu yeniden etkinleştirmek için bir sebep girin.",
+      "suggestedKey": "EmailDashboard.topluEmailKuyrugunuYenidenEtkinlestirmek",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailDashboard.jsx",
+      "location": "jsx-text",
+      "text": "İptal",
+      "suggestedKey": "EmailDashboard.iptal",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailDashboard.jsx",
+      "location": "prop:label",
+      "text": "Sıraya Alınan",
+      "suggestedKey": "EmailDashboard.label.sirayaAlinan",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailDashboard.jsx",
+      "location": "prop:label",
+      "text": "Teslimat Yapılan",
+      "suggestedKey": "EmailDashboard.label.teslimatYapilan",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailDashboard.jsx",
+      "location": "prop:label",
+      "text": "Geri Dönen",
+      "suggestedKey": "EmailDashboard.label.geriDonen",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailDashboard.jsx",
+      "location": "prop:label",
+      "text": "Şikayet",
+      "suggestedKey": "EmailDashboard.label.sikayet",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailDashboard.jsx",
+      "location": "prop:label",
+      "text": "Geri Dönüş Oranı",
+      "suggestedKey": "EmailDashboard.label.geriDonusOrani",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailDashboard.jsx",
+      "location": "prop:placeholder",
+      "text": "Örn: Bakım tamamlandı, sistem stabilleşti",
+      "suggestedKey": "EmailDashboard.placeholder.ornBakimTamamlandiSistemStabillesti",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailKillSwitches.jsx",
+      "location": "jsx-text",
+      "text": "Email kanallarını koşullu olarak kapat veya aç",
+      "suggestedKey": "EmailKillSwitches.emailKanallariniKosulluOlarakKapatVeyaAc",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailKillSwitches.jsx",
+      "location": "jsx-text",
+      "text": "Nasıl çalışır?",
+      "suggestedKey": "EmailKillSwitches.nasilCalisir",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailKillSwitches.jsx",
+      "location": "jsx-text",
+      "text": "Kritik ve Bildirim kategorileri gerekçeli kapatılabilir. Toplu emailler otomatik yönetilir.",
+      "suggestedKey": "EmailKillSwitches.kritikVeBildirimKategorileriGerekceliKap",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailKillSwitches.jsx",
+      "location": "jsx-text",
+      "text": "Yeşil:",
+      "suggestedKey": "EmailKillSwitches.yesil",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailKillSwitches.jsx",
+      "location": "jsx-text",
+      "text": "Açık (emailler gönderiliyor)",
+      "suggestedKey": "EmailKillSwitches.acikEmaillerGonderiliyor",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailKillSwitches.jsx",
+      "location": "jsx-text",
+      "text": "Kapalı (emailler gönderilmiyor)",
+      "suggestedKey": "EmailKillSwitches.kapaliEmaillerGonderilmiyor",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailKillSwitches.jsx",
+      "location": "jsx-text",
+      "text": "Bu kategori bu rol için uygulanmıyor",
+      "suggestedKey": "EmailKillSwitches.buKategoriBuRolIcinUygulanmiyor",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailKillSwitches.jsx",
+      "location": "jsx-text",
+      "text": "Ayarı Değiştir",
+      "suggestedKey": "EmailKillSwitches.ayariDegistir",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailKillSwitches.jsx",
+      "location": "jsx-text",
+      "text": "Bu değişikliğin nedenini açıklayan bir not girin. Minimum 3 karakter.",
+      "suggestedKey": "EmailKillSwitches.buDegisikliginNedeniniAciklayanBirNotGir",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailKillSwitches.jsx",
+      "location": "jsx-text",
+      "text": "İptal",
+      "suggestedKey": "EmailKillSwitches.iptal",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailKillSwitches.jsx",
+      "location": "jsx-text",
+      "text": "Gönderim Saatleri",
+      "suggestedKey": "EmailKillSwitches.gonderimSaatleri",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailKillSwitches.jsx",
+      "location": "jsx-text",
+      "text": "Başlangıç saati",
+      "suggestedKey": "EmailKillSwitches.baslangicSaati",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailKillSwitches.jsx",
+      "location": "jsx-text",
+      "text": "Bitiş saati",
+      "suggestedKey": "EmailKillSwitches.bitisSaati",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailKillSwitches.jsx",
+      "location": "jsx-text",
+      "text": "Geçersiz aralık: başlangıç saati bitiş saatinden küçük olmalı (start 0-23, end 1-24).",
+      "suggestedKey": "EmailKillSwitches.gecersizAralikBaslangicSaatiBitisSaatind",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailKillSwitches.jsx",
+      "location": "jsx-text",
+      "text": "Kapalı: şifre sıfırlama / ödeme makbuzu / iade onayı pencereyi yoksayar (önerilen).",
+      "suggestedKey": "EmailKillSwitches.kapaliSifreSifirlamaOdemeMakbuzuIadeOnay",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailKillSwitches.jsx",
+      "location": "jsx-text",
+      "text": "Değişiklik sebebi",
+      "suggestedKey": "EmailKillSwitches.degisiklikSebebi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailKillSwitches.jsx",
+      "location": "prop:placeholder",
+      "text": "Örn: Servis bakımı, konfigürasyon testi",
+      "suggestedKey": "EmailKillSwitches.placeholder.ornServisBakimiKonfigurasyonTesti",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailKillSwitches.jsx",
+      "location": "prop:placeholder",
+      "text": "Örn: Spam şikayetlerini azaltmak için akşam mesai saatleri sınırlandı",
+      "suggestedKey": "EmailKillSwitches.placeholder.ornSpamSikayetleriniAzaltmakIcinAksamMes",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailLogDetail.jsx",
+      "location": "jsx-text",
+      "text": "Log ID bulunamadı",
+      "suggestedKey": "EmailLogDetail.logIdBulunamadi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailLogDetail.jsx",
+      "location": "jsx-text",
+      "text": "Log bulunamadı",
+      "suggestedKey": "EmailLogDetail.logBulunamadi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailLogDetail.jsx",
+      "location": "jsx-text",
+      "text": "Email Detayı",
+      "suggestedKey": "EmailLogDetail.emailDetayi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailLogDetail.jsx",
+      "location": "jsx-text",
+      "text": "Alıcı",
+      "suggestedKey": "EmailLogDetail.alici",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailLogDetail.jsx",
+      "location": "jsx-text",
+      "text": "Şablon",
+      "suggestedKey": "EmailLogDetail.sablon",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailLogDetail.jsx",
+      "location": "jsx-text",
+      "text": "HTML Önizlemesi",
+      "suggestedKey": "EmailLogDetail.htmlOnizlemesi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailLogDetail.jsx",
+      "location": "jsx-text",
+      "text": "Metin İçeriği",
+      "suggestedKey": "EmailLogDetail.metinIcerigi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailLogDetail.jsx",
+      "location": "jsx-text",
+      "text": "Sağlayıcı Türü",
+      "suggestedKey": "EmailLogDetail.saglayiciTuru",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailLogDetail.jsx",
+      "location": "jsx-text",
+      "text": "Sıraya Alındığı Zaman",
+      "suggestedKey": "EmailLogDetail.sirayaAlindigiZaman",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailLogDetail.jsx",
+      "location": "jsx-text",
+      "text": "Deneme Sayısı",
+      "suggestedKey": "EmailLogDetail.denemeSayisi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailLogDetail.jsx",
+      "location": "prop:title",
+      "text": "Şablon Verileri",
+      "suggestedKey": "EmailLogDetail.title.sablonVerileri",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailLogs.jsx",
+      "location": "jsx-text",
+      "text": "Loglar yüklenemedi",
+      "suggestedKey": "EmailLogs.loglarYuklenemedi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailLogs.jsx",
+      "location": "jsx-text",
+      "text": "Email Logları",
+      "suggestedKey": "EmailLogs.emailLoglari",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailLogs.jsx",
+      "location": "jsx-text",
+      "text": "Tüm email gönderimi kayıtları",
+      "suggestedKey": "EmailLogs.tumEmailGonderimiKayitlari",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailLogs.jsx",
+      "location": "jsx-text",
+      "text": "Tüm Kuyruklar",
+      "suggestedKey": "EmailLogs.tumKuyruklar",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailLogs.jsx",
+      "location": "jsx-text",
+      "text": "Tüm Durumlar",
+      "suggestedKey": "EmailLogs.tumDurumlar",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailLogs.jsx",
+      "location": "jsx-text",
+      "text": "Tüm Roller",
+      "suggestedKey": "EmailLogs.tumRoller",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailLogs.jsx",
+      "location": "jsx-text",
+      "text": "Sonuç bulunamadı",
+      "suggestedKey": "EmailLogs.sonucBulunamadi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailLogs.jsx",
+      "location": "prop:placeholder",
+      "text": "Şablon adı...",
+      "suggestedKey": "EmailLogs.placeholder.sablonAdi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailManagement.jsx",
+      "location": "jsx-text",
+      "text": "Mail Yönetimi",
+      "suggestedKey": "EmailManagement.mailYonetimi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailManagement.jsx",
+      "location": "jsx-text",
+      "text": "Tüm mail trafiği — panel, kontrol, sağlayıcılar, loglar, şablonlar ve engellenmiş adresler",
+      "suggestedKey": "EmailManagement.tumMailTrafigiPanelKontrolSaglayicilarLo",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailManagement.jsx",
+      "location": "prop:aria-label",
+      "text": "Mail yönetimi sekmeleri",
+      "suggestedKey": "EmailManagement.aria-label.mailYonetimiSekmeleri",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailPreferences.jsx",
+      "location": "jsx-text",
+      "text": "Hangi mailleri almak istediğinizi kontrol edin",
+      "suggestedKey": "EmailPreferences.hangiMailleriAlmakIstediginiziKontrolEdi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailPreferences.jsx",
+      "location": "jsx-text",
+      "text": "Önemli:",
+      "suggestedKey": "EmailPreferences.onemli",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailPreferences.jsx",
+      "location": "jsx-text",
+      "text": "Kaydedilmemiş değişiklikler var",
+      "suggestedKey": "EmailPreferences.kaydedilmemisDegisikliklerVar",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailPreferences.jsx",
+      "location": "jsx-text",
+      "text": "İletişim Türleri",
+      "suggestedKey": "EmailPreferences.iletisimTurleri",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailProviders.jsx",
+      "location": "jsx-text",
+      "text": "Sağlayıcı Adı",
+      "suggestedKey": "EmailProviders.saglayiciAdi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailProviders.jsx",
+      "location": "jsx-text",
+      "text": "Tür",
+      "suggestedKey": "EmailProviders.tur",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailProviders.jsx",
+      "location": "jsx-text",
+      "text": "Öncelik",
+      "suggestedKey": "EmailProviders.oncelik",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailProviders.jsx",
+      "location": "jsx-text",
+      "text": "Gönderen Email Adresi",
+      "suggestedKey": "EmailProviders.gonderenEmailAdresi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailProviders.jsx",
+      "location": "jsx-text",
+      "text": "Gönderen Adı",
+      "suggestedKey": "EmailProviders.gonderenAdi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailProviders.jsx",
+      "location": "jsx-text",
+      "text": "Reply-To Email (isteğe bağlı)",
+      "suggestedKey": "EmailProviders.replytoEmailIstegeBagli",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailProviders.jsx",
+      "location": "jsx-text",
+      "text": "Günlük Limit",
+      "suggestedKey": "EmailProviders.gunlukLimit",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailProviders.jsx",
+      "location": "jsx-text",
+      "text": "Kullanıcı Adı",
+      "suggestedKey": "EmailProviders.kullaniciAdi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailProviders.jsx",
+      "location": "jsx-text",
+      "text": "Şifre",
+      "suggestedKey": "EmailProviders.sifre",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailProviders.jsx",
+      "location": "jsx-text",
+      "text": "Test Maili Gönder",
+      "suggestedKey": "EmailProviders.testMailiGonder",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailProviders.jsx",
+      "location": "jsx-text",
+      "text": "Alıcı Email",
+      "suggestedKey": "EmailProviders.aliciEmail",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailProviders.jsx",
+      "location": "jsx-text",
+      "text": "Email Sağlayıcıları",
+      "suggestedKey": "EmailProviders.emailSaglayicilari",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailProviders.jsx",
+      "location": "jsx-text",
+      "text": "SMTP ve API tabanlı sağlayıcıları yönetin",
+      "suggestedKey": "EmailProviders.smtpVeApiTabanliSaglayicilariYonetin",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailProviders.jsx",
+      "location": "jsx-text",
+      "text": "Yeni Sağlayıcı",
+      "suggestedKey": "EmailProviders.yeniSaglayici",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailProviders.jsx",
+      "location": "jsx-text",
+      "text": "Yeni Sağlayıcı Ekle",
+      "suggestedKey": "EmailProviders.yeniSaglayiciEkle",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailProviders.jsx",
+      "location": "jsx-text",
+      "text": "Güvenlik:",
+      "suggestedKey": "EmailProviders.guvenlik",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailProviders.jsx",
+      "location": "jsx-text",
+      "text": "Brevo API sağlayıcısı için webhook URL:",
+      "suggestedKey": "EmailProviders.brevoApiSaglayicisiIcinWebhookUrl",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailProviders.jsx",
+      "location": "jsx-text",
+      "text": "Henüz sağlayıcı eklenmemiş",
+      "suggestedKey": "EmailProviders.henuzSaglayiciEklenmemis",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailProviders.jsx",
+      "location": "jsx-text",
+      "text": "Sağlayıcıyı Düzenle",
+      "suggestedKey": "EmailProviders.saglayiciyiDuzenle",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailProviders.jsx",
+      "location": "prop:placeholder",
+      "text": "Örn. Brevo (Ana)",
+      "suggestedKey": "EmailProviders.placeholder.ornBrevoAna",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailProviders.jsx",
+      "location": "prop:placeholder",
+      "text": "Sınav Salonu",
+      "suggestedKey": "EmailProviders.placeholder.sinavSalonu",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailProviders.jsx",
+      "location": "prop:aria-label",
+      "text": "Düzenle",
+      "suggestedKey": "EmailProviders.aria-label.duzenle",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailSuppressions.jsx",
+      "location": "jsx-text",
+      "text": "Not (isteğe bağlı)",
+      "suggestedKey": "EmailSuppressions.notIstegeBagli",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailSuppressions.jsx",
+      "location": "jsx-text",
+      "text": "Bitiş Tarihi (isteğe bağlı)",
+      "suggestedKey": "EmailSuppressions.bitisTarihiIstegeBagli",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailSuppressions.jsx",
+      "location": "jsx-text",
+      "text": "Veriler yüklenemedi",
+      "suggestedKey": "EmailSuppressions.verilerYuklenemedi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailSuppressions.jsx",
+      "location": "jsx-text",
+      "text": "Engellenen email adreslerini yönetin",
+      "suggestedKey": "EmailSuppressions.engellenenEmailAdresleriniYonetin",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailSuppressions.jsx",
+      "location": "prop:placeholder",
+      "text": "Örn: Kullanıcı talebi",
+      "suggestedKey": "EmailSuppressions.placeholder.ornKullaniciTalebi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailSuppressions.jsx",
+      "location": "prop:aria-label",
+      "text": "Kaldır",
+      "suggestedKey": "EmailSuppressions.aria-label.kaldir",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailTemplates.jsx",
+      "location": "jsx-text",
+      "text": "Açıklama",
+      "suggestedKey": "EmailTemplates.aciklama",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailTemplates.jsx",
+      "location": "jsx-text",
+      "text": "Varsayılan Kuyruk",
+      "suggestedKey": "EmailTemplates.varsayilanKuyruk",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailTemplates.jsx",
+      "location": "jsx-text",
+      "text": "Düzenle",
+      "suggestedKey": "EmailTemplates.duzenle",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailTemplates.jsx",
+      "location": "jsx-text",
+      "text": "Email Şablonları",
+      "suggestedKey": "EmailTemplates.emailSablonlari",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailTemplates.jsx",
+      "location": "jsx-text",
+      "text": "Sistem şablonlarının meta bilgilerini yönetin",
+      "suggestedKey": "EmailTemplates.sistemSablonlarininMetaBilgileriniYoneti",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailTemplates.jsx",
+      "location": "jsx-text",
+      "text": "Şablon bulunamadı",
+      "suggestedKey": "EmailTemplates.sablonBulunamadi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailTemplates.jsx",
+      "location": "jsx-text",
+      "text": "Şablonu Düzenle —",
+      "suggestedKey": "EmailTemplates.sablonuDuzenle",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailTemplates.jsx",
+      "location": "prop:placeholder",
+      "text": "Örn. Hesap Doğrulama",
+      "suggestedKey": "EmailTemplates.placeholder.ornHesapDogrulama",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/EmailTemplates.jsx",
+      "location": "prop:placeholder",
+      "text": "Bu şablon neden kullanılır?",
+      "suggestedKey": "EmailTemplates.placeholder.buSablonNedenKullanilir",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ExamTypes.jsx",
+      "location": "jsx-text",
+      "text": "Sınav türü bulunamadı",
+      "suggestedKey": "ExamTypes.sinavTuruBulunamadi",
+      "usesI18n": true
+    },
+    {
+      "file": "src/pages/ExamTypes.jsx",
+      "location": "jsx-text",
+      "text": "Farklı bir arama terimi deneyin",
+      "suggestedKey": "ExamTypes.farkliBirAramaTerimiDeneyin",
+      "usesI18n": true
+    },
+    {
+      "file": "src/pages/ExamTypes.jsx",
+      "location": "prop:placeholder",
+      "text": "Sınav türü ara...",
+      "suggestedKey": "ExamTypes.placeholder.sinavTuruAra",
+      "usesI18n": true
+    },
+    {
+      "file": "src/pages/LiveSessionCreate.jsx",
+      "location": "jsx-text",
+      "text": "Uyarı: Benzer bir soru bulundu",
+      "suggestedKey": "LiveSessionCreate.uyariBenzerBirSoruBulundu",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/LiveSessionCreate.jsx",
+      "location": "jsx-text",
+      "text": "Soru Görseli (İsteğe Bağlı)",
+      "suggestedKey": "LiveSessionCreate.soruGorseliIstegeBagli",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/LiveSessionCreate.jsx",
+      "location": "jsx-text",
+      "text": "Görsel Seç",
+      "suggestedKey": "LiveSessionCreate.gorselSec",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/LiveSessionCreate.jsx",
+      "location": "jsx-text",
+      "text": "Konu (İsteğe Bağlı)",
+      "suggestedKey": "LiveSessionCreate.konuIstegeBagli",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/LiveSessionCreate.jsx",
+      "location": "jsx-text",
+      "text": "Seçenekler",
+      "suggestedKey": "LiveSessionCreate.secenekler",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/LiveSessionCreate.jsx",
+      "location": "jsx-text",
+      "text": "İptal",
+      "suggestedKey": "LiveSessionCreate.iptal",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/LiveSessionCreate.jsx",
+      "location": "jsx-text",
+      "text": "Çözümlü",
+      "suggestedKey": "LiveSessionCreate.cozumlu",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/LiveSessionCreate.jsx",
+      "location": "jsx-text",
+      "text": "Canlı Test Oluştur",
+      "suggestedKey": "LiveSessionCreate.canliTestOlustur",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/LiveSessionCreate.jsx",
+      "location": "jsx-text",
+      "text": "3 adımda canlı oturumunuzu hazırlayın.",
+      "suggestedKey": "LiveSessionCreate.3AdimdaCanliOturumunuzuHazirlayin",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/LiveSessionCreate.jsx",
+      "location": "jsx-text",
+      "text": "Oturum Başlığı *",
+      "suggestedKey": "LiveSessionCreate.oturumBasligi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/LiveSessionCreate.jsx",
+      "location": "jsx-text",
+      "text": "Açıklama (İsteğe Bağlı)",
+      "suggestedKey": "LiveSessionCreate.aciklamaIstegeBagli",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/LiveSessionCreate.jsx",
+      "location": "jsx-text",
+      "text": "Kapasite Paketi (İsteğe Bağlı)",
+      "suggestedKey": "LiveSessionCreate.kapasitePaketiIstegeBagli",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/LiveSessionCreate.jsx",
+      "location": "jsx-text",
+      "text": "Kapasite paketi tanımlı değil. Paket seçmeden devam edebilirsiniz.",
+      "suggestedKey": "LiveSessionCreate.kapasitePaketiTanimliDegilPaketSecmedenD",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/LiveSessionCreate.jsx",
+      "location": "jsx-text",
+      "text": "Ücretsiz",
+      "suggestedKey": "LiveSessionCreate.ucretsiz",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/LiveSessionCreate.jsx",
+      "location": "jsx-text",
+      "text": "İleri →",
+      "suggestedKey": "LiveSessionCreate.ileri",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/LiveSessionCreate.jsx",
+      "location": "jsx-text",
+      "text": "DOCX'ten Sorular İçeri Aktar",
+      "suggestedKey": "LiveSessionCreate.docxtenSorularIceriAktar",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/LiveSessionCreate.jsx",
+      "location": "jsx-text",
+      "text": "Word dosyasını seçin. Sorular otomatik olarak ayrıştırılacak.",
+      "suggestedKey": "LiveSessionCreate.wordDosyasiniSecinSorularOtomatikOlarakA",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/LiveSessionCreate.jsx",
+      "location": "jsx-text",
+      "text": ", ardından",
+      "suggestedKey": "LiveSessionCreate.ardindan",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/LiveSessionCreate.jsx",
+      "location": "jsx-text",
+      "text": "DOCX Dosya Seç",
+      "suggestedKey": "LiveSessionCreate.docxDosyaSec",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/LiveSessionCreate.jsx",
+      "location": "jsx-text",
+      "text": "Henüz soru eklenmedi",
+      "suggestedKey": "LiveSessionCreate.henuzSoruEklenmedi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/LiveSessionCreate.jsx",
+      "location": "jsx-text",
+      "text": "Önizleme →",
+      "suggestedKey": "LiveSessionCreate.onizleme",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/LiveSessionCreate.jsx",
+      "location": "jsx-text",
+      "text": "Oturum Özeti",
+      "suggestedKey": "LiveSessionCreate.oturumOzeti",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/LiveSessionCreate.jsx",
+      "location": "jsx-text",
+      "text": "Oturum Başlığı",
+      "suggestedKey": "LiveSessionCreate.oturumBasligi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/LiveSessionCreate.jsx",
+      "location": "jsx-text",
+      "text": "Oturum oluşturulunca",
+      "suggestedKey": "LiveSessionCreate.oturumOlusturulunca",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/LiveSessionCreate.jsx",
+      "location": "jsx-text",
+      "text": "ödemesi alınacaktır.",
+      "suggestedKey": "LiveSessionCreate.odemesiAlinacaktir",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/LiveSessionCreate.jsx",
+      "location": "jsx-text",
+      "text": "Oluşturuluyor...",
+      "suggestedKey": "LiveSessionCreate.olusturuluyor",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/LiveSessionCreate.jsx",
+      "location": "jsx-text",
+      "text": "Ödeme Yap ve Oluştur",
+      "suggestedKey": "LiveSessionCreate.odemeYapVeOlustur",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/LiveSessionCreate.jsx",
+      "location": "jsx-text",
+      "text": "Ödeme ile Oturum Oluştur",
+      "suggestedKey": "LiveSessionCreate.odemeIleOturumOlustur",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/LiveSessionCreate.jsx",
+      "location": "jsx-text",
+      "text": "Başlık",
+      "suggestedKey": "LiveSessionCreate.baslik",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/LiveSessionCreate.jsx",
+      "location": "jsx-text",
+      "text": "Ödeme Sağlayıcısı",
+      "suggestedKey": "LiveSessionCreate.odemeSaglayicisi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/LiveSessionCreate.jsx",
+      "location": "jsx-text",
+      "text": "İşleniyor...",
+      "suggestedKey": "LiveSessionCreate.isleniyor",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/LiveSessionCreate.jsx",
+      "location": "jsx-text",
+      "text": "Ödemeyi Tamamla",
+      "suggestedKey": "LiveSessionCreate.odemeyiTamamla",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/LiveSessionCreate.jsx",
+      "location": "jsx-text",
+      "text": "Onayla ve Oluştur",
+      "suggestedKey": "LiveSessionCreate.onaylaVeOlustur",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/LiveSessionCreate.jsx",
+      "location": "prop:placeholder",
+      "text": "Konu seçin...",
+      "suggestedKey": "LiveSessionCreate.placeholder.konuSecin",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/LiveSessionCreate.jsx",
+      "location": "prop:aria-label",
+      "text": "Düzenle",
+      "suggestedKey": "LiveSessionCreate.aria-label.duzenle",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/LiveSessionCreate.jsx",
+      "location": "prop:title",
+      "text": "Oturum başlığı zorunludur",
+      "suggestedKey": "LiveSessionCreate.title.oturumBasligiZorunludur",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/LiveSessionCreate.jsx",
+      "location": "prop:placeholder",
+      "text": "örn. Haftalık Matematik Quizi",
+      "suggestedKey": "LiveSessionCreate.placeholder.ornHaftalikMatematikQuizi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/LiveSessionCreate.jsx",
+      "location": "prop:placeholder",
+      "text": "Katılımcılara kısa bir bilgi...",
+      "suggestedKey": "LiveSessionCreate.placeholder.katilimcilaraKisaBirBilgi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/LiveSessionJoin.jsx",
+      "location": "jsx-text",
+      "text": "Canlı Teste Katıl",
+      "suggestedKey": "LiveSessionJoin.canliTesteKatil",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/LiveSessionJoin.jsx",
+      "location": "jsx-text",
+      "text": "Katılmak için giriş yapmanız gerekiyor",
+      "suggestedKey": "LiveSessionJoin.katilmakIcinGirisYapmanizGerekiyor",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/LiveSessionJoin.jsx",
+      "location": "jsx-text",
+      "text": "Giriş Yap",
+      "suggestedKey": "LiveSessionJoin.girisYap",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/LiveSessionJoin.jsx",
+      "location": "jsx-text",
+      "text": "Eğiticinizden aldığınız kodu girin",
+      "suggestedKey": "LiveSessionJoin.egiticinizdenAldiginizKoduGirin",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/LiveSessionJoin.jsx",
+      "location": "jsx-text",
+      "text": "Katılınıyor...",
+      "suggestedKey": "LiveSessionJoin.katiliniyor",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/LiveSessionJoin.jsx",
+      "location": "jsx-text",
+      "text": "Eğitici testi başlatana kadar bekleyin…",
+      "suggestedKey": "LiveSessionJoin.egiticiTestiBaslatanaKadarBekleyin",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/LiveSessionJoin.jsx",
+      "location": "jsx-text",
+      "text": "Test Tamamlandı!",
+      "suggestedKey": "LiveSessionJoin.testTamamlandi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/LiveSessionJoin.jsx",
+      "location": "jsx-text",
+      "text": "Ön-Test",
+      "suggestedKey": "LiveSessionJoin.ontest",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/LiveSessionJoin.jsx",
+      "location": "jsx-text",
+      "text": "Sonuçlar yükleniyor…",
+      "suggestedKey": "LiveSessionJoin.sonuclarYukleniyor",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/LiveSessionJoin.jsx",
+      "location": "jsx-text",
+      "text": "Soru Detayları",
+      "suggestedKey": "LiveSessionJoin.soruDetaylari",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/LiveSessionJoin.jsx",
+      "location": "jsx-text",
+      "text": "Cevabınız:",
+      "suggestedKey": "LiveSessionJoin.cevabiniz",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/LiveSessionJoin.jsx",
+      "location": "jsx-text",
+      "text": "Cevaplanmadı",
+      "suggestedKey": "LiveSessionJoin.cevaplanmadi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/LiveSessionJoin.jsx",
+      "location": "jsx-text",
+      "text": "Doğru cevap:",
+      "suggestedKey": "LiveSessionJoin.dogruCevap",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/LiveSessionJoin.jsx",
+      "location": "jsx-text",
+      "text": "Ön-test:",
+      "suggestedKey": "LiveSessionJoin.ontest",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/LiveSessionJoin.jsx",
+      "location": "jsx-text",
+      "text": "✓ Cevabınız kaydedildi. Eğiticinin bir sonraki soruya geçmesini bekleyin.",
+      "suggestedKey": "LiveSessionJoin.cevabinizKaydedildiEgiticininBirSonrakiS",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/LiveSessionJoin.jsx",
+      "location": "jsx-text",
+      "text": "Sınıf Sonuçları",
+      "suggestedKey": "LiveSessionJoin.sinifSonuclari",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/LiveSessionJoin.jsx",
+      "location": "jsx-text",
+      "text": "Görsel",
+      "suggestedKey": "LiveSessionJoin.gorsel",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/LiveSessionJoin.jsx",
+      "location": "prop:aria-label",
+      "text": "Görseli büyüt",
+      "suggestedKey": "LiveSessionJoin.aria-label.gorseliBuyut",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageExamTypes.jsx",
+      "location": "jsx-text",
+      "text": "Erişim Engellendi",
+      "suggestedKey": "ManageExamTypes.erisimEngellendi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageExamTypes.jsx",
+      "location": "jsx-text",
+      "text": "Bu sayfaya erişim yetkiniz yok",
+      "suggestedKey": "ManageExamTypes.buSayfayaErisimYetkinizYok",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageExamTypes.jsx",
+      "location": "jsx-text",
+      "text": "Sınav Türleri",
+      "suggestedKey": "ManageExamTypes.sinavTurleri",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageExamTypes.jsx",
+      "location": "jsx-text",
+      "text": "Platformdaki sınav türlerini yönet",
+      "suggestedKey": "ManageExamTypes.platformdakiSinavTurleriniYonet",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageExamTypes.jsx",
+      "location": "jsx-text",
+      "text": "Yeni Sınav Türü",
+      "suggestedKey": "ManageExamTypes.yeniSinavTuru",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageExamTypes.jsx",
+      "location": "jsx-text",
+      "text": "İsim",
+      "suggestedKey": "ManageExamTypes.isim",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageExamTypes.jsx",
+      "location": "jsx-text",
+      "text": "Tümü",
+      "suggestedKey": "ManageExamTypes.tumu",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageExamTypes.jsx",
+      "location": "jsx-text",
+      "text": "Başlangıç tarihi",
+      "suggestedKey": "ManageExamTypes.baslangicTarihi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageExamTypes.jsx",
+      "location": "jsx-text",
+      "text": "Bitiş tarihi",
+      "suggestedKey": "ManageExamTypes.bitisTarihi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageExamTypes.jsx",
+      "location": "jsx-text",
+      "text": "Sınav Türü Adı *",
+      "suggestedKey": "ManageExamTypes.sinavTuruAdi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageExamTypes.jsx",
+      "location": "jsx-text",
+      "text": "Açıklama",
+      "suggestedKey": "ManageExamTypes.aciklama",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageExamTypes.jsx",
+      "location": "jsx-text",
+      "text": "İptal",
+      "suggestedKey": "ManageExamTypes.iptal",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageExamTypes.jsx",
+      "location": "jsx-text",
+      "text": "Sınav türünü silmek istediğinize emin misiniz?",
+      "suggestedKey": "ManageExamTypes.sinavTurunuSilmekIstediginizeEminMisiniz",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageExamTypes.jsx",
+      "location": "jsx-text",
+      "text": "Bu işlem geri alınamaz.",
+      "suggestedKey": "ManageExamTypes.buIslemGeriAlinamaz",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageExamTypes.jsx",
+      "location": "prop:placeholder",
+      "text": "Sınav türü ara...",
+      "suggestedKey": "ManageExamTypes.placeholder.sinavTuruAra",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageExamTypes.jsx",
+      "location": "prop:placeholder",
+      "text": "Örn: KPSS",
+      "suggestedKey": "ManageExamTypes.placeholder.ornKpss",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageExamTypes.jsx",
+      "location": "prop:placeholder",
+      "text": "Sınav türü hakkında kısa açıklama",
+      "suggestedKey": "ManageExamTypes.placeholder.sinavTuruHakkindaKisaAciklama",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageLiveTiers.jsx",
+      "location": "jsx-text",
+      "text": "Paket Adı",
+      "suggestedKey": "ManageLiveTiers.paketAdi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageLiveTiers.jsx",
+      "location": "jsx-text",
+      "text": "Maks Katılımcı (boş = sınırsız)",
+      "suggestedKey": "ManageLiveTiers.maksKatilimciBosSinirsiz",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageLiveTiers.jsx",
+      "location": "jsx-text",
+      "text": "Sıra",
+      "suggestedKey": "ManageLiveTiers.sira",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageLiveTiers.jsx",
+      "location": "jsx-text",
+      "text": "İptal",
+      "suggestedKey": "ManageLiveTiers.iptal",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageLiveTiers.jsx",
+      "location": "jsx-text",
+      "text": "Erişim engellendi",
+      "suggestedKey": "ManageLiveTiers.erisimEngellendi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageLiveTiers.jsx",
+      "location": "jsx-text",
+      "text": "Canlı Test Kapasite Paketleri",
+      "suggestedKey": "ManageLiveTiers.canliTestKapasitePaketleri",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageLiveTiers.jsx",
+      "location": "jsx-text",
+      "text": "Eğiticilerin canlı test oluştururken seçeceği kapasite ve fiyat paketleri",
+      "suggestedKey": "ManageLiveTiers.egiticilerinCanliTestOlustururkenSececeg",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageLiveTiers.jsx",
+      "location": "jsx-text",
+      "text": "Henüz kapasite paketi yok",
+      "suggestedKey": "ManageLiveTiers.henuzKapasitePaketiYok",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageLiveTiers.jsx",
+      "location": "jsx-text",
+      "text": "İlk paketi oluşturun",
+      "suggestedKey": "ManageLiveTiers.ilkPaketiOlusturun",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageLiveTiers.jsx",
+      "location": "jsx-text",
+      "text": "💡 Nasıl çalışır?",
+      "suggestedKey": "ManageLiveTiers.nasilCalisir",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageLiveTiers.jsx",
+      "location": "jsx-text",
+      "text": "Eğitici canlı test oluştururken bu paketlerden birini seçer",
+      "suggestedKey": "ManageLiveTiers.egiticiCanliTestOlustururkenBuPaketlerde",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageLiveTiers.jsx",
+      "location": "jsx-text",
+      "text": "Seçilen paketteki maks katılımcı sayısı aşıldığında yeni katılım engellenir",
+      "suggestedKey": "ManageLiveTiers.secilenPakettekiMaksKatilimciSayisiAsild",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageLiveTiers.jsx",
+      "location": "jsx-text",
+      "text": "Maks katılımcı boş bırakılırsa sınırsız katılım olur",
+      "suggestedKey": "ManageLiveTiers.maksKatilimciBosBirakilirsaSinirsizKatil",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageLiveTiers.jsx",
+      "location": "prop:placeholder",
+      "text": "ör. Başlangıç (max 20 kişi)",
+      "suggestedKey": "ManageLiveTiers.placeholder.orBaslangicMax20Kisi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageLiveTiers.jsx",
+      "location": "prop:placeholder",
+      "text": "Sınırsız",
+      "suggestedKey": "ManageLiveTiers.placeholder.sinirsiz",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageRefunds.jsx",
+      "location": "jsx-text",
+      "text": "Erişim Engellendi",
+      "suggestedKey": "ManageRefunds.erisimEngellendi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageRefunds.jsx",
+      "location": "jsx-text",
+      "text": "İade Yönetimi",
+      "suggestedKey": "ManageRefunds.iadeYonetimi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageRefunds.jsx",
+      "location": "jsx-text",
+      "text": "Eğitici onaylı, itirazlı ve süresi dolmuş iade taleplerini sonuçlandırın.",
+      "suggestedKey": "ManageRefunds.egiticiOnayliItirazliVeSuresiDolmusIadeT",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageRefunds.jsx",
+      "location": "jsx-text",
+      "text": "Eğitici Onayladı",
+      "suggestedKey": "ManageRefunds.egiticiOnayladi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageRefunds.jsx",
+      "location": "jsx-text",
+      "text": "İtiraz Var",
+      "suggestedKey": "ManageRefunds.itirazVar",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageRefunds.jsx",
+      "location": "jsx-text",
+      "text": "Süre Doldu",
+      "suggestedKey": "ManageRefunds.sureDoldu",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageRefunds.jsx",
+      "location": "jsx-text",
+      "text": "İade Yapıldı",
+      "suggestedKey": "ManageRefunds.iadeYapildi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageRefunds.jsx",
+      "location": "jsx-text",
+      "text": "Eğitici Bekliyor",
+      "suggestedKey": "ManageRefunds.egiticiBekliyor",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageRefunds.jsx",
+      "location": "jsx-text",
+      "text": "Eğitici Reddetti",
+      "suggestedKey": "ManageRefunds.egiticiReddetti",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageRefunds.jsx",
+      "location": "jsx-text",
+      "text": "İtiraz:",
+      "suggestedKey": "ManageRefunds.itiraz",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageRefunds.jsx",
+      "location": "jsx-text",
+      "text": "İncele",
+      "suggestedKey": "ManageRefunds.incele",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageRefunds.jsx",
+      "location": "jsx-text",
+      "text": "Sonuçlanan talep yok",
+      "suggestedKey": "ManageRefunds.sonuclananTalepYok",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageRefunds.jsx",
+      "location": "jsx-text",
+      "text": "İade Talebini Sonuçlandır",
+      "suggestedKey": "ManageRefunds.iadeTalebiniSonuclandir",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageRefunds.jsx",
+      "location": "jsx-text",
+      "text": "Açıklama:",
+      "suggestedKey": "ManageRefunds.aciklama",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageRefunds.jsx",
+      "location": "jsx-text",
+      "text": "İtiraz Gerekçesi:",
+      "suggestedKey": "ManageRefunds.itirazGerekcesi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageRefunds.jsx",
+      "location": "jsx-text",
+      "text": "Eğitici bu iadeyi onayladı. Admin onayından sonra iade işlemi gerçekleşir.",
+      "suggestedKey": "ManageRefunds.egiticiBuIadeyiOnayladiAdminOnayindanSon",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageRefunds.jsx",
+      "location": "jsx-text",
+      "text": "Aday eğiticinin ret kararına itiraz etti. Nihai kararı veriniz.",
+      "suggestedKey": "ManageRefunds.adayEgiticininRetKararinaItirazEttiNihai",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageRefunds.jsx",
+      "location": "jsx-text",
+      "text": "Eğitici 7 gün içinde yanıtlamadı. Admin olarak sonuçlandırabilirsiniz.",
+      "suggestedKey": "ManageRefunds.egitici7GunIcindeYanitlamadiAdminOlarakS",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageRefunds.jsx",
+      "location": "jsx-text",
+      "text": "Onayla (İade Yap)",
+      "suggestedKey": "ManageRefunds.onaylaIadeYap",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageRefunds.jsx",
+      "location": "prop:placeholder",
+      "text": "Yönetici notu (opsiyonel)...",
+      "suggestedKey": "ManageRefunds.placeholder.yoneticiNotuOpsiyonel",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageTests.jsx",
+      "location": "jsx-text",
+      "text": "Erişim Engellendi",
+      "suggestedKey": "ManageTests.erisimEngellendi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageTests.jsx",
+      "location": "jsx-text",
+      "text": "Bu sayfaya erişim yetkiniz yok",
+      "suggestedKey": "ManageTests.buSayfayaErisimYetkinizYok",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageTests.jsx",
+      "location": "jsx-text",
+      "text": "Tüm Testler",
+      "suggestedKey": "ManageTests.tumTestler",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageTests.jsx",
+      "location": "jsx-text",
+      "text": "Platformdaki tüm testleri görüntüle ve yönet",
+      "suggestedKey": "ManageTests.platformdakiTumTestleriGoruntuleVeYonet",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageTests.jsx",
+      "location": "jsx-text",
+      "text": "Tümü",
+      "suggestedKey": "ManageTests.tumu",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageTests.jsx",
+      "location": "jsx-text",
+      "text": "Yayında",
+      "suggestedKey": "ManageTests.yayinda",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageTests.jsx",
+      "location": "jsx-text",
+      "text": "Gelişmiş Filtreler:",
+      "suggestedKey": "ManageTests.gelismisFiltreler",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageTests.jsx",
+      "location": "jsx-text",
+      "text": "Tüm Sınav Türleri",
+      "suggestedKey": "ManageTests.tumSinavTurleri",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageTests.jsx",
+      "location": "jsx-text",
+      "text": "Eğitici bulunamadı",
+      "suggestedKey": "ManageTests.egiticiBulunamadi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageTests.jsx",
+      "location": "jsx-text",
+      "text": "Tüm Eğiticiler",
+      "suggestedKey": "ManageTests.tumEgiticiler",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageTests.jsx",
+      "location": "jsx-text",
+      "text": "Tüm Fiyatlar",
+      "suggestedKey": "ManageTests.tumFiyatlar",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageTests.jsx",
+      "location": "jsx-text",
+      "text": "Tüm Satışlar",
+      "suggestedKey": "ManageTests.tumSatislar",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageTests.jsx",
+      "location": "jsx-text",
+      "text": "Tüm Durumlar",
+      "suggestedKey": "ManageTests.tumDurumlar",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageTests.jsx",
+      "location": "jsx-text",
+      "text": "Test bulunamadı",
+      "suggestedKey": "ManageTests.testBulunamadi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageTests.jsx",
+      "location": "jsx-text",
+      "text": "Eğitici",
+      "suggestedKey": "ManageTests.egitici",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageTests.jsx",
+      "location": "jsx-text",
+      "text": "Satış",
+      "suggestedKey": "ManageTests.satis",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageTests.jsx",
+      "location": "jsx-text",
+      "text": "İşlemler",
+      "suggestedKey": "ManageTests.islemler",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageTests.jsx",
+      "location": "prop:placeholder",
+      "text": "Test veya eğitici ara...",
+      "suggestedKey": "ManageTests.placeholder.testVeyaEgiticiAra",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageTests.jsx",
+      "location": "prop:placeholder",
+      "text": "Sınav Türü",
+      "suggestedKey": "ManageTests.placeholder.sinavTuru",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageTests.jsx",
+      "location": "prop:placeholder",
+      "text": "Eğitici ara...",
+      "suggestedKey": "ManageTests.placeholder.egiticiAra",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageTests.jsx",
+      "location": "prop:placeholder",
+      "text": "Fiyat Aralığı",
+      "suggestedKey": "ManageTests.placeholder.fiyatAraligi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageTests.jsx",
+      "location": "prop:placeholder",
+      "text": "Satış Sayısı",
+      "suggestedKey": "ManageTests.placeholder.satisSayisi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageTests.jsx",
+      "location": "prop:placeholder",
+      "text": "Yayın Durumu",
+      "suggestedKey": "ManageTests.placeholder.yayinDurumu",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageTopics.jsx",
+      "location": "jsx-text",
+      "text": "Sınav türleri yükleniyor...",
+      "suggestedKey": "ManageTopics.sinavTurleriYukleniyor",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageTopics.jsx",
+      "location": "jsx-text",
+      "text": "Üst konu:",
+      "suggestedKey": "ManageTopics.ustKonu",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageTopics.jsx",
+      "location": "jsx-text",
+      "text": "Konu Adı *",
+      "suggestedKey": "ManageTopics.konuAdi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageTopics.jsx",
+      "location": "jsx-text",
+      "text": "(birden fazla seçilebilir)",
+      "suggestedKey": "ManageTopics.birdenFazlaSecilebilir",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageTopics.jsx",
+      "location": "jsx-text",
+      "text": "İptal",
+      "suggestedKey": "ManageTopics.iptal",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageTopics.jsx",
+      "location": "jsx-text",
+      "text": "Erişim Engellendi",
+      "suggestedKey": "ManageTopics.erisimEngellendi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageTopics.jsx",
+      "location": "jsx-text",
+      "text": "Bu sayfaya erişim yetkiniz yok",
+      "suggestedKey": "ManageTopics.buSayfayaErisimYetkinizYok",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageTopics.jsx",
+      "location": "jsx-text",
+      "text": "Soru Konuları",
+      "suggestedKey": "ManageTopics.soruKonulari",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageTopics.jsx",
+      "location": "jsx-text",
+      "text": "Sınav türlerine bağlı konuları hiyerarşik olarak yönet",
+      "suggestedKey": "ManageTopics.sinavTurlerineBagliKonulariHiyerarsikOla",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageTopics.jsx",
+      "location": "jsx-text",
+      "text": "Eşleşen sınav türü yok",
+      "suggestedKey": "ManageTopics.eslesenSinavTuruYok",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageTopics.jsx",
+      "location": "jsx-text",
+      "text": "İlk konuyu ekle",
+      "suggestedKey": "ManageTopics.ilkKonuyuEkle",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageTopics.jsx",
+      "location": "prop:placeholder",
+      "text": "Örn: Matematik, Paragraf, Türev...",
+      "suggestedKey": "ManageTopics.placeholder.ornMatematikParagrafTurev",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageTopics.jsx",
+      "location": "prop:placeholder",
+      "text": "Konu adı ara (tüm hiyerarşide)…",
+      "suggestedKey": "ManageTopics.placeholder.konuAdiAraTumHiyerarside",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageTopics.jsx",
+      "location": "prop:aria-label",
+      "text": "Konu adı ara",
+      "suggestedKey": "ManageTopics.aria-label.konuAdiAra",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageTopics.jsx",
+      "location": "prop:aria-label",
+      "text": "Aramayı temizle",
+      "suggestedKey": "ManageTopics.aria-label.aramayiTemizle",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageTopics.jsx",
+      "location": "prop:placeholder",
+      "text": "Sınav türü ara…",
+      "suggestedKey": "ManageTopics.placeholder.sinavTuruAra",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageTopics.jsx",
+      "location": "prop:aria-label",
+      "text": "Sınav türleri",
+      "suggestedKey": "ManageTopics.aria-label.sinavTurleri",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageUsers.jsx",
+      "location": "jsx-text",
+      "text": "Erişim Engellendi",
+      "suggestedKey": "ManageUsers.erisimEngellendi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageUsers.jsx",
+      "location": "jsx-text",
+      "text": "Bu sayfaya erişim yetkiniz yok",
+      "suggestedKey": "ManageUsers.buSayfayaErisimYetkinizYok",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageUsers.jsx",
+      "location": "jsx-text",
+      "text": "Kullanıcılar",
+      "suggestedKey": "ManageUsers.kullanicilar",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageUsers.jsx",
+      "location": "jsx-text",
+      "text": "Tüm kullanıcıları görüntüle ve yönet",
+      "suggestedKey": "ManageUsers.tumKullanicilariGoruntuleVeYonet",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageUsers.jsx",
+      "location": "jsx-text",
+      "text": "Çalışanlar (Worker)",
+      "suggestedKey": "ManageUsers.calisanlarWorker",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageUsers.jsx",
+      "location": "jsx-text",
+      "text": "Kullanıcı",
+      "suggestedKey": "ManageUsers.kullanici",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageUsers.jsx",
+      "location": "jsx-text",
+      "text": "İzinli Sayfalar",
+      "suggestedKey": "ManageUsers.izinliSayfalar",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageUsers.jsx",
+      "location": "jsx-text",
+      "text": "İşlemler",
+      "suggestedKey": "ManageUsers.islemler",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageUsers.jsx",
+      "location": "jsx-text",
+      "text": "İzinleri Düzenle",
+      "suggestedKey": "ManageUsers.izinleriDuzenle",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageUsers.jsx",
+      "location": "jsx-text",
+      "text": "Tüm Roller",
+      "suggestedKey": "ManageUsers.tumRoller",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageUsers.jsx",
+      "location": "jsx-text",
+      "text": "Eğiticiler",
+      "suggestedKey": "ManageUsers.egiticiler",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageUsers.jsx",
+      "location": "jsx-text",
+      "text": "Çalışanlar",
+      "suggestedKey": "ManageUsers.calisanlar",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageUsers.jsx",
+      "location": "jsx-text",
+      "text": "Kullanıcı bulunamadı",
+      "suggestedKey": "ManageUsers.kullaniciBulunamadi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageUsers.jsx",
+      "location": "jsx-text",
+      "text": "Kayıt Tarihi",
+      "suggestedKey": "ManageUsers.kayitTarihi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageUsers.jsx",
+      "location": "jsx-text",
+      "text": "İzinler",
+      "suggestedKey": "ManageUsers.izinler",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageUsers.jsx",
+      "location": "jsx-text",
+      "text": "Kullanıcı Adı *",
+      "suggestedKey": "ManageUsers.kullaniciAdi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageUsers.jsx",
+      "location": "jsx-text",
+      "text": "Şifre *",
+      "suggestedKey": "ManageUsers.sifre",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageUsers.jsx",
+      "location": "jsx-text",
+      "text": "Sayfa İzinleri",
+      "suggestedKey": "ManageUsers.sayfaIzinleri",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageUsers.jsx",
+      "location": "jsx-text",
+      "text": "İptal",
+      "suggestedKey": "ManageUsers.iptal",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageUsers.jsx",
+      "location": "jsx-text",
+      "text": "Bu çalışanın erişebileceği sayfaları seçin.",
+      "suggestedKey": "ManageUsers.buCalisaninErisebilecegiSayfalariSecin",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageUsers.jsx",
+      "location": "jsx-text",
+      "text": "Başvuruyu Reddet",
+      "suggestedKey": "ManageUsers.basvuruyuReddet",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageUsers.jsx",
+      "location": "jsx-text",
+      "text": "Bu açıklama eğitici tarafından görülebilecek",
+      "suggestedKey": "ManageUsers.buAciklamaEgiticiTarafindanGorulebilecek",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageUsers.jsx",
+      "location": "prop:placeholder",
+      "text": "İsim veya e-posta ara...",
+      "suggestedKey": "ManageUsers.placeholder.isimVeyaEpostaAra",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ManageUsers.jsx",
+      "location": "prop:placeholder",
+      "text": "Başvurunun red edilme nedenini açıklayın...",
+      "suggestedKey": "ManageUsers.placeholder.basvurununRedEdilmeNedeniniAciklayin",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ModerationQueue.jsx",
+      "location": "jsx-text",
+      "text": "İncelemeci Notu (opsiyonel)",
+      "suggestedKey": "ModerationQueue.incelemeciNotuOpsiyonel",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ModerationQueue.jsx",
+      "location": "jsx-text",
+      "text": "İptal",
+      "suggestedKey": "ModerationQueue.iptal",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ModerationQueue.jsx",
+      "location": "jsx-text",
+      "text": "İnceleme Kuyruğu",
+      "suggestedKey": "ModerationQueue.incelemeKuyrugu",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ModerationQueue.jsx",
+      "location": "jsx-text",
+      "text": "İçerik moderasyonu için bekleyen kararlar",
+      "suggestedKey": "ModerationQueue.icerikModerasyonuIcinBekleyenKararlar",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ModerationQueue.jsx",
+      "location": "jsx-text",
+      "text": "Yükleme Başarısız",
+      "suggestedKey": "ModerationQueue.yuklemeBasarisiz",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ModerationQueue.jsx",
+      "location": "jsx-text",
+      "text": "Kuyruk verileri yüklenemedi.",
+      "suggestedKey": "ModerationQueue.kuyrukVerileriYuklenemedi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ModerationQueue.jsx",
+      "location": "jsx-text",
+      "text": "Tümü",
+      "suggestedKey": "ModerationQueue.tumu",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ModerationQueue.jsx",
+      "location": "jsx-text",
+      "text": "Eğitici E-posta",
+      "suggestedKey": "ModerationQueue.egiticiEposta",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ModerationQueue.jsx",
+      "location": "jsx-text",
+      "text": "Tarih Başlangıcı",
+      "suggestedKey": "ModerationQueue.tarihBaslangici",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ModerationQueue.jsx",
+      "location": "jsx-text",
+      "text": "Tarih Bitişi",
+      "suggestedKey": "ModerationQueue.tarihBitisi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ModerationQueue.jsx",
+      "location": "jsx-text",
+      "text": "İncelenecek içerik yok — sistem temiz görünüyor!",
+      "suggestedKey": "ModerationQueue.incelenecekIcerikYokSistemTemizGorunuyor",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ModerationQueue.jsx",
+      "location": "jsx-text",
+      "text": "İhlal",
+      "suggestedKey": "ModerationQueue.ihlal",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ModerationResultDetail.jsx",
+      "location": "jsx-text",
+      "text": "İncelemeci Notu (opsiyonel)",
+      "suggestedKey": "ModerationResultDetail.incelemeciNotuOpsiyonel",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ModerationResultDetail.jsx",
+      "location": "jsx-text",
+      "text": "İptal",
+      "suggestedKey": "ModerationResultDetail.iptal",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ModerationResultDetail.jsx",
+      "location": "jsx-text",
+      "text": "Geri Dön",
+      "suggestedKey": "ModerationResultDetail.geriDon",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ModerationResultDetail.jsx",
+      "location": "jsx-text",
+      "text": "Sonuç bulunamadı",
+      "suggestedKey": "ModerationResultDetail.sonucBulunamadi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ModerationResultDetail.jsx",
+      "location": "jsx-text",
+      "text": "Moderasyon Sonucu Detayı",
+      "suggestedKey": "ModerationResultDetail.moderasyonSonucuDetayi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ModerationResultDetail.jsx",
+      "location": "jsx-text",
+      "text": "İçerik Türü",
+      "suggestedKey": "ModerationResultDetail.icerikTuru",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ModerationResultDetail.jsx",
+      "location": "jsx-text",
+      "text": "Güvenilirlik Puanı",
+      "suggestedKey": "ModerationResultDetail.guvenilirlikPuani",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ModerationResultDetail.jsx",
+      "location": "jsx-text",
+      "text": "Eğitici",
+      "suggestedKey": "ModerationResultDetail.egitici",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ModerationResultDetail.jsx",
+      "location": "jsx-text",
+      "text": "Orijinal İçerik",
+      "suggestedKey": "ModerationResultDetail.orijinalIcerik",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ModerationResultDetail.jsx",
+      "location": "jsx-text",
+      "text": "Seçenek Metni",
+      "suggestedKey": "ModerationResultDetail.secenekMetni",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ModerationResultDetail.jsx",
+      "location": "jsx-text",
+      "text": "Görüntü",
+      "suggestedKey": "ModerationResultDetail.goruntu",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ModerationResultDetail.jsx",
+      "location": "jsx-text",
+      "text": "İçerik bulunamadı",
+      "suggestedKey": "ModerationResultDetail.icerikBulunamadi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ModerationResultDetail.jsx",
+      "location": "jsx-text",
+      "text": "Kategori bulunamadı",
+      "suggestedKey": "ModerationResultDetail.kategoriBulunamadi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ModerationResultDetail.jsx",
+      "location": "jsx-text",
+      "text": "Kategori Puanları",
+      "suggestedKey": "ModerationResultDetail.kategoriPuanlari",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ModerationResultDetail.jsx",
+      "location": "jsx-text",
+      "text": "Eşleşen Yasak Kelimeler",
+      "suggestedKey": "ModerationResultDetail.eslesenYasakKelimeler",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ModerationResultDetail.jsx",
+      "location": "jsx-text",
+      "text": "Bu içerik hakkında karar verin",
+      "suggestedKey": "ModerationResultDetail.buIcerikHakkindaKararVerin",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ModerationResultDetail.jsx",
+      "location": "jsx-text",
+      "text": "Seçiminiz hemen uygulanacak ve eğitici hakkında işlem başlayabilir",
+      "suggestedKey": "ModerationResultDetail.seciminizHemenUygulanacakVeEgiticiHakkin",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ModerationResultDetail.jsx",
+      "location": "jsx-text",
+      "text": "Temiz İşaretle",
+      "suggestedKey": "ModerationResultDetail.temizIsaretle",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ModerationResultDetail.jsx",
+      "location": "jsx-text",
+      "text": "İhlal Onayla",
+      "suggestedKey": "ModerationResultDetail.ihlalOnayla",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ModerationResultDetail.jsx",
+      "location": "prop:aria-label",
+      "text": "İncelemeci notu",
+      "suggestedKey": "ModerationResultDetail.aria-label.incelemeciNotu",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ModerationResultDetail.jsx",
+      "location": "prop:aria-label",
+      "text": "Geri dön",
+      "suggestedKey": "ModerationResultDetail.aria-label.geriDon",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ModerationResultDetail.jsx",
+      "location": "prop:alt",
+      "text": "Bayraklandırılan içerik",
+      "suggestedKey": "ModerationResultDetail.alt.bayraklandirilanIcerik",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ModerationSettings.jsx",
+      "location": "jsx-text",
+      "text": "Ayarlar yüklenemedi",
+      "suggestedKey": "ModerationSettings.ayarlarYuklenemedi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ModerationSettings.jsx",
+      "location": "jsx-text",
+      "text": "Moderasyon Ayarları",
+      "suggestedKey": "ModerationSettings.moderasyonAyarlari",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ModerationSettings.jsx",
+      "location": "jsx-text",
+      "text": "İçerik moderasyonu ve güvenlik ayarlarını yapılandırın",
+      "suggestedKey": "ModerationSettings.icerikModerasyonuVeGuvenlikAyarlariniYap",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ModerationSettings.jsx",
+      "location": "jsx-text",
+      "text": "Moderasyon özelliklerini etkinleştirin veya devre dışı bırakın",
+      "suggestedKey": "ModerationSettings.moderasyonOzellikleriniEtkinlestirinVeya",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ModerationSettings.jsx",
+      "location": "jsx-text",
+      "text": "İçerik Moderasyonu Aktif",
+      "suggestedKey": "ModerationSettings.icerikModerasyonuAktif",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ModerationSettings.jsx",
+      "location": "jsx-text",
+      "text": "Tüm yüklenen içeriği otomatik olarak kontrol et",
+      "suggestedKey": "ModerationSettings.tumYuklenenIcerigiOtomatikOlarakKontrolE",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ModerationSettings.jsx",
+      "location": "jsx-text",
+      "text": "Daha detaylı içerik analizi için Claude AI kullan",
+      "suggestedKey": "ModerationSettings.dahaDetayliIcerikAnaliziIcinClaudeAiKull",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ModerationSettings.jsx",
+      "location": "jsx-text",
+      "text": "Claude Haiku 4.5 (hızlı, ucuz)",
+      "suggestedKey": "ModerationSettings.claudeHaiku45HizliUcuz",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ModerationSettings.jsx",
+      "location": "jsx-text",
+      "text": "Metin içeriği analizi için kullanılacak model",
+      "suggestedKey": "ModerationSettings.metinIcerigiAnaliziIcinKullanilacakModel",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ModerationSettings.jsx",
+      "location": "jsx-text",
+      "text": "Görsel Analiz Modeli",
+      "suggestedKey": "ModerationSettings.gorselAnalizModeli",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ModerationSettings.jsx",
+      "location": "jsx-text",
+      "text": "Görsel içeriği analizi için kullanılacak model",
+      "suggestedKey": "ModerationSettings.gorselIcerigiAnaliziIcinKullanilacakMode",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ModerationSettings.jsx",
+      "location": "jsx-text",
+      "text": "Kategori Eşikleri",
+      "suggestedKey": "ModerationSettings.kategoriEsikleri",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ModerationSettings.jsx",
+      "location": "jsx-text",
+      "text": "Her kategori için ihlal sayılması için minimum puan (0.0 — 1.0)",
+      "suggestedKey": "ModerationSettings.herKategoriIcinIhlalSayilmasiIcinMinimum",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ModerationSettings.jsx",
+      "location": "jsx-text",
+      "text": "Varsayılana Döndür",
+      "suggestedKey": "ModerationSettings.varsayilanaDondur",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ModerationSettings.jsx",
+      "location": "jsx-text",
+      "text": "Otomatik Yaptırım Eşikleri",
+      "suggestedKey": "ModerationSettings.otomatikYaptirimEsikleri",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ModerationSettings.jsx",
+      "location": "jsx-text",
+      "text": "Eğitici risk skoru bu eşikleri aştığında otomatik işlem başlat",
+      "suggestedKey": "ModerationSettings.egiticiRiskSkoruBuEsikleriAstigindaOtoma",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ModerationSettings.jsx",
+      "location": "jsx-text",
+      "text": "Otomatik Askıya Alma Eşiği (%)",
+      "suggestedKey": "ModerationSettings.otomatikAskiyaAlmaEsigi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ModerationSettings.jsx",
+      "location": "jsx-text",
+      "text": "Risk skoru bu yüzdeyi aşarsa hesap otomatik askıya alınır",
+      "suggestedKey": "ModerationSettings.riskSkoruBuYuzdeyiAsarsaHesapOtomatikAsk",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ModerationSettings.jsx",
+      "location": "jsx-text",
+      "text": "Otomatik Yasaklama Eşiği (%)",
+      "suggestedKey": "ModerationSettings.otomatikYasaklamaEsigi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ModerationSettings.jsx",
+      "location": "jsx-text",
+      "text": "Risk skoru bu yüzdeyi aşarsa hesap otomatik yasaklanır",
+      "suggestedKey": "ModerationSettings.riskSkoruBuYuzdeyiAsarsaHesapOtomatikYas",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ModerationSettings.jsx",
+      "location": "jsx-text",
+      "text": "Varsayılan Değerler",
+      "suggestedKey": "ModerationSettings.varsayilanDegerler",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ModerationSettings.jsx",
+      "location": "jsx-text",
+      "text": "Askıya Alma: 80% | Yasaklama: 95%",
+      "suggestedKey": "ModerationSettings.askiyaAlma80Yasaklama95",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ModerationSettings.jsx",
+      "location": "jsx-text",
+      "text": "Sıfırla",
+      "suggestedKey": "ModerationSettings.sifirla",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/Pricing.jsx",
+      "location": "jsx-text",
+      "text": "Aylık",
+      "suggestedKey": "Pricing.aylik",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/Pricing.jsx",
+      "location": "jsx-text",
+      "text": "Yıllık",
+      "suggestedKey": "Pricing.yillik",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/Pricing.jsx",
+      "location": "jsx-text",
+      "text": "İletişim",
+      "suggestedKey": "Pricing.iletisim",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/Pricing.jsx",
+      "location": "jsx-text",
+      "text": "Ücretsiz",
+      "suggestedKey": "Pricing.ucretsiz",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/Pricing.jsx",
+      "location": "prop:aria-label",
+      "text": "Faturalama dönemi",
+      "suggestedKey": "Pricing.aria-label.faturalamaDonemi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ProfileSettings.jsx",
+      "location": "prop:title",
+      "text": "Sınav Salonu",
+      "suggestedKey": "ProfileSettings.title.sinavSalonu",
+      "usesI18n": true
+    },
+    {
+      "file": "src/pages/ResetPassword.jsx",
+      "location": "jsx-text",
+      "text": "Şifre Sıfırla",
+      "suggestedKey": "ResetPassword.sifreSifirla",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ResetPassword.jsx",
+      "location": "jsx-text",
+      "text": "Geçersiz bağlantı. Lütfen şifre sıfırlama işlemini baştan başlayın.",
+      "suggestedKey": "ResetPassword.gecersizBaglantiLutfenSifreSifirlamaIsle",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ResetPassword.jsx",
+      "location": "jsx-text",
+      "text": "Şifremi Unuttum",
+      "suggestedKey": "ResetPassword.sifremiUnuttum",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ResetPassword.jsx",
+      "location": "jsx-text",
+      "text": "Şifreniz başarıyla sıfırlanmıştır.",
+      "suggestedKey": "ResetPassword.sifrenizBasariylaSifirlanmistir",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ResetPassword.jsx",
+      "location": "jsx-text",
+      "text": "Artık yeni şifrenizle giriş yapabilirsiniz.",
+      "suggestedKey": "ResetPassword.artikYeniSifrenizleGirisYapabilirsiniz",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ResetPassword.jsx",
+      "location": "jsx-text",
+      "text": "Giriş Yap",
+      "suggestedKey": "ResetPassword.girisYap",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ResetPassword.jsx",
+      "location": "jsx-text",
+      "text": "Yeni Şifre",
+      "suggestedKey": "ResetPassword.yeniSifre",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ResetPassword.jsx",
+      "location": "jsx-text",
+      "text": "Şifre Tekrarı",
+      "suggestedKey": "ResetPassword.sifreTekrari",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/ResetPassword.jsx",
+      "location": "jsx-text",
+      "text": "← Ana sayfaya dön",
+      "suggestedKey": "ResetPassword.anaSayfayaDon",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/RiskyContent.jsx",
+      "location": "jsx-text",
+      "text": "Riskli İçerik",
+      "suggestedKey": "RiskyContent.riskliIcerik",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/RiskyContent.jsx",
+      "location": "jsx-text",
+      "text": "Moderasyon kuyruğu, riskli eğiticiler, yasak kelimeler ve ayarlar",
+      "suggestedKey": "RiskyContent.moderasyonKuyruguRiskliEgiticilerYasakKe",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/RiskyEducators.jsx",
+      "location": "jsx-text",
+      "text": "Eğitici Aksiyonu",
+      "suggestedKey": "RiskyEducators.egiticiAksiyonu",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/RiskyEducators.jsx",
+      "location": "jsx-text",
+      "text": "Aksiyon Türü",
+      "suggestedKey": "RiskyEducators.aksiyonTuru",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/RiskyEducators.jsx",
+      "location": "jsx-text",
+      "text": "Uyarı",
+      "suggestedKey": "RiskyEducators.uyari",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/RiskyEducators.jsx",
+      "location": "jsx-text",
+      "text": "Askıya Al",
+      "suggestedKey": "RiskyEducators.askiyaAl",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/RiskyEducators.jsx",
+      "location": "jsx-text",
+      "text": "Yönetime İlet",
+      "suggestedKey": "RiskyEducators.yonetimeIlet",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/RiskyEducators.jsx",
+      "location": "jsx-text",
+      "text": "Süre (Gün)",
+      "suggestedKey": "RiskyEducators.sureGun",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/RiskyEducators.jsx",
+      "location": "jsx-text",
+      "text": "İptal",
+      "suggestedKey": "RiskyEducators.iptal",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/RiskyEducators.jsx",
+      "location": "jsx-text",
+      "text": "Riskli Eğiticiler",
+      "suggestedKey": "RiskyEducators.riskliEgiticiler",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/RiskyEducators.jsx",
+      "location": "jsx-text",
+      "text": "İhlal riski altındaki eğiticiler",
+      "suggestedKey": "RiskyEducators.ihlalRiskiAltindakiEgiticiler",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/RiskyEducators.jsx",
+      "location": "jsx-text",
+      "text": "İhlal riski altındaki eğiticileri yönetin",
+      "suggestedKey": "RiskyEducators.ihlalRiskiAltindakiEgiticileriYonetin",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/RiskyEducators.jsx",
+      "location": "jsx-text",
+      "text": "Uyarı Altında",
+      "suggestedKey": "RiskyEducators.uyariAltinda",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/RiskyEducators.jsx",
+      "location": "jsx-text",
+      "text": "Askıya Alınmış",
+      "suggestedKey": "RiskyEducators.askiyaAlinmis",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/RiskyEducators.jsx",
+      "location": "jsx-text",
+      "text": "Yasaklanmış",
+      "suggestedKey": "RiskyEducators.yasaklanmis",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/RiskyEducators.jsx",
+      "location": "jsx-text",
+      "text": "Son 7 Gün İhlal",
+      "suggestedKey": "RiskyEducators.son7GunIhlal",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/RiskyEducators.jsx",
+      "location": "jsx-text",
+      "text": "Arama (E-posta / Kullanıcı Adı)",
+      "suggestedKey": "RiskyEducators.aramaEpostaKullaniciAdi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/RiskyEducators.jsx",
+      "location": "jsx-text",
+      "text": "Tümü",
+      "suggestedKey": "RiskyEducators.tumu",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/RiskyEducators.jsx",
+      "location": "jsx-text",
+      "text": "Sıralama",
+      "suggestedKey": "RiskyEducators.siralama",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/RiskyEducators.jsx",
+      "location": "jsx-text",
+      "text": "Risk Skoru (Yüksek → Düşük)",
+      "suggestedKey": "RiskyEducators.riskSkoruYuksekDusuk",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/RiskyEducators.jsx",
+      "location": "jsx-text",
+      "text": "Toplam İhlal (Çok → Az)",
+      "suggestedKey": "RiskyEducators.toplamIhlalCokAz",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/RiskyEducators.jsx",
+      "location": "jsx-text",
+      "text": "Son İhlal (En Yeni)",
+      "suggestedKey": "RiskyEducators.sonIhlalEnYeni",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/RiskyEducators.jsx",
+      "location": "jsx-text",
+      "text": "Aktif risk altında eğitici yok — sistem temiz görünüyor!",
+      "suggestedKey": "RiskyEducators.aktifRiskAltindaEgiticiYokSistemTemizGor",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/RiskyEducators.jsx",
+      "location": "jsx-text",
+      "text": "Riskli eğiticiler listesi",
+      "suggestedKey": "RiskyEducators.riskliEgiticilerListesi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/RiskyEducators.jsx",
+      "location": "jsx-text",
+      "text": "Eğitici",
+      "suggestedKey": "RiskyEducators.egitici",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/RiskyEducators.jsx",
+      "location": "jsx-text",
+      "text": "Toplam İhlal",
+      "suggestedKey": "RiskyEducators.toplamIhlal",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/RiskyEducators.jsx",
+      "location": "jsx-text",
+      "text": "Açık",
+      "suggestedKey": "RiskyEducators.acik",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/RiskyEducators.jsx",
+      "location": "jsx-text",
+      "text": "Son İhlal",
+      "suggestedKey": "RiskyEducators.sonIhlal",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/RiskyEducators.jsx",
+      "location": "jsx-text",
+      "text": "Yasaklı",
+      "suggestedKey": "RiskyEducators.yasakli",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/RiskyEducators.jsx",
+      "location": "jsx-text",
+      "text": "Askıda",
+      "suggestedKey": "RiskyEducators.askida",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/RiskyEducators.jsx",
+      "location": "jsx-text",
+      "text": "Detayı Gör",
+      "suggestedKey": "RiskyEducators.detayiGor",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/RiskyEducators.jsx",
+      "location": "prop:placeholder",
+      "text": "Bu aksiyonun nedenini açıklayın...",
+      "suggestedKey": "RiskyEducators.placeholder.buAksiyonunNedeniniAciklayin",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/SelectExamTypes.jsx",
+      "location": "jsx-text",
+      "text": "Hangi Sınavlara Hazırlanıyorsunuz?",
+      "suggestedKey": "SelectExamTypes.hangiSinavlaraHazirlaniyorsunuz",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/SelectExamTypes.jsx",
+      "location": "jsx-text",
+      "text": "İlgilendiğiniz sınavları seçin, size özel içerikler önceliklendirilsin",
+      "suggestedKey": "SelectExamTypes.ilgilendiginizSinavlariSecinSizeOzelIcer",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/SelectExamTypes.jsx",
+      "location": "jsx-text",
+      "text": "Sınav türü bulunamadı",
+      "suggestedKey": "SelectExamTypes.sinavTuruBulunamadi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/SelectExamTypes.jsx",
+      "location": "jsx-text",
+      "text": "Şimdi Değil",
+      "suggestedKey": "SelectExamTypes.simdiDegil",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/SelectExamTypes.jsx",
+      "location": "jsx-text",
+      "text": "Tercihlerinizi daha sonra profil ayarlarından değiştirebilirsiniz",
+      "suggestedKey": "SelectExamTypes.tercihleriniziDahaSonraProfilAyarlarinda",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/TakeTest.jsx",
+      "location": "jsx-text",
+      "text": "Teste başlamak için giriş yapın",
+      "suggestedKey": "TakeTest.testeBaslamakIcinGirisYapin",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/TakeTest.jsx",
+      "location": "jsx-text",
+      "text": "Giriş Yap",
+      "suggestedKey": "TakeTest.girisYap",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/TakeTest.jsx",
+      "location": "jsx-text",
+      "text": "Bu testi henüz satın almadınız",
+      "suggestedKey": "TakeTest.buTestiHenuzSatinAlmadiniz",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/TakeTest.jsx",
+      "location": "jsx-text",
+      "text": "Sonuç Bulunamadı",
+      "suggestedKey": "TakeTest.sonucBulunamadi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/TakeTest.jsx",
+      "location": "jsx-text",
+      "text": "Bu test için henüz tamamlanmış bir sonuç bulunamadı.",
+      "suggestedKey": "TakeTest.buTestIcinHenuzTamamlanmisBirSonucBuluna",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/TakeTest.jsx",
+      "location": "jsx-text",
+      "text": "Testlerime Dön",
+      "suggestedKey": "TakeTest.testlerimeDon",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/TakeTest.jsx",
+      "location": "jsx-text",
+      "text": "Test Tamamlandı!",
+      "suggestedKey": "TakeTest.testTamamlandi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/TakeTest.jsx",
+      "location": "jsx-text",
+      "text": "100 üzerinden",
+      "suggestedKey": "TakeTest.100Uzerinden",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/TakeTest.jsx",
+      "location": "jsx-text",
+      "text": "Diğer adayların ortalaması:",
+      "suggestedKey": "TakeTest.digerAdaylarinOrtalamasi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/TakeTest.jsx",
+      "location": "jsx-text",
+      "text": "Doğru",
+      "suggestedKey": "TakeTest.dogru",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/TakeTest.jsx",
+      "location": "jsx-text",
+      "text": "Yanlış",
+      "suggestedKey": "TakeTest.yanlis",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/TakeTest.jsx",
+      "location": "jsx-text",
+      "text": "Boş",
+      "suggestedKey": "TakeTest.bos",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/TakeTest.jsx",
+      "location": "jsx-text",
+      "text": "Süre yönetimi sınav performansının önemli bir parçasıdır. Gelişim raporlarında bu bilgiyi takip edebilirsin.",
+      "suggestedKey": "TakeTest.sureYonetimiSinavPerformansininOnemliBir",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/TakeTest.jsx",
+      "location": "jsx-text",
+      "text": "Paketi değerlendir",
+      "suggestedKey": "TakeTest.paketiDegerlendir",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/TakeTest.jsx",
+      "location": "jsx-text",
+      "text": "Bu paket için daha önce puan vermiştiniz — istediğinizde güncelleyebilirsiniz.",
+      "suggestedKey": "TakeTest.buPaketIcinDahaOncePuanVermistinizIstedi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/TakeTest.jsx",
+      "location": "jsx-text",
+      "text": "Paketin tüm testlerini tamamladın. Paketi puanlayarak deneyimini paylaş.",
+      "suggestedKey": "TakeTest.paketinTumTestleriniTamamladinPaketiPuan",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/TakeTest.jsx",
+      "location": "jsx-text",
+      "text": "İncele",
+      "suggestedKey": "TakeTest.incele",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/TakeTest.jsx",
+      "location": "jsx-text",
+      "text": "Teste başlamaya hazır mısın?",
+      "suggestedKey": "TakeTest.testeBaslamayaHazirMisin",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/TakeTest.jsx",
+      "location": "jsx-text",
+      "text": "🔧 Test başlatma bakımdadır",
+      "suggestedKey": "TakeTest.testBaslatmaBakimdadir",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/TakeTest.jsx",
+      "location": "jsx-text",
+      "text": "Lütfen daha sonra tekrar deneyin.",
+      "suggestedKey": "TakeTest.lutfenDahaSonraTekrarDeneyin",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/TakeTest.jsx",
+      "location": "jsx-text",
+      "text": "⚠️ Bu test henüz soru içermiyor",
+      "suggestedKey": "TakeTest.buTestHenuzSoruIcermiyor",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/TakeTest.jsx",
+      "location": "jsx-text",
+      "text": "Eğitici soruları ekleyene kadar başlatamazsınız.",
+      "suggestedKey": "TakeTest.egiticiSorulariEkleyeneKadarBaslatamazsi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/TakeTest.jsx",
+      "location": "jsx-text",
+      "text": "Soruları kendin ilerletirsin",
+      "suggestedKey": "TakeTest.sorulariKendinIlerletirsin",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/TakeTest.jsx",
+      "location": "jsx-text",
+      "text": "Cevap verdikçe otomatik ilerleme",
+      "suggestedKey": "TakeTest.cevapVerdikceOtomatikIlerleme",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/TakeTest.jsx",
+      "location": "jsx-text",
+      "text": "Başlatılıyor…",
+      "suggestedKey": "TakeTest.baslatiliyor",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/TakeTest.jsx",
+      "location": "jsx-text",
+      "text": "Bu olay sunucuya kaydedildi ve eğiticiniz tarafından görülebilir.",
+      "suggestedKey": "TakeTest.buOlaySunucuyaKaydedildiVeEgiticinizTara",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/TakeTest.jsx",
+      "location": "jsx-text",
+      "text": "Tam ekrana dön",
+      "suggestedKey": "TakeTest.tamEkranaDon",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/TakeTest.jsx",
+      "location": "jsx-text",
+      "text": "Testi bitirmek istediğine emin misin?",
+      "suggestedKey": "TakeTest.testiBitirmekIstedigineEminMisin",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/TakeTest.jsx",
+      "location": "jsx-text",
+      "text": "cevaplandı",
+      "suggestedKey": "TakeTest.cevaplandi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/TakeTest.jsx",
+      "location": "jsx-text",
+      "text": "boş bırakıldı",
+      "suggestedKey": "TakeTest.bosBirakildi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/TakeTest.jsx",
+      "location": "jsx-text",
+      "text": "seçeneği sınavı sonlandırır ve sonuç kaydedilir.",
+      "suggestedKey": "TakeTest.secenegiSinaviSonlandirirVeSonucKaydedil",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/TakeTest.jsx",
+      "location": "jsx-text",
+      "text": "Bu işlem",
+      "suggestedKey": "TakeTest.buIslem",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/TakeTest.jsx",
+      "location": "jsx-text",
+      "text": "geri alınamaz",
+      "suggestedKey": "TakeTest.geriAlinamaz",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/TakeTest.jsx",
+      "location": "jsx-text",
+      "text": "Eğer cevaplamaya devam etmek istiyorsan",
+      "suggestedKey": "TakeTest.egerCevaplamayaDevamEtmekIstiyorsan",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/TakeTest.jsx",
+      "location": "jsx-text",
+      "text": "Kaydet ve Çık",
+      "suggestedKey": "TakeTest.kaydetVeCik",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/TakeTest.jsx",
+      "location": "jsx-text",
+      "text": "İptal",
+      "suggestedKey": "TakeTest.iptal",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/TakeTest.jsx",
+      "location": "jsx-text",
+      "text": "İnceleme Modu",
+      "suggestedKey": "TakeTest.incelemeModu",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/TakeTest.jsx",
+      "location": "jsx-text",
+      "text": "aşıldı",
+      "suggestedKey": "TakeTest.asildi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/TakeTest.jsx",
+      "location": "jsx-text",
+      "text": "Boş Bırak",
+      "suggestedKey": "TakeTest.bosBirak",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/TakeTest.jsx",
+      "location": "jsx-text",
+      "text": "Seçeneklere Dön",
+      "suggestedKey": "TakeTest.seceneklereDon",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/TakeTest.jsx",
+      "location": "jsx-text",
+      "text": "Çözümü Gör",
+      "suggestedKey": "TakeTest.cozumuGor",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/TakeTest.jsx",
+      "location": "jsx-text",
+      "text": "Çözüm",
+      "suggestedKey": "TakeTest.cozum",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/TakeTest.jsx",
+      "location": "jsx-text",
+      "text": "Cevaplarım",
+      "suggestedKey": "TakeTest.cevaplarim",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/TakeTest.jsx",
+      "location": "jsx-text",
+      "text": "boş soru",
+      "suggestedKey": "TakeTest.bosSoru",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/TakeTest.jsx",
+      "location": "jsx-text",
+      "text": "Önceki",
+      "suggestedKey": "TakeTest.onceki",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/TakeTest.jsx",
+      "location": "prop:aria-label",
+      "text": "Normal Mod ile teste başla",
+      "suggestedKey": "TakeTest.aria-label.normalModIleTesteBasla",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/TakeTest.jsx",
+      "location": "prop:aria-label",
+      "text": "Seri Mod ile teste başla",
+      "suggestedKey": "TakeTest.aria-label.seriModIleTesteBasla",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/TakeTest.jsx",
+      "location": "prop:alt",
+      "text": "Soru görseli",
+      "suggestedKey": "TakeTest.alt.soruGorseli",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/TakeTest.jsx",
+      "location": "prop:alt",
+      "text": "Çözüm görseli",
+      "suggestedKey": "TakeTest.alt.cozumGorseli",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/Unsubscribe.jsx",
+      "location": "jsx-text",
+      "text": "İşlem yapılıyor...",
+      "suggestedKey": "Unsubscribe.islemYapiliyor",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/Unsubscribe.jsx",
+      "location": "jsx-text",
+      "text": "Başarılı",
+      "suggestedKey": "Unsubscribe.basarili",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/Unsubscribe.jsx",
+      "location": "jsx-text",
+      "text": "kategorisinden çıkış yaptınız.",
+      "suggestedKey": "Unsubscribe.kategorisindenCikisYaptiniz",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/Unsubscribe.jsx",
+      "location": "jsx-text",
+      "text": "Tüm email kategorilerinden çıkış yaptınız.",
+      "suggestedKey": "Unsubscribe.tumEmailKategorilerindenCikisYaptiniz",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/Unsubscribe.jsx",
+      "location": "jsx-text",
+      "text": "İleri Adımlar",
+      "suggestedKey": "Unsubscribe.ileriAdimlar",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/Unsubscribe.jsx",
+      "location": "jsx-text",
+      "text": "Email tercihlerinizi buradan yönetebilirsiniz",
+      "suggestedKey": "Unsubscribe.emailTercihleriniziBuradanYonetebilirsin",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/Unsubscribe.jsx",
+      "location": "jsx-text",
+      "text": "Geri çıkış yapmak istiyorsanız hesap ayarlarınızı güncelleyin",
+      "suggestedKey": "Unsubscribe.geriCikisYapmakIstiyorsanizHesapAyarlari",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/Unsubscribe.jsx",
+      "location": "jsx-text",
+      "text": "Kritik mailler (hesap güvenliği, ödeme) yine de gönderilmeye devam eder",
+      "suggestedKey": "Unsubscribe.kritikMaillerHesapGuvenligiOdemeYineDeGo",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/Unsubscribe.jsx",
+      "location": "jsx-text",
+      "text": "Ana Sayfaya Dön",
+      "suggestedKey": "Unsubscribe.anaSayfayaDon",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/Unsubscribe.jsx",
+      "location": "jsx-text",
+      "text": "Çıkış Başarısız",
+      "suggestedKey": "Unsubscribe.cikisBasarisiz",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/Unsubscribe.jsx",
+      "location": "jsx-text",
+      "text": "• Emailinizi tekrar kontrol edin ve linki açın",
+      "suggestedKey": "Unsubscribe.emailiniziTekrarKontrolEdinVeLinkiAcin",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/Unsubscribe.jsx",
+      "location": "jsx-text",
+      "text": "• Linkinin süresi dolduysa yeni bir çıkış isteği gönderin",
+      "suggestedKey": "Unsubscribe.linkininSuresiDolduysaYeniBirCikisIstegi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/pages/Unsubscribe.jsx",
+      "location": "jsx-text",
+      "text": "• Destek ekibine başvurun",
+      "suggestedKey": "Unsubscribe.destekEkibineBasvurun",
+      "usesI18n": false
+    },
+    {
+      "file": "src/components/auth/GoogleSignInButton.jsx",
+      "location": "jsx-text",
+      "text": "Google girişi yapılandırılmamış — admin panelinden Client ID giriniz.",
+      "suggestedKey": "GoogleSignInButton.googleGirisiYapilandirilmamisAdminPaneli",
+      "usesI18n": false
+    },
+    {
+      "file": "src/components/ConsentBanner.jsx",
+      "location": "jsx-text",
+      "text": "Çerez ve Analitik Tercihleri",
+      "suggestedKey": "ConsentBanner.cerezVeAnalitikTercihleri",
+      "usesI18n": false
+    },
+    {
+      "file": "src/components/ConsentBanner.jsx",
+      "location": "jsx-text",
+      "text": "Detaylı bilgi",
+      "suggestedKey": "ConsentBanner.detayliBilgi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/components/ConsentBanner.jsx",
+      "location": "prop:aria-label",
+      "text": "Sadece zorunlu çerezlere izin ver",
+      "suggestedKey": "ConsentBanner.aria-label.sadeceZorunluCerezlereIzinVer",
+      "usesI18n": false
+    },
+    {
+      "file": "src/components/ConsentBanner.jsx",
+      "location": "prop:aria-label",
+      "text": "Analitik dahil tüm çerezlere izin ver",
+      "suggestedKey": "ConsentBanner.aria-label.analitikDahilTumCerezlereIzinVer",
+      "usesI18n": false
+    },
+    {
+      "file": "src/components/onboarding/tourSteps.jsx",
+      "location": "jsx-text",
+      "text": "Satın Alınan Testler",
+      "suggestedKey": "tourSteps.satinAlinanTestler",
+      "usesI18n": true
+    },
+    {
+      "file": "src/components/onboarding/tourSteps.jsx",
+      "location": "jsx-text",
+      "text": "Sınav Salonu",
+      "suggestedKey": "tourSteps.sinavSalonu",
+      "usesI18n": true
+    },
+    {
+      "file": "src/components/onboarding/tourSteps.jsx",
+      "location": "jsx-text",
+      "text": "İşaretlenen",
+      "suggestedKey": "tourSteps.isaretlenen",
+      "usesI18n": true
+    },
+    {
+      "file": "src/components/onboarding/tourSteps.jsx",
+      "location": "jsx-text",
+      "text": "İşaretli",
+      "suggestedKey": "tourSteps.isaretli",
+      "usesI18n": true
+    },
+    {
+      "file": "src/components/onboarding/tourSteps.jsx",
+      "location": "jsx-text",
+      "text": "Yeni Test Oluştur",
+      "suggestedKey": "tourSteps.yeniTestOlustur",
+      "usesI18n": true
+    },
+    {
+      "file": "src/components/onboarding/tourSteps.jsx",
+      "location": "jsx-text",
+      "text": "Satışlarım",
+      "suggestedKey": "tourSteps.satislarim",
+      "usesI18n": true
+    },
+    {
+      "file": "src/components/onboarding/tourSteps.jsx",
+      "location": "jsx-text",
+      "text": "Şub",
+      "suggestedKey": "tourSteps.sub",
+      "usesI18n": true
+    },
+    {
+      "file": "src/components/onboarding/tourSteps.jsx",
+      "location": "jsx-text",
+      "text": "Eğitici Adı",
+      "suggestedKey": "tourSteps.egiticiAdi",
+      "usesI18n": true
+    },
+    {
+      "file": "src/components/onboarding/tourSteps.jsx",
+      "location": "jsx-text",
+      "text": "Çözüm Açıklaması",
+      "suggestedKey": "tourSteps.cozumAciklamasi",
+      "usesI18n": true
+    },
+    {
+      "file": "src/components/onboarding/tourSteps.jsx",
+      "location": "jsx-text",
+      "text": "Yayınlamaya Hazır!",
+      "suggestedKey": "tourSteps.yayinlamayaHazir",
+      "usesI18n": true
+    },
+    {
+      "file": "src/components/onboarding/tourSteps.jsx",
+      "location": "jsx-text",
+      "text": "Yayında",
+      "suggestedKey": "tourSteps.yayinda",
+      "usesI18n": true
+    },
+    {
+      "file": "src/components/onboarding/tourSteps.jsx",
+      "location": "prop:label",
+      "text": "Çoktan Seçmeli",
+      "suggestedKey": "tourSteps.label.coktanSecmeli",
+      "usesI18n": true
+    },
+    {
+      "file": "src/components/onboarding/tourSteps.jsx",
+      "location": "prop:label",
+      "text": "Soru 1 Çözümü",
+      "suggestedKey": "tourSteps.label.soru1Cozumu",
+      "usesI18n": true
+    },
+    {
+      "file": "src/components/onboarding/tourSteps.jsx",
+      "location": "prop:label",
+      "text": "Doğru: C",
+      "suggestedKey": "tourSteps.label.dogruC",
+      "usesI18n": true
+    },
+    {
+      "file": "src/components/questions/QuestionForm.jsx",
+      "location": "jsx-text",
+      "text": "Doğru Cevap *",
+      "suggestedKey": "QuestionForm.dogruCevap",
+      "usesI18n": false
+    },
+    {
+      "file": "src/components/questions/QuestionForm.jsx",
+      "location": "jsx-text",
+      "text": "İptal",
+      "suggestedKey": "QuestionForm.iptal",
+      "usesI18n": false
+    },
+    {
+      "file": "src/components/questions/QuestionForm.jsx",
+      "location": "prop:placeholder",
+      "text": "Soruyu buraya yazın...",
+      "suggestedKey": "QuestionForm.placeholder.soruyuBurayaYazin",
+      "usesI18n": false
+    },
+    {
+      "file": "src/components/questions/QuestionForm.jsx",
+      "location": "prop:alt",
+      "text": "Soru görseli",
+      "suggestedKey": "QuestionForm.alt.soruGorseli",
+      "usesI18n": false
+    },
+    {
+      "file": "src/components/questions/QuestionForm.jsx",
+      "location": "prop:placeholder",
+      "text": "Konu seçin...",
+      "suggestedKey": "QuestionForm.placeholder.konuSecin",
+      "usesI18n": false
+    },
+    {
+      "file": "src/components/questions/QuestionForm.jsx",
+      "location": "prop:placeholder",
+      "text": "Sorunun çözüm açıklaması (öğrenci cevapladıktan sonra gösterilir)...",
+      "suggestedKey": "QuestionForm.placeholder.sorununCozumAciklamasiOgrenciCevapladikt",
+      "usesI18n": false
+    },
+    {
+      "file": "src/components/questions/QuestionForm.jsx",
+      "location": "prop:alt",
+      "text": "Çözüm görseli",
+      "suggestedKey": "QuestionForm.alt.cozumGorseli",
+      "usesI18n": false
+    },
+    {
+      "file": "src/components/refund/RefundRequestModal.jsx",
+      "location": "jsx-text",
+      "text": "İade Talebi Oluştur",
+      "suggestedKey": "RefundRequestModal.iadeTalebiOlustur",
+      "usesI18n": false
+    },
+    {
+      "file": "src/components/refund/RefundRequestModal.jsx",
+      "location": "jsx-text",
+      "text": "İade Sebebi",
+      "suggestedKey": "RefundRequestModal.iadeSebebi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/components/refund/RefundRequestModal.jsx",
+      "location": "jsx-text",
+      "text": "Açıklama",
+      "suggestedKey": "RefundRequestModal.aciklama",
+      "usesI18n": false
+    },
+    {
+      "file": "src/components/refund/RefundRequestModal.jsx",
+      "location": "jsx-text",
+      "text": "İptal",
+      "suggestedKey": "RefundRequestModal.iptal",
+      "usesI18n": false
+    },
+    {
+      "file": "src/components/refund/RefundRequestModal.jsx",
+      "location": "prop:placeholder",
+      "text": "İade talebiniz hakkında detaylı bilgi verin...",
+      "suggestedKey": "RefundRequestModal.placeholder.iadeTalebinizHakkindaDetayliBilgiVerin",
+      "usesI18n": false
+    },
+    {
+      "file": "src/components/review/ReviewModal.jsx",
+      "location": "jsx-text",
+      "text": "İptal",
+      "suggestedKey": "ReviewModal.iptal",
+      "usesI18n": false
+    },
+    {
+      "file": "src/components/review/ReviewModal.jsx",
+      "location": "prop:placeholder",
+      "text": "Deneyiminizi paylaşın...",
+      "suggestedKey": "ReviewModal.placeholder.deneyiminiziPaylasin",
+      "usesI18n": false
+    },
+    {
+      "file": "src/components/test/ReportQuestionModal.jsx",
+      "location": "jsx-text",
+      "text": "Hata Türü *",
+      "suggestedKey": "ReportQuestionModal.hataTuru",
+      "usesI18n": false
+    },
+    {
+      "file": "src/components/test/ReportQuestionModal.jsx",
+      "location": "jsx-text",
+      "text": "Açıklama *",
+      "suggestedKey": "ReportQuestionModal.aciklama",
+      "usesI18n": false
+    },
+    {
+      "file": "src/components/test/ReportQuestionModal.jsx",
+      "location": "jsx-text",
+      "text": "İptal",
+      "suggestedKey": "ReportQuestionModal.iptal",
+      "usesI18n": false
+    },
+    {
+      "file": "src/components/test/ReportQuestionModal.jsx",
+      "location": "prop:placeholder",
+      "text": "Seçin",
+      "suggestedKey": "ReportQuestionModal.placeholder.secin",
+      "usesI18n": false
+    },
+    {
+      "file": "src/components/test/ReportQuestionModal.jsx",
+      "location": "prop:placeholder",
+      "text": "Hatayı detaylı şekilde açıklayın...",
+      "suggestedKey": "ReportQuestionModal.placeholder.hatayiDetayliSekildeAciklayin",
+      "usesI18n": false
+    },
+    {
+      "file": "src/components/test/ReviewModal.jsx",
+      "location": "jsx-text",
+      "text": "İptal",
+      "suggestedKey": "ReviewModal.iptal",
+      "usesI18n": false
+    },
+    {
+      "file": "src/components/test/ReviewModal.jsx",
+      "location": "jsx-text",
+      "text": "Değerlendir",
+      "suggestedKey": "ReviewModal.degerlendir",
+      "usesI18n": false
+    },
+    {
+      "file": "src/components/test/ReviewModal.jsx",
+      "location": "prop:placeholder",
+      "text": "Yorumunuzu yazın (opsiyonel)...",
+      "suggestedKey": "ReviewModal.placeholder.yorumunuzuYazinOpsiyonel",
+      "usesI18n": false
+    },
+    {
+      "file": "src/components/TestPreviewModal.jsx",
+      "location": "jsx-text",
+      "text": "Aday Önizlemesi",
+      "suggestedKey": "TestPreviewModal.adayOnizlemesi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/components/TestPreviewModal.jsx",
+      "location": "jsx-text",
+      "text": "Yayınla",
+      "suggestedKey": "TestPreviewModal.yayinla",
+      "usesI18n": false
+    },
+    {
+      "file": "src/components/TestPreviewModal.jsx",
+      "location": "jsx-text",
+      "text": "Tüm Sorular",
+      "suggestedKey": "TestPreviewModal.tumSorular",
+      "usesI18n": false
+    },
+    {
+      "file": "src/components/TestPreviewModal.jsx",
+      "location": "jsx-text",
+      "text": "Önceki",
+      "suggestedKey": "TestPreviewModal.onceki",
+      "usesI18n": false
+    },
+    {
+      "file": "src/components/TestPreviewModal.jsx",
+      "location": "prop:alt",
+      "text": "soru görseli",
+      "suggestedKey": "TestPreviewModal.alt.soruGorseli",
+      "usesI18n": false
+    },
+    {
+      "file": "src/components/TierUpgradePrompt.jsx",
+      "location": "jsx-text",
+      "text": "Bu özellik için aktif",
+      "suggestedKey": "TierUpgradePrompt.buOzellikIcinAktif",
+      "usesI18n": false
+    },
+    {
+      "file": "src/components/TierUpgradePrompt.jsx",
+      "location": "jsx-text",
+      "text": "planındasın.",
+      "suggestedKey": "TierUpgradePrompt.planindasin",
+      "usesI18n": false
+    },
+    {
+      "file": "src/components/TierUpgradePrompt.jsx",
+      "location": "jsx-text",
+      "text": "Planları gör",
+      "suggestedKey": "TierUpgradePrompt.planlariGor",
+      "usesI18n": false
+    },
+    {
+      "file": "src/components/ui/Pagination.jsx",
+      "location": "jsx-text",
+      "text": "Sayfa başına:",
+      "suggestedKey": "Pagination.sayfaBasina",
+      "usesI18n": false
+    },
+    {
+      "file": "src/components/ui/PaymentModal.jsx",
+      "location": "jsx-text",
+      "text": "Ödeme Yöntemi Seçin",
+      "suggestedKey": "PaymentModal.odemeYontemiSecin",
+      "usesI18n": false
+    },
+    {
+      "file": "src/components/ui/PaymentModal.jsx",
+      "location": "jsx-text",
+      "text": "Ücretsiz",
+      "suggestedKey": "PaymentModal.ucretsiz",
+      "usesI18n": false
+    },
+    {
+      "file": "src/components/ui/PaymentModal.jsx",
+      "location": "jsx-text",
+      "text": "İndirim uygulandı",
+      "suggestedKey": "PaymentModal.indirimUygulandi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/components/ui/PaymentModal.jsx",
+      "location": "jsx-text",
+      "text": "Bu test ücretsizdir. Hemen erişim kazanın.",
+      "suggestedKey": "PaymentModal.buTestUcretsizdirHemenErisimKazanin",
+      "usesI18n": false
+    },
+    {
+      "file": "src/components/ui/PaymentModal.jsx",
+      "location": "jsx-text",
+      "text": "İşleniyor...",
+      "suggestedKey": "PaymentModal.isleniyor",
+      "usesI18n": false
+    },
+    {
+      "file": "src/components/ui/PaymentModal.jsx",
+      "location": "jsx-text",
+      "text": "Kart Numarası",
+      "suggestedKey": "PaymentModal.kartNumarasi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/components/ui/PaymentModal.jsx",
+      "location": "jsx-text",
+      "text": "Kart Üzerindeki İsim",
+      "suggestedKey": "PaymentModal.kartUzerindekiIsim",
+      "usesI18n": false
+    },
+    {
+      "file": "src/components/ui/PaymentModal.jsx",
+      "location": "jsx-text",
+      "text": "Test Kartı Doldur",
+      "suggestedKey": "PaymentModal.testKartiDoldur",
+      "usesI18n": false
+    },
+    {
+      "file": "src/components/ui/PaymentModal.jsx",
+      "location": "jsx-text",
+      "text": "Ödeme İşleniyor...",
+      "suggestedKey": "PaymentModal.odemeIsleniyor",
+      "usesI18n": false
+    },
+    {
+      "file": "src/components/ui/PaymentModal.jsx",
+      "location": "jsx-text",
+      "text": "Lütfen sayfayı kapatmayın",
+      "suggestedKey": "PaymentModal.lutfenSayfayiKapatmayin",
+      "usesI18n": false
+    },
+    {
+      "file": "src/components/ui/PaymentModal.jsx",
+      "location": "jsx-text",
+      "text": "Satın Alma Başarılı!",
+      "suggestedKey": "PaymentModal.satinAlmaBasarili",
+      "usesI18n": false
+    },
+    {
+      "file": "src/components/ui/PaymentModal.jsx",
+      "location": "jsx-text",
+      "text": "Teste Başla",
+      "suggestedKey": "PaymentModal.testeBasla",
+      "usesI18n": false
+    },
+    {
+      "file": "src/components/ui/PaymentModal.jsx",
+      "location": "jsx-text",
+      "text": "Ödeme Başarısız",
+      "suggestedKey": "PaymentModal.odemeBasarisiz",
+      "usesI18n": false
+    },
+    {
+      "file": "src/components/ui/PaymentModal.jsx",
+      "location": "jsx-text",
+      "text": "İptal",
+      "suggestedKey": "PaymentModal.iptal",
+      "usesI18n": false
+    },
+    {
+      "file": "src/components/ui/SearchableSelect.jsx",
+      "location": "prop:placeholder",
+      "text": "Seçin...",
+      "suggestedKey": "SearchableSelect.placeholder.secin",
+      "usesI18n": false
+    },
+    {
+      "file": "src/components/ui/TopicCombobox.jsx",
+      "location": "prop:placeholder",
+      "text": "— Seçilmedi —",
+      "suggestedKey": "TopicCombobox.placeholder.secilmedi",
+      "usesI18n": false
+    },
+    {
+      "file": "src/components/ZoomableImage.jsx",
+      "location": "jsx-text",
+      "text": "içinde nested",
+      "suggestedKey": "ZoomableImage.icindeNested",
+      "usesI18n": false
+    }
+  ]
+}

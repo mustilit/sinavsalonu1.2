@@ -213,6 +213,8 @@ import { MeModerationController } from './controllers/me.moderation.controller';
 // ── Email Trafiği Modülü ────────────────────────────────────────────────
 import { AdminEmailController } from './controllers/admin.email.controller';
 import { MeEmailPreferencesController } from './controllers/me.email-preferences.controller';
+import { MeAccountController } from './controllers/me.account.controller';
+import { DeleteMyAccountUseCase } from '../application/use-cases/auth/DeleteMyAccountUseCase';
 import { EmailWebhookController } from './controllers/email-webhook.controller';
 import { EmailSeedService } from './bootstrap/email-seed.service';
 import { SendEmailUseCase } from '../application/use-cases/email/SendEmailUseCase';
@@ -313,6 +315,7 @@ const throttleDisabled = process.env.THROTTLE_DISABLED === '1';
     // Email Trafiği Modülü
     AdminEmailController,
     MeEmailPreferencesController,
+    MeAccountController,
     EmailWebhookController,
     // Server-side draft yedek endpoint'leri (autoSave)
     DraftsController,
@@ -334,6 +337,11 @@ const throttleDisabled = process.env.THROTTLE_DISABLED === '1';
     { provide: ManageSuppressedEmailUseCase, useFactory: () => new ManageSuppressedEmailUseCase() },
     { provide: ManageEmailTemplateUseCase, useFactory: () => new ManageEmailTemplateUseCase() },
     { provide: UpdateUserEmailPreferencesUseCase, useFactory: () => new UpdateUserEmailPreferencesUseCase() },
+    {
+      provide: DeleteMyAccountUseCase,
+      inject: ['PRISMA', AuditLogger],
+      useFactory: (prisma: any, audit: any) => new DeleteMyAccountUseCase(prisma, audit),
+    },
     { provide: UnsubscribeViaTokenUseCase, useFactory: () => new UnsubscribeViaTokenUseCase() },
     { provide: GetEmailTrafficMetricsUseCase, useFactory: () => new GetEmailTrafficMetricsUseCase() },
     { provide: AnonymizeOldEmailLogsUseCase, useFactory: () => new AnonymizeOldEmailLogsUseCase() },

@@ -1,0 +1,37 @@
+# Build çıktısı + bağımlılıklar
+node_modules/
+dist/
+build/
+coverage/
+.next/
+.turbo/
+
+# Generated
+apps/backend/prisma/generated/
+apps/backend/node_modules/
+apps/frontend/node_modules/
+apps/frontend/dist/
+apps/frontend/playwright-report/
+apps/frontend/test-results/
+
+# Sandbox + cache
+apps/backend/.stryker-tmp/
+sinavsalonu-extracted/
+.claude.bak/
+.claude/worktrees/
+.claude/logs/
+.claude/cache/
+
+# Locale JSON dosyaları (otomatik üretildiği için format dokunmasın)
+apps/frontend/src/locales/
+
+# Lock dosyaları
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Git + CI artefakları
+.git/
+*.log
+*.lcov
+*.tsbuildinfo

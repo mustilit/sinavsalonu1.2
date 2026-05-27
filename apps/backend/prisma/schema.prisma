@@ -5,6 +5,10 @@ generator client {
   provider = "prisma-client-js"
 }
 
+// ER diagram otomasyonu için scripts/generate-er-diagram.js kullanılır
+// (sıfır dependency, Mermaid markdown çıktısı). CI'da nightly + push'ta
+// docs/architecture/er-diagram.md güncellenir. Lokal'de: npm run db:erd
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")

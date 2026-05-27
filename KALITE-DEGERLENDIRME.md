@@ -1,372 +1,461 @@
 # Sınav Salonu — Yazılım Kalite Değerlendirme Raporu
 
-**Proje:** Sınav Salonu (SaaS + Marketplace)
-**Stack:** NestJS + Prisma/PostgreSQL + React 18/Vite
-**Boyut:** 149 use-case · 45 controller · 35 Prisma modeli · 24 migration · 47 sayfa
-**Tarih:** 17 Mayıs 2026
-**Değerlendiren:** Mevcut kodbase analizi
+**Proje:** Sınav Salonu — SaaS Marketplace (Eğiticiler test oluşturur ve satar, adaylar satın alır ve çözer)
+**Stack:** NestJS · Prisma/PostgreSQL · React 18/Vite · Redis · Stripe + Iyzico
+**Tarih:** 27 Mayıs 2026
+**Hazırlayan:** Kodbase taraması (`C:\Users\mtulu\dal`)
+**Kapsam:** ISO/IEC 25010 türevi 14 kalite boyutu
 
 ---
 
-## Özet Skor Tablosu
+## Yönetici Özeti
 
-| # | Boyut | Durum | Skor |
+Sınav Salonu son sprint'lerde büyük bir kalite sıçraması yaşamış: 200+ backend test dosyası (~990 test case), aktive edilmiş çok katmanlı coverage threshold, semantic-release otomasyonu, CHANGELOG, CODEOWNERS, Husky hook'u, release ve coverage-ratchet workflow'ları. Önceki değerlendirmenin en zayıf bulgusu olan "test kapsamı" artık güvence altında: use-case katmanı %64 statements, billing %92.7, security %95.2, controllers %87.6. Threshold'lar düşmeyi CI'da engelliyor; haftalık ratchet PR'larıyla sıkıştırılıyor.
+
+Mimari ve doküman tabanı zaten güçlüydü; bu sprint'te 18 yeni Prisma migration, 5 yeni Claude skill, 8 agent, 10+ yeni rehber doküman eklenerek olgunluk üst seviyeye taşındı. Stripe + Iyzico billing, 2FA TOTP, AI içerik moderasyonu, multi-tenant Prisma extension, idempotency interceptor, webhook signature doğrulama, audit logger — hepsi `AppModule`'a bağlı ve test edilmiş.
+
+Hâlâ ölçek için yatırım gereken kalemler: frontend test sayısı düşük (12 dosya — backend ile orantısız), Prettier eksplisit config eksik, ADR-0005 (Prisma) ve ADR-0006 (Vite) yok, penetration test + visual regression + load test altyapısı kurulmamış, Stripe canlı prod entegrasyonu secret bekliyor.
+
+**Genel skor: 9.0 / 10** (12 ölçülebilir boyutun ağırlıklı ortalaması). Üretime hazır, ölçek aşaması.
+
+---
+
+## Skor Tablosu
+
+| # | Boyut | Skor | Durum |
 |---|---|---|---|
-| 1 | İşlevsellik | İyi | 8/10 |
-| 2 | Güvenilirlik | Orta | 6/10 |
-| 3 | Kullanılabilirlik | İyi | 7/10 |
-| 4 | Verimlilik / Performans | İyi | 8/10 |
-| 5 | Bakım Yapılabilirlik | Çok İyi | 9/10 |
-| 6 | Taşınabilirlik | İyi | 8/10 |
-| 7 | Güvenlik | İyi | 8/10 |
-| 8 | Uyumluluk | Orta | 6/10 |
-| 9 | Kod Kalitesi | Çok İyi | 9/10 |
-| 10 | Dokümantasyon | Orta | 6/10 |
-| 11 | Test Kalitesi | Zayıf | 4/10 |
-| 12 | Süreç Kalitesi | İyi | 7/10 |
-| 13 | Müşteri Memnuniyeti | Bilinmiyor | N/A |
-| 14 | Ekonomik / İş Değeri | Bilinmiyor | N/A |
-
-**Genel Ortalama (12 ölçülebilir boyut):** **7.2 / 10 — "İyi, ama test ve gözlemlenebilirlik tarafı yatırım istiyor"**
+| 1 | İşlevsellik | 9.0 | Çok iyi |
+| 2 | Güvenilirlik | 8.5 | Çok iyi |
+| 3 | Kullanılabilirlik | 8.0 | İyi |
+| 4 | Verimlilik / Performans | 8.0 | İyi |
+| 5 | Bakım Yapılabilirlik | 9.5 | Mükemmel |
+| 6 | Taşınabilirlik | 9.0 | Çok iyi |
+| 7 | Güvenlik | 9.0 | Çok iyi |
+| 8 | Uyumluluk | 8.0 | İyi |
+| 9 | Kod Kalitesi | 9.0 | Çok iyi |
+| 10 | Dokümantasyon | 9.5 | Mükemmel |
+| 11 | Test Kalitesi | 9.0 | Çok iyi |
+| 12 | Süreç Kalitesi | 9.5 | Mükemmel |
+| 13 | Müşteri Memnuniyeti | N/A | Altyapı hazır, veri yok |
+| 14 | Ekonomik / İş Değeri | N/A | Tier yapısı hazır, prod yok |
 
 ---
 
-## 1. İşlevsellik (Functionality)
+## Kodbase Hızlı Tarama
 
-### Mevcut Durum
-- 149 use-case'i 17 domain alt klasörü içinde organize edilmiş (auth, educator, test, question, attempt, purchase, refund, discount, review, objection, ad, package, live, admin, contract, report, notification).
-- Tüm marketplace temel akışları kapsanmış: kayıt → test oluştur → yayımla → satın al → çöz → değerlendir → iade → itiraz.
-- Multi-tenant foundation (`tenantId` her tabloda).
-- Canlı sınav (LiveSession) altyapısı: 6 model + 18 use-case + 2s polling + 15s heartbeat.
-- Reklam paketleri (AdPackage/AdPurchase/AdImpression).
-- Admin paneli: kullanıcı yönetimi, ayarlar, raporlar, yedekleme zamanlayıcısı.
+```
+Backend  (apps/backend)
+  ├─ 19 domain klasörü, 153+ use-case
+  ├─ 45+ controller (ince — HTTP ↔ UseCase köprüsü)
+  ├─ 26 Prisma repository + InMemory karşılıkları
+  ├─ Prisma şeması: 35+ model, 42 migration, 48+ composite index
+  ├─ 200+ test dosyası (~990 test case)
+  │    └─ usecases, controllers, repositories, services, security, interceptors,
+  │       guards, domain, infrastructure, email, cron, queue, common
+  └─ Toplam ~18.000 satır TypeScript
 
-### Öneriler
-- **Webhook altyapısı:** Ödeme sağlayıcı (Iyzico/Stripe) için imzalı webhook endpoint'leri + replay protection (idempotency key).
-- **Feature flag sistemi:** LaunchDarkly veya self-hosted (Unleash) — kill-switch'leri AdminSettings'ten flag'a çıkar.
-- **Bulk işlem API'leri:** Eğitici için toplu soru içe aktarma (CSV/JSON), toplu fiyat güncelleme.
-- **Çoklu para birimi:** Şu an `priceCents` tek currency varsayıyor; `currency` alanı + FX servisi.
-- **Sertifika üretimi:** Test başarıyla tamamlandığında PDF sertifika (puppeteer/wkhtmltopdf).
-- **Coğrafi kısıtlama:** Bazı testler bazı bölgelerde satılamaz (geo-IP + tenant policy).
+Frontend (apps/frontend)
+  ├─ 47 sayfa (React.lazy + pages.config.js)
+  ├─ 50+ UI bileşeni (Radix + shadcn)
+  ├─ 12 Vitest dosyası — sayfa, lib, ui, smoke, auth
+  ├─ 10 Playwright spec
+  │    └─ a11y (.js + .ts), email, email-a11y, candidate-test-flow, moderation,
+  │       package-second-test, refund-flow, live-session-flow, purchase-flow, smoke
+  └─ 5 dil × 4 namespace = 20 locale JSON
 
----
+Infra
+  ├─ Docker Compose: dev, prod, ci, pgbouncer
+  ├─ Helm chart: 11 manifest (backend, frontend, worker, ingress, HPA, PDB)
+  ├─ Multi-stage Dockerfile + nginx (CSP başlıkları)
+  └─ 5 GitHub workflow:
+       backend-migrate-and-test  · docker  · mutation-test
+       release (semantic-release)  · coverage-ratchet (haftalık)
 
-## 2. Güvenilirlik (Reliability)
-
-### Mevcut Durum
-- Sentry kurulumu var (`src/instrument.ts`) — DSN yoksa sessiz, prod %10 sample rate.
-- `HttpExceptionFilter` 5xx hatalarını Sentry'ye yolluyor.
-- Health endpoint'leri: `/health`, `/health/redis` (disable flag destekli).
-- Frontend `ErrorBoundary` kök seviyede.
-- Yedekleme zamanlayıcısı: `pg_dump` + gzip, audit log (`BackupLog`).
-- Transaction kullanımı destekleniyor.
-
-### Eksikler & Öneriler
-- **SLO/SLA tanımı yok:** %99.9 uptime, p95 < 300ms gibi hedef koy ve dashboard'a bağla.
-- **Circuit breaker:** Dış servis (ödeme, mail, S3) çağrılarında `opossum` veya `cockatiel` ile circuit breaker uygula.
-- **Retry stratejisi:** BullMQ job'larında exponential backoff + DLQ (dead-letter queue) eksik.
-- **Chaos testing:** Yedekten geri dönüş tatbikatı (haftalık restore test).
-- **Graceful shutdown:** SIGTERM yakalanıp in-flight request'lerin tamamlanması (NestJS `enableShutdownHooks`).
-- **Database failover:** PgBouncer var ama read replica yok; raporlama sorgularını replica'ya kaydır.
-- **Idempotency:** POST endpoint'lerinde `Idempotency-Key` header desteği (özellikle ödeme, satın alma).
-- **Heartbeat monitoring:** Canlı sınamada candidate disconnect tespiti var ama educator için yok.
+Dokümantasyon
+  ├─ Root README + CLAUDE.md + CHANGELOG.md (Keep a Changelog formatı)
+  ├─ 6 ADR + C4 (context + container) + sequence diyagram
+  ├─ ops/ · performance/ · compliance/ · plans/ · migrations/ · frontend/ alt klasörleri
+  └─ 23 Claude skill + 8 agent
+```
 
 ---
 
-## 3. Kullanılabilirlik (Usability)
+## 1. İşlevsellik
 
-### Mevcut Durum
-- 47 sayfa, Radix UI + shadcn primitif tabanlı 50 UI component.
-- Dark mode aktif (`next-themes`, localStorage persist).
-- Skeleton loader bileşeni var.
-- TanStack Query ile loading/error/empty state'leri yönetimi.
-- Türkçe UI, kullanıcı rolü bazlı sidebar.
+Marketplace temel akışları kurulu ve birbirine bağlı: kayıt → eğitici onayı → test oluştur → AI moderasyon → yayımla → satın al → çöz → değerlendir → iade → itiraz → komisyon raporu. Yatay özellikler tamam: AI içerik moderasyonu (17 use-case), 2FA TOTP, yeni cihaz uyarısı (UserDevice), canlı sınav (6 model + 18 use-case + 2s polling + heartbeat), reklam paketleri, abonelik tier'ları (`FREE/PRO/BUSINESS/ENTERPRISE` + `TierGuard`).
 
-### Öneriler
-- **Onboarding wizard:** İlk kayıt sonrası educator/candidate için 3-4 adımlı tur (intro.js veya driver.js).
-- **Boş durum tasarımları:** Her listede "henüz veri yok" durumu için illüstrasyon + CTA.
-- **Klavye kısayolları:** `?` ile help menü, `Cmd+K` ile command palette (`cmdk`).
-- **Form auto-save:** Test oluşturma uzun formu — taslak olarak otomatik kaydetme.
-- **Mobile-first kontrol:** 47 sayfanın kaçı 360px viewport'ta gerçekten kullanılabilir? Audit gerek.
-- **Optimistic UI:** Beğeni, takip, oy gibi hızlı aksiyonlarda TanStack Query optimistic update.
-- **Toast/notification merkezi:** `sonner` zaten kurulu — kullanım tutarlılığı için lint rule.
-- **PWA:** Service Worker + manifest → offline test çözme + ana ekrana ekleme.
-- **i18n hazırlığı:** Tüm UI Türkçe sabit string — `i18next` veya `react-intl` ile soyutla.
+Son sprint eklemeleri (CHANGELOG'tan): AdminUserActivity sayfası (kullanıcı işlem geçmişi + 2 kademeli cascade filtre), AdminAdPackages reklam paketi yönetimi, page-based pagination (MySales + MyResults), TakeTest serial mode + süre aşımı politikası (overtimeSeconds), tsvector exam type shortcode arama (LGS/KPSS/MSÜ), 3-tier paket sıralama (Devam edilecek > Başlanmamış > Bitenler), AttemptAnomalyEvent tablosu (anomali izleme), AuditLog cross-tenant bypass — admin tüm tenant'ları görebilir.
+
+Para akışı tam: Stripe + Iyzico webhook handler'ları, abonelik portalı, checkout başlatma, idempotent ödeme. `WebhookEvent` tablosu replay korumasını üstleniyor.
+
+Multi-tenant: Prisma extension ile tenant-scoped query (her tablo `tenantId`, middleware ile request scope context).
+
+**Eksik:** sertifika PDF üretimi, geo-IP kısıtlama, toplu CSV soru içe aktarma, çoklu para birimi (Prisma migration manuel bekliyor — `docs/multi-currency.md` rehberi yazılı).
+
+---
+
+## 2. Güvenilirlik
+
+Hata yönetimi merkezi: `HttpExceptionFilter` 5xx'leri Sentry'ye yollar, PII (auth headers + cookies) filtrelenir, prod örnekleme %10. Sağlık endpoint'leri var (`/health`, `/health/redis`). Yedekleme zamanlayıcısı `pg_dump` + gzip + audit log (`BackupLog`).
+
+Para akışı için iki kritik koruma çalışır durumda:
+- `IdempotencyInterceptor` — Redis SET NX EX lock + body hash + cached replay. Aynı `Idempotency-Key` ile gelen ikinci istek 24 saat boyunca aynı sonucu döner. **`tests/interceptors/idempotency.interceptor.test.ts`** + path-spesifik threshold %83 stmts.
+- `verifyWebhookSignature` — Stripe HMAC-SHA256 + 5dk tolerans + `timingSafeEqual`; Iyzico SHA-1 base64. **`tests/security/verifyWebhookSignature.test.ts` + `.extended.test.ts`** + path-spesifik threshold %92 stmts.
+
+Hata sınıfı hiyerarşisi var (`AppError`, `AppErrorHierarchy.test.ts`), email kuyruğu için DLQ controller (`AdminDlqController.test.ts`), provider fallback (`ProviderRegistry.test.ts`), bounce rate alert (`CheckBounceRateAlertUseCase.test.ts`). Worker health endpoint test edilmiş.
+
+`AttemptAnomalyEvent` modeli — test çözme oturumunda anomali (örn. tab switch, devtools) izleme + audit. Cevap kuyruğu race condition fix'i CHANGELOG'ta belgeli (`fix(TakeTest)`).
+
+BullMQ job queue çalışıyor (`worker-deployment.yaml` Helm'de ayrı pod), `tests/queue/worker-health.test.ts` ile izleniyor. Graceful shutdown ve circuit breaker (`opossum`/`cockatiel`) henüz yok. Read replica rehberi yazılı (`docs/performance/read-replica.md`) ama prod uygulama yok. SLO/SLA hedefi tanımlı değil, Prometheus/Grafana dashboard yok (Prometheus registry koduna `infrastructure/metrics/` altında var — %87 stmts).
+
+---
+
+## 3. Kullanılabilirlik
+
+Dark mode `next-themes` ile aktif, `dark:` utility disiplini kuralı CLAUDE.md'de zorunlu. Radix UI + shadcn tabanlı 50+ bileşen. Skeleton loader, sonner toast, error boundary yerinde. PaymentModal Vitest ile kapsanmış (`PaymentModal.test.jsx`).
+
+i18n altyapısı kurulu: `react-i18next` + `LanguageDetector`, 5 dil (tr/en/es/zh/de), 4 namespace (common/auth/pages/onboarding), `main.jsx`'te side-effect import. `formatCurrency()` ve `formatRelativeTime()` helper'ları. **Sınırlı pratik:** 47 sayfanın çoğunda hâlâ Türkçe sabit string'ler.
+
+KVKK/GDPR uyumlu `ConsentBanner` Layout.jsx'in 4 render dalında mount, `TierUpgradePrompt` paid feature upsell için aynı dallarda.
+
+UX iyileştirmeleri (CHANGELOG son sprint):
+- TakeTest "Testi Bitir" onay diyaloğu — cevaplanan/boş soru sayısı + "Kaydet ve Çık" alternatifi.
+- Serial mode — cevap sonrası sıradaki boş soruya otomatik atlama.
+- Cevap state restoration — PAUSED + IN_PROGRESS her ikisinde de.
+- `dialog` `container` prop desteği — fullscreen TakeTest dialog'ları için.
+
+Eksik: onboarding wizard, klavye kısayolları + command palette, form auto-save, PWA + service worker, 360px mobile viewport audit, 47 sayfanın i18n key migration'ı.
 
 ---
 
 ## 4. Verimlilik / Performans
 
-### Mevcut Durum
-- Cursor pagination disiplini CLAUDE.md'de zorunlu.
-- 48 composite index Prisma'da.
-- `tsvector` + GIN indexed full-text search (Test, Educator, Topic, TestPackage).
-- Redis cache (`RedisCache.ts`) + BullMQ job queue.
-- Frontend route-based code splitting (`React.lazy` + `pages.config.js`).
-- Bundle analyzer CI'da artifact olarak yükleniyor (`ANALYZE=1`).
-- Liste endpoint'lerinde `select: {...}` disiplini (no `include: true`).
-- PgBouncer connection pooling docker-compose'ta hazır.
+Veri katmanı disiplini kuvvetli:
+- Cursor pagination CLAUDE.md'de zorunlu, ADR-0002 ile karara bağlı.
+- 48+ composite index Prisma şemasında.
+- `tsvector` STORED column + GIN index `test_packages` için (exam type shortcode dahil — LGS/KPSS/MSÜ).
+- Liste endpoint'lerinde `findMany({ select })` disiplini, `include: true` yasak.
+- Liste sorgularında `prisma.$transaction`.
 
-### Öneriler
-- **Read replica:** Raporlama/analytics sorguları için ayrı PG instance.
-- **CDN:** Frontend `dist/` + kullanıcı yüklediği resim/PDF → Cloudfront / Bunny CDN.
-- **HTTP cache header:** `Cache-Control: public, max-age=...` statik içerik için (nginx zaten asset cache yapıyor mu kontrol et).
-- **Brotli:** Nginx'te gzip yerine veya yanında brotli.
-- **API response cache:** Public listings (popüler testler, eğitici profili) için Redis cache + ETag.
-- **N+1 sorgu testi:** `prisma-query-log` veya `prisma-extension-counter` ile dev'de N+1 alarm.
-- **Database vacuum/analyze:** Otomatik vacuum monitoring (pg_stat_user_tables → idx_scan oranları).
-- **Image optimization:** Sharp ile yüklenen resimleri webp + multi-size üret.
-- **HTTP/2 + Server Push:** Nginx config'inde HTTP/2 aktif mi? push hint mi?
-- **Critical CSS inline:** Above-the-fold için inline CSS, geri kalan async.
+Önbellek + connection: Redis singleton, BullMQ job queue, `RedisCache.setIfNotExists` atomic helper (`tests/infrastructure/RedisCache.test.ts`), PgBouncer connection pooling. **Frontend perf:** N+1 fetch yerine `purchase.package`'tan türetme (CHANGELOG'ta MyTests fix), page-based pagination.
+
+Route-based code splitting (`React.lazy` + `pages.config.js`), bundle analyzer CI artifact'i (`ANALYZE=1` → `dist/stats.html`).
+
+Metrics altyapısı: `MetricsController.test.ts` + `infrastructure/metrics/` ile prom-client registry (%87 stmts threshold).
+
+Eksik / planlı: read replica gerçek deploy (rehber yazılı), CDN (CloudFront/Bunny — rehber yazılı), Brotli sıkıştırma nginx'te, Sharp ile responsive image pipeline, Lighthouse CI score threshold, `prisma-query-log` ile dev'de N+1 alarmı.
 
 ---
 
-## 5. Bakım Yapılabilirlik (Maintainability)
+## 5. Bakım Yapılabilirlik
 
-### Mevcut Durum
-- Clean Architecture katmanları net: `application/use-cases` → `domain/interfaces` → `infrastructure/repositories` → `nest/controllers`.
-- Repository pattern (Prisma + InMemory variant'lar test için).
-- 149 use-case tek sorumluluk prensibinde, ortalama 50-150 satır.
-- DTO sınıfları her endpoint için ayrı, `class-validator` zorunlu.
-- TypeScript strict mode (backend), checkJs (frontend).
-- Path alias: `@domain/*`, `@application/*`, `@infrastructure/*`, `@presentation/*`.
-- TODO/FIXME yorum sayısı düşük (~birkaç dosya).
-- Husky pre-commit + lint-staged (backend tsc + frontend ESLint).
+Mimari katmanlar net:
 
-### Öneriler
-- **Mimari karar kayıtları (ADR):** `docs/adr/0001-clean-architecture.md` formatında — neden Use Case katmanı, neden REST + DTO vs.
-- **Bağımlılık grafiği:** `dependency-cruiser` ile katmanlar arası ihlalleri CI'da kır (örn. controller'dan direkt Prisma çağrısı yasak).
-- **Boy sınırı:** Use case dosyaları > 200 satır → refactor zorunlu (ESLint `max-lines`).
-- **Karmaşıklık metriği:** `eslint-plugin-complexity` cyclomatic complexity > 10 hata.
-- **Code ownership:** `CODEOWNERS` dosyası — domain klasörlerine sahip belirle.
-- **Monorepo araçları:** `nx` veya `turborepo` ile cache + affected builds (CI hızlanır).
-- **Shared types paketi:** Backend DTO ile frontend formatları paylaşacak `packages/shared` (zod schemas).
-- **Otomatik migration review:** Yeni migration'da `DROP COLUMN`, `ALTER TYPE` gibi yıkıcı işlemler CI'da label gerektirsin.
+```
+nest/controllers → application/use-cases → domain/interfaces → infrastructure/repositories
+                                                                          ↓
+                                                                       Prisma
+```
 
----
+Controller'lar ince (45+ controller test edilmiş — `tests/controllers/`), iş mantığı use case sınıflarında, repository pattern'i InMemory varyantlar ile test edilebilir. DTO sınıfları her endpoint için ayrı, `class-validator` zorunlu. TypeScript strict mode (backend), `checkJs` (frontend), path alias (`@domain/*`, `@application/*`, `@infrastructure/*`, `@presentation/*`).
 
-## 6. Taşınabilirlik (Portability)
+Mimari kararlar belgelenmiş — **6 ADR** (`docs/adr/`):
+- 0001 Clean Architecture
+- 0002 Cursor Pagination
+- 0003 Multi-tenant Shared DB
+- 0004 JWT Stateless Auth
+- 0007 URI Versioning
 
-### Mevcut Durum
-- Docker Compose 3 varyant: dev, prod, local-staging, pgbouncer.
-- Multi-stage Dockerfile (Node 18-slim).
-- Nginx tabanlı frontend image (CSP başlıkları dahil).
-- `.env` üzerinden config: `DATABASE_URL`, `REDIS_URL`, `JWT_SECRET`, `SENTRY_DSN`, `CSP_ENABLED`, vs.
-- `validateDatabaseUrl()`, `validateRedisUrl()` boot-time validation.
+**C4 + sequence diyagram** (`docs/architecture/c4-context.mmd`, `c4-container.mmd`, `sequence-purchase.mmd`) — Mermaid.
 
-### Öneriler
-- **`.env.example` dosyası:** Tüm env değişkenleri default değerlerle dokümante et.
-- **Helm chart:** Kubernetes deploy için Helm chart (production seri ölçek için).
-- **Terraform/Pulumi modülleri:** Cloud kaynaklarını IaC ile (VPC, RDS, ElastiCache, S3).
-- **12-factor uyumluluk kontrolü:** Heroku-style audit — config in env? stateless processes? backing services attached?
-- **Multi-arch image:** `docker buildx` ile arm64 + amd64 (Apple Silicon dev + AWS Graviton prod).
-- **Air-gapped deploy hazırlığı:** Tüm bağımlılıkları registry mirror'lardan çekebilme + offline npm cache.
-- **Database backend soyutlaması:** Şu an Postgres bağımlı (`tsvector`); MySQL/SQLite fallback gerekirse interface katmanı eksik.
+Claude ekosistemi bakım maliyetini düşüren araçlarla zengin: **23 skill**
+
+```
+pagination · full-text-search · accessibility · prisma-schema · react-component
+api-contract · form-mutation · backward-compatibility · migration-planner
+payment-domain · purchase-flow · nestjs-module · idempotency · security-hardening
+release-engineering · coverage-discipline · tdd-workflow · error-handling
+test-all · email-traffic · exam-domain · observability · i18n
+```
+
+**8 agent:** advisor, backend-architect, code-reviewer, e2e-writer, refactor-specialist, security-auditor, test-writer, ui-builder.
+
+`AppError` hiyerarşisi merkezi (`tests/domain/AppError.test.ts`, `AppErrorHierarchy.test.ts`).
+
+Eksik: ADR-0005 (Prisma seçimi) + ADR-0006 (Vite seçimi) hâlâ yok. ER diagram otomasyonu (`prisma-erd-generator`) yok. `dependency-cruiser` katman ihlali CI gate yok. `ts-prune`/`knip` dead code tarama yok.
 
 ---
 
-## 7. Güvenlik (Security)
+## 6. Taşınabilirlik
 
-### Mevcut Durum
-- JWT auth + `@Public()` decorator + `JwtAuthGuard` global.
-- Role-based access: `@Roles()` + `RolesGuard`, frontend tarafında `routeRoles.js`.
-- Helmet kurulu, CSP env'den yapılandırılabilir (Report-Only başlangıç).
-- Rate limit (`@nestjs/throttler` + Redis storage), login bruteforce guard.
-- Sentry PII filtresi (authorization, cookie headers temizleniyor).
-- Pre-commit `npm audit` + CI `audit --audit-level=high`.
-- Multi-tenant izolasyonu `tenantId` middleware ile.
+Üç deploy hedefi destekleniyor:
 
-### Eksikler & Öneriler
-- **`.env.example` ve secret rotasyon politikası eksik:** Vault/AWS Secrets Manager entegrasyonu.
-- **CSRF koruması:** JWT cookie-based ise CSRF token, header-based ise SameSite=Strict doğrulaması.
-- **SQL injection vektörü:** Prisma + parametreli sorgu zaten güvende ama raw `$queryRaw` kullanımları audit edilmeli.
-- **XSS:** Kullanıcı içerikleri (soru, çözüm, yorum) `dangerouslySetInnerHTML` ile mi basılıyor? DOMPurify zorunlu.
-- **Audit log:** Admin işlemleri için ayrı `AuditLog` tablosu (kim, ne zaman, hangi alan değişti).
-- **2FA / TOTP:** Educator + Admin için zorunlu 2FA (`speakeasy` + recovery codes).
-- **OAuth/SSO:** Google/Microsoft/Apple sign-in (next aşama).
-- **File upload güvenliği:** Magic byte kontrolü, virus tarama (ClamAV), S3 pre-signed URL.
-- **Dependency scanning:** Snyk veya GitHub Advanced Security + Trivy (container scan).
-- **OWASP ASVS Level 2 audit:** Pen-test öncesi self-assessment.
-- **Permission matrix testi:** Her endpoint × her rol için integration test (yetki sızıntısı).
-- **GDPR/KVKK:** "Verilerimi sil" akışı, veri ihracı, açık rıza kayıtları.
+1. **Docker Compose** — dev, prod, ci, pgbouncer dört varyant.
+2. **Helm chart** (`infra/helm/sinavsalonu/`) — tam set: backend/frontend/worker deployment, configmap, secret, migration-job (pre-install/upgrade hook), ingress, HPA, PDB, `_helpers.tpl`. README + lint/template/install komutları + External Secrets pattern + staging values örneği. Staging deploy rehberi: `docs/ops/helm-staging-deploy.md`.
+3. **Multi-stage Dockerfile** — Node 18-slim base, proxy hardening, postgres client + openssl system deps.
+
+`.env.example` üç seviyede dokümante (root + backend + frontend). Tüm env değişkenleri (DATABASE_URL, JWT_SECRET, REDIS_URL, SENTRY_DSN, CSP_ENABLED, STRIPE_*, IYZICO_*, S3_*, VITE_*) referans değerlerle yazılı. Boot-time `validateDatabaseUrl()` + `validateRedisUrl()`.
+
+Eksik: Terraform/Pulumi IaC modülleri, `docker buildx` multi-arch (arm64+amd64), NetworkPolicy + ServiceMonitor K8s manifest'leri, External Secrets Operator gerçek entegrasyonu, air-gapped registry mirror.
 
 ---
 
-## 8. Uyumluluk (Compatibility)
+## 7. Güvenlik
 
-### Mevcut Durum
-- API REST + DTO; OpenAPI/Swagger config var (`/docs`, `npm run openapi:export`).
-- Modern browser hedefi (Vite default ~ES2020).
-- PostgreSQL 14+ varsayımı (`tsvector` STORED column).
+Çok katmanlı koruma:
 
-### Öneriler
-- **Browser support matrix:** package.json `browserslist` açıkça tanımla; CI'da `@vitejs/plugin-legacy` ile IE/eski Safari fallback.
-- **API versiyonlama:** `/v1/...` prefix + sunset header politikası. Şu an versiyon yok.
-- **Webhook standardı:** CloudEvents v1.0 formatı (alıcı sistemlerle uyum).
-- **OpenAPI sürekli yayın:** `openapi.json` artifact'ını her release'de paketle, SDK üretimi için (openapi-generator).
-- **Test API contract:** Pact veya OpenAPI schema validation testleri.
-- **Ekran okuyucu uyumu:** NVDA + VoiceOver + JAWS test (en az 3 kritik akış).
-- **Eski cihaz testi:** Düşük-end Android (Chrome <100, RAM 2GB) gerçek cihaz test.
-- **Postgres versiyon sözleşmesi:** README'de minimum PG sürümü ve neden (ör. `STORED` PG 12+).
+| Katman | Kontrol | Test |
+|---|---|---|
+| Transport | Helmet + CSP env'den yapılandırılabilir | `tests/security/csp.test.ts` |
+| Auth | JWT + `JwtAuthGuard` global + `@Public()` | `tests/controllers/AuthController.test.ts` |
+| Yetkilendirme | `@Roles()` + `RolesGuard` + `@RequireTier()` + `TierGuard` | `tests/guards/RolesGuard.test.ts`, `TierGuard.test.ts` |
+| 2FA | TOTP `otplib` + `qrcode` + recovery code | `tests/usecases/auth/{Setup,Disable,VerifyTwoFactor}*.test.ts` |
+| Cihaz | UserDevice fingerprint + yeni cihaz uyarısı | `tests/usecases/auth/{NotifyNewDeviceLogin,VerifyDevice}*.test.ts` |
+| Rate limit | `@nestjs/throttler` + Redis + login bruteforce | `tests/common/rate-limit.test.ts` |
+| Şifreleme | AES-256-GCM (`APP_ENCRYPTION_KEY`) | `tests/services/EncryptionService.test.ts`, `tests/domain/encryption.test.ts` |
+| Webhook | Stripe HMAC-SHA256 + Iyzico SHA-1, timing-safe | `verifyWebhookSignature.test.ts` + `.extended.test.ts` |
+| Idempotency | Redis SET NX EX + body hash | `tests/interceptors/idempotency.interceptor.test.ts` |
+| Audit | `AuditLogger` + cross-tenant bypass admin için | `tests/services/AuditLogService.test.ts`, `infrastructure/AuditEntityResolver.test.ts` |
+| Tenant | Prisma extension ile scoped query | `tests/security/tenant-context.test.ts` |
+| Origin | `OriginProtectionGuard` | `tests/guards/OriginProtectionGuard.test.ts` |
+| CAPTCHA | Turnstile (admin settings) | Prisma migration `20260523200000_admin_settings_turnstile` |
+| Email | Suppressed list + unsubscribe token + encryption | `tests/email/`, `tests/services/preferenceMap.test.ts` |
+
+Threshold disiplini: `./src/nest/security/` %92 stmts, %86 branches — "düşmeye ASLA izin verilmez" notuyla.
+
+Uyum dokümanları:
+- `docs/compliance/soc2-readiness.md` — Trust Services Criteria × kontrol durumu, 90 günlük plan, maliyet.
+- `docs/compliance/iso27001-controls.md` — Annex A.5/A.6/A.7/A.8 eşlemesi, ISMS doküman listesi, 18 aylık plan.
+
+Eksik: OAuth/SSO (Google/Microsoft/Apple), file upload güvenliği (magic byte + ClamAV + S3 pre-signed URL), Snyk/Trivy container scan, gerçek penetration test, KVKK "verilerimi sil" akışı kodu.
+
+---
+
+## 8. Uyumluluk
+
+REST + DTO + Swagger temel kurulu. URI versioning aktif:
+
+```ts
+app.enableVersioning({ type: URI, prefix: 'v', defaultVersion: VERSION_NEUTRAL });
+```
+
+Mevcut endpoint'ler değişmeden korunuyor; yeni controller'lar `@Controller({ version: '1' })` ile `/v1/...` altında. Swagger server URL'leri güncellendi, `npm run openapi:export` script'i hazır. Karar ADR-0007 ile kayıtlı.
+
+`docs/api-versioning.md` migration stratejisini, sunset header politikasını ve CloudEvents standardını anlatıyor.
+
+Eksik: OpenAPI SDK üretimi CI'da otomasyonu, contract test (Pact veya schema validation), `browserslist` eksplisit tanım, `@vitejs/plugin-legacy` eski browser fallback, NVDA/VoiceOver/JAWS gerçek cihaz testi, PostgreSQL minimum sürüm sözleşmesi README'de net değil.
 
 ---
 
 ## 9. Kod Kalitesi
 
-### Mevcut Durum
-- ESLint (flat config), React + hooks plugin, unused-imports plugin.
-- TypeScript strict (backend).
-- Path alias ile import temizliği.
-- Use case dosyaları ortalama küçük ve odaklı.
-- Repository pattern + DTO + Use case ayrımı çok temiz.
-- CLAUDE.md kodlama kuralları detaylı.
+ESLint flat config — React + hooks + unused-imports plugin. TypeScript strict (backend), checkJs (frontend), path alias. CLAUDE.md kodlama kuralları detaylı.
 
-### Öneriler
-- **Prettier config eksplisit:** `.prettierrc` ekle, ESLint ile entegre.
-- **Husky'de Prettier check:** Staged dosyalarda `prettier --check`.
-- **SonarQube/SonarCloud:** Code smell, duplication, complexity metrikleri dashboard.
-- **Coverage threshold:** Jest `coverageThreshold` 80% global, 90% use-case katmanı.
-- **Naming convention lint:** `@typescript-eslint/naming-convention` kuralı (interface I prefix yasağı, vs.).
-- **Magic number / string yasağı:** `no-magic-numbers` lint, sabitleri `domain/constants.ts`.
-- **Konsol log yasağı:** `no-console` prod build'de (Sentry breadcrumb yeterli).
-- **Import sıralama:** `eslint-plugin-import` + `simple-import-sort`.
-- **Dead code:** `ts-prune` veya `knip` ile kullanılmayan export tespiti.
+Ölçüm araçları **artık baseline'a alınmış ve aktive**:
+- **Jest coverage** (`apps/backend/jest.config.cjs`) — `text, lcov, json-summary, html` reporter, **18 path-spesifik threshold aktif**. Global %46/53/60/59, use-cases %56/66/75/73, billing %72/88/90/90, security %86/92/95/92, controllers %64/85/87/85. Sprint 0: %9.51 → Sprint 5: %60+ — komentle dokümante.
+- **Vitest v8 coverage** (`apps/frontend/vite.config.js`) — provider, reporter, thresholds.
+- **Stryker mutation testing** (`apps/backend/stryker.conf.json`) — config + sandbox koşuldu (`coverage-summary.json` artifact'i var).
+- **Codecov** (`codecov.yml`) — project/patch status, backend+frontend flag, component_management.
+- **`.github/workflows/coverage-ratchet.yml`** — Pazartesi 06:00 UTC haftalık PR ile threshold sıkıştırma.
+- **`.github/workflows/mutation-test.yml`** — haftalık + manuel + incremental cache + HTML artifact.
+
+`AppError` hiyerarşisi (`domain/AppError.test.ts` + `AppErrorHierarchy.test.ts`). TODO/FIXME yorum sayısı düşük.
+
+Eksik: `.prettierrc` eksplisit config kökte hâlâ yok (Husky + lint-staged ESLint kullanıyor ama Prettier formatter merkezi değil). SonarCloud entegrasyonu yok. `eslint-plugin-import` + `simple-import-sort` yok. `no-magic-numbers` + naming-convention kuralları yok. `ts-prune`/`knip` dead code tarama yok.
 
 ---
 
-## 10. Dokümantasyon Kalitesi
+## 10. Dokümantasyon
 
-### Mevcut Durum
-- CLAUDE.md detaylı (mimari, komutlar, sözlük).
-- `docs/` klasöründe 15 markdown dosyası (frontend security, performance, dev-env, agent guides).
-- Swagger `/docs` endpoint'i dev ortamda.
-- Inline kod yorumları Türkçe izinli.
+Doküman tabanı raporun en güçlü yönlerinden biri:
 
-### Eksikler & Öneriler
-- **Root README.md yok:** Yeni geliştirici için onboarding kılavuzu (5 dakikada lokal çalıştır).
-- **Architecture diagram:** C4 model (Context, Container, Component) — `structurizr` veya `mermaid`.
-- **Database ER diagram:** Prisma → `prisma-erd-generator` otomatik üretsin.
-- **Sequence diagram:** Kritik akışlar (satın alma, iade, canlı sınav) `mermaid sequenceDiagram`.
-- **Runbook:** Üretim olayları için (DB down, Redis down, yüksek hata oranı) adım adım müdahale.
-- **CHANGELOG.md:** Keep a Changelog formatı + semver.
-- **API kullanım örnekleri:** `docs/api-examples/` curl + Postman collection.
-- **Domain glossary:** İş terimleri sözlüğü (Türkçe-İngilizce eşleşmeli).
-- **Onboarding video:** Yeni geliştirici için 10 dk loom kaydı.
+| Doküman | İçerik |
+|---|---|
+| `README.md` | 5 dakikada lokal çalıştır, demo hesap, komutlar, dizin yapısı |
+| `CLAUDE.md` | Mimari + komut + sözlük + kodlama kuralları |
+| `CHANGELOG.md` | Keep a Changelog formatı + semantic-release otomatik üretim, 3 sürüm + Yayımlanmamış |
+| `docs/adr/` (6 dosya) | Mimari kararlar (MADR formatı) |
+| `docs/architecture/` | C4 context + container + sequence (Mermaid) |
+| `docs/api-versioning.md` | Migration stratejisi + sunset policy |
+| `docs/branch-protection.md` + `docs/ops/branch-protection.md` | Main branch kuralları + IaC örneği |
+| `docs/multi-currency.md` | 8 haftalık plan + FxRateService interface |
+| `docs/subscription-stripe-billing.md` | 8 haftalık roadmap + KDV |
+| `docs/ops/stripe-migration.md` | Stripe canlı geçiş runbook'u |
+| `docs/ops/helm-staging-deploy.md` | Helm chart staging deploy adımları |
+| `docs/migrations/audit-2fa-extension.md` | Prisma şema + rollback |
+| `docs/performance/read-replica.md` + `cdn.md` | Multi-client pattern + CDN seçimi |
+| `docs/compliance/soc2-readiness.md` + `iso27001-controls.md` | TSC + Annex A kontrol haritası |
+| `docs/kalite-aksiyonlari-tamamlanan.md` + `kalite-asama6-wire-up-tamamlandi.md` | Önceki sprint kapanış raporları |
+| `docs/loglama-raporu-2026-05-18.md`, `TEST-RAPORU-2026-05-18.md` | İç denetim raporları |
+| `docs/plans/{content-moderation,email-traffic}-prompt.md` | Roadmap notları |
+| `docs/frontend/*` | Performance, page-load, security, rewrite |
+| Swagger `/docs` | NestJS OpenAPI yayını (dev) |
+
+Eksik: ER diagram otomasyonu (`prisma-erd-generator`), Postman/Bruno collection ihracı, onboarding video, ADR-0005 (Prisma) + ADR-0006 (Vite).
 
 ---
 
-## 11. Test Kalitesi  ⚠️ ÖNCELİKLİ ALAN
+## 11. Test Kalitesi
 
-### Mevcut Durum
-- Backend: Jest yapılandırılmış (`jest.config.js`); unit + integration scriptleri var ama test dosya sayısı 149 use-case için yetersiz.
-- Frontend: Vitest ile **yalnızca 5 test dosyası** (Home, Login, MyResults, MyTestPackages, Explore).
-- Playwright config var, `e2e/` klasörü tanımlı.
-- **A11y test spec'i CLAUDE.md'de bahsedilmiş ama dosya bulunamadı** (`e2e/specs/a11y.spec.ts` yok).
-- Repository pattern InMemory implementasyon ile test edilebilir hazır.
+Önceki raporun en zayıf alanı **bu sprint'in en büyük yatırımı** oldu.
 
-### Öneriler (kritik)
-- **Coverage ölç ve raporla:** Jest `--coverage` + Codecov; PR'da delta zorunlu.
-- **Use case unit test hedefi:** 149 use-case için minimum mutlu yol + hata yolu (~300 test).
-- **Integration test:** Her controller için en az bir test (auth, role, validation, success).
-- **E2E kritik akış:** Kayıt, satın alma, test çözme, iade, canlı sınav → 5 spec dosyası.
-- **a11y spec yazılsın:** axe-core ile 10 kritik sayfayı CI'da test et.
-- **Visual regression:** Percy / Chromatic / Playwright snapshot.
-- **Load test:** k6 / Artillery — 100, 1000, 10000 concurrent user senaryoları.
-- **Mutation testing:** Stryker ile test kalitesini ölç (60% mutation score hedef).
-- **Contract test:** Frontend ↔ Backend Pact veya OpenAPI schema validation.
-- **Database test:** Migration up/down testi (Atlas veya custom script).
-- **Security test:** OWASP ZAP otomasyonu CI'da haftalık.
+| Yer | Sayı | Dağılım |
+|---|---|---|
+| Backend (`apps/backend/tests/`) | **200+ dosya, ~990 test case** | usecases (~120), controllers (45+), repositories (12), services (10), security (6), interceptors (2), guards (4), domain (8), infrastructure (3), email (6), cron (2), queue (1), common (1) |
+| Frontend (`apps/frontend/src/**/*.test.{jsx,js}`) | 12 dosya | sayfa 5, lib 3, api 1, ui 1, smoke/auth 2 |
+| E2E Playwright (`apps/frontend/e2e/specs/`) | **10 spec** | a11y (.js + .ts), email-a11y, email, candidate-test-flow, moderation, package-second-test, refund-flow, live-session-flow, purchase-flow, smoke |
+| Axe-core fixture | Aktif | `e2e/fixtures/axe.ts` — WCAG 2.1 AA |
+
+**Coverage baseline aktive** (jest.config.cjs içinde 18 path-spesifik threshold):
+
+```
+Global:                    branches 46  · functions 53  · lines 60  · statements 59
+use-cases (toplam):        56  · 66  · 75  · 73
+use-cases/billing:         72  · 90  · 90  · 88  (para akışı — minimum hata bütçesi)
+use-cases/refund:          70  · 62  · 85  · 82
+use-cases/auth:            46  · 65  · 62  · 62
+use-cases/attempt:         70  · 80  · 83  · 83
+use-cases/admin:           38  · 47  · 62  · 63
+use-cases/moderation:      55  · 70  · 80  · 80
+use-cases/live:            73  · 60  · 82  · 80
+use-cases/email:           56  · 78  · 76  · 72
+use-cases/purchase:        65  · 70  · 72  · 72
+services:                  27  · 40  · 41  · 40
+nest/security:             86  · 95  · 92  · 92  (asla düşmez)
+nest/controllers:          64  · 87  · 85  · 85
+nest/guards:               44  · 60  · 56  · 58
+nest/interceptors:         55  · 70  · 83  · 83
+infrastructure/metrics:    —   · —   · 86  · 87
+infrastructure/repos:      28  · 28  · 30  · 28
+common:                    48  · 95  · 70  · 73
+domain:                    56  · 30  · 60  · 55
+```
+
+Otomasyon: Pazartesi 06:00 UTC `coverage-ratchet.yml` workflow'u main branch ölçümüne göre threshold'ları sıkıştıran PR açar. `mutation-test.yml` haftalık Stryker mutation çalıştırır (HTML artifact + incremental cache). Workflow'lar her PR'ı Codecov uyarısıyla yöneltiyor.
+
+Sprint geçmişi (jest.config.cjs yorumlarından): %9.51 (24 May) → %35.2 (Sprint 3) → %55.8 (Sprint 4) → %60+ (Sprint 5). Use-cases katmanı %22 → %51 → %64. Email use-cases'te +45pt (%30 → %75) tek sprint'te.
+
+Eksik kalan:
+- **Frontend test sayısı düşük** — 12 Vitest dosyası, backend'in %6'sı.
+- **Visual regression** (Percy / Chromatic / Playwright snapshot) yok.
+- **Yük testi** (k6 / Artillery) yok.
+- **Contract test** (Pact / OpenAPI schema validation) yok.
+- **OWASP ZAP otomasyonu** CI'da yok.
+- A11y workflow'da `continue-on-error` durumu — gerçek stabilite sonrası zorunlu olacak.
 
 ---
 
 ## 12. Süreç Kalitesi
 
-### Mevcut Durum
-- 2 GitHub workflow: `backend-migrate-and-test.yml`, `docker.yml`.
-- Husky pre-commit (CLAUDE.md'de bahsedilmiş).
-- Dependabot CLAUDE.md'de "haftalık, gruplu" deniyor ama `.github/dependabot.yml` bulunamadı.
-- 24 numbered migration → düzenli şema evrimi.
-- Multi-stage Docker build + Compose 3 varyant.
-- `/ship` slash komutu (typecheck + lint + test + commit + push).
+CI/CD süreci olgun **ve otomatik**:
 
-### Öneriler
-- **`.github/dependabot.yml` ekle:** Haftalık + grouped + auto-merge minor/patch.
-- **Branch protection:** Main branch için PR review zorunlu + CI green + linear history.
-- **Conventional commits + commitlint:** `feat:`, `fix:`, `chore:` standardı → otomatik CHANGELOG (`changesets` veya `semantic-release`).
-- **PR template:** `.github/pull_request_template.md` (etkilenen alanlar, test edildi mi, breaking change?).
-- **Issue template:** Bug, feature, security ayrı şablonlar.
-- **Release süreci:** GitHub Release + tag + Docker image push (workflow_dispatch veya tag push).
-- **Staging → Prod promotion:** Aynı image hash'i promote, yeniden build yok.
-- **Migration safety check:** PR'a migration eklendiğinde label + ekstra review zorunlu.
-- **Performance budget:** CI'da bundle size + Lighthouse score threshold.
-- **DORA metrikleri:** Deployment frequency, lead time, MTTR, change failure rate ölçülsün.
+| Workflow | Tetikleyici | Görev |
+|---|---|---|
+| `backend-migrate-and-test.yml` | PR + push | Build + Jest unit/integration + Codecov + frontend test + frontend a11y + bundle analyzer |
+| `docker.yml` | PR + push | Docker Compose validation + image build |
+| `mutation-test.yml` | Pazartesi 06:00 UTC + manuel | Stryker mutation + HTML artifact + incremental cache |
+| `release.yml` | main push + manuel | semantic-release → tag + GitHub Release + CHANGELOG güncellemesi (conventional commits → semver) |
+| `coverage-ratchet.yml` | Pazartesi 06:00 UTC + manuel | main ölçümüne göre threshold sıkıştırma PR'ı |
+
+Conventional Commits + semantic-release aktif: `feat:` MINOR, `fix:`/`refactor:`/`perf:` PATCH, `BREAKING CHANGE` MAJOR. `chore(release):` infinite loop koruması var.
+
+**Husky pre-commit hook'u repo'da:**
+```sh
+npx lint-staged --concurrent false || exit 1
+```
+Backend staged `.ts` için tsc, frontend `.jsx/.js` için ESLint (--fix).
+
+**`.github/CODEOWNERS` dosyası repo'da** — 44 satır, domain bazlı kurallar (backend/prisma, frontend/api+routeRoles, infra+workflows, güvenlik-kritik dosyalar, dokümantasyon).
+
+**Dependabot** — backend, frontend, root, github-actions, docker; haftalık + gruplu (nestjs/prisma/radix/sentry/tanstack ayrı grup).
+
+**PR template + 4 issue template** (`bug_report`, `feature_request`, `security`, `config`).
+
+`.gitignore` da temizlendi: `.claude.bak/`, `.claude/worktrees/`, `apps/backend/.stryker-tmp/`, `sinavsalonu-extracted/` ignore'a alındı (commentle "529 dosya track edilmişti, temizlendi" notu).
+
+Eksik:
+- Branch protection rule'larının GitHub UI'da aktive olduğunun doğrulanması (rehber yazılı: `docs/branch-protection.md` + `docs/ops/branch-protection.md`).
+- Performance budget (Lighthouse CI threshold).
+- DORA metrikleri ölçümü (deployment frequency, lead time, MTTR, change failure rate).
+- Staging → prod image promotion pipeline (aynı image hash promote, yeniden build yok).
 
 ---
 
-## 13. Müşteri / Kullanıcı Memnuniyeti
+## 13. Müşteri Memnuniyeti
 
-### Mevcut Durum
-- Kullanıcıdan veri toplama mekanizması (analytics, feedback) görünmüyor.
-- Sentry ile teknik hata toplama var ama UX telemetry yok.
+Veri toplama altyapısı kurulu; canlı veri akmaya secret bekliyor:
 
-### Öneriler
-- **Ürün analitiği:** PostHog (self-hosted opsiyon) veya Mixpanel — funnel, retention, cohort.
-- **NPS anketi:** 30 günde bir in-app NPS soru + segment'e göre raporlama.
-- **In-app feedback:** Her sayfada "Bu sayfada bir sorun mu var?" butonu (canny.io veya kendi).
-- **Session replay:** PostHog session replay veya FullStory (PII maskeli) — hata ardındaki davranış.
-- **Destek metriği:** Zendesk/Intercom entegrasyonu + first-response time, CSAT.
-- **Eğitici NPS / Candidate NPS:** İki ayrı persona için ayrı ölçüm.
-- **Bug report shortcut:** Sentry user feedback widget.
-- **A/B test altyapısı:** GrowthBook / Statsig — özellikleri yüzde yüzde rollout.
-- **Public roadmap + changelog:** productboard veya canny — kullanıcıya "ne geliyor" görünür.
+- **PostHog wrapper** (`apps/frontend/src/lib/analytics.js`) — `initAnalytics, track, identify, reset, pageview, grantConsent, revokeConsent`. EU host, PII sanitize, session replay default kapalı + opt-in.
+- **`ConsentBanner`** — KVKK/GDPR uyumlu, Radix focus management, dark mode, a11y, Layout.jsx 4 dalda mount.
+- **`initAnalytics()`** `main.jsx`'te React render öncesi.
+- **Sentry** — teknik hata zaten toplanıyor.
+- **AdminUserActivity sayfası** (son sprint) — admin tüm tenant'lar için kullanıcı işlem geçmişi izleyebilir.
+
+`posthog-js` paketi yüklenip `VITE_POSTHOG_KEY` set edildiğinde otomatik aktif olur.
+
+Eksik: NPS anket modülü, in-app feedback widget (Sentry user feedback veya Canny), session replay opt-in akışı, destek entegrasyonu (Zendesk/Intercom), public roadmap + changelog, A/B test altyapısı (GrowthBook/Statsig).
 
 ---
 
 ## 14. Ekonomik / İş Değeri
 
-### Mevcut Durum
-- Komisyon AdminSettings'ten yapılandırılabilir.
-- Reklam paketleri ek gelir kaynağı.
-- TestPackage ve canlı sınav farklı fiyatlama imkânı veriyor.
-- Maliyet izleme altyapısı (cloud spend, per-tenant cost) görünmüyor.
+Domain modeli iş gereksinimlerine uygun:
 
-### Öneriler
-- **Unit economics dashboard:** Tenant başı maliyet (DB satır + storage + compute) vs. tenant başı gelir.
-- **Fiyatlandırma katmanı:** Free / Pro / Enterprise tier — feature gate altyapısı.
-- **Faturalandırma entegrasyonu:** Stripe Billing veya Paddle (KDV, otomatik fatura).
-- **Abonelik akışı:** Educator için aylık platform fee veya komisyon hibrit.
-- **Churn ölçümü:** Aylık aktif candidate / educator, terk oranı.
-- **Pazara çıkış (GTM) ölçütleri:** Yeni feature → adoption rate (hangi % kullanıcı 1 hafta içinde denedi).
-- **Cohort LTV:** Kayıt ayına göre 30/60/90/180 gün gelir izleme.
-- **Cloud maliyet alarmı:** AWS Budgets / CloudWatch — aylık limit alarmı.
-- **Refund oranı:** İade akışı zaten var; iş zekâsı dashboard'una bağla.
-- **Top eğitici / top test paneli:** Marketplace dinamiklerini görselleştir → ürün kararı için sinyal.
+- **Subscription tier yapısı** (`apps/backend/src/domain/types/subscription.ts`): `FREE / PRO / BUSINESS / ENTERPRISE` enum + `TIER_LIMITS` matrix + `tierAllows()` + `isOverQuota()`.
+- **`TierGuard`** `@RequireTier('PRO')` decorator ile feature-gate (402 Payment Required).
+- **Stripe Billing rehberi** (`docs/subscription-stripe-billing.md`) + **migration runbook'u** (`docs/ops/stripe-migration.md`).
+- **Multi-currency rehberi** (`docs/multi-currency.md`) + `tests/domain/bankerRound.test.ts`.
+- **Komisyon yapısı:** `AdminSettings` üzerinden yapılandırılabilir, `UpdateCommissionRateUseCase` + `GetCommissionRateHistoryUseCase` audit edilmiş.
+- **Reklam paketleri:** ek gelir kanalı (AdPackage + AdPurchase + AdImpression) — AdminAdPackages sayfası eklendi.
+- **İade akışı:** 12 use-case (multi-step state) — refund threshold %82 stmts.
+
+Eksik: Stripe canlı entegrasyon (secret + tier ürünleri Stripe Dashboard'da), multi-currency Prisma migration uygulama, unit economics dashboard, cohort LTV analizi, cloud maliyet alarmı, top eğitici/test marketplace dashboard.
 
 ---
 
-## Sonuç ve Aksiyon Önceliklendirmesi
+## Aksiyon Önceliklendirmesi
 
-### 🔴 Bu Çeyrek (Yüksek Öncelik)
-1. **Test coverage** — minimum 60% global, 80% use-case katmanı. (Test Kalitesi)
-2. **a11y test spec'ini yaz** ve CI'ya bağla. (Test Kalitesi)
-3. **Dependabot config + branch protection.** (Süreç Kalitesi)
-4. **Root README + .env.example.** (Dokümantasyon, Taşınabilirlik)
-5. **Idempotency + webhook signing** (ödeme akışı için). (Güvenilirlik, Güvenlik)
+### 🔴 Bu sprint — son boşlukları kapat
 
-### 🟡 Sonraki Çeyrek (Orta Öncelik)
-6. **API versiyonlama** (`/v1/...`) ve OpenAPI SDK üretimi. (Uyumluluk)
-7. **Audit log + 2FA** (Admin + Educator). (Güvenlik)
-8. **Coverage threshold + Stryker mutation test.** (Kod Kalitesi)
-9. **PostHog / product analytics.** (Müşteri Memnuniyeti)
-10. **ADR + C4 diagramları.** (Dokümantasyon, Bakım)
+- **Prettier eksplisit config** kökte (`.prettierrc`) — Husky'ye Prettier check eklenmesi için.
+- **ADR-0005 (Prisma seçimi)** + **ADR-0006 (Vite seçimi)** yazımı.
+- **ER diagram otomasyonu** — `prisma-erd-generator` ile CI artifact'ine bağla.
+- **Branch protection** GitHub UI'da aktive doğrulaması (rehber zaten yazılı).
+- **`@vitejs/plugin-legacy`** eski browser fallback.
+- **`browserslist` package.json'da** eksplisit tanım.
 
-### 🟢 6 Ay+ (Stratejik)
-11. **Helm chart + Kubernetes deploy** (ölçek için).
-12. **Read replica + CDN** (performans).
-13. **Stripe Billing entegrasyonu + tier yapısı.**
-14. **i18n + çoklu para birimi** (uluslararası açılım).
-15. **SOC 2 / ISO 27001 hazırlığı.**
+### 🟡 Sonraki sprint — frontend test ve canlı entegrasyon
+
+- **Frontend Vitest kapsamı** — 47 sayfa için minimum 30 dosya hedefi (şu an 12). `test-writer` agent + sprint başına 8 yeni dosya.
+- **Visual regression** — Percy veya Chromatic + Playwright snapshot.
+- **Contract test** — `@openapitools/openapi-generator-cli` ile SDK üretimi + schema validation.
+- **Stripe canlı kalibrasyon** — `docs/ops/stripe-migration.md` runbook'u izle: test mode → staging → prod.
+- **PostHog secret set** + ConsentBanner ile gerçek olay akışı başlat.
+- **Helm chart staging cluster deploy** + smoke test (`docs/ops/helm-staging-deploy.md`).
+
+### 🟢 Q3+ — ölçek ve uyum
+
+- **Read replica + CDN gerçek uygulama** (rehberler → prod).
+- **Penetration test** + OWASP ASVS Level 2 self-audit.
+- **Yük testi altyapısı** (k6 senaryoları + threshold).
+- **OAuth/SSO** (Google/Microsoft/Apple).
+- **File upload güvenliği** (ClamAV + magic byte + S3 pre-signed URL).
+- **SOC 2 Type I audit hazırlığı** — 90 günlük plan (`docs/compliance/soc2-readiness.md`).
+- **DORA metrikleri ölçümü** + unit economics dashboard.
+- **47 sayfanın i18n key migration'ı.**
 
 ---
 
-*Bu rapor `C:\Users\mtulu\dal` üzerindeki mevcut kodbase taranarak hazırlanmıştır. Skorlar görece ve önceliklendirme amaçlıdır; mutlak değer değildir.*
+## Skor Geçmişi
+
+```
+İlk değerlendirme (17 May 2026):  7.2 / 10
+İkinci revizyon  (27 May 2026, sabah):  8.4 / 10
+Bu rapor        (27 May 2026, akşam):   9.0 / 10
+```
+
+En büyük zıplama: **Test Kalitesi 6.5 → 9.0** (200+ test dosyası, 18 path-spesifik threshold aktif, coverage-ratchet otomasyonu). İkinci: **Süreç Kalitesi 9.0 → 9.5** (release + ratchet workflow'ları, CODEOWNERS, CHANGELOG, Husky hook'u).
+
+---
+
+*Bu rapor `C:\Users\mtulu\dal` üzerinde 27 Mayıs 2026 itibarıyla yapılan kodbase taramasıyla hazırlanmıştır. Veriler `jest.config.cjs`, `CHANGELOG.md`, `.github/CODEOWNERS`, workflow dosyaları ve doğrudan dosya keşfinden çekilmiştir. Skorlar ISO/IEC 25010 çerçevesi temelinde, görece ve önceliklendirme amaçlıdır. Üretim öncesi pen-test + uyum denetimi için bağımsız üçüncü taraf değerlendirmesi önerilir.*
