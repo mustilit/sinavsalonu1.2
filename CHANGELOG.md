@@ -4,6 +4,12 @@ Bu projede yapılan tüm önemli değişiklikler bu dosyada belgelenir.
 
 Format [Keep a Changelog](https://keepachangelog.com/tr/1.0.0/) ve [Semantic Versioning](https://semver.org/lang/tr/) standartlarına uygundur.
 
+## [1.3.0](https://github.com/mustilit/sinavsalonu1_6/compare/v1.2.0...v1.3.0) (2026-05-28)
+
+### ✨ Özellikler
+
+* **card-grid:** auto-fill responsive grid + kart içi overflow koruması ([fd1f517](https://github.com/mustilit/sinavsalonu1_6/commit/fd1f51730e89f52359c7fa9813767818f99122b7))
+
 ## [1.2.0](https://github.com/mustilit/sinavsalonu1_6/compare/v1.1.0...v1.2.0) (2026-05-28)
 
 ### ✨ Özellikler
