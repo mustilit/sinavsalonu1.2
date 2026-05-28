@@ -4,6 +4,12 @@ Bu projede yapılan tüm önemli değişiklikler bu dosyada belgelenir.
 
 Format [Keep a Changelog](https://keepachangelog.com/tr/1.0.0/) ve [Semantic Versioning](https://semver.org/lang/tr/) standartlarına uygundur.
 
+## [1.2.0](https://github.com/mustilit/sinavsalonu1_6/compare/v1.1.0...v1.2.0) (2026-05-28)
+
+### ✨ Özellikler
+
+* **TakeTest:** çözüm kartına "Doğru Cevap: X" rozeti ekle ([23cafb5](https://github.com/mustilit/sinavsalonu1_6/commit/23cafb50edf436ee0d648343637caa4047f8c048))
+
 ## [1.1.0](https://github.com/mustilit/sinavsalonu1_6/compare/v1.0.1...v1.1.0) (2026-05-28)
 
 ### ✨ Özellikler
