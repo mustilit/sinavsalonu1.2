@@ -4,6 +4,12 @@ Bu projede yapılan tüm önemli değişiklikler bu dosyada belgelenir.
 
 Format [Keep a Changelog](https://keepachangelog.com/tr/1.0.0/) ve [Semantic Versioning](https://semver.org/lang/tr/) standartlarına uygundur.
 
+## [1.4.0](https://github.com/mustilit/sinavsalonu1_6/compare/v1.3.1...v1.4.0) (2026-05-28)
+
+### ✨ Özellikler
+
+* **sprint14:** sözleşme onayı zorunluluğu — register + purchase + educator ([db6dfea](https://github.com/mustilit/sinavsalonu1_6/commit/db6dfea77f1a840856184acbd9705785b3d8b399)), closes [#1](https://github.com/mustilit/sinavsalonu1_6/issues/1) [#2](https://github.com/mustilit/sinavsalonu1_6/issues/2) [#3](https://github.com/mustilit/sinavsalonu1_6/issues/3) [#4](https://github.com/mustilit/sinavsalonu1_6/issues/4) [#5](https://github.com/mustilit/sinavsalonu1_6/issues/5) [#6](https://github.com/mustilit/sinavsalonu1_6/issues/6)
+
 ## [1.3.1](https://github.com/mustilit/sinavsalonu1_6/compare/v1.3.0...v1.3.1) (2026-05-28)
 
 ### 🐛 Düzeltmeler
