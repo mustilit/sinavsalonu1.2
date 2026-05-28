@@ -7,9 +7,16 @@ import type { PrismaClient } from '@prisma/client';
 export class PurchasesService {
   constructor(@Inject('PRISMA') private readonly prisma: PrismaClient) {}
 
-  async purchase(testId: string, candidateId: string, discountCode?: string, paymentProvider?: string) {
+  // Sprint 14 — ctx parametresi: mesafeli satış sözleşmesi onayı + IP/UA delili
+  async purchase(
+    testId: string,
+    candidateId: string,
+    discountCode?: string,
+    paymentProvider?: string,
+    ctx?: { acceptedDistanceSaleContractId?: string; ip?: string; userAgent?: string },
+  ) {
     const uc = new PurchaseUseCase(this.prisma);
-    return uc.execute(testId, candidateId, discountCode, paymentProvider);
+    return uc.execute(testId, candidateId, discountCode, paymentProvider, ctx);
   }
 }
 

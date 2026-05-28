@@ -99,16 +99,29 @@ export class AuthController {
   @Post('register')
   @Public()
   @RequireCaptcha()
-  async register(@Body() body: any) {
+  async register(@Body() body: any, @Req() req: any) {
     try {
       // DI bazen dev ortamında undefined kalabiliyor (tsx watch + hot reload). Fail-safe:
       let uc = this.registerUseCase;
       if (!uc) {
+        const { PrismaContractRepository } = require('../../infrastructure/repositories/PrismaContractRepository');
+        const { PrismaContractAcceptanceRepository } = require('../../infrastructure/repositories/PrismaContractAcceptanceRepository');
+        const { PrismaAuditLogRepository } = require('../../infrastructure/repositories/PrismaAuditLogRepository');
         const repo = new PrismaUserRepository();
         const pwd = new PasswordService();
-        uc = new RegisterUseCase(repo, pwd);
+        uc = new RegisterUseCase(
+          repo,
+          pwd,
+          new PrismaContractRepository(prisma),
+          new PrismaContractAcceptanceRepository(prisma),
+          new PrismaAuditLogRepository(),
+        );
       }
-      const user = await uc.execute(body);
+      // Sprint 14 — IP/UA delil olarak ContractAcceptance'a yazılır.
+      const ip = (req?.headers?.['x-forwarded-for'] as string | undefined)?.split(',')[0]?.trim()
+        || (req?.socket?.remoteAddress as string | undefined);
+      const userAgent = req?.headers?.['user-agent'] as string | undefined;
+      const user = await uc.execute(body, { ip, userAgent });
 
       // Email doğrulama linkini fire-and-forget gönder — kayıt akışını bekletmez/bozmaz
       try {
@@ -191,7 +204,15 @@ export class AuthController {
   @Public()
   @RequireCaptcha()
   @Throttle({ default: { limit: 30, ttl: 300000 } })
-  async registerEducator(@Body() body: RegisterEducatorDto & { firstName?: string; lastName?: string }) {
+  async registerEducator(
+    @Body() body: RegisterEducatorDto & {
+      firstName?: string;
+      lastName?: string;
+      acceptedEducatorContractId?: string;
+      acceptedPrivacyContractId?: string;
+    },
+    @Req() req: any,
+  ) {
     try {
       // DI bazen dev ortamında undefined kalabiliyor (tsx watch + hot reload). Fail-safe:
       let uc = this.registerEducatorUseCase;
@@ -208,13 +229,22 @@ export class AuthController {
           new JwtService(),
         );
       }
-      const result = await uc.execute({
-        email: body.email,
-        username: body.username,
-        password: body.password,
-        firstName: body.firstName ?? '',
-        lastName: body.lastName ?? '',
-      });
+      // Sprint 14 — IP/UA delil için ContractAcceptance'a yazılır
+      const ip = (req?.headers?.['x-forwarded-for'] as string | undefined)?.split(',')[0]?.trim()
+        || (req?.socket?.remoteAddress as string | undefined);
+      const userAgent = req?.headers?.['user-agent'] as string | undefined;
+      const result = await uc.execute(
+        {
+          email: body.email,
+          username: body.username,
+          password: body.password,
+          firstName: body.firstName ?? '',
+          lastName: body.lastName ?? '',
+          acceptedEducatorContractId: body.acceptedEducatorContractId,
+          acceptedPrivacyContractId: body.acceptedPrivacyContractId,
+        },
+        { ip, userAgent },
+      );
 
       // Email doğrulama linkini fire-and-forget gönder
       try {

@@ -3,9 +3,10 @@
  * Adımlar: select → card (iyzico) | processing (hepsi) → success | error
  * Desteklenen sağlayıcılar: iyzico, Google Pay, Amazon Pay
  */
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { entities } from "@/api/dalClient";
+import { entities, contracts as contractsApi } from "@/api/dalClient";
 import {
   Dialog,
   DialogContent,
@@ -98,6 +99,48 @@ const PROVIDERS = [
 ];
 
 // ---------------------------------------------------------------------------
+// Sprint 14 — Mesafeli Satış Sözleşmesi onay checkbox'ı
+// ---------------------------------------------------------------------------
+
+/**
+ * Modal'ın select adımında gösterilir. Sözleşme henüz fetch edilmediyse
+ * (`available=false`) loading state; varsa checkbox + linkler.
+ *
+ * Link target="_blank" — kullanıcı sözleşmeyi yeni sekmede okuyup checkbox'a döner.
+ */
+function DistanceSaleCheckbox({ checked, onChange, available }) {
+  if (!available) {
+    return (
+      <div className="rounded-lg bg-slate-50 border border-slate-200 p-3 text-xs text-slate-500">
+        Mesafeli satış sözleşmesi yükleniyor...
+      </div>
+    );
+  }
+  return (
+    <label className="flex items-start gap-2 rounded-lg bg-slate-50 border border-slate-200 p-3 text-sm text-slate-700 cursor-pointer">
+      <input
+        type="checkbox"
+        checked={checked}
+        onChange={(e) => onChange(e.target.checked)}
+        className="mt-0.5 h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+        aria-required="true"
+      />
+      <span>
+        <Link
+          to="/sozlesmeler/mesafeli-satis"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-indigo-600 underline hover:no-underline"
+        >
+          Ön Bilgilendirme Formu&apos;nu ve Mesafeli Satış Sözleşmesi&apos;ni
+        </Link>{" "}
+        okudum, onaylıyorum.
+      </span>
+    </label>
+  );
+}
+
+// ---------------------------------------------------------------------------
 // Bileşen
 // ---------------------------------------------------------------------------
 
@@ -120,6 +163,20 @@ export function PaymentModal({ isOpen, onClose, test, discountCode }) {
   const [expiry, setExpiry] = useState("");
   const [cvv, setCvv] = useState("");
 
+  // Sprint 14 — Mesafeli Satış Sözleşmesi onayı (TKHK m.48). Her satın almada
+  // ayrı kayıt; modal açıldığında aktif sözleşme fetch edilir, checkbox işaretlenince
+  // contract.id Purchase.create body'sine geçer.
+  const [distanceSaleContract, setDistanceSaleContract] = useState(null);
+  const [acceptedDistanceSale, setAcceptedDistanceSale] = useState(false);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    contractsApi
+      .getActive("DISTANCE_SALE")
+      .then((c) => setDistanceSaleContract(c))
+      .catch(() => setDistanceSaleContract(null));
+  }, [isOpen]);
+
   const queryClient = useQueryClient();
 
   // ---------------------------------------------------------------------------
@@ -139,6 +196,7 @@ export function PaymentModal({ isOpen, onClose, test, discountCode }) {
     setSelectedProvider(null);
     resetCardForm();
     setErrorMessage(null);
+    setAcceptedDistanceSale(false);
     purchaseMutation.reset();
     onClose();
   };
@@ -149,10 +207,13 @@ export function PaymentModal({ isOpen, onClose, test, discountCode }) {
 
   const purchaseMutation = useMutation({
     mutationFn: async () => {
+      // Sprint 14 — Mesafeli Satış sözleşmesi acceptance backend'e gönderilir.
+      // Backend bunu aktif contract ID ile karşılaştırır; eşleşmezse 400 atar.
       await entities.Purchase.create({
         test_package_id: test.id,
         discount_code: discountCode || undefined,
         payment_provider: selectedProvider,
+        acceptedDistanceSaleContractId: distanceSaleContract?.id,
       });
     },
     onSuccess: async () => {
@@ -241,6 +302,9 @@ export function PaymentModal({ isOpen, onClose, test, discountCode }) {
   const price = test?.price ?? 0;
   const isFree = price === 0;
   const isCardFormComplete = cardNumber && cardHolder && expiry && cvv;
+  // Sprint 14 — Mesafeli satış onayı ücretli + ücretsiz tüm satın alımlarda zorunlu
+  // (KVKK/TKHK kapsamında ücretsiz dijital içerikte de kullanım koşulları kabul edilmeli).
+  const canProceed = acceptedDistanceSale && distanceSaleContract?.id;
 
   // ---------------------------------------------------------------------------
   // Render
@@ -280,6 +344,14 @@ export function PaymentModal({ isOpen, onClose, test, discountCode }) {
               </DialogDescription>
             </DialogHeader>
 
+            {/* Sprint 14 — Mesafeli Satış Sözleşmesi onayı (TKHK m.48).
+                Ücretli + ücretsiz akış öncesinde gösterilir; eksikse satın alma butonu disabled. */}
+            <DistanceSaleCheckbox
+              checked={acceptedDistanceSale}
+              onChange={setAcceptedDistanceSale}
+              available={Boolean(distanceSaleContract)}
+            />
+
             {isFree ? (
               /* Ücretsiz test — direkt satın al */
               <div className="py-2">
@@ -292,7 +364,7 @@ export function PaymentModal({ isOpen, onClose, test, discountCode }) {
                     setStep("processing");
                     purchaseMutation.mutate();
                   }}
-                  disabled={purchaseMutation.isPending}
+                  disabled={purchaseMutation.isPending || !canProceed}
                 >
                   {purchaseMutation.isPending ? (
                     <>
@@ -351,9 +423,13 @@ export function PaymentModal({ isOpen, onClose, test, discountCode }) {
                   <Button
                     className="w-full h-12 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold"
                     onClick={handleConfirm}
-                    disabled={!selectedProvider}
+                    disabled={!selectedProvider || !canProceed}
                   >
-                    {selectedProvider ? "Devam Et" : "Ödeme yöntemi seçin"}
+                    {!canProceed
+                      ? "Sözleşmeyi onaylayın"
+                      : selectedProvider
+                      ? "Devam Et"
+                      : "Ödeme yöntemi seçin"}
                   </Button>
                   <p className="text-center text-xs text-slate-400">
                     Ödemeniz 256-bit SSL ile şifrelenerek güvence altına

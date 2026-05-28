@@ -35,6 +35,8 @@ export const PAGE_ROLES = {
   Login: [ROLES.PUBLIC],
   Register: [ROLES.PUBLIC],
   ResetPassword: [ROLES.PUBLIC],
+  // Sprint 14 — Yasal metinler her zaman herkese açık (sözleşme görmek için login gerekmez)
+  LegalDocument: [ROLES.PUBLIC],
 
   MyTests: [ROLES.CANDIDATE],
   MyResults: [ROLES.CANDIDATE],

@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { auth } from '@/api/dalClient';
+import { auth, contracts } from '@/api/dalClient';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { createPageUrl } from '@/utils';
@@ -25,19 +25,64 @@ export default function Register() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [turnstileToken, setTurnstileToken] = useState(null);
+  // Sprint 14 — Sözleşme onayı zorunluluğu.
+  // Aktif sözleşmeler kayıt formu açıldığında fetch edilir; checkbox'lar
+  // bunların id'lerini submit'te backend'e gönderir. Backend ID'leri
+  // aktif olanlarla karşılaştırır — eşleşmezse 400 (TERMS_NOT_ACCEPTED).
+  const [activeContracts, setActiveContracts] = useState({ terms: null, privacy: null });
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const [acceptedPrivacy, setAcceptedPrivacy] = useState(false);
+  const [contractsLoadError, setContractsLoadError] = useState(false);
   const navigate = useAppNavigate();
+
+  useEffect(() => {
+    // İki contract'ı paralel fetch et. Failure case: kayıt akışı bloklanır.
+    const termsType = isEducator ? 'EDUCATOR' : 'CANDIDATE';
+    Promise.all([
+      contracts.getActive(termsType).catch(() => null),
+      contracts.getActive('PRIVACY').catch(() => null),
+    ]).then(([terms, privacy]) => {
+      if (!terms || !privacy) {
+        setContractsLoadError(true);
+        return;
+      }
+      setActiveContracts({ terms, privacy });
+    });
+  }, [isEducator]);
 
   const submit = async (e) => {
     e.preventDefault();
     setError(null);
     setLoading(true);
     try {
+      if (!acceptedTerms || !acceptedPrivacy) {
+        setError(t('auth:register.contractsRequired', {
+          defaultValue: 'Sözleşme ve KVKK aydınlatma metni kabulü zorunludur.',
+        }));
+        return;
+      }
+      if (!activeContracts.terms?.id || !activeContracts.privacy?.id) {
+        setError(t('auth:register.contractsLoadFailed', {
+          defaultValue: 'Sözleşme metinleri yüklenemedi, lütfen sayfayı yenileyin.',
+        }));
+        return;
+      }
       if (isEducator) {
-        await auth.registerEducator(email, username, password, { firstName, lastName, turnstileToken });
+        await auth.registerEducator(email, username, password, {
+          firstName,
+          lastName,
+          turnstileToken,
+          acceptedEducatorContractId: activeContracts.terms.id,
+          acceptedPrivacyContractId: activeContracts.privacy.id,
+        });
         // Eğitici: doğrulama → login → EducatorOnboarding (CV + uzmanlık alanı zorunlu)
         navigate(createPageUrl('VerifyEmail') + `?email=${encodeURIComponent(email)}&role=educator`, { replace: true });
       } else {
-        await auth.register(email, username, password, { turnstileToken });
+        await auth.register(email, username, password, {
+          turnstileToken,
+          acceptedTermsContractId: activeContracts.terms.id,
+          acceptedPrivacyContractId: activeContracts.privacy.id,
+        });
         // Aday: e-posta doğrulama sayfasına yönlendir; doğrulama sonrası SelectExamTypes'a yönlendirilir
         navigate(createPageUrl('VerifyEmail') + `?email=${encodeURIComponent(email)}`, { replace: true });
       }
@@ -140,10 +185,69 @@ export default function Register() {
               className="w-full"
             />
           </div>
+          {/* Sprint 14 — Sözleşme onay checkbox'ları (zorunlu).
+              Üyelik/Eğitici sözleşmesi + KVKK Aydınlatma metni linkleri yeni
+              sekmede public sayfayı açar; içerik görüldükten sonra checkbox işaretlenir. */}
+          {contractsLoadError ? (
+            <div className="rounded-lg bg-rose-50 border border-rose-200 p-3 text-sm text-rose-700">
+              {t('auth:register.contractsLoadFailed', {
+                defaultValue: 'Sözleşme metinleri yüklenemedi. Lütfen sayfayı yenileyin veya yöneticiyle iletişime geçin.',
+              })}
+            </div>
+          ) : (
+            <div className="space-y-2 rounded-lg bg-slate-50 border border-slate-200 p-3">
+              <label className="flex items-start gap-2 text-sm text-slate-700 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={acceptedTerms}
+                  onChange={(e) => setAcceptedTerms(e.target.checked)}
+                  className="mt-0.5 h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                  aria-required="true"
+                />
+                <span>
+                  <Link
+                    to={isEducator ? '/sozlesmeler/egitici-hizmet' : '/sozlesmeler/uyelik'}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-indigo-600 underline hover:no-underline"
+                  >
+                    {isEducator
+                      ? t('auth:register.educatorContractLink', { defaultValue: 'Eğitici Hizmet Sözleşmesi' })
+                      : t('auth:register.termsContractLink', { defaultValue: 'Üyelik / Kullanım Sözleşmesi' })}
+                  </Link>
+                  {'’'}ni okudum, kabul ediyorum.
+                </span>
+              </label>
+              <label className="flex items-start gap-2 text-sm text-slate-700 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={acceptedPrivacy}
+                  onChange={(e) => setAcceptedPrivacy(e.target.checked)}
+                  className="mt-0.5 h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                  aria-required="true"
+                />
+                <span>
+                  <Link
+                    to="/sozlesmeler/kvkk"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-indigo-600 underline hover:no-underline"
+                  >
+                    {t('auth:register.privacyContractLink', { defaultValue: 'KVKK Aydınlatma Metni' })}
+                  </Link>
+                  {'’'}ni okudum.
+                </span>
+              </label>
+            </div>
+          )}
           {error && <p className="text-sm text-red-600">{error}</p>}
           {/* Bot doğrulaması — normal kullanıcıya görünmez; şüpheli aktivitede challenge */}
           <TurnstileWidget onSuccess={setTurnstileToken} action="register" />
-          <Button type="submit" disabled={loading} className="w-full bg-indigo-600 hover:bg-indigo-700">
+          <Button
+            type="submit"
+            disabled={loading || !acceptedTerms || !acceptedPrivacy || contractsLoadError}
+            className="w-full bg-indigo-600 hover:bg-indigo-700"
+          >
             {loading ? t('auth:register.submitting') : t('auth:register.submit')}
           </Button>
         </form>

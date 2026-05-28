@@ -16,6 +16,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { MemoryRouter } from 'react-router-dom';
 import { PaymentModal } from './PaymentModal';
 
 // ---------------------------------------------------------------------------
@@ -29,6 +30,19 @@ vi.mock('@/api/dalClient', () => ({
     Purchase: {
       create: (...args) => mockPurchaseCreate(...args),
     },
+  },
+  // Sprint 14 — Mesafeli Satış Sözleşmesi onayı için contracts.getActive mock'u.
+  // Test her açılışta DISTANCE_SALE contract'ını başarıyla fetch eder; checkbox
+  // ve buton state'i `acceptedDistanceSale` ile yönetilir.
+  contracts: {
+    getActive: vi.fn().mockResolvedValue({
+      id: 'mock-distance-sale-contract-id',
+      type: 'DISTANCE_SALE',
+      version: 1,
+      title: 'Mesafeli Satış Sözleşmesi',
+      content: 'Mock sözleşme metni',
+      publishedAt: '2026-01-01T00:00:00.000Z',
+    }),
   },
 }));
 
@@ -47,16 +61,31 @@ const DEFAULT_PACKAGE = { id: 'pkg-kpss-2026', title: 'KPSS 2026 Paketi', price:
 function renderModal(props = {}) {
   const onClose = vi.fn();
   render(
-    <QueryClientProvider client={makeQC()}>
-      <PaymentModal
-        isOpen={true}
-        onClose={onClose}
-        test={DEFAULT_PACKAGE}
-        {...props}
-      />
-    </QueryClientProvider>
+    // Sprint 14 — MemoryRouter wrap: PaymentModal artık <Link> kullanıyor
+    // (mesafeli satış sözleşmesi'ne route).
+    <MemoryRouter>
+      <QueryClientProvider client={makeQC()}>
+        <PaymentModal
+          isOpen={true}
+          onClose={onClose}
+          test={DEFAULT_PACKAGE}
+          {...props}
+        />
+      </QueryClientProvider>
+    </MemoryRouter>
   );
   return { onClose };
+}
+
+/**
+ * Sprint 14 — Mesafeli Satış Sözleşmesi onay checkbox'ını işaretler.
+ * Çoğu test akışı için ilk adımdır; ödeme yöntemi seçilmeden önce çağrılır
+ * (modal `useEffect` ile DISTANCE_SALE contract'ı async fetch ettiği için await).
+ */
+async function acceptContract() {
+  // Mock contracts.getActive resolve olmuş, checkbox render edilmiş olmalı.
+  const checkbox = await screen.findByRole('checkbox');
+  fireEvent.click(checkbox);
 }
 
 /** iyzico provider butonunu tıkla (data-testid ile) */
@@ -97,15 +126,20 @@ describe('PaymentModal', () => {
       expect(screen.getByTestId('provider-amazon_pay')).toBeDefined();
     });
 
-    it('sağlayıcı seçilmeden Devam Et disabled', () => {
+    it('sağlayıcı seçilmeden Devam Et disabled', async () => {
       renderModal();
-      expect(
-        screen.getByRole('button', { name: /ödeme yöntemi seçin/i }).disabled
-      ).toBe(true);
+      // Sprint 14 — Sözleşme onayı sonrası buton hâlâ disabled (provider yok)
+      await acceptContract();
+      await waitFor(() =>
+        expect(
+          screen.getByRole('button', { name: /ödeme yöntemi seçin/i }).disabled
+        ).toBe(true)
+      );
     });
 
     it('sağlayıcı seçince Devam Et aktif olur', async () => {
       renderModal();
+      await acceptContract();
       clickGoogle();
       await waitFor(() =>
         expect(screen.getByRole('button', { name: /devam et/i }).disabled).toBe(false)
@@ -119,6 +153,8 @@ describe('PaymentModal', () => {
   describe('iyzico — kart formu', () => {
     async function openCard() {
       renderModal();
+      // Sprint 14 — Mesafeli Satış Sözleşmesi onayı zorunlu
+      await acceptContract();
       clickIyzico();
       clickDevamEt();
       await waitFor(() => expect(screen.getByText('Kart Bilgileri')).toBeDefined());
@@ -164,6 +200,7 @@ describe('PaymentModal', () => {
       mockPurchaseCreate.mockResolvedValue({ id: 'pur-1' });
       renderModal();
 
+      await acceptContract();
       clickIyzico();
       clickDevamEt();
       await waitFor(() => expect(screen.getByText('Kart Bilgileri')).toBeDefined());
@@ -185,6 +222,7 @@ describe('PaymentModal', () => {
       mockPurchaseCreate.mockResolvedValue({ id: 'pur-2' });
       renderModal();
 
+      await acceptContract();
       clickGoogle();
       clickDevamEt();
 
@@ -201,6 +239,7 @@ describe('PaymentModal', () => {
       mockPurchaseCreate.mockResolvedValue({ id: 'pur-3' });
       renderModal();
 
+      await acceptContract();
       clickAmazon();
       clickDevamEt();
 
@@ -221,6 +260,8 @@ describe('PaymentModal', () => {
     async function triggerIyzicoError(status, data) {
       mockPurchaseCreate.mockRejectedValue({ response: { status, data } });
       renderModal();
+      // Sprint 14 — Mesafeli Satış Sözleşmesi onayı zorunlu
+      await acceptContract();
       clickIyzico();
       clickDevamEt();
       await waitFor(() => expect(screen.getByText('Kart Bilgileri')).toBeDefined());
@@ -268,6 +309,7 @@ describe('PaymentModal', () => {
       mockPurchaseCreate.mockReturnValue(new Promise(() => {})); // asla bitmez
       const { onClose } = renderModal();
 
+      await acceptContract();
       clickIyzico();
       clickDevamEt();
       await waitFor(() => expect(screen.getByText('Kart Bilgileri')).toBeDefined());
@@ -308,6 +350,9 @@ describe('PaymentModal', () => {
       mockPurchaseCreate.mockResolvedValue({ id: 'pur-free' });
       renderModal({ test: FREE_PKG });
 
+      // Sprint 14 — Ücretsiz pakette de mesafeli satış sözleşmesi onayı zorunlu
+      // (ön bilgilendirme + kullanım koşulları kabulü tüm satın almalarda var).
+      await acceptContract();
       fireEvent.click(screen.getByRole('button', { name: /ücretsiz erişim/i }));
 
       await waitFor(() =>

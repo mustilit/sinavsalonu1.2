@@ -119,6 +119,8 @@ const EmailTemplates = lazy(() => import('./pages/EmailTemplates'));
 const EmailSuppressions = lazy(() => import('./pages/EmailSuppressions'));
 const EmailPreferences = lazy(() => import('./pages/EmailPreferences'));
 const Unsubscribe = lazy(() => import('./pages/Unsubscribe'));
+// Sprint 14 — Public yasal metin sayfası (4 slug paylaşır)
+const LegalDocument = lazy(() => import('./pages/LegalDocument'));
 const EmailManagement = lazy(() => import('./pages/EmailManagement'));
 // İçerik Moderasyonu
 const ModerationQueue = lazy(() => import('./pages/ModerationQueue'));
@@ -202,6 +204,7 @@ export const PAGES = {
     "EmailSuppressions": EmailSuppressions,
     "EmailPreferences": EmailPreferences,
     "Unsubscribe": Unsubscribe,
+    "LegalDocument": LegalDocument,
     "EmailManagement": EmailManagement,
     "ModerationQueue": ModerationQueue,
     "RiskyEducators": RiskyEducators,

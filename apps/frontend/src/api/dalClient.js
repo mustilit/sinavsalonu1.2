@@ -20,11 +20,16 @@ export const auth = {
     return data;
   },
   async register(email, username, password, opts = {}) {
+    // Sprint 14 — Sözleşme onayı zorunluluğu: opts.acceptedTermsContractId
+    // (CANDIDATE üyelik) ve opts.acceptedPrivacyContractId (PRIVACY/KVKK) backend'in
+    // doğruladığı aktif contract ID'leri olmalı. Eşleşmezse 400 (TERMS_NOT_ACCEPTED).
     const body = {
       email,
       username,
       password,
       ...(opts.turnstileToken ? { turnstileToken: opts.turnstileToken } : {}),
+      ...(opts.acceptedTermsContractId ? { acceptedTermsContractId: opts.acceptedTermsContractId } : {}),
+      ...(opts.acceptedPrivacyContractId ? { acceptedPrivacyContractId: opts.acceptedPrivacyContractId } : {}),
     };
     const { data } = await api.post('/auth/register', body);
     return data;
@@ -40,7 +45,8 @@ export const auth = {
     return data; // { message }
   },
   async registerEducator(email, username, password, opts = {}) {
-    // opts: { firstName, lastName, turnstileToken } — eğitici kaydında zorunlu
+    // opts: { firstName, lastName, turnstileToken, acceptedEducatorContractId,
+    //        acceptedPrivacyContractId } — Sprint 14 sözleşme onayları zorunlu
     const body = {
       email,
       username,
@@ -48,6 +54,8 @@ export const auth = {
       firstName: opts.firstName ?? '',
       lastName: opts.lastName ?? '',
       ...(opts.turnstileToken ? { turnstileToken: opts.turnstileToken } : {}),
+      ...(opts.acceptedEducatorContractId ? { acceptedEducatorContractId: opts.acceptedEducatorContractId } : {}),
+      ...(opts.acceptedPrivacyContractId ? { acceptedPrivacyContractId: opts.acceptedPrivacyContractId } : {}),
     };
     const { data } = await api.post('/auth/register/educator', body);
     return data;
@@ -360,10 +368,17 @@ export const entities = {
       });
     },
     create: async (body) => {
+      // Sprint 14 — acceptedDistanceSaleContractId zorunlu (backend 400 atar yoksa).
+      // Çağıran taraf önceden GET /contracts/active?type=DISTANCE_SALE ile aktif
+      // contract ID'sini almalı ve kullanıcıya "Mesafeli Satış Sözleşmesi'ni onaylıyorum"
+      // checkbox'ı göstermeli.
       const testId = body.test_package_id ?? body.test_id;
       const { data } = await api.post(`/purchases/${testId}`, {
         discountCode: body.discount_code,
         paymentProvider: body.payment_provider,
+        ...(body.acceptedDistanceSaleContractId
+          ? { acceptedDistanceSaleContractId: body.acceptedDistanceSaleContractId }
+          : {}),
       });
       return data;
     },
@@ -1523,6 +1538,35 @@ export const adminBackup = {
   },
 };
 
+
+/**
+ * Contracts API — Sprint 14.
+ *
+ * Frontend, Register / Purchase / Educator-onboarding akışlarında
+ * aktif sözleşme metnini fetch edip kullanıcıya gösterir, kabul checkbox'ı
+ * ile birlikte contract.id'yi backend'e gönderir.
+ *
+ * ContractType: 'CANDIDATE' | 'EDUCATOR' | 'PRIVACY' | 'DISTANCE_SALE'
+ */
+export const contracts = {
+  /** Aktif sözleşmeyi tipine göre getir. Auth gerekmez. */
+  getActive: async (type) => {
+    const { data } = await api.get(`/contracts/active?type=${encodeURIComponent(type)}`);
+    return data; // { id, type, version, title, content, publishedAt }
+  },
+  /**
+   * Kabul kaydı oluştur. Idempotent: aynı user + contract için tek satır.
+   * Auth zorunlu (CANDIDATE/EDUCATOR/ADMIN).
+   *
+   * NOT: Register + Purchase akışı kendi içinde acceptance kaydını üretir
+   * (RegisterUseCase + PurchaseUseCase atomik). Bu endpoint sadece
+   * profil sonrası "Yeni sözleşme yayımlandı, kabul et" gibi senaryolar için.
+   */
+  accept: async (contractId) => {
+    const { data } = await api.post('/contracts/accept', { contractId });
+    return data; // { acceptedAt }
+  },
+};
 
 export default api;
 export { api };

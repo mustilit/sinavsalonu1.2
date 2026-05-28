@@ -124,6 +124,28 @@ Tüm giden mailler izlenir, kuyruklara ayrılır ve admin kontrolünde tutulur. 
 
 **AdminSettings — kill switch grid:** Rol (Eğitici / Aday / Staff) × Kuyruk (Kritik / Bildirim / Toplu) 9 ayrı bool + global `emailEnabled`. Admin paneli `/yonetim/mail/kontrol`.
 
+### Contract — Yasal Sözleşmeler (Sprint 14)
+
+Kayıt + satın alma + eğitici onboarding akışlarında yasal sözleşme kabulü zorunludur.
+
+- **Contract:** `id, type, version, title, content (markdown), isActive, publishedAt, createdAt, updatedAt`
+  - `type`: 4 değer — `CANDIDATE` (üyelik), `EDUCATOR` (eğitici hizmet sözleşmesi), `PRIVACY` (KVKK aydınlatma), `DISTANCE_SALE` (mesafeli satış + ön bilgilendirme)
+  - `@@unique([type, version])` — her tip için tek aktif version. Yeni versiyon yayımlanınca eski `isActive=false`.
+- **ContractAcceptance:** `id, userId, contractId, acceptedAt, ip, userAgent` — delil zinciri. `@@unique([userId, contractId])` idempotent kabul.
+- **Purchase.distanceSale\*** alanları (denormalized snapshot): `distanceSaleContractId`, `distanceSaleAcceptedAt`, `distanceSaleAcceptedIp`, `distanceSaleAcceptedUserAgent` — TKHK m.48 kanıt zinciri her satın alma satırında kendi içinde.
+
+**Tetikleme noktaları (uygulama katmanı zorlar):**
+
+| Akış | Zorunlu sözleşmeler |
+|---|---|
+| `RegisterUseCase` (aday kayıt) | CANDIDATE + PRIVACY |
+| `RegisterEducatorUseCase` (eğitici kayıt) | EDUCATOR + PRIVACY |
+| `PurchaseUseCase` (her satın alma) | DISTANCE_SALE — her purchase için yeni snapshot |
+
+**Seed:** `SeedService.seedLegalContracts()` her boot'ta `docs/legal/*.md` dosyalarından idempotent upsert eder. Production metinleri avukat onaylı versiyonla değiştirilir; seed sadece "boş veritabanı / ilk kurulum" güvencesi.
+
+**Public sayfa:** `/sozlesmeler/:slug` (4 slug: `uyelik`, `kvkk`, `mesafeli-satis`, `egitici-hizmet`) — herkese açık, markdown render. Footer'a link.
+
 ### LiveSession — Canlı Sınav Oturumu
 
 Gerçek zamanlı toplu sınav özelliği. **6 Prisma modeli:**

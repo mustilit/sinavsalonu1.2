@@ -20,11 +20,23 @@ export class PurchasesController {
     const candidateId = (req as any).user?.id;
     const discountCode = body?.discountCode;
     const paymentProvider = body?.paymentProvider;
+    // Sprint 14 — Mesafeli satış sözleşmesi acceptance: frontend body içinde gönderir
+    const acceptedDistanceSaleContractId = body?.acceptedDistanceSaleContractId;
     if (!candidateId) {
       throw new HttpException('candidateId required', HttpStatus.BAD_REQUEST);
     }
+    // Sprint 14 — IP/UA delil olarak Purchase tablosuna snapshot edilir
+    const ip = ((req.headers?.['x-forwarded-for'] as string | undefined)?.split(',')[0]?.trim())
+      || (req.socket?.remoteAddress as string | undefined);
+    const userAgent = req.headers?.['user-agent'];
     try {
-      return await this.purchasesService.purchase(testId, candidateId, discountCode, paymentProvider);
+      return await this.purchasesService.purchase(
+        testId,
+        candidateId,
+        discountCode,
+        paymentProvider,
+        { acceptedDistanceSaleContractId, ip, userAgent },
+      );
     } catch (e: any) {
       if (e?.status === 409 || e?.message === 'ALREADY_PURCHASED' || e?.response?.code === 'ALREADY_PURCHASED') {
         throw new HttpException('Already purchased', HttpStatus.CONFLICT);

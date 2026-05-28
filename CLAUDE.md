@@ -262,6 +262,23 @@ cd apps/frontend && npm audit --audit-level=high
 - **AVIF varyantları (Sharp pipeline):** `ImageProcessor.ts` her responsive width için WebP + AVIF iki encode (320w/640w/1024w × 2). Thumbnail tek format (WebP — küçük boyutta AVIF avantajı yok). AVIF config: `quality=60, effort=4` (WebP q=80'e eşdeğer kalite). `buildImageUrls()` `srcsetWebp` + `srcsetAvif` ayrı stringler; `srcset` legacy alias. `<ResponsiveImage>` `<picture><source type="image/avif"><source type="image/webp"><img>` fallback chain'i kurar. **AVIF destekli tarayıcıda mobil byte ~%30 azalır** (320w: 80 KB → 50 KB). AVIF encode WebP'ye göre ~12x yavaş; yüksek upload hacminde Phase 3'te BullMQ worker'a taşınacak.
 - **Strict touch target:** `Button` component variantları yeniden boyutlandı — `default h-9 → h-10` (40px), `sm h-8 → h-8 min-h-10` (görsel kompakt, hit area 40), `lg h-10 → h-11` (44px Apple HIG), `icon h-9 w-9 → h-10 w-10` (40×40). Tek edit ile 110+ buton kullanımı düzeldi. Carousel prev/next + Sidebar trigger override'ları da 40×40. `mobile-a11y.spec.ts` artık **strict** (`expect(violations).toEqual([])`) — yeni component 40px altında buton üretirse CI kırılır. WCAG 2.5.5 "Target Size" Level AAA-near uyumlu.
 
+### Sprint 14 — Sözleşme onayı zorunluluğu
+
+Kayıt + satın alma + eğitici onboarding akışlarında yasal sözleşme onayı uygulama katmanından zorlanır. KVKK + TKHK + TBK gereksinimlerini karşılar (placeholder metinler, **production öncesi avukat onayı zorunlu**).
+
+- **Schema:** `ContractType` enum'una `PRIVACY` + `DISTANCE_SALE` eklendi (önceden CANDIDATE + EDUCATOR vardı). `Purchase` modeline mesafeli satış acceptance snapshot alanları: `distanceSaleContractId`, `distanceSaleAcceptedAt`, `distanceSaleAcceptedIp`, `distanceSaleAcceptedUserAgent` — her satın alma satırı kendi içinde TKHK m.48 kanıt zinciri taşır. Migration: `20260528200000_sprint14_contract_extensions`.
+- **Seed (`SeedService.seedLegalContracts`):** Her sistem boot'unda `docs/legal/*.md` markdown dosyaları okunur ve 4 contract idempotent upsert edilir (`CANDIDATE/PRIVACY/DISTANCE_SALE/EDUCATOR`, hepsi version 1, isActive=true). Admin paneli runtime'da yeni versiyon yayımlayabilir.
+- **RegisterUseCase:** `acceptedTermsContractId` + `acceptedPrivacyContractId` zorunlu (DI verilmişse). Aktif contract ID'leri ile karşılaştırır; eşleşmezse 400 `TERMS_NOT_ACCEPTED`. Backward compatible — DI verilmezse contract kontrolü atlanır (test ortamı).
+- **RegisterEducatorUseCase:** Aynı pattern + EDUCATOR sözleşmesi de zorunlu (`acceptedEducatorContractId` + `acceptedPrivacyContractId`). 2 acceptance kaydı (EDUCATOR + PRIVACY) IP/UA delili ile yazılır.
+- **PurchaseUseCase:** `ctx.acceptedDistanceSaleContractId` zorunlu — aktif DISTANCE_SALE contract ID ile eşleşmezse 400. Purchase satırına snapshot olarak yazılır (contract ID + acceptedAt + IP + UA).
+- **Frontend:**
+  - `Register.jsx` 2 zorunlu checkbox (Üyelik + KVKK; eğitici mode'da Üyelik → Eğitici Hizmet). `contracts.getActive()` mount'ta fetch, submit butonu kabul olmadan disabled.
+  - `PaymentModal.jsx` "Mesafeli Satış Sözleşmesi'ni onaylıyorum" checkbox + sözleşmeye yeni sekmede link. Hem ücretli hem ücretsiz akışta zorunlu.
+  - `LegalDocument.jsx` + route `/sozlesmeler/:slug` (4 slug: `uyelik`, `kvkk`, `mesafeli-satis`, `egitici-hizmet`) — public sayfa, markdown render.
+  - `dalClient.contracts.getActive(type)` + `.accept(contractId)` API metodları.
+- **Yasal metinler:** `docs/legal/` altında 4 markdown şablon dosya — her birinin başında ⚠️ "ŞABLON METİN — AVUKAT ONAYI GEREKLİ" uyarısı. README'de production checklist + KVKK/TKHK kapsamı.
+- **Test:** Backend `auth-register.test.ts` 6 → 11 test (5 yeni Sprint 14 case'i: backward compat, missing ID, mismatch, success path, unavailable contract). Frontend `Register.test.jsx` + `PaymentModal.test.jsx` mock'lar `contracts.getActive` ekledi; helper `acceptContract()`/`acceptContracts()` zorunlu adımı simüle eder. 215/215 frontend + 11/11 register pass.
+
 ## Delege Rehberi
 
 | Task tipi | Agent |

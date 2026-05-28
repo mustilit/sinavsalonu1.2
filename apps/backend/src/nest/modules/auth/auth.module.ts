@@ -30,10 +30,17 @@ import { SendEmailUseCase } from '../../../application/use-cases/email/SendEmail
     { provide: USER_REPO, useClass: PrismaUserRepository },
     PasswordService,
     JwtService,
+    // Sprint 14 — RegisterUseCase artık contract repo'larını alır (üyelik + KVKK zorunlu)
     {
       provide: RegisterUseCase,
       useFactory: (userRepo: PrismaUserRepository, passwordService: PasswordService) =>
-        new RegisterUseCase(userRepo, passwordService),
+        new RegisterUseCase(
+          userRepo,
+          passwordService,
+          new PrismaContractRepository(prisma),
+          new PrismaContractAcceptanceRepository(prisma),
+          new PrismaAuditLogRepository(),
+        ),
       inject: [PrismaUserRepository, PasswordService],
     },
     AuditLogger,

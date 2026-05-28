@@ -27,13 +27,20 @@ export class RegisterEducatorUseCase {
     private readonly jwtService: JwtService,
   ) {}
 
-  async execute(dto: {
-    email: string;
-    username: string;
-    password: string;
-    firstName: string;
-    lastName: string;
-  }): Promise<{ user: UserPublic; token: string }> {
+  async execute(
+    dto: {
+      email: string;
+      username: string;
+      password: string;
+      firstName: string;
+      lastName: string;
+      /** Sprint 14 — Aktif EDUCATOR contract ID (eğitici hizmet sözleşmesi) */
+      acceptedEducatorContractId?: string;
+      /** Sprint 14 — Aktif PRIVACY contract ID (KVKK aydınlatma) */
+      acceptedPrivacyContractId?: string;
+    },
+    ctx?: { ip?: string; userAgent?: string },
+  ): Promise<{ user: UserPublic; token: string }> {
     // Zorunlu alan doğrulaması
     const firstName = (dto.firstName ?? '').trim();
     const lastName = (dto.lastName ?? '').trim();
@@ -69,28 +76,51 @@ export class RegisterEducatorUseCase {
       data: { firstName, lastName },
     });
 
-    // Aktif EDUCATOR sözleşmesi zorunludur
-    const contract = await this.contractRepo.getActiveByType('EDUCATOR');
-    if (!contract || !contract.isActive) {
-      throw new AppError('CONTRACT_NOT_AVAILABLE', 'Active educator contract not found', 400);
+    // Sprint 14 — Aktif EDUCATOR + PRIVACY sözleşmeleri zorunludur.
+    // Frontend her ikisini de doğru contract ID ile göndermeli.
+    const educatorContract = await this.contractRepo.getActiveByType('EDUCATOR');
+    const privacyContract = await this.contractRepo.getActiveByType('PRIVACY');
+    if (!educatorContract || !educatorContract.isActive || !privacyContract || !privacyContract.isActive) {
+      throw new AppError(
+        'CONTRACT_NOT_AVAILABLE',
+        'Aktif eğitici veya gizlilik sözleşmesi bulunamadı — sistem yöneticisine başvurun',
+        503,
+      );
+    }
+    if (
+      !dto.acceptedEducatorContractId ||
+      !dto.acceptedPrivacyContractId ||
+      dto.acceptedEducatorContractId !== educatorContract.id ||
+      dto.acceptedPrivacyContractId !== privacyContract.id
+    ) {
+      throw new AppError(
+        'TERMS_NOT_ACCEPTED',
+        'Eğitici hizmet sözleşmesi ve KVKK aydınlatma metni kabulü zorunludur',
+        400,
+      );
     }
 
-    const existingAcceptance = await this.acceptanceRepo.findByUserAndContract(saved.id, contract.id);
-    if (!existingAcceptance) {
-      await this.acceptanceRepo.create({
-        userId: saved.id,
-        contractId: contract.id,
-      });
-      try {
-        await this.auditRepo.create({
-          action: 'CONTRACT_ACCEPTED',
-          entityType: 'CONTRACT',
-          entityId: contract.id,
-          actorId: saved.id,
-          metadata: { type: 'EDUCATOR' },
+    // Acceptance kayıtları — IP/UA delil olarak saklanır (TKHK + KVKK kanıt zinciri)
+    for (const contract of [educatorContract, privacyContract]) {
+      const existingAcceptance = await this.acceptanceRepo.findByUserAndContract(saved.id, contract.id);
+      if (!existingAcceptance) {
+        await this.acceptanceRepo.create({
+          userId: saved.id,
+          contractId: contract.id,
+          ip: ctx?.ip,
+          userAgent: ctx?.userAgent,
         });
-      } catch {
-        /* best-effort */
+        try {
+          await this.auditRepo.create({
+            action: 'CONTRACT_ACCEPTED',
+            entityType: 'CONTRACT',
+            entityId: contract.id,
+            actorId: saved.id,
+            metadata: { during: 'register', role: 'EDUCATOR', type: contract.type },
+          });
+        } catch {
+          /* best-effort */
+        }
       }
     }
 

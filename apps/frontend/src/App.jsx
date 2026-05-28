@@ -75,6 +75,9 @@ const AuthenticatedApp = () => {
           const paramPaths = {
             ModerationResultDetail: '/yonetim/moderasyon/sonuc/:id',
             EducatorViolationDetail: '/yonetim/moderasyon/eğitici/:id',
+            // Sprint 14 — 4 yasal metin tek slug-paramlı sayfa paylaşır
+            // (uyelik / kvkk / mesafeli-satis / egitici-hizmet)
+            LegalDocument: '/sozlesmeler/:slug',
           };
           const routePath = paramPaths[path] || `/${path}`;
           return (

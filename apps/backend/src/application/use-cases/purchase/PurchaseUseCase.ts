@@ -30,12 +30,50 @@ export class PurchaseUseCase {
   /**
    * Test satın alma işlemini gerçekleştirir.
    * Fiyat istemci tarafından gönderilmez; test fiyatı ve indirim kurallarından hesaplanır.
-   * @param testId       - Satın alınacak testin ID'si.
-   * @param candidateId  - Satın almayı yapan adayın ID'si.
-   * @param discountCode - Opsiyonel indirim kodu.
+   *
+   * Sprint 14 — Mesafeli Satış Sözleşmesi onayı zorunludur:
+   *   `acceptedDistanceSaleContractId` aktif DISTANCE_SALE contract ID ile eşleşmeli.
+   *   Eşleşmezse 400 (TERMS_NOT_ACCEPTED). Purchase satırına ayrıca contract ID,
+   *   acceptedAt, IP ve UA snapshot olarak yazılır (TKHK m.48 kanıt zinciri).
+   *
+   * @param testId                          - Satın alınacak testin ID'si.
+   * @param candidateId                     - Satın almayı yapan adayın ID'si.
+   * @param discountCode                    - Opsiyonel indirim kodu.
+   * @param paymentProvider                 - Opsiyonel ödeme sağlayıcısı.
+   * @param ctx.acceptedDistanceSaleContractId - Sprint 14 zorunlu.
+   * @param ctx.ip                          - Sprint 14 — delil için Purchase'a yazılır.
+   * @param ctx.userAgent                   - Sprint 14 — delil için Purchase'a yazılır.
    */
-  async execute(testId: string, candidateId: string, discountCode?: string, paymentProvider?: string) {
+  async execute(
+    testId: string,
+    candidateId: string,
+    discountCode?: string,
+    paymentProvider?: string,
+    ctx?: { acceptedDistanceSaleContractId?: string; ip?: string; userAgent?: string },
+  ) {
     if (!testId || !candidateId) throw new BadRequestException({ code: 'INVALID_INPUT', message: 'Missing testId or candidateId' });
+
+    // Sprint 14 — Mesafeli Satış Sözleşmesi onayı doğrulaması.
+    // Aktif DISTANCE_SALE contract'ı bul; istemcinin gönderdiği ID ile eşleşmeli.
+    const activeDistanceSaleContract = await this.prisma.contract.findFirst({
+      where: { type: 'DISTANCE_SALE', isActive: true },
+      orderBy: { version: 'desc' },
+    });
+    if (!activeDistanceSaleContract) {
+      throw new BadRequestException({
+        code: 'CONTRACT_NOT_AVAILABLE',
+        message: 'Aktif mesafeli satış sözleşmesi bulunamadı — sistem yöneticisine başvurun',
+      });
+    }
+    if (
+      !ctx?.acceptedDistanceSaleContractId ||
+      ctx.acceptedDistanceSaleContractId !== activeDistanceSaleContract.id
+    ) {
+      throw new BadRequestException({
+        code: 'TERMS_NOT_ACCEPTED',
+        message: 'Mesafeli satış sözleşmesi ve ön bilgilendirme formu onayı zorunludur',
+      });
+    }
 
     // FR-Y-05: Satın alma kill-switch'i — admin panelinden geçici durdurulabilir
     const settings = await this.prisma.adminSettings.findFirst({ where: { id: 1 } });
@@ -206,6 +244,11 @@ export class PurchaseUseCase {
             ...(discountApplied ? { discountCodeId: discountApplied.id } : {}),
             ...(packageId ? { packageId } : {}),
             ...(paymentProvider ? { paymentProvider } : {}),
+            // Sprint 14 — Mesafeli satış acceptance snapshot (TKHK kanıt zinciri)
+            distanceSaleContractId: activeDistanceSaleContract.id,
+            distanceSaleAcceptedAt: new Date(),
+            ...(ctx?.ip ? { distanceSaleAcceptedIp: ctx.ip } : {}),
+            ...(ctx?.userAgent ? { distanceSaleAcceptedUserAgent: ctx.userAgent } : {}),
           } as any,
         });
 

@@ -1,5 +1,7 @@
 import { Injectable, OnApplicationBootstrap, Inject } from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
+import { readFileSync, existsSync } from 'fs';
+import { join } from 'path';
 import type { PrismaClient } from '@prisma/client';
 import { getDefaultTenantId } from '../../common/tenant';
 
@@ -57,10 +59,97 @@ export class SeedService implements OnApplicationBootstrap {
         console.warn('Seed: commission_rate_history seed skipped:', (e as Error).message);
       }
 
+      // Sprint 14 — Yasal sözleşme metinleri (CANDIDATE/PRIVACY/DISTANCE_SALE/EDUCATOR)
+      // her boot'ta docs/legal/*.md dosyalarından idempotent upsert edilir. Admin
+      // paneli runtime'da yeni version yayımlayabilir; bu seed sadece "boş veritabanı"
+      // veya "ilk kurulum" için güvence (versiyon 1).
+      await this.seedLegalContracts();
+
       await this.seedDemoUsersAndData();
       await this.ensureTestQuestions();
     } catch (e) {
       console.error('Seed error', e);
+    }
+  }
+
+  /**
+   * Sprint 14 — Yasal sözleşme şablonlarını yükler.
+   *
+   * Tetiklenen akışlar (uygulama katmanında):
+   *   - CANDIDATE       → RegisterUseCase
+   *   - PRIVACY         → RegisterUseCase + RegisterEducatorUseCase
+   *   - DISTANCE_SALE   → PurchaseUseCase (her satın almada)
+   *   - EDUCATOR        → RegisterEducatorUseCase
+   *
+   * docs/legal/*.md dosyaları yoksa (örn. test ortamı) inline fallback metin kullanılır.
+   * Production'da bu metinler **avukat onaylı** versiyonla değiştirilmelidir.
+   */
+  private async seedLegalContracts() {
+    // Yasal şablonların metin yolu — repo'da apps/backend'in 4 üst dizini (proje kökü)
+    const repoRoot = join(__dirname, '..', '..', '..', '..', '..');
+    const legalDir = join(repoRoot, 'docs', 'legal');
+
+    const contracts = [
+      {
+        type: 'CANDIDATE' as const,
+        title: 'Üyelik / Kullanım Sözleşmesi',
+        file: 'uyelik-sozlesmesi.md',
+        fallback: 'Üyelik sözleşmesi yer tutucu metni — avukat onayı bekleniyor.',
+      },
+      {
+        type: 'PRIVACY' as const,
+        title: 'KVKK Aydınlatma Metni',
+        file: 'kvkk-aydinlatma.md',
+        fallback: 'KVKK aydınlatma metni yer tutucu — avukat onayı bekleniyor.',
+      },
+      {
+        type: 'DISTANCE_SALE' as const,
+        title: 'Mesafeli Satış Sözleşmesi + Ön Bilgilendirme',
+        file: 'mesafeli-satis-sozlesmesi.md',
+        fallback: 'Mesafeli satış sözleşmesi yer tutucu — avukat onayı bekleniyor.',
+      },
+      {
+        type: 'EDUCATOR' as const,
+        title: 'Eğitici Hizmet Sözleşmesi',
+        file: 'egitici-hizmet-sozlesmesi.md',
+        fallback: 'Eğitici sözleşmesi yer tutucu metni — avukat onayı bekleniyor.',
+      },
+    ];
+
+    let upsertedCount = 0;
+    for (const c of contracts) {
+      const filePath = join(legalDir, c.file);
+      let content: string;
+      try {
+        content = existsSync(filePath) ? readFileSync(filePath, 'utf8') : c.fallback;
+      } catch {
+        content = c.fallback;
+      }
+      try {
+        await this.prisma.contract.upsert({
+          where: { type_version: { type: c.type, version: 1 } },
+          create: {
+            type: c.type,
+            version: 1,
+            title: c.title,
+            content,
+            isActive: true,
+            publishedAt: new Date(),
+          },
+          // İdempotent: content metni docs/'tan güncellendiyse senkronize et.
+          // Ama version 1 koruması — yeni version admin paneli üzerinden açılır.
+          update: { content, title: c.title, isActive: true },
+        });
+        upsertedCount++;
+      } catch (e) {
+        console.warn(
+          `Seed: contract ${c.type} v1 upsert skipped:`,
+          (e as Error).message,
+        );
+      }
+    }
+    if (upsertedCount > 0) {
+      console.log(`Seed: ${upsertedCount}/4 yasal sözleşme yüklendi (CANDIDATE/PRIVACY/DISTANCE_SALE/EDUCATOR)`);
     }
   }
 
@@ -106,18 +195,18 @@ export class SeedService implements OnApplicationBootstrap {
 
     console.log('Running DEV seed: demo users + test data...');
 
-    // Sözleşme (eğitici kaydı için)
-    const contract = await this.prisma.contract.upsert({
-      where: { type_version: { type: 'EDUCATOR', version: 1 } },
-      create: {
-        type: 'EDUCATOR',
-        version: 1,
-        title: 'Eğitici Sözleşmesi',
-        content: 'Demo eğitici sözleşmesi metni.',
-        isActive: true,
-        publishedAt: new Date(),
-      },
-      update: { isActive: true },
+    // Sprint 14 — Eğitici + Aday için sözleşme acceptance'ları sıkı bağ:
+    // Yasal contract'lar `seedLegalContracts()` tarafından zaten upsert edildi
+    // (onApplicationBootstrap başlangıcında). Burada sadece demo kullanıcıların
+    // kabul kaydı oluşturuluyor — production'da uygulama akışı zorlayacak.
+    const educatorContract = await this.prisma.contract.findFirst({
+      where: { type: 'EDUCATOR', isActive: true },
+    });
+    const candidateContract = await this.prisma.contract.findFirst({
+      where: { type: 'CANDIDATE', isActive: true },
+    });
+    const privacyContract = await this.prisma.contract.findFirst({
+      where: { type: 'PRIVACY', isActive: true },
     });
 
     // Demo eğitici (onaylı)
@@ -135,14 +224,17 @@ export class SeedService implements OnApplicationBootstrap {
       update: {},
     });
 
-    await this.prisma.contractAcceptance.upsert({
-      where: { userId_contractId: { userId: educator.id, contractId: contract.id } },
-      create: { userId: educator.id, contractId: contract.id },
-      update: {},
-    });
+    // Demo eğitici: EDUCATOR + PRIVACY contract kabul
+    for (const ctr of [educatorContract, privacyContract].filter(Boolean) as Array<{ id: string }>) {
+      await this.prisma.contractAcceptance.upsert({
+        where: { userId_contractId: { userId: educator.id, contractId: ctr.id } },
+        create: { userId: educator.id, contractId: ctr.id },
+        update: {},
+      });
+    }
 
     // Demo aday
-    await this.prisma.user.upsert({
+    const candidate = await this.prisma.user.upsert({
       where: { email: 'aday@demo.com' },
       create: {
         email: 'aday@demo.com',
@@ -154,6 +246,15 @@ export class SeedService implements OnApplicationBootstrap {
       },
       update: {},
     });
+
+    // Demo aday: CANDIDATE + PRIVACY contract kabul
+    for (const ctr of [candidateContract, privacyContract].filter(Boolean) as Array<{ id: string }>) {
+      await this.prisma.contractAcceptance.upsert({
+        where: { userId_contractId: { userId: candidate.id, contractId: ctr.id } },
+        create: { userId: candidate.id, contractId: ctr.id },
+        update: {},
+      });
+    }
 
     await this.createDemoTestData(educator.id);
 

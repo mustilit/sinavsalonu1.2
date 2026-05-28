@@ -16,6 +16,20 @@ vi.mock('@/api/dalClient', () => ({
     registerEducator: vi.fn(),
   },
   entities: {},
+  // Sprint 14 — Register kayıt akışı useEffect ile contracts.getActive('CANDIDATE'|'EDUCATOR')
+  // ve contracts.getActive('PRIVACY') çağırır. Bu mock her ikisini de çözer.
+  contracts: {
+    getActive: vi.fn().mockImplementation((type) =>
+      Promise.resolve({
+        id: type === 'PRIVACY' ? 'mock-privacy-id' : 'mock-terms-id',
+        type,
+        version: 1,
+        title: 'Mock Sözleşme',
+        content: 'Mock metin',
+        publishedAt: '2026-01-01T00:00:00.000Z',
+      }),
+    ),
+  },
 }));
 
 // TurnstileWidget — Cloudflare widget; test ortamında render etme
@@ -98,13 +112,27 @@ describe('Register sayfası', () => {
     expect(screen.queryByLabelText(/^ad$/i)).not.toBeInTheDocument();
   });
 
-  it('submit butonu mevcut ve başlangıçta aktif', () => {
+  /**
+   * Sprint 14 — Sözleşme onay checkbox'larını işaretler.
+   * Register form artık 2 zorunlu checkbox içerir (üyelik + KVKK).
+   * Submit butonu sözleşmeler kabul edilene kadar disabled.
+   */
+  async function acceptContracts() {
+    const checkboxes = await screen.findAllByRole('checkbox');
+    checkboxes.forEach((cb) => fireEvent.click(cb));
+  }
+
+  it('submit butonu sözleşme onaylanmadan disabled, onaylandıktan sonra aktif', async () => {
     // Arrange & Act
     renderRegister();
-    // Assert
     const btn = screen.getByRole('button', { name: /kayıt ol/i });
     expect(btn).toBeInTheDocument();
-    expect(btn).not.toBeDisabled();
+    // Sprint 14 — başlangıçta disabled (sözleşmeler yüklenmemiş veya onay yok)
+    expect(btn).toBeDisabled();
+
+    // Sözleşmeleri onayla → buton aktif
+    await acceptContracts();
+    await waitFor(() => expect(btn).not.toBeDisabled());
   });
 
   it('başarılı aday kaydında auth.register çağrılır', async () => {
@@ -113,19 +141,25 @@ describe('Register sayfası', () => {
     auth.register.mockResolvedValue({ ok: true });
     renderRegister();
 
+    // Sprint 14 — sözleşmeleri onayla (submit butonunu aktif hale getirir)
+    await acceptContracts();
+
     // Act
     fireEvent.change(screen.getByLabelText(/e-posta/i), { target: { value: 'test@example.com' } });
     fireEvent.change(screen.getByLabelText(/kullanıcı adı/i), { target: { value: 'testuser' } });
     fireEvent.change(screen.getByLabelText(/şifre/i), { target: { value: 'pass123' } });
     fireEvent.submit(screen.getByRole('button', { name: /kayıt ol/i }).closest('form'));
 
-    // Assert
+    // Assert — Sprint 14: contract ID'leri opts içinde gönderilir
     await waitFor(() => {
       expect(auth.register).toHaveBeenCalledWith(
         'test@example.com',
         'testuser',
         'pass123',
-        expect.objectContaining({})
+        expect.objectContaining({
+          acceptedTermsContractId: 'mock-terms-id',
+          acceptedPrivacyContractId: 'mock-privacy-id',
+        }),
       );
     });
   });
@@ -137,6 +171,9 @@ describe('Register sayfası', () => {
       response: { data: { message: 'Bu email zaten kayıtlı' } },
     });
     renderRegister();
+
+    // Sprint 14 — sözleşmeleri onayla
+    await acceptContracts();
 
     // Act
     fireEvent.change(screen.getByLabelText(/e-posta/i), { target: { value: 'existing@example.com' } });

@@ -245,8 +245,10 @@ enum ObjectionStatus {
 }
 
 enum ContractType {
-  CANDIDATE
-  EDUCATOR
+  CANDIDATE       // Üyelik / Kullanım Sözleşmesi — kayıt sırasında her kullanıcıya
+  EDUCATOR        // Eğitici Hizmet Sözleşmesi — RegisterEducator'da, komisyon + IP/telif
+  PRIVACY         // KVKK Aydınlatma Metni — kayıt sırasında (Sprint 14)
+  DISTANCE_SALE   // Mesafeli Satış Sözleşmesi + Ön Bilgilendirme — her satın almada (Sprint 14)
 }
 
 // Reklam satın alma hedef türü: belirli test paketi veya eğiticinin kendisi
@@ -605,6 +607,18 @@ model Purchase {
   package   TestPackage? @relation(fields: [packageId], references: [id])
 
   paymentProvider String? // "iyzico" | "google_pay" | "amazon_pay"
+
+  // Sprint 14 — Mesafeli Satış Sözleşmesi acceptance snapshot. TKHK m.48 gereği
+  // her satın alma için ön bilgilendirme + sözleşme onayı kanıtı saklanır.
+  // ContractAcceptance tablosundan ayrı; bir satın alma satırı kendi içinde
+  // tam delil zinciri taşır (sözleşme hangi versiyondu, ne zaman/kim/hangi IP).
+  // distanceSaleContractId: kabul edilen Contract.id snapshot'ı (NOT FK — versiyon
+  //                        ileride pasif olsa bile kayıt korunur; FK olsaydı
+  //                        on-delete tehlikesi vardı).
+  distanceSaleContractId       String?   @db.Uuid
+  distanceSaleAcceptedAt       DateTime?
+  distanceSaleAcceptedIp       String?
+  distanceSaleAcceptedUserAgent String?
 
   // Satın alma anında paketin testlerinin + sorularının + seçeneklerinin
   // donmuş snapshot'ı. Eğitici sonradan içeriği güncellese bile bu adayın

@@ -16,7 +16,8 @@ export type ReviewStatus = 'pending' | 'in_progress' | 'completed';
 
 export type ObjectionStatus = 'OPEN' | 'ANSWERED' | 'ESCALATED';
 
-export type ContractType = 'CANDIDATE' | 'EDUCATOR';
+// Sprint 14 — PRIVACY ve DISTANCE_SALE eklendi (KVKK + Mesafeli Satış)
+export type ContractType = 'CANDIDATE' | 'EDUCATOR' | 'PRIVACY' | 'DISTANCE_SALE';
 
 export type Severity = 'info' | 'warning' | 'error';
 
