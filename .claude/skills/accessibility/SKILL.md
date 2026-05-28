@@ -358,9 +358,15 @@ export default {
 | Kural | Eşik | Sebep |
 |---|---|---|
 | Yatay scroll | `html.scrollWidth - clientWidth <= 1` | Mobil ekranda yan kaydırma = ölü UX |
-| Touch target | tıklanabilir element ≥ 40×40px | WCAG 2.5.5 Level AAA hedefi 44; AA için 40 kabul |
+| Touch target | tıklanabilir element ≥ 40×40px (**Sprint 12 #3'ten itibaren STRICT**) | WCAG 2.5.5 Level AAA hedefi 44; AA için 40 kabul |
 | Skip link | İlk Tab'da odakta görünür | Klavye + screen reader kullanıcısı |
 | Modal viewport | İçerik 360px'de kayma yapmıyor | Form ve dialog'da overflow guard |
+
+**Touch target nasıl garanti edilir** (Sprint 12 #3):
+- **`<Button>` component'i kullan** — variantları zaten ≥ 40px (`default h-10`, `sm h-8 min-h-10`, `lg h-11`, `icon h-10 w-10`).
+- Custom `<button>` veya `<a>` yazıyorsan `min-h-10 min-w-10` veya `p-2.5` ekle.
+- İkon-only buton için `<Button size="icon">` veya `className="h-10 w-10"`.
+- Pagination/breadcrumb gibi yoğun action satırlarında her item ayrı buton — sıkışık görünmesin diye `gap-2` veya dropdown menüye taşı.
 
 ### Test pattern — mobile-a11y.spec.ts
 
@@ -408,15 +414,16 @@ for (const p of PAGES) {
           const style = window.getComputedStyle(el);
           if (style.visibility === 'hidden' || style.display === 'none') continue;
           if (style.pointerEvents === 'none') continue;
-          if (r.width < 4 && r.height < 4) continue; // sr-only skip link vs.
+          if (r.width < 4 && r.height < 4) continue;          // sr-only skip link vs.
+          if (r.bottom < 0 || r.right < 0) continue;          // viewport dışı (kapalı menü)
           if (r.width < MIN || r.height < MIN) {
             out.push({ tag: el.tagName.toLowerCase(), w: Math.round(r.width), h: Math.round(r.height) });
           }
         }
         return out;
       });
-      // Sprint 11 baseline: soft (≤ 5 violation). Sprint 12'de strict (0) yapılacak.
-      expect(violations.length).toBeLessThanOrEqual(5);
+      // Sprint 12 #3: STRICT — yeni component 40px altı buton üretirse PR kırılır.
+      expect(violations).toEqual([]);
     });
   });
 }

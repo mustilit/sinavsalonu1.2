@@ -337,7 +337,7 @@ const result = await stripeBreaker.fire(() => stripe.charges.create(params));
 
 DB/Redis için breaker YOK. Mevcut: `stripe`, `iyzico`, `brevo`, `turnstile`, `google-oauth`. Detay: `observability` skill'i.
 
-## Image Upload Pipeline (Sprint 11)
+## Image Upload Pipeline (Sprint 11 + Sprint 12)
 
 Yeni bir görsel yükleme endpoint'i gerekiyorsa **mevcut `upload.controller.ts`'i yeniden yazma** — referans olarak kullan ve `processImage()` çağrısını koru:
 
@@ -355,10 +355,29 @@ const processed = await processImage(file.buffer, {
   detected: validation.detected,
 });
 const urls = buildImageUrls(processed, baseUrl);
-return { url: urls.original, responsive: urls, variants: processed.variants };
+return {
+  url: urls.original,
+  responsive: {
+    thumb: urls.thumb,
+    srcset: urls.srcset,                  // legacy alias = srcsetWebp
+    srcsetWebp: urls.srcsetWebp,
+    srcsetAvif: urls.srcsetAvif,          // Sprint 12 #2
+    sizes: urls.sizes,
+    width: urls.width,
+    height: urls.height,
+  },
+  variants: processed.variants,
+};
 ```
 
-Sharp pipeline: origin (EXIF strip + auto-rotate) + 320w/640w/1024w WebP + 96px thumbnail. GIF pass-through. Detay test: `apps/backend/tests/services/ImageProcessor.test.ts`.
+**Sharp pipeline çıktıları:**
+- Origin (EXIF strip + auto-rotate, kendi formatında yazılır)
+- 320w/640w/1024w **WebP** (Sprint 11)
+- 320w/640w/1024w **AVIF** (Sprint 12 #2 — ~%30 daha küçük, browser support %93+)
+- 96×96 WebP thumbnail (sadece WebP — AVIF küçük boyutta avantaj yok)
+- GIF: pass-through (animasyon korunur, varyant üretilmez)
+
+AVIF encode WebP'ye göre ~12x yavaş (libavif effort=4). Yüksek upload hacminde Phase 3'te BullMQ worker'a taşınacak. Detay test: `apps/backend/tests/services/ImageProcessor.test.ts` (9 test).
 
 ## Import Derinliği
 

@@ -171,6 +171,52 @@ Link hover'da next route'u prefetch:
 
 Sözleşme: kritik 3-5 sayfa için prefetch yeter; hepsine eklersen eager'a geri dönmüş olursun.
 
+### Bundle Discipline — `manualChunks` + Heavy Lib Dynamic Import (Sprint 12 #1)
+
+**Vendor split (`vite.config.js`):** Rollup `output.manualChunks` ile 8 vendor grup tanımlı (react / radix / query / i18n / icons / analytics / form / date). Vendor chunk'lar **stable hash** alır → kod deploy edildiğinde tarayıcı sadece değişen entry chunk'ı indirir, vendor'lar cache'den gelir.
+
+**Yeni vendor lib eklerken:**
+1. `vite.config.js`'i aç, `manualChunks` map'ine uygun grubu seç.
+2. Yeni kategoriye uymayan tek başına büyük lib (>100 KB) için ayrı grup ekle.
+3. Entry chunk'a (uncategorized) yeni büyük lib eklemek **yasak** — `index-*.js` 600 KB'ı aşarsa Vite uyarısı verir.
+
+**Heavy lib dynamic import:** İlk yüklemede ihtiyaç **olmayan** ama bazı sayfa veya handler'da gereken büyük lib'leri statik import etmek yerine `await import()` ile lazy yükle:
+
+```jsx
+// Sayfa açılışında ihtiyaç YOK — sadece "Excel'e aktar" tıklayınca
+const handleExport = async () => {
+  const XLSX = await import('xlsx');           // 429 KB lazy
+  // ...
+};
+
+// html2canvas paylaş fonksiyonu içinde
+const handleShare = async () => {
+  const html2canvas = (await import('html2canvas')).default; // 202 KB lazy
+  const canvas = await html2canvas(node);
+  // ...
+};
+
+// recharts — gerçek grafik component'i lazy
+const LineChart = lazy(() => import('recharts').then(m => ({ default: m.LineChart })));
+```
+
+**Hangi lib'ler lazy olmalı?**
+- `xlsx`, `jspdf`, `mammoth`, `html2canvas` — export/PDF tek tıklamada lazım
+- `recharts` (LineChart vb.) — sadece dashboard sayfalarında
+- `three`, `react-quill` — niche kullanımlar
+- `framer-motion` — sayfa-spesifik animasyon varsa
+
+**Yapmayacaklar:**
+- Heavy lib'i `App.jsx`'te veya `Layout.jsx`'te statik import — tüm sayfaya bulaşır.
+- Her route'ta `await import` — yine eager'a dönmüş olursun.
+- `manualChunks` içinde 20+ grup tanımlamak — küçük chunk yağmuru, HTTP overhead.
+
+**Ölçüm:**
+```bash
+ANALYZE=1 npm run build   # dist/stats.html treemap
+```
+Hedef: initial entry < 500 KB raw, vendor chunk'lar 50-200 KB arası. Sayfa chunk'ı 20-80 KB.
+
 ## Data Fetching — TanStack Query
 
 ```jsx
@@ -420,9 +466,11 @@ function ExamCardSkeleton() {
 }
 ```
 
-## Görsel Kullanımı — `<ResponsiveImage>` (Sprint 11 #2)
+## Görsel Kullanımı — `<ResponsiveImage>` (Sprint 11 #2, Sprint 12 #2)
 
-> **Backend Sharp pipeline** her yüklemeden sonra `responsive: { srcset, sizes, thumb, width, height }` döner. `<img src="...">` hardcoded YAZMA — `<ResponsiveImage>` kullan.
+> **Backend Sharp pipeline** her yüklemeden sonra `responsive: { srcset, srcsetWebp, srcsetAvif, sizes, thumb, width, height }` döner. `<img src="...">` hardcoded YAZMA — `<ResponsiveImage>` kullan.
+>
+> **Sprint 12 #2:** AVIF varyantları da üretiliyor. `<ResponsiveImage>` `srcsetAvif` doluysa `<picture><source type="image/avif"><source type="image/webp"><img>` chain'i kurar; AVIF destekleyen tarayıcı ~%30 daha küçük dosya indirir. AVIF yoksa düz `<img srcset>` (legacy/Sprint 11 davranışı).
 
 **Component:** `apps/frontend/src/components/ui/ResponsiveImage.jsx`
 
@@ -474,14 +522,18 @@ import { ResponsiveImage } from '@/components/ui/ResponsiveImage';
   "detectedType": "jpeg",
   "responsive": {
     "thumb": "http://api/uploads/abc-thumb.webp",
-    "srcset": "http://api/uploads/abc-320w.webp 320w, .../abc-640w.webp 640w, .../abc-1024w.webp 1024w",
+    "srcset":     "http://api/uploads/abc-320w.webp 320w, .../abc-640w.webp 640w, .../abc-1024w.webp 1024w",
+    "srcsetWebp": "http://api/uploads/abc-320w.webp 320w, .../abc-640w.webp 640w, .../abc-1024w.webp 1024w",
+    "srcsetAvif": "http://api/uploads/abc-320w.avif 320w, .../abc-640w.avif 640w, .../abc-1024w.avif 1024w",
     "sizes": "(max-width: 640px) 100vw, 1024px",
     "width": 2000,
     "height": 1500
   },
-  "variants": [/* { label, width, height, bytes, url } */]
+  "variants": [/* { label, width, height, format, bytes, url } */]
 }
 ```
+
+`<ResponsiveImage>` `srcsetAvif` doluysa otomatik `<picture>` + AVIF source basar; tarayıcı negotiation yapar. `srcsetAvif` boşsa (legacy kayıt veya GIF) düz `<img srcset>` davranışı.
 
 **Database'de iki alan tutuluyor (öneri pattern):**
 - `coverImageUrl: string`     — origin (geriye dönük)

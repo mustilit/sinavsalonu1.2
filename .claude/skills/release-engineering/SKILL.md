@@ -403,15 +403,32 @@ nginx Brotli module: `infra/docker/frontend.Dockerfile` Alpine edge community'de
 
 `npm run build` → `dist/sw.js` + `dist/workbox-*.js` + `dist/manifest.webmanifest`. Workbox precache 185 entry (~3877 KiB) — yeni route eklendiğinde otomatik artar. Yeni PNG ikonu: `npm run pwa:icons`.
 
-### Bundle size budget
+### Bundle size budget (Sprint 12 #1 sonrası)
 
-- **Initial bundle:** `dist/assets/index-*.js` (gzip'siz) < 500KB hedef. Mevcut **~1.1MB → Sprint 12 hedef: manualChunks + dynamic import ile < 500KB**.
-- **Vendor chunk:** ayrı (`recharts`, `xlsx`, `three` gibi büyük lib'ler kendi chunk'ında).
-- **Sayfa chunk'ları:** her sayfa kendi chunk'ında 20-80KB.
+- **Initial entry:** `dist/assets/index-*.js` = **~496 KB / 159 KB gzip** (Sprint 11 sonu 1117 KB / 354 KB idi).
+- **Vendor chunk'ları (`vite.config.js` `manualChunks`):**
+  - `react-vendor` ~157 KB (react + react-dom + react-router-dom)
+  - `radix-vendor` ~146 KB (tüm @radix-ui/* primitives)
+  - `analytics-vendor` ~211 KB (posthog + @sentry/react)
+  - `i18n-vendor` ~68 KB (i18next + react-i18next + LanguageDetector)
+  - `form-vendor` ~53 KB (react-hook-form + zod + @hookform/resolvers)
+  - `icons-vendor` ~50 KB (lucide-react)
+  - `query-vendor` ~43 KB (@tanstack/react-query)
+  - `date-vendor` ~26 KB (date-fns)
+- **Dynamic chunk'lar** (heavy lib lazy):
+  - `xlsx` ~429 KB — sadece "Excel'e aktar" tıklanınca
+  - `html2canvas` ~202 KB — sadece "Paylaş" tıklanınca
+  - `LineChart` ~392 KB — MyResults grafik açılınca
+- **Sayfa chunk'ları:** her sayfa kendi chunk'ında 20-80 KB.
+- **`chunkSizeWarningLimit`:** 600 KB (vendor chunk büyük olabilir).
+
+**Sprint 12 sonrası tekrar ziyaret performansı:** Vendor chunk'lar stable hash → cache hit. Kullanıcı sadece değişen entry chunk'ı indirir (~159 KB gzip).
 
 ```bash
 ANALYZE=1 npm run build   # dist/stats.html treemap — CI'da artifact yüklenir
 ```
+
+**Yeni vendor lib eklenirken:** `vite.config.js` `manualChunks`'a uygun grubu seç. Entry chunk'a (uncategorized) yeni büyük lib yüklemek yasak. Heavy lib (>100 KB) tek sayfada gerekiyorsa `await import()` ile dinamik yükle. Detay: `react-component` skill, "Bundle Discipline" bölümü.
 
 ### Lighthouse manuel çalıştırma
 

@@ -63,8 +63,9 @@ Her component/sayfa için:
 - **Routing:** `<Link to>` / `useNavigate()`.
 - **Data:** TanStack Query (`useQuery`/`useMutation`). `useEffect`'te fetch yasak.
 - **Rol kontrolü:** `apps/frontend/src/lib/routeRoles.js`.
-- **Görsel:** `<ResponsiveImage>` (`@/components/ui/ResponsiveImage`) — backend `/upload/image` payload'undan `responsive` bloğunu geçir. Hardcoded `<img src>` yazma. Hero görseli için `priority` prop. Detay: `react-component` skill, "Görsel Kullanımı" bölümü.
-- **Touch target ≥ 40×40:** Buton/link/ikon-buton'a `min-h-10 min-w-10` veya `p-2.5` ver. Mobil 360px test eder.
+- **Görsel:** `<ResponsiveImage>` (`@/components/ui/ResponsiveImage`) — backend `/upload/image` payload'undan `responsive` bloğunu geçir (AVIF + WebP otomatik fallback chain). Hardcoded `<img src>` yazma. Hero görseli için `priority` prop. Detay: `react-component` skill, "Görsel Kullanımı" bölümü.
+- **Touch target ≥ 40×40 (Sprint 12 #3 STRICT):** `<Button>` zaten garanti eder. Custom buton/link yazıyorsan `min-h-10 min-w-10` veya `p-2.5` ekle. Mobil 360px CI sıfır tolerans — `mobile-a11y.spec.ts` strict.
+- **Heavy lib lazy:** Sayfan `xlsx`/`html2canvas`/`jspdf`/`recharts` gibi >100KB lib kullanıyorsa **statik import yerine** handler içinde `await import()` ile dinamik yükle. Detay: `react-component` skill, "Bundle Discipline" bölümü.
 - **Onboarding tour eklenirken:** `<OnboardingTour tourKey="ob_..." persona="candidate|educator" steps={STEPS} />` — `tourKey` analytics event'leri için zorunlu (Sprint 11 #6).
 
 ## Akış
