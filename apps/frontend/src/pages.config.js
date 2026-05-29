@@ -83,6 +83,8 @@ const DeviceVerify = lazy(() => import('./pages/DeviceVerify'));
 const Login = lazy(() => import('./pages/Login'));
 const Register = lazy(() => import('./pages/Register'));
 const ManageExamTypes = lazy(() => import('./pages/ManageExamTypes'));
+// Sprint 16 — Sınav Türleri + Soru Konuları tek sayfada iki sekme
+const ContentManagement = lazy(() => import('./pages/ContentManagement'));
 const ManageRefunds = lazy(() => import('./pages/ManageRefunds'));
 const ManageTests = lazy(() => import('./pages/ManageTests'));
 const ManageTopics = lazy(() => import('./pages/ManageTopics'));
@@ -173,6 +175,7 @@ export const PAGES = {
     "EducatorOnboarding": EducatorOnboarding,
     "DeviceVerify": DeviceVerify,
     "ManageExamTypes": ManageExamTypes,
+    "ContentManagement": ContentManagement,
     "ManageRefunds": ManageRefunds,
     "ManageTests": ManageTests,
     "ManageTopics": ManageTopics,

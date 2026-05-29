@@ -102,6 +102,8 @@
       "educatorReport": "Eğitici Raporu",
       "examTypes": "Sınav Türleri",
       "topics": "Soru Konuları",
+      "contentManagement": "İçerik Yönetimi",
+      "contentManagementDesc": "Sınav türleri ve soru konularını tek yerden yönetin",
       "users": "Kullanıcılar",
       "userActivity": "İşlem Geçmişi",
       "tests": "Tüm Testler",

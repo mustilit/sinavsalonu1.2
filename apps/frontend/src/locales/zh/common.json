@@ -102,6 +102,8 @@
       "educatorReport": "讲师报告",
       "examTypes": "考试类型",
       "topics": "题目主题",
+      "contentManagement": "内容管理",
+      "contentManagementDesc": "在一处管理考试类型和题目主题",
       "users": "用户",
       "userActivity": "活动记录",
       "tests": "所有测试",

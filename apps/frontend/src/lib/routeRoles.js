@@ -85,6 +85,8 @@ export const PAGE_ROLES = {
   AdminDashboard: [ROLES.ADMIN],
   AdminEducatorReport: [ROLES.ADMIN],
   ManageExamTypes: [ROLES.ADMIN],
+  // Sprint 16 — Sınav Türleri + Soru Konuları birleşik sayfa
+  ContentManagement: [ROLES.ADMIN],
   // Sprint 15 — admin platform promo kodu yönetimi
   ManagePromoCodes: [ROLES.ADMIN],
   // Sprint 16 — admin yasal sözleşme yönetimi

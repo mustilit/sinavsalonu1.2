@@ -102,6 +102,8 @@
       "educatorReport": "Informe de educadores",
       "examTypes": "Tipos de examen",
       "topics": "Temas de preguntas",
+      "contentManagement": "Gestión de contenido",
+      "contentManagementDesc": "Gestiona tipos de examen y temas de preguntas en un solo lugar",
       "users": "Usuarios",
       "userActivity": "Historial de actividad",
       "tests": "Todos los exámenes",

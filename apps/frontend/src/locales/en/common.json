@@ -102,6 +102,8 @@
       "educatorReport": "Educator Report",
       "examTypes": "Exam Types",
       "topics": "Question Topics",
+      "contentManagement": "Content Management",
+      "contentManagementDesc": "Manage exam types and question topics in one place",
       "users": "Users",
       "userActivity": "Activity History",
       "tests": "All Tests",

@@ -102,6 +102,8 @@
       "educatorReport": "Ausbilderbericht",
       "examTypes": "Testtypen",
       "topics": "Themen",
+      "contentManagement": "Inhaltsverwaltung",
+      "contentManagementDesc": "Testtypen und Themen an einem Ort verwalten",
       "users": "Benutzer",
       "userActivity": "Aktivitätsverlauf",
       "tests": "Alle Tests",

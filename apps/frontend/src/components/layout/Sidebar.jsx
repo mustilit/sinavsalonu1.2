@@ -118,8 +118,9 @@ export default function Sidebar({ user, currentPage, collapsed = false }) {
     { name: t("sidebar.admin.dashboard"), page: "AdminDashboard", icon: Settings },
     { name: t("sidebar.admin.candidateReport"), page: "AdminCandidateReport", icon: Users },
     { name: t("sidebar.admin.educatorReport"), page: "AdminEducatorReport", icon: GraduationCap },
-    { name: t("sidebar.admin.examTypes"), page: "ManageExamTypes", icon: Award },
-    { name: t("sidebar.admin.topics"), page: "ManageTopics", icon: BookOpen },
+    // İçerik Yönetimi: Sınav Türleri + Soru Konuları tek sayfada iki sekme.
+    // Eski /ManageExamTypes ve /ManageTopics route'ları çalışmaya devam eder.
+    { name: t("sidebar.admin.contentManagement"), page: "ContentManagement", icon: BookOpen },
     { name: t("sidebar.admin.users"), page: "ManageUsers", icon: Users },
     { name: t("sidebar.admin.userActivity"), page: "AdminUserActivity", icon: History },
     { name: t("sidebar.admin.tests"), page: "ManageTests", icon: BookOpen },
