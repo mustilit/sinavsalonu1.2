@@ -4,8 +4,12 @@ import {
   getHomeForRole,
   normalizeRole,
   isProtectedPage,
+  isOnboardingEducator,
+  isRejectedEducator,
   AUTH_PAGES,
   ROLES,
+  ONBOARDING_EDUCATOR_ALLOWED_PAGES,
+  REJECTED_EDUCATOR_ALLOWED_PAGES,
 } from './routeRoles';
 
 describe('routeRoles', () => {
@@ -148,6 +152,96 @@ describe('routeRoles', () => {
     });
     it('WORKER workerPages undefined → admin sayfalarına erişemez', () => {
       expect(canAccessPage('AdminDashboard', { role: 'WORKER' })).toBe(false);
+    });
+  });
+
+  // B9 — onay aşamasındaki eğitici tek sayfa kilidi
+  describe('canAccessPage — REJECTED / PENDING eğitici kilidi', () => {
+    const educator = (status) => ({ role: 'EDUCATOR', status });
+
+    it('REJECTED eğitici sadece EducatorSettings görür', () => {
+      const u = educator('REJECTED');
+      expect(canAccessPage('EducatorSettings', u)).toBe(true);
+      expect(canAccessPage('EducatorDashboard', u)).toBe(false);
+      expect(canAccessPage('CreateTest', u)).toBe(false);
+      expect(canAccessPage('MyTestPackages', u)).toBe(false);
+      expect(canAccessPage('MyAds', u)).toBe(false);
+      expect(canAccessPage('MyLiveSessions', u)).toBe(false);
+      expect(canAccessPage('MySales', u)).toBe(false);
+      expect(canAccessPage('EmailPreferences', u)).toBe(false);
+      expect(canAccessPage('MyModerationStatus', u)).toBe(false);
+    });
+
+    it('PENDING_EDUCATOR_APPROVAL eğitici de sadece EducatorSettings görür', () => {
+      const u = educator('PENDING_EDUCATOR_APPROVAL');
+      expect(canAccessPage('EducatorSettings', u)).toBe(true);
+      expect(canAccessPage('CreateTest', u)).toBe(false);
+      expect(canAccessPage('EducatorDashboard', u)).toBe(false);
+    });
+
+    it('ACTIVE eğitici kilidi geçer — tüm EDUCATOR sayfaları açık', () => {
+      const u = educator('ACTIVE');
+      expect(canAccessPage('EducatorDashboard', u)).toBe(true);
+      expect(canAccessPage('CreateTest', u)).toBe(true);
+      expect(canAccessPage('MyAds', u)).toBe(true);
+    });
+
+    it('REJECTED eğitici public sayfaları görmeye devam eder', () => {
+      const u = educator('REJECTED');
+      expect(canAccessPage('Home', u)).toBe(true);
+      expect(canAccessPage('Explore', u)).toBe(true);
+    });
+
+    it('REJECTED eğitici ADMIN sayfalarına da girmez', () => {
+      const u = educator('REJECTED');
+      expect(canAccessPage('AdminDashboard', u)).toBe(false);
+      expect(canAccessPage('ManageUsers', u)).toBe(false);
+    });
+  });
+
+  describe('getHomeForRole — onay aşaması yönlendirmesi', () => {
+    it('REJECTED eğitici → EducatorSettings', () => {
+      expect(getHomeForRole('EDUCATOR', { role: 'EDUCATOR', status: 'REJECTED' }))
+        .toBe('EducatorSettings');
+    });
+
+    it('PENDING_EDUCATOR_APPROVAL eğitici → EducatorSettings', () => {
+      expect(getHomeForRole('EDUCATOR', { role: 'EDUCATOR', status: 'PENDING_EDUCATOR_APPROVAL' }))
+        .toBe('EducatorSettings');
+    });
+
+    it('ACTIVE eğitici → EducatorDashboard', () => {
+      expect(getHomeForRole('EDUCATOR', { role: 'EDUCATOR', status: 'ACTIVE' }))
+        .toBe('EducatorDashboard');
+    });
+
+    it('Bilinmeyen statüsteki eğitici güvenli tarafa — EducatorSettings', () => {
+      expect(getHomeForRole('EDUCATOR', { role: 'EDUCATOR', status: 'WEIRD_VALUE' }))
+        .toBe('EducatorSettings');
+    });
+  });
+
+  describe('helper fonksiyonları (B9)', () => {
+    it('isRejectedEducator: sadece REJECTED + EDUCATOR true', () => {
+      expect(isRejectedEducator({ role: 'EDUCATOR', status: 'REJECTED' })).toBe(true);
+      expect(isRejectedEducator({ role: 'EDUCATOR', status: 'ACTIVE' })).toBe(false);
+      expect(isRejectedEducator({ role: 'EDUCATOR', status: 'PENDING_EDUCATOR_APPROVAL' })).toBe(false);
+      expect(isRejectedEducator({ role: 'CANDIDATE', status: 'REJECTED' })).toBe(false);
+      expect(isRejectedEducator(null)).toBe(false);
+    });
+
+    it('isOnboardingEducator: REJECTED ve PENDING ikisi de true', () => {
+      expect(isOnboardingEducator({ role: 'EDUCATOR', status: 'REJECTED' })).toBe(true);
+      expect(isOnboardingEducator({ role: 'EDUCATOR', status: 'PENDING_EDUCATOR_APPROVAL' })).toBe(true);
+      expect(isOnboardingEducator({ role: 'EDUCATOR', status: 'ACTIVE' })).toBe(false);
+      expect(isOnboardingEducator({ role: 'CANDIDATE', status: 'REJECTED' })).toBe(false);
+      expect(isOnboardingEducator(null)).toBe(false);
+    });
+
+    it('whitelist tek sayfa içerir: EducatorSettings', () => {
+      expect(Array.from(ONBOARDING_EDUCATOR_ALLOWED_PAGES)).toEqual(['EducatorSettings']);
+      // Geriye dönük uyumluluk alias'ı aynı Set'i işaret etsin
+      expect(REJECTED_EDUCATOR_ALLOWED_PAGES).toBe(ONBOARDING_EDUCATOR_ALLOWED_PAGES);
     });
   });
 });
