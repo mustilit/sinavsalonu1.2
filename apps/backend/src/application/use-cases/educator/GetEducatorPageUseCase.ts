@@ -39,20 +39,19 @@ export class GetEducatorPageUseCase {
       eduAgg = await this.reviewAgg.getAggregatesForTestIds(testIds);
     }
 
+    // Eğitici puanı SADECE Review.educatorRating'den hesaplanır — test puanından (testRating)
+    // TÜRETİLMEZ. educatorRating: adayın eğiticiye verdiği ayrı puan. Hiç educatorRating yoksa
+    // ratingAvg=null, ratingCount=0 döner ve frontend rozeti hiç göstermez.
     const ratingData: { ratingAvg: number | null; ratingCount: number } = { ratingAvg: null, ratingCount: 0 };
-    // Eğiticinin tüm testleri üzerinden ağırlıklı ortalama puan hesapla
     {
-      let sum = 0;
-      let cnt = 0;
-      for (const tid of testIds) {
-        const r = (eduAgg as any)[tid];
-        if (r && r.count) {
-          sum += (r.avg ?? 0) * r.count;
-          cnt += r.count;
-        }
-      }
-      ratingData.ratingAvg = cnt ? sum / cnt : null;
-      ratingData.ratingCount = cnt;
+      const { prisma } = require('../../../infrastructure/database/prisma');
+      const agg = await prisma.review.aggregate({
+        where: { educatorId, educatorRating: { not: null } },
+        _avg: { educatorRating: true },
+        _count: { _all: true },
+      });
+      ratingData.ratingAvg = agg._avg.educatorRating ?? null;
+      ratingData.ratingCount = agg._count._all ?? 0;
     }
 
     const items = tests.map((t: any) => ({

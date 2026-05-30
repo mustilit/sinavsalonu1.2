@@ -209,11 +209,15 @@ export default function EducatorProfile() {
                 <BookOpen className="w-3.5 h-3.5 mr-1.5" />
                 {stats.totalPublishedTests ?? tests.length} test
               </Badge>
-              <Badge className="bg-amber-50 text-amber-700 border-0">
-                <Star className="w-3.5 h-3.5 mr-1.5 fill-amber-400 text-amber-400" />
-                {stats.ratingAvg != null ? Number(stats.ratingAvg).toFixed(1) : '0.0'}
-                <span className="ml-1 text-amber-500">({stats.ratingCount ?? 0} yorum)</span>
-              </Badge>
+              {/* Eğitici puanı (Review.educatorRating ortalaması) — yalnızca varsa göster.
+                  Puan yoksa rozet hiç render edilmez; test puanından türetilmez. */}
+              {stats.ratingAvg != null && (stats.ratingCount ?? 0) > 0 && (
+                <Badge className="bg-amber-50 text-amber-700 border-0">
+                  <Star className="w-3.5 h-3.5 mr-1.5 fill-amber-400 text-amber-400" />
+                  {Number(stats.ratingAvg).toFixed(1)}
+                  <span className="ml-1 text-amber-500">({stats.ratingCount} yorum)</span>
+                </Badge>
+              )}
               {stats.totalPurchases != null && (
                 <Badge className="bg-indigo-50 text-indigo-700 border-0">
                   <Users className="w-3.5 h-3.5 mr-1.5" />
