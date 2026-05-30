@@ -258,8 +258,18 @@ export default function EducatorSettings() {
       await checkAppState();
       queryClient.invalidateQueries({ queryKey: ["educatorUser"] });
     },
-    onError: () => {
-      toast.error(t("pages:educatorSettings.notices.rejected.resubmitFailed", { defaultValue: "Yeniden başvuru başarısız. Tekrar deneyin." }));
+    onError: (err) => {
+      // Backend mesajını göster — "Tekrar deneyin" çok genel, sebebi yutuyordu
+      const detail =
+        err?.response?.data?.message?.message ||
+        err?.response?.data?.message ||
+        err?.response?.data?.error ||
+        err?.message ||
+        "";
+      const base = t("pages:educatorSettings.notices.rejected.resubmitFailed", { defaultValue: "Yeniden başvuru başarısız" });
+      toast.error(detail ? `${base}: ${detail}` : `${base}. Tekrar deneyin.`);
+       
+      console.error("[resubmit] error:", err?.response?.data || err);
     },
   });
 

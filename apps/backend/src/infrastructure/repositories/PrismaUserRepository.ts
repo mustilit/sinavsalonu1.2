@@ -127,13 +127,20 @@ export class PrismaUserRepository implements IUserRepository {
 
   async updateEducatorProfile(userId: string, data: { metadata?: Record<string, unknown> }): Promise<User | null> {
     if (!data.metadata || Object.keys(data.metadata).length === 0) return this.findById(userId);
-    const user = await prisma.user.findUnique({ where: { id: userId } });
-    if (!user) return null;
-    const merged = { ...((user.metadata as Record<string, unknown>) ?? {}), ...data.metadata };
-    await prisma.user.update({
-      where: { id: userId },
-      data: { metadata: merged as any },
-    });
+    // RAW SQL: REJECTED kullanıcılarda Prisma client UserStatus enum'unu çözemediği
+    // için `findUnique`/`update` row hydrate edip patlardı (login sonrası "Yeniden
+    // başvuru başarısız" toast'ının kaynağı). $queryRaw + $executeRaw status'a
+    // dokunmuyor → enum doğrulaması devreden çıkıyor.
+    const rows = await prisma.$queryRaw<Array<{ metadata: any }>>`
+      SELECT metadata FROM users WHERE id = ${userId} LIMIT 1
+    `;
+    if (!rows[0]) return null;
+    const merged = { ...((rows[0].metadata as Record<string, unknown>) ?? {}), ...data.metadata };
+    await prisma.$executeRaw`
+      UPDATE users
+      SET metadata = ${JSON.stringify(merged)}::jsonb, "updatedAt" = NOW()
+      WHERE id = ${userId}
+    `;
     return this.findById(userId);
   }
 
