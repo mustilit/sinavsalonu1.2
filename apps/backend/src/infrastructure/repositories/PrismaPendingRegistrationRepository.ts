@@ -28,15 +28,23 @@ export class PrismaPendingRegistrationRepository implements IPendingRegistration
     ip?: string | null;
     userAgent?: string | null;
     tenantId?: string | null;
+    cvUrl?: string | null;
+    specializations?: string[];
+    educationInfo?: string | null;
+    bio?: string | null;
   }): Promise<PendingRegistrationModel> {
     const id = randomUUID();
     const email = input.email.toLowerCase();
+    // PostgreSQL text[] literal: '{id1,id2}' formatında gönderilir
+    const specializationsLiteral = `{${(input.specializations ?? []).join(',')}}`;
     const rows = await prisma.$queryRaw<any[]>`
       INSERT INTO pending_registrations (
         id, email, username, "passwordHash", "firstName", "lastName", role,
         "acceptedTermsContractId", "acceptedPrivacyContractId",
         "verificationToken", "verificationTokenExpiresAt",
-        ip, "userAgent", "tenantId", "createdAt"
+        ip, "userAgent", "tenantId",
+        "cvUrl", specializations, "educationInfo", bio,
+        "createdAt"
       ) VALUES (
         ${id}, ${email}, ${input.username}, ${input.passwordHash},
         ${input.firstName ?? null}, ${input.lastName ?? null},
@@ -44,6 +52,7 @@ export class PrismaPendingRegistrationRepository implements IPendingRegistration
         ${input.acceptedTermsContractId ?? null}, ${input.acceptedPrivacyContractId ?? null},
         ${input.verificationToken}, ${input.verificationTokenExpiresAt},
         ${input.ip ?? null}, ${input.userAgent ?? null}, ${input.tenantId ?? null},
+        ${input.cvUrl ?? null}, ${specializationsLiteral}::text[], ${input.educationInfo ?? null}, ${input.bio ?? null},
         CURRENT_TIMESTAMP
       )
       RETURNING *
@@ -110,6 +119,15 @@ export class PrismaPendingRegistrationRepository implements IPendingRegistration
       userAgent: row.userAgent ?? null,
       tenantId: row.tenantId ?? null,
       createdAt: row.createdAt,
+      cvUrl: row.cvUrl ?? null,
+      // PostgreSQL text[] → JS string[] (raw query döner string veya array)
+      specializations: Array.isArray(row.specializations)
+        ? row.specializations
+        : typeof row.specializations === 'string'
+          ? row.specializations.replace(/^\{/, '').replace(/\}$/, '').split(',').filter(Boolean)
+          : [],
+      educationInfo: row.educationInfo ?? null,
+      bio: row.bio ?? null,
     };
   }
 }

@@ -46,7 +46,9 @@ export const auth = {
   },
   async registerEducator(email, username, password, opts = {}) {
     // opts: { firstName, lastName, turnstileToken, acceptedEducatorContractId,
-    //        acceptedPrivacyContractId } — Sprint 14 sözleşme onayları zorunlu
+    //        acceptedPrivacyContractId, cvUrl, specializations, educationInfo, bio }
+    // Sprint 17 — wizard step 2 alanları: cvUrl (zorunlu), specializations[] (zorunlu, en az 1),
+    //             educationInfo (opsiyonel), bio (opsiyonel)
     const body = {
       email,
       username,
@@ -56,6 +58,10 @@ export const auth = {
       ...(opts.turnstileToken ? { turnstileToken: opts.turnstileToken } : {}),
       ...(opts.acceptedEducatorContractId ? { acceptedEducatorContractId: opts.acceptedEducatorContractId } : {}),
       ...(opts.acceptedPrivacyContractId ? { acceptedPrivacyContractId: opts.acceptedPrivacyContractId } : {}),
+      ...(opts.cvUrl ? { cvUrl: opts.cvUrl } : {}),
+      ...(opts.specializations?.length ? { specializations: opts.specializations } : {}),
+      ...(opts.educationInfo ? { educationInfo: opts.educationInfo } : {}),
+      ...(opts.bio ? { bio: opts.bio } : {}),
     };
     const { data } = await api.post('/auth/register/educator', body);
     return data;

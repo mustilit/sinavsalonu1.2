@@ -17,7 +17,14 @@ export class UpdateEducatorProfileUseCase {
     if (!user) throw new AppError('USER_NOT_FOUND', 'User not found', 404);
     if (user.role !== 'EDUCATOR') throw new AppError('FORBIDDEN', 'Only educators can update profile', 403);
 
-    const whitelist = ['bio', 'avatarUrl', 'displayName', 'linkedIn', 'website'];
+    const whitelist = [
+      'bio', 'avatarUrl', 'displayName', 'linkedIn', 'website',
+      // Sprint 17: REJECTED eğiticinin yeniden başvuruda güncelleyebildiği alanlar
+      'cv_url', 'specialized_exam_types', 'education_info',
+      // EducatorSettings mevcut alanları
+      'education', 'phone', 'city', 'google_scholar_url', 'profile_image_url',
+      'notification_preferences', 'iban', 'bankName', 'accountHolder', 'linkedin',
+    ];
     const filtered: Record<string, unknown> = {};
     if (input.metadata && typeof input.metadata === 'object') {
       for (const k of Object.keys(input.metadata)) {

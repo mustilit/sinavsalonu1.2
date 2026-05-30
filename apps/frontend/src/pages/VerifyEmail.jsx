@@ -46,11 +46,12 @@ export default function VerifyEmail() {
         setMessage(t("auth:verifyEmail.successMessage"));
         // Doğrulama sonrası kullanıcı oturum açmamış olabilir → Login'e gönder.
         // Email pre-fill için query param ekle.
-        // next: rol bazlı onboarding hedefi (aday → SelectExamTypes, eğitici → EducatorOnboarding)
+        // Sprint 17: eğitici wizard'dan geldiği için artık EducatorDashboard'a yönlendir.
+        // (EducatorOnboarding adımı kayıt sırasında tamamlandı)
         const params = new URLSearchParams();
         if (res?.email) params.set("email", res.email);
         if (res?.role === "CANDIDATE") params.set("next", "SelectExamTypes");
-        if (res?.role === "EDUCATOR") params.set("next", "EducatorOnboarding");
+        if (res?.role === "EDUCATOR") params.set("next", "EducatorDashboard");
         const target = createPageUrl("Login") + (params.toString() ? `?${params}` : "");
         setTimeout(() => navigate(target, { replace: true }), 1800);
       } catch (err) {

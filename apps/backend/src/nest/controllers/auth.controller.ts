@@ -326,6 +326,10 @@ export class AuthController {
       lastName?: string;
       acceptedEducatorContractId?: string;
       acceptedPrivacyContractId?: string;
+      cvUrl?: string;
+      specializations?: string[];
+      educationInfo?: string;
+      bio?: string;
     },
     @Req() req: any,
   ) {
@@ -355,6 +359,10 @@ export class AuthController {
           lastName: body.lastName ?? '',
           acceptedEducatorContractId: body.acceptedEducatorContractId,
           acceptedPrivacyContractId: body.acceptedPrivacyContractId,
+          cvUrl: body.cvUrl,
+          specializations: Array.isArray(body.specializations) ? body.specializations : [],
+          educationInfo: body.educationInfo,
+          bio: body.bio,
         },
         { ip, userAgent },
       );
@@ -390,6 +398,15 @@ export class AuthController {
     } catch (err: any) {
       if (err.code === 'CONTRACT_NOT_AVAILABLE') {
         throw new HttpException({ error: 'Eğitici sözleşmesi henüz tanımlanmamış.' }, HttpStatus.BAD_REQUEST);
+      }
+      if (err.code === 'CV_REQUIRED') {
+        throw new HttpException({ error: err.message || 'CV yüklemesi zorunludur', code: err.code }, HttpStatus.BAD_REQUEST);
+      }
+      if (err.code === 'SPECIALIZATION_REQUIRED') {
+        throw new HttpException({ error: err.message || 'En az bir uzmanlık alanı seçilmelidir', code: err.code }, HttpStatus.BAD_REQUEST);
+      }
+      if (err.code === 'TERMS_NOT_ACCEPTED') {
+        throw new HttpException({ error: err.message, code: err.code }, HttpStatus.BAD_REQUEST);
       }
       if (err.code === 'FIRSTNAME_REQUIRED' || err.code === 'FIRSTNAME_INVALID') {
         throw new HttpException({ error: err.message || 'Ad gereklidir', code: err.code }, HttpStatus.BAD_REQUEST);

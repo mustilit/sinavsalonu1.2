@@ -44,6 +44,14 @@ export class RegisterEducatorUseCase {
       acceptedEducatorContractId?: string;
       /** Sprint 14 — Aktif PRIVACY contract ID (KVKK aydınlatma) */
       acceptedPrivacyContractId?: string;
+      /** Wizard step 2 — CV dosya URL'i (eğitici kayıt için zorunlu, pendingRepo varsa) */
+      cvUrl?: string;
+      /** Wizard step 2 — uzmanlık exam type ID'leri (en az 1 zorunlu, pendingRepo varsa) */
+      specializations?: string[];
+      /** Wizard step 2 — mezuniyet / eğitim bilgisi (opsiyonel) */
+      educationInfo?: string;
+      /** Wizard step 2 — tanıtım metni / bio (opsiyonel) */
+      bio?: string;
     },
     ctx?: { ip?: string; userAgent?: string },
   ): Promise<{ message: string; email: string }> {
@@ -98,6 +106,14 @@ export class RegisterEducatorUseCase {
 
     // PendingRegistration desteği varsa pending-first akış
     if (this.pendingRepo) {
+      // Wizard step 2 validasyonu: cvUrl ve specializations zorunlu
+      if (!dto.cvUrl || !dto.cvUrl.trim()) {
+        throw new AppError('CV_REQUIRED', 'CV yüklemesi zorunludur', 400);
+      }
+      if (!dto.specializations || dto.specializations.length === 0) {
+        throw new AppError('SPECIALIZATION_REQUIRED', 'En az bir uzmanlık alanı seçilmelidir', 400);
+      }
+
       // Aynı email/username için eski pending varsa temizle (re-issue)
       await this.pendingRepo.deleteByEmail(email);
       await this.pendingRepo.deleteByUsername(dto.username);
@@ -119,6 +135,10 @@ export class RegisterEducatorUseCase {
         ip: ctx?.ip ?? null,
         userAgent: ctx?.userAgent ?? null,
         tenantId: getDefaultTenantId(),
+        cvUrl: dto.cvUrl ?? null,
+        specializations: dto.specializations ?? [],
+        educationInfo: dto.educationInfo ?? null,
+        bio: dto.bio ?? null,
       });
 
       return { message: 'Doğrulama maili gönderildi', email };

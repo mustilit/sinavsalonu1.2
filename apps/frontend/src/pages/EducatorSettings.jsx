@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { entities, auth } from "@/api/dalClient";
 import api from "@/lib/api/apiClient";
@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import SensitiveProfileOtpDialog from "@/components/settings/SensitiveProfileOtpDialog";
 import { toast } from "sonner";
-import { User, Save, Globe, Linkedin, Phone, MapPin, FileText, Upload, CheckCircle, GraduationCap, ShieldCheck, Bell, Award, Camera, CreditCard, Building2 } from "lucide-react";
+import { User, Save, Globe, Linkedin, Phone, MapPin, FileText, Upload, CheckCircle, GraduationCap, ShieldCheck, Bell, Award, Camera, CreditCard, Building2, Loader2 } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useQuery } from "@tanstack/react-query";
@@ -178,17 +178,82 @@ export default function EducatorSettings() {
     toast.success(t("pages:educatorSettings.toasts.profileUpdated"));
   };
 
+  // REJECTED durumu: inline edit formu state'i
+  const [rejectedCvUrl, setRejectedCvUrl] = useState("");
+  const [rejectedSpecializations, setRejectedSpecializations] = useState([]);
+  const [rejectedEducation, setRejectedEducation] = useState("");
+  const [rejectedBio, setRejectedBio] = useState("");
+  const [uploadingRejectedCv, setUploadingRejectedCv] = useState(false);
+  const rejectedCvInputRef = useRef(null);
+
+  // REJECTED durumundaki form'u user değişince önceden dolduran etkisi
+  useEffect(() => {
+    if (!user || user.educator_status !== "rejected") return;
+    setRejectedCvUrl(user.cv_url || user.metadata?.cv_url || "");
+    setRejectedSpecializations(user.specialized_exam_types || user.metadata?.specialized_exam_types || []);
+    setRejectedEducation(user.education || user.metadata?.education_info || "");
+    setRejectedBio(user.bio || "");
+  }, [user?.id]);
+
+  const handleRejectedCvUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.type !== "application/pdf") {
+      toast.error(t("pages:educatorSettings.toasts.invalidPdf"));
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error(t("pages:educatorSettings.toasts.fileTooBig"));
+      return;
+    }
+    setUploadingRejectedCv(true);
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      const res = await api.post("/upload/image", fd, { headers: { "Content-Type": "multipart/form-data" } });
+      const url = res.data?.url || res.data?.fileUrl || res.data?.file_url;
+      if (!url) throw new Error("URL alınamadı");
+      setRejectedCvUrl(url);
+      toast.success(t("pages:educatorSettings.toasts.cvUploaded"));
+    } catch {
+      toast.error(t("pages:educatorSettings.toasts.cvUploadFailed"));
+    } finally {
+      setUploadingRejectedCv(false);
+      e.target.value = "";
+    }
+  };
+
+  const toggleRejectedSpec = (id) => {
+    setRejectedSpecializations((prev) =>
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
+    );
+  };
+
+  // Yeniden başvur: önce profili güncelle, sonra status'u pending'e al
   const resubmitApplicationMutation = useMutation({
     mutationFn: async () => {
+      // 1. Güncellenmiş alanları PATCH /educators/me ile kaydet
+      await api.patch("/educators/me", {
+        metadata: {
+          cv_url: rejectedCvUrl,
+          specialized_exam_types: rejectedSpecializations,
+          education_info: rejectedEducation,
+          bio: rejectedBio,
+        },
+      });
+      // 2. status → PENDING_EDUCATOR_APPROVAL (eski alan adıyla da dengesel uyumluluk)
       await auth.updateMe({
         educator_status: "pending",
-        rejection_reason: null
+        rejection_reason: null,
       });
     },
     onSuccess: async () => {
       toast.success(t("pages:educatorSettings.notices.rejected.resubmittedToast"));
       await checkAppState();
       queryClient.invalidateQueries({ queryKey: ["educatorUser"] });
+    },
+    onError: () => {
+      toast.error(t("pages:educatorSettings.notices.rejected.resubmitFailed", { defaultValue: "Yeniden başvuru başarısız. Tekrar deneyin." }));
     },
   });
 
@@ -266,29 +331,178 @@ export default function EducatorSettings() {
         <p className="text-slate-500 mt-2">{t("pages:titles.educatorSettingsDesc")}</p>
       </div>
 
-      {/* Rejection Notice */}
-      {user.educator_status === "rejected" && user.rejection_reason && (
-        <div className="bg-rose-50 border border-rose-200 rounded-xl p-6 mb-8">
+      {/* Rejection Notice + Inline Profile Update */}
+      {user.educator_status === "rejected" && (
+        <div className="bg-rose-50 border border-rose-200 rounded-xl p-6 mb-8 space-y-6">
           <div className="flex items-start gap-4">
             <div className="w-10 h-10 bg-rose-100 rounded-full flex items-center justify-center flex-shrink-0">
               <ShieldCheck className="w-5 h-5 text-rose-600" />
             </div>
             <div className="flex-1">
-              <h3 className="text-lg font-semibold text-rose-900 mb-2">{t("pages:educatorSettings.notices.rejected.title")}</h3>
-              <p className="text-sm text-rose-700 mb-4">
-                <strong>{t("pages:educatorSettings.notices.rejected.reason")}</strong> {user.rejection_reason}
-              </p>
-              <p className="text-sm text-rose-600 mb-4">
+              <h3 className="text-lg font-semibold text-rose-900 mb-2">
+                {t("pages:educatorSettings.notices.rejected.title")}
+              </h3>
+              {user.rejection_reason && (
+                <p className="text-sm text-rose-700 mb-2">
+                  <strong>{t("pages:educatorSettings.notices.rejected.reason")}</strong>{" "}
+                  {user.rejection_reason}
+                </p>
+              )}
+              <p className="text-sm text-rose-600">
                 {t("pages:educatorSettings.notices.rejected.desc")}
               </p>
-              <Button
-                onClick={() => resubmitApplicationMutation.mutate()}
-                disabled={resubmitApplicationMutation.isPending}
-                className="bg-rose-600 hover:bg-rose-700"
-              >
-                {resubmitApplicationMutation.isPending ? t("pages:educatorSettings.notices.rejected.resubmitting") : t("pages:educatorSettings.notices.rejected.resubmit")}
-              </Button>
             </div>
+          </div>
+
+          {/* Profil güncelleme formu (REJECTED durumunda) */}
+          <div className="border-t border-rose-200 pt-5 space-y-5">
+            <p className="text-sm font-medium text-rose-900">
+              {t("pages:educatorSettings.notices.rejected.updateProfileHint", {
+                defaultValue: "Aşağıdaki bilgileri güncelleyip \"Yeniden Başvur\" butonuna tıklayın.",
+              })}
+            </p>
+
+            {/* CV */}
+            <div>
+              <label className="block text-sm font-medium text-rose-800 mb-2">
+                {t("pages:educatorSettings.verification.cvLabel")} —{" "}
+                <span className="font-normal text-rose-600">
+                  {t("pages:educatorSettings.notices.rejected.cvRequired", { defaultValue: "Zorunlu" })}
+                </span>
+              </label>
+              {rejectedCvUrl ? (
+                <div className="flex items-center gap-3 p-3 bg-white border border-emerald-200 rounded-lg">
+                  <CheckCircle className="w-5 h-5 text-emerald-600 flex-shrink-0" />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-emerald-900">
+                      {t("pages:educatorSettings.verification.cvUploaded")}
+                    </p>
+                    <a href={rejectedCvUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-emerald-600 hover:underline truncate block">
+                      {t("pages:educatorSettings.verification.cvView")}
+                    </a>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => rejectedCvInputRef.current?.click()}
+                    disabled={uploadingRejectedCv}
+                  >
+                    {t("pages:educatorSettings.verification.cvChange")}
+                  </Button>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => rejectedCvInputRef.current?.click()}
+                  disabled={uploadingRejectedCv}
+                  className="w-full p-4 border-2 border-dashed border-rose-300 rounded-lg hover:border-rose-400 hover:bg-rose-50/50 transition-colors disabled:opacity-50 min-h-10"
+                  aria-label={t("pages:educatorSettings.verification.cvUpload")}
+                >
+                  <div className="flex flex-col items-center gap-1">
+                    {uploadingRejectedCv ? (
+                      <Loader2 className="w-6 h-6 text-rose-400 animate-spin" />
+                    ) : (
+                      <Upload className="w-6 h-6 text-rose-400" />
+                    )}
+                    <p className="text-sm font-medium text-rose-800">
+                      {uploadingRejectedCv
+                        ? t("pages:educatorSettings.verification.cvUploading")
+                        : t("pages:educatorSettings.verification.cvUpload")}
+                    </p>
+                    <p className="text-xs text-rose-500">{t("pages:educatorSettings.verification.cvFormat")}</p>
+                  </div>
+                </button>
+              )}
+              <input
+                ref={rejectedCvInputRef}
+                type="file"
+                accept=".pdf"
+                onChange={handleRejectedCvUpload}
+                className="hidden"
+                aria-hidden="true"
+              />
+            </div>
+
+            {/* Uzmanlık alanları */}
+            <div>
+              <label className="block text-sm font-medium text-rose-800 mb-2">
+                {t("pages:educatorSettings.exams.title")} —{" "}
+                <span className="font-normal text-rose-600">
+                  {t("pages:educatorSettings.notices.rejected.specRequired", { defaultValue: "En az 1" })}
+                </span>
+              </label>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2 max-h-48 overflow-y-auto">
+                {examTypes.map((exam) => {
+                  const checked = rejectedSpecializations.includes(exam.id);
+                  return (
+                    <label
+                      key={exam.id}
+                      className={`flex items-center gap-3 p-3 rounded-lg border-2 cursor-pointer transition-all bg-white ${
+                        checked ? "border-rose-500 bg-rose-50" : "border-slate-200 hover:border-rose-300"
+                      }`}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={checked}
+                        onChange={() => toggleRejectedSpec(exam.id)}
+                        className="h-4 w-4 rounded border-slate-300 text-rose-600 focus:ring-rose-500"
+                      />
+                      <span className="text-sm font-medium text-slate-900">{exam.name}</span>
+                    </label>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Mezuniyet bilgisi */}
+            <div>
+              <label htmlFor="rejected-education" className="block text-sm font-medium text-rose-800 mb-1">
+                {t("pages:educatorSettings.profile.educationLabel")}{" "}
+                <span className="font-normal text-rose-500">
+                  ({t("pages:educatorSettings.profile.optional", { defaultValue: "opsiyonel" })})
+                </span>
+              </label>
+              <Input
+                id="rejected-education"
+                value={rejectedEducation}
+                onChange={(e) => setRejectedEducation(e.target.value)}
+                placeholder={t("pages:educatorSettings.profile.educationPlaceholder")}
+                className="bg-white"
+              />
+            </div>
+
+            {/* Bio */}
+            <div>
+              <label htmlFor="rejected-bio" className="block text-sm font-medium text-rose-800 mb-1">
+                {t("pages:educatorSettings.profile.bioLabel")}{" "}
+                <span className="font-normal text-rose-500">
+                  ({t("pages:educatorSettings.profile.optional", { defaultValue: "opsiyonel" })})
+                </span>
+              </label>
+              <textarea
+                id="rejected-bio"
+                value={rejectedBio}
+                onChange={(e) => setRejectedBio(e.target.value)}
+                placeholder={t("pages:educatorSettings.profile.bioPlaceholder")}
+                rows={3}
+                className="w-full rounded-md border border-input bg-white px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-ring"
+              />
+            </div>
+
+            <Button
+              onClick={() => resubmitApplicationMutation.mutate()}
+              disabled={
+                resubmitApplicationMutation.isPending ||
+                !rejectedCvUrl ||
+                rejectedSpecializations.length === 0
+              }
+              className="w-full bg-rose-600 hover:bg-rose-700 min-h-10"
+            >
+              {resubmitApplicationMutation.isPending
+                ? t("pages:educatorSettings.notices.rejected.resubmitting")
+                : t("pages:educatorSettings.notices.rejected.resubmit")}
+            </Button>
           </div>
         </div>
       )}

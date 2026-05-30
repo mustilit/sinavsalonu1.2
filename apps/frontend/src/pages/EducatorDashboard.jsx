@@ -1,9 +1,7 @@
-import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { createPageUrl } from "@/utils";
 import { useAuth } from "@/lib/AuthContext";
-import { auth } from "@/api/dalClient";
 import api from "@/lib/api/apiClient";
 import OnboardingTour from "@/components/onboarding/OnboardingTour";
 import { useShouldShowTour, useCompleteTour, TOUR_KEYS } from "@/lib/useOnboarding";
@@ -31,17 +29,19 @@ export default function EducatorDashboard() {
   const showWelcomeTour = useShouldShowTour(TOUR_KEYS.EDUCATOR_WELCOME);
   const completeTour = useCompleteTour();
 
-  // Eğitici onboarding (CV + uzmanlık alanı) tamamlanmamışsa dashboard'a izin verme.
-  // Direkt giriş veya Google ile giriş yapan eğiticiler de bu kontrolden geçer.
-  useEffect(() => {
-    if (!user || (user.role || "").toUpperCase() !== "EDUCATOR") return;
-    (async () => {
-      const status = await auth.educatorOnboardingStatus();
-      if (status && !status.complete) {
-        navigate(createPageUrl("EducatorOnboarding"), { replace: true });
-      }
-    })();
-  }, [user?.id, navigate]);
+  // Sprint 17: Register wizard artık CV + uzmanlık alanlarını kayıt anında topluyor.
+  // EducatorOnboarding yönlendirmesi devre dışı bırakıldı — yeni eğiticiler wizard'dan
+  // geldiği için onboarding adımını tamamlamış sayılır. Legacy Google-ile-kayıt
+  // eğiticileri (/EducatorOnboarding URL'i hâlâ çalışır, silinmedi).
+  // useEffect(() => {
+  //   if (!user || (user.role || "").toUpperCase() !== "EDUCATOR") return;
+  //   (async () => {
+  //     const status = await auth.educatorOnboardingStatus();
+  //     if (status && !status.complete) {
+  //       navigate(createPageUrl("EducatorOnboarding"), { replace: true });
+  //     }
+  //   })();
+  // }, [user?.id, navigate]);
 
   const { data: myTests = [], isLoading: loadingTests } = useQuery({
     queryKey: ["myTests", user?.id],

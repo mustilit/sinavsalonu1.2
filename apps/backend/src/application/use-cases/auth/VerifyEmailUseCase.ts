@@ -48,6 +48,22 @@ export class VerifyEmailUseCase {
     const isEducator = pending.role === 'EDUCATOR';
     const userId = randomUUID();
 
+    // Eğitici wizard alanları için metadata hazırla
+    const educatorMetadata: Record<string, any> = {};
+    if (isEducator) {
+      if (pending.cvUrl) educatorMetadata['cv_url'] = pending.cvUrl;
+      if (Array.isArray(pending.specializations) && pending.specializations.length > 0) {
+        educatorMetadata['specialized_exam_types'] = pending.specializations;
+      } else if (typeof pending.specializations === 'string' && (pending.specializations as string).length > 2) {
+        // raw SQL'den gelen '{id1,id2}' formatını parse et
+        const parsed = (pending.specializations as string)
+          .replace(/^\{/, '').replace(/\}$/, '').split(',').filter(Boolean);
+        if (parsed.length > 0) educatorMetadata['specialized_exam_types'] = parsed;
+      }
+      if (pending.educationInfo) educatorMetadata['education_info'] = pending.educationInfo;
+      if (pending.bio) educatorMetadata['bio'] = pending.bio;
+    }
+
     // User oluştur — transaction içinde
     await prisma.$transaction(async (tx) => {
       // User yarat
@@ -63,7 +79,7 @@ export class VerifyEmailUseCase {
           status: isEducator ? 'PENDING_EDUCATOR_APPROVAL' : 'ACTIVE',
           emailVerified: true, // doğrulama tamamlandı
           tenantId,
-          metadata: {},
+          metadata: educatorMetadata,
         },
       });
 
