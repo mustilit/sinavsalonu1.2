@@ -81,12 +81,30 @@ export class AuthController {
     const user = await this.userRepo.findById(sub);
     if (!user) throw new HttpException({ error: 'User not found' }, HttpStatus.NOT_FOUND);
 
-    // Rejection bilgisi (eğitici başvurusu reddedildiyse) — raw SQL (client yeni
-    // kolonları henüz tanımıyor olabilir, EPERM nedeniyle generate edilmedi).
-    const rejectionRows = await prisma.$queryRaw<Array<{ rejectionReason: string | null; rejectedAt: Date | null }>>`
-      SELECT "rejectionReason", "rejectedAt" FROM users WHERE id = ${user.id} LIMIT 1
+    // Rejection + profil detayları — raw SQL: Prisma client REJECTED enum'unu
+    // tanımıyor ve bazı yeni kolonlar (firstName/lastName/bio) için zaten raw
+    // SQL'e geçiyoruz. Tek sorguda hepsini al.
+    const detailRows = await prisma.$queryRaw<Array<{
+      rejectionReason: string | null;
+      rejectedAt: Date | null;
+      firstName: string | null;
+      lastName: string | null;
+      bio: string | null;
+      metadata: Record<string, unknown> | null;
+    }>>`
+      SELECT "rejectionReason", "rejectedAt", "firstName", "lastName", bio, metadata
+      FROM users WHERE id = ${user.id} LIMIT 1
     `;
-    const rejRow = rejectionRows[0] ?? null;
+    const detail = detailRows[0] ?? null;
+    const meta = (detail?.metadata ?? {}) as Record<string, any>;
+
+    // Register wizard alanları: register endpoint metadata.cv_url, metadata.
+    // specialized_exam_types, metadata.education_info, metadata.website_url,
+    // metadata.linkedin_url yazıyor. Frontend (EducatorSettings, EducatorProfile)
+    // user.cv_url / user.education / user.website / user.linkedin gibi top-level
+    // alanlar bekliyor — burada metadata'yı tek sefer flatten + alias edelim.
+    // (Aynı alanın hem snake hem camel kullanımı geriye dönük uyum sağlar.)
+    const fullName = [detail?.firstName, detail?.lastName].filter(Boolean).join(' ') || user.username;
 
     const userResponse: any = {
       id: user.id,
@@ -95,16 +113,47 @@ export class AuthController {
       role: user.role,
       status: user.status,
       educatorApprovedAt: user.educatorApprovedAt ?? undefined,
-      rejectionReason: rejRow?.rejectionReason ?? null,
-      rejectedAt: rejRow?.rejectedAt ?? null,
+      rejectionReason: detail?.rejectionReason ?? null,
+      rejectedAt: detail?.rejectedAt ?? null,
       // Geriye dönük uyumluluk — eski frontend alan adları (EducatorSettings rejection notice)
       educator_status:
         user.status === 'REJECTED' ? 'rejected'
         : user.status === 'ACTIVE' && user.educatorApprovedAt ? 'approved'
         : user.status === 'PENDING_EDUCATOR_APPROVAL' ? 'pending'
         : undefined,
-      rejection_reason: rejRow?.rejectionReason ?? undefined,
+      rejection_reason: detail?.rejectionReason ?? undefined,
       createdAt: user.createdAt,
+
+      // Kimlik (register wizard step 1)
+      firstName: detail?.firstName ?? null,
+      lastName: detail?.lastName ?? null,
+      full_name: fullName,
+
+      // Profil (register wizard step 2 + EducatorSettings)
+      bio: detail?.bio ?? meta.bio ?? '',
+      cv_url: meta.cv_url ?? null,
+      specialized_exam_types: Array.isArray(meta.specialized_exam_types) ? meta.specialized_exam_types : [],
+      education: meta.education_info ?? meta.education ?? '',
+      education_info: meta.education_info ?? '',
+      website: meta.website_url ?? meta.website ?? '',
+      website_url: meta.website_url ?? null,
+      linkedin: meta.linkedin_url ?? meta.linkedin ?? '',
+      linkedin_url: meta.linkedin_url ?? null,
+      google_scholar_url: meta.google_scholar_url ?? '',
+      profile_image_url: meta.profile_image_url ?? null,
+      phone: meta.phone ?? '',
+      city: meta.city ?? '',
+
+      // Ödeme bilgileri (EducatorSettings payment tab)
+      iban: meta.iban ?? '',
+      bankName: meta.bankName ?? '',
+      accountHolder: meta.accountHolder ?? '',
+
+      // Bildirim tercihleri
+      notification_preferences: meta.notification_preferences ?? null,
+
+      // Ham metadata da dursun — yeni alan eklenirse frontend fallback yapabilir
+      metadata: meta,
     };
 
     // WORKER rolü ise sayfa izinlerini de ekle
