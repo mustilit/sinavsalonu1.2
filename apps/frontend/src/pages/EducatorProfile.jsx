@@ -225,24 +225,6 @@ export default function EducatorProfile() {
 
       {/* Profil Kartı */}
       <div className="bg-white rounded-2xl border border-slate-200 p-6 mb-6">
-        {/* Aday bu eğiticiden test satın almışsa eğiticiyi puanlayabilir
-            (educatorRating — test puanından bağımsız). Kartın sağ üst köşesinde,
-            tüm ekran genişliklerinde sağa yaslı. */}
-        {isCandidate && myRating?.eligible && (
-          <div className="flex justify-end mb-4">
-            <Button
-              onClick={openRateModal}
-              variant={myRating?.rating ? 'outline' : 'default'}
-              className={myRating?.rating ? '' : 'bg-indigo-600 hover:bg-indigo-700'}
-            >
-              <Star
-                className={`w-4 h-4 mr-1.5 ${myRating?.rating ? 'fill-amber-400 text-amber-400' : ''}`}
-                aria-hidden="true"
-              />
-              {myRating?.rating ? `Puanını Güncelle (${myRating.rating}/5)` : 'Eğiticiyi Değerlendir'}
-            </Button>
-          </div>
-        )}
         <div className="flex flex-col md:flex-row md:items-start gap-6">
           {/* Avatar */}
           <div className="w-20 h-20 rounded-full overflow-hidden flex-shrink-0 bg-gradient-to-br from-indigo-100 to-violet-100 flex items-center justify-center">
@@ -351,13 +333,31 @@ export default function EducatorProfile() {
 
       {/* Yorumlar */}
       <div className="bg-white rounded-2xl border border-slate-200 p-6">
-        <h2 className="text-xl font-semibold text-slate-900 mb-5 flex items-center gap-2">
-          <MessageSquare className="w-5 h-5 text-indigo-500" />
-          Yorumlar
-          {reviews.length > 0 && (
-            <span className="text-sm font-normal text-slate-400">({reviews.length})</span>
+        <div className="flex items-center justify-between gap-3 mb-5">
+          <h2 className="text-xl font-semibold text-slate-900 flex items-center gap-2">
+            <MessageSquare className="w-5 h-5 text-indigo-500" />
+            Yorumlar
+            {reviews.length > 0 && (
+              <span className="text-sm font-normal text-slate-400">({reviews.length})</span>
+            )}
+          </h2>
+          {/* Aday bu eğiticiden test satın almışsa eğiticiyi puanlayabilir
+              (educatorRating — test puanından bağımsız). Yorumlar satırında sağda. */}
+          {isCandidate && myRating?.eligible && (
+            <Button
+              onClick={openRateModal}
+              variant={myRating?.rating ? 'outline' : 'default'}
+              size="sm"
+              className={`flex-shrink-0 ${myRating?.rating ? '' : 'bg-indigo-600 hover:bg-indigo-700'}`}
+            >
+              <Star
+                className={`w-4 h-4 mr-1.5 ${myRating?.rating ? 'fill-amber-400 text-amber-400' : ''}`}
+                aria-hidden="true"
+              />
+              {myRating?.rating ? `Puanını Güncelle (${myRating.rating}/5)` : 'Eğiticiyi Değerlendir'}
+            </Button>
           )}
-        </h2>
+        </div>
 
         {reviews.length === 0 ? (
           <div className="text-center py-10">
