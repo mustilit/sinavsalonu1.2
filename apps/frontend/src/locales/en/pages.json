@@ -164,7 +164,7 @@
       "followed": "Followed"
     },
     "reviews": {
-      "title": "Reviews",
+      "title": "Comments",
       "unknownCandidate": "Unknown candidate",
       "ratedTestCount_one": "(average of {{count}} test)",
       "ratedTestCount_other": "(average of {{count}} tests)",
@@ -197,9 +197,9 @@
     "packageRating": {
       "title": "Package Rating",
       "outOf": "/ 5",
-      "noReviews": "No reviews yet",
-      "reviewerCount_one": "{{count}} candidate's rating",
-      "reviewerCount_other": "{{count}} candidates' ratings",
+      "noReviews": "No comments yet",
+      "reviewerCount_one": "{{count}} candidate's comment",
+      "reviewerCount_other": "{{count}} candidates' comments",
       "rateButton": "Rate",
       "updateButton": "Update Rating"
     }

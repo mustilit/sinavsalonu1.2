@@ -164,7 +164,7 @@
       "followed": "已关注"
     },
     "reviews": {
-      "title": "评价",
+      "title": "评论",
       "unknownCandidate": "未知考生",
       "ratedTestCount_one": "(共 {{count}} 个测试的平均分)",
       "ratedTestCount_other": "(共 {{count}} 个测试的平均分)",
@@ -197,9 +197,9 @@
     "packageRating": {
       "title": "套餐评分",
       "outOf": "/ 5",
-      "noReviews": "暂无评价",
-      "reviewerCount_one": "{{count}} 位考生的评分",
-      "reviewerCount_other": "{{count}} 位考生的评分",
+      "noReviews": "暂无评论",
+      "reviewerCount_one": "{{count}} 位考生的评论",
+      "reviewerCount_other": "{{count}} 位考生的评论",
       "rateButton": "评价",
       "updateButton": "更新评分"
     }

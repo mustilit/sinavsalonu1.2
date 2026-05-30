@@ -164,7 +164,7 @@
       "followed": "Empezaste a seguir"
     },
     "reviews": {
-      "title": "Valoraciones",
+      "title": "Comentarios",
       "unknownCandidate": "Candidato desconocido",
       "ratedTestCount_one": "(promedio de {{count}} examen)",
       "ratedTestCount_other": "(promedio de {{count}} exámenes)",
@@ -197,9 +197,9 @@
     "packageRating": {
       "title": "Calificación del Paquete",
       "outOf": "/ 5",
-      "noReviews": "Aún no hay calificaciones",
-      "reviewerCount_one": "Calificación de {{count}} candidato",
-      "reviewerCount_other": "Calificaciones de {{count}} candidatos",
+      "noReviews": "Aún no hay comentarios",
+      "reviewerCount_one": "Comentario de {{count}} candidato",
+      "reviewerCount_other": "Comentarios de {{count}} candidatos",
       "rateButton": "Calificar",
       "updateButton": "Actualizar Calificación"
     }

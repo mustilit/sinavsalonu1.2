@@ -164,7 +164,7 @@
       "followed": "Takip edildi"
     },
     "reviews": {
-      "title": "Değerlendirmeler",
+      "title": "Yorumlar",
       "unknownCandidate": "Bilinmeyen aday",
       "ratedTestCount_one": "({{count}} test ortalaması)",
       "ratedTestCount_other": "({{count}} test ortalaması)",
@@ -197,9 +197,9 @@
     "packageRating": {
       "title": "Paket Genel Puanı",
       "outOf": "/ 5",
-      "noReviews": "Henüz değerlendirme yok",
-      "reviewerCount_one": "{{count}} adayın değerlendirmesi",
-      "reviewerCount_other": "{{count}} adayın değerlendirmesi",
+      "noReviews": "Henüz yorum yok",
+      "reviewerCount_one": "{{count}} adayın yorumu",
+      "reviewerCount_other": "{{count}} adayın yorumu",
       "rateButton": "Değerlendir",
       "updateButton": "Puanı Güncelle"
     }

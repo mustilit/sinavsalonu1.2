@@ -164,7 +164,7 @@
       "followed": "Gefolgt"
     },
     "reviews": {
-      "title": "Bewertungen",
+      "title": "Kommentare",
       "unknownCandidate": "Unbekannter Kandidat",
       "ratedTestCount_one": "(Durchschnitt von {{count}} Test)",
       "ratedTestCount_other": "(Durchschnitt von {{count}} Tests)",
@@ -197,9 +197,9 @@
     "packageRating": {
       "title": "Paketbewertung",
       "outOf": "/ 5",
-      "noReviews": "Noch keine Bewertungen",
-      "reviewerCount_one": "Bewertung von {{count}} Kandidaten",
-      "reviewerCount_other": "Bewertungen von {{count}} Kandidaten",
+      "noReviews": "Noch keine Kommentare",
+      "reviewerCount_one": "Kommentar von {{count}} Kandidaten",
+      "reviewerCount_other": "Kommentare von {{count}} Kandidaten",
       "rateButton": "Bewerten",
       "updateButton": "Bewertung aktualisieren"
     }
