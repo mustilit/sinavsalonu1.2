@@ -33,6 +33,7 @@ export class ListEducatorReviewsUseCase {
       FROM reviews r
       LEFT JOIN test_packages p ON r."packageId" = p.id
       WHERE r."educatorId" = ${educatorId}
+        AND r."educatorRating" IS NOT NULL
       ORDER BY r."createdAt" DESC
       LIMIT ${safeLimit}
     `;

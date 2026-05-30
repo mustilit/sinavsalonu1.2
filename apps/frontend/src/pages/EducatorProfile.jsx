@@ -372,23 +372,8 @@ export default function EducatorProfile() {
             {reviews.map((r) => (
               <div key={r.id} className="border border-slate-100 rounded-xl p-4">
                 <div className="flex items-start justify-between gap-4 mb-2">
-                  <div>
-                    <p className="text-xs text-slate-400 font-medium mb-1">{r.testTitle}</p>
-                    <div className="flex items-center gap-3">
-                      {r.testRating != null && (
-                        <div className="flex items-center gap-1.5">
-                          <span className="text-xs text-slate-500">Test:</span>
-                          <StarRating value={r.testRating} />
-                        </div>
-                      )}
-                      {r.educatorRating != null && (
-                        <div className="flex items-center gap-1.5">
-                          <span className="text-xs text-slate-500">Eğitici:</span>
-                          <StarRating value={r.educatorRating} />
-                        </div>
-                      )}
-                    </div>
-                  </div>
+                  {/* Yalnızca eğitici puanı (educatorRating) — paket/test puanı bu sayfada gösterilmez */}
+                  <StarRating value={r.educatorRating ?? 0} />
                   <span className="text-xs text-slate-400 whitespace-nowrap">
                     {new Date(r.createdAt).toLocaleDateString('tr-TR')}
                   </span>
