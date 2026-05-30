@@ -155,6 +155,7 @@ export default function ManageUsers() {
   const { user } = useAuth();
   const [searchQuery, setSearchQuery] = useState("");
   const [filterRole, setFilterRole] = useState("all");
+  const [filterStatus, setFilterStatus] = useState("all");
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(25);
   const [showInvite, setShowInvite] = useState(false);
@@ -185,10 +186,11 @@ export default function ManageUsers() {
 
   // Kullanıcı listesi
   const { data: users = [], isLoading } = useQuery({
-    queryKey: ["allUsers", filterRole, searchQuery],
+    queryKey: ["allUsers", filterRole, filterStatus, searchQuery],
     queryFn: async () => {
       const params = {};
       if (filterRole !== "all") params.role = filterRole;
+      if (filterStatus !== "all") params.status = filterStatus;
       if (searchQuery) params.q = searchQuery;
       const { data } = await api.get("/admin/users", { params });
       return Array.isArray(data) ? data : (data?.items ?? []);
@@ -322,6 +324,26 @@ export default function ManageUsers() {
     return <Badge className={m.cls}>{m.label}</Badge>;
   };
 
+  // Durum etiketi (TR) — backend enum'unu kullanıcı dostuna çevirir.
+  const statusLabel = (status) => {
+    switch (status) {
+      case "ACTIVE": return "Aktif";
+      case "PENDING_EDUCATOR_APPROVAL": return "İnceleme Bekliyor";
+      case "REJECTED": return "Red";
+      case "SUSPENDED": return "Askıya Alındı";
+      default: return status ?? "-";
+    }
+  };
+  const statusBadgeClass = (status) => {
+    switch (status) {
+      case "ACTIVE": return "bg-emerald-100 text-emerald-700";
+      case "PENDING_EDUCATOR_APPROVAL": return "bg-amber-100 text-amber-700";
+      case "REJECTED": return "bg-rose-100 text-rose-700";
+      case "SUSPENDED": return "bg-slate-200 text-slate-700";
+      default: return "bg-slate-100 text-slate-600";
+    }
+  };
+
   if ((user?.role || '').toUpperCase() !== "ADMIN") {
     return (
       <div className="text-center py-20">
@@ -431,6 +453,18 @@ export default function ManageUsers() {
             <SelectItem value="WORKER">Çalışanlar</SelectItem>
           </SelectContent>
         </Select>
+        <Select value={filterStatus} onValueChange={(v) => { setFilterStatus(v); setPage(1); }}>
+          <SelectTrigger className="w-full sm:w-44">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Tüm Durumlar</SelectItem>
+            <SelectItem value="ACTIVE">Aktif</SelectItem>
+            <SelectItem value="PENDING_EDUCATOR_APPROVAL">İnceleme Bekliyor</SelectItem>
+            <SelectItem value="REJECTED">Red</SelectItem>
+            <SelectItem value="SUSPENDED">Askıya Alındı</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       {/* Kullanıcı tablosu */}
@@ -478,14 +512,8 @@ export default function ManageUsers() {
                       </TableCell>
                       <TableCell>{roleBadge(u.role)}</TableCell>
                       <TableCell>
-                        <span className={`text-xs px-2 py-1 rounded-full font-medium ${
-                          u.status === "ACTIVE"
-                            ? "bg-emerald-100 text-emerald-700"
-                            : u.status === "SUSPENDED"
-                            ? "bg-rose-100 text-rose-700"
-                            : "bg-slate-100 text-slate-600"
-                        }`}>
-                          {u.status === "ACTIVE" ? "Aktif" : u.status === "SUSPENDED" ? "Askıya Alındı" : (u.status ?? "-")}
+                        <span className={`text-xs px-2 py-1 rounded-full font-medium ${statusBadgeClass(u.status)}`}>
+                          {statusLabel(u.status)}
                         </span>
                       </TableCell>
                       <TableCell className="text-slate-500">
