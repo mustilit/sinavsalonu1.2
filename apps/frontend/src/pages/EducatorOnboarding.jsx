@@ -77,7 +77,7 @@ export default function EducatorOnboarding() {
     try {
       const fd = new FormData();
       fd.append("file", file);
-      const res = await api.post("/upload/image", fd, {
+      const res = await api.post("/upload/document", fd, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       const url = res.data.url || res.data.fileUrl || res.data.file_url;

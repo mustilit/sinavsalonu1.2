@@ -11,7 +11,7 @@ import { ApiTags, ApiConsumes, ApiBody } from '@nestjs/swagger';
 import { Roles } from '../decorators/roles.decorator';
 import type { Request } from 'express';
 import { join } from 'path';
-import { existsSync, mkdirSync } from 'fs';
+import { existsSync, mkdirSync, writeFileSync } from 'fs';
 import { randomBytes } from 'crypto';
 import { validateImageUpload } from '../../application/security/fileTypeDetection';
 import { isClean as scanForVirus } from '../../application/security/clamavScan';
@@ -146,5 +146,67 @@ export class UploadController {
         url: `${baseUrl}/uploads/${v.filename}`,
       })),
     };
+  }
+
+  /**
+   * PDF doküman yükleme (eğitici CV vb.). Görsel pipeline'ından AYRI — Sharp'tan
+   * geçmez. Yalnızca PDF magic byte + boyut doğrulanıp diske yazılır.
+   *   1. Multer memoryStorage + fileFilter (application/pdf MIME ön eleme)
+   *   2. Magic byte "%PDF-" kontrolü (HTTP MIME'a güvenmeyiz)
+   *   3. Filename crypto.randomBytes → path traversal yok
+   *   4. Max 5MB, opsiyonel ClamAV
+   */
+  @Post('document')
+  @Roles('EDUCATOR', 'ADMIN', 'WORKER')
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({ schema: { type: 'object', properties: { file: { type: 'string', format: 'binary' } } } })
+  @UseInterceptors(
+    FileInterceptor('file', {
+      limits: { fileSize: MAX_SIZE_BYTES },
+      fileFilter: (_req: Request, file: Express.Multer.File, cb: (err: Error | null, accept: boolean) => void) => {
+        if (file.mimetype !== 'application/pdf') {
+          return cb(new BadRequestException('Sadece PDF dosyası yüklenebilir'), false);
+        }
+        cb(null, true);
+      },
+    }),
+  )
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async uploadDocument(@UploadedFile() file: any) {
+    if (!file) throw new BadRequestException('Dosya bulunamadı');
+    if (!file.buffer || !Buffer.isBuffer(file.buffer)) {
+      throw new BadRequestException('Dosya içeriği okunamadı');
+    }
+    if (file.size > MAX_SIZE_BYTES) {
+      throw new BadRequestException(`Dosya boyutu ${MAX_SIZE_BYTES / 1024 / 1024}MB'dan büyük olamaz`);
+    }
+
+    // Magic byte: gerçek PDF "%PDF-" ile başlar (ilk 1KB içinde). HTTP MIME'a güvenme.
+    const head = file.buffer.subarray(0, 1024).toString('latin1');
+    if (!head.includes('%PDF-')) {
+      throw new BadRequestException('Geçersiz PDF dosyası');
+    }
+
+    if (process.env.CLAMAV_ENABLED === 'true') {
+      const scan = await scanForVirus(file.buffer);
+      if (!scan.clean) {
+        throw new BadRequestException(
+          scan.threat
+            ? `Dosya virüs taramasından geçemedi: ${scan.threat}`
+            : 'Dosya virüs taramasından geçemedi',
+        );
+      }
+    }
+
+    const filename = `${Date.now()}-${randomBytes(16).toString('hex')}.pdf`;
+    try {
+      writeFileSync(join(UPLOAD_DIR, filename), file.buffer);
+    } catch (err) {
+      this.logger.error(`PDF yazma hatası: ${(err as Error).message}`);
+      throw new BadRequestException('Dosya kaydedilemedi');
+    }
+
+    const baseUrl = process.env.BACKEND_URL || `http://localhost:${process.env.PORT || 3000}`;
+    return { url: `${baseUrl}/uploads/${filename}`, filename, size: file.size };
   }
 }
